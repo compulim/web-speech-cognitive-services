@@ -25,7 +25,7 @@ const EVENT_TYPES = [
   'end'
 ];
 
-function buildSimpleResult(transcript, confidence, isFinal) {
+function buildSpeechResult(transcript, confidence, isFinal) {
   const result = [{ confidence, transcript }];
 
   result.isFinal = isFinal;
@@ -72,7 +72,7 @@ class CognitiveServicesSpeechRecognition {
         ),
         mode,
         lang,
-        CognitiveSpeech.SpeechResultFormat.Simple
+        CognitiveSpeech.SpeechResultFormat.Detailed
       );
 
       let auth;
@@ -155,22 +155,24 @@ class CognitiveServicesSpeechRecognition {
     }
   }
 
-  _handleHypothesis(event) {
-    console.log(event);
-
-    this.onresult && this.onresult(buildSimpleResult(event.Result.Text, .5, false));
-  }
-
-  _handleSimplePhrase(event) {
+  _handleDetailedPhrase(event) {
     console.log(event);
 
     this._transitTo(AUDIO_END);
 
     if (CognitiveSpeech.RecognitionStatus[event.Result.RecognitionStatus] === CognitiveSpeech.RecognitionStatus.Success) {
-      this.onresult && this.onresult(buildSimpleResult(event.Result.DisplayText, 1, true));
+      const { NBest: nBest } = event.Result;
+
+      this.onresult && this.onresult(buildSpeechResult(event.Result.NBest[0].Display, event.Result.NBest[0].Confidence, true));
     } else {
       this.onerror && this.onerror({ error: event.Result.RecognitionStatus, type: 'error' });
     }
+  }
+
+  _handleHypothesis(event) {
+    console.log(event);
+
+    this.onresult && this.onresult(buildSpeechResult(event.Result.Text, .5, false));
   }
 
   abort() {
@@ -218,16 +220,16 @@ class CognitiveServicesSpeechRecognition {
         this._transitTo(SPEECH_START);
         break;
 
-      case 'SpeechSimplePhraseEvent':
-        this._handleSimplePhrase(event);
-        break;
-
       case 'SpeechHypothesisEvent':
         this._handleHypothesis(event);
         break;
 
-      case 'ConnectingToServiceEvent':
       case 'SpeechDetailedPhraseEvent':
+        this._handleDetailedPhrase(event);
+        break;
+
+      case 'ConnectingToServiceEvent':
+      case 'SpeechSimplePhraseEvent':
         break;
 
       default:

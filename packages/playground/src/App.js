@@ -22,6 +22,10 @@ export default class App extends React.Component {
 
   handleError = event => {
     console.warn(event.error);
+
+    this.setState(() => ({
+      dictated: `ERROR: ${ event.error }`
+    }));
   }
 
   handleRawEvent = event => {
