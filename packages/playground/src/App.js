@@ -16,7 +16,7 @@ export default class App extends React.Component {
     console.warn(type);
 
     this.setState(() => ({
-      dictated: (event.results || []).map(({ transcript }) => transcript.trim()).join(' ')
+      dictated: (event.results || (event.result ? [event.result] : [])).map(({ transcript }) => transcript.trim()).join(' ')
     }));
   }
 
