@@ -6,6 +6,8 @@ Polyfill Web Speech API with Cognitive Services.
 
 ## Test matrix
 
+Latest as of 2018-06-28.
+
 | Platform             | OS                | Browser             | Cognitive Services (WebRTC) | Web Speech API                          |
 | -                    | -                 | -                   | -                           | -                                       |
 | PC                   | Windows 10 (1803) | Chrome 67.0.3396.99 | Yes                         | Yes                                     |
