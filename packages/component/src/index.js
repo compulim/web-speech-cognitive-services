@@ -1,0 +1,3 @@
+import CognitiveServicesSpeechRecognition from './CognitiveServicesSpeechRecognition';
+
+export default CognitiveServicesSpeechRecognition

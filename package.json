@@ -1,0 +1,50 @@
+{
+  "name": "web-speech-cognitive-services",
+  "version": "0.0.1-0",
+  "description": "",
+  "keywords": [],
+  "main": "lib/index.js",
+  "files": [
+    "lib/**/*"
+  ],
+  "scripts": {
+    "bootstrap": "lerna bootstrap --hoist",
+    "build": "lerna run build",
+    "test": "lerna run test"
+  },
+  "author": "William Wong <compulim@hotmail.com> (http://compulim.info/)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/compulim/web-speech-cognitive-services.git"
+  },
+  "bugs": {
+    "url": "https://github.com/compulim/web-speech-cognitive-services/issues"
+  },
+  "homepage": "https://github.com/compulim/web-speech-cognitive-services#readme",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
+    "babel-env": "^2.4.1",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-plugin-version-transform": "^1.0.0",
+    "babel-preset-stage-3": "^6.24.1",
+    "classnames": "^2.2.6",
+    "glamor": "^2.20.40",
+    "jest": "^22.4.4",
+    "lerna": "^2.11.0",
+    "microsoft-speech-browser-sdk": "0.0.12",
+    "react": "^16.4.1",
+    "react-dictate-button": "^1.0.0",
+    "react-dom": "^16.4.1",
+    "react-scripts": "1.1.4",
+    "rimraf": "^2.6.2"
+  },
+  "dependencies": {
+    "memoize-one": "^3.1.1"
+  },
+  "peerDependencies": {
+    "microsoft-speech-browser-sdk": "^0.0.12",
+    "react": "^16.4.1"
+  }
+}
