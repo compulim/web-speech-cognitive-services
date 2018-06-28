@@ -57,6 +57,7 @@ export default class App extends React.Component {
           onError={ this.handleError }
           onProgress={ this.handleProgressAndDictate.bind(null, 'progress') }
           onRawEvent={ this.handleRawEvent }
+          speechGrammarList={ Object }
           speechRecognition={ CognitiveServicesSpeechRecognition }
         >
           { ({ readyState }) => readyState < 2 ? 'Dictate' : 'Stop' }
