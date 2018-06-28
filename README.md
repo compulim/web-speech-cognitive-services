@@ -6,20 +6,21 @@ Polyfill Web Speech API with Cognitive Services.
 
 ## Test matrix
 
-| Platform             | OS            | Browser             | Cognitive Services (WebRTC) | Web Speech API                          |
-| -                    | -             | -                   | -                           | -                                       |
-| PC                   | Windows 10    | Chrome 67.0.3396.99 | Yes                         | Yes                                     |
-| PC                   | Windows 10    | Edge 42.17134.1.0   | Yes                         | No, `SpeechRecognition` not implemented |
-| PC                   | Windows 10    | Firefox 61.0        | Yes                         | No, `SpeechRecognition` not implemented |
-| Apple iPhone X       | iOS 11.4      | Chrome 67.0.3396.87 | No, `AudioSourceError`      | No, `SpeechRecognition` not implemented |
-| Apple iPhone X       | iOS 11.4      | Edge 42.2.2.0       | No, `AudioSourceError`      | No, `SpeechRecognition` not implemented |
-| Apple iPhone X       | iOS 11.4      | Safari              | Yes                         | No, `SpeechRecognition` not implemented |
-| Apple iPod (6th gen) | iOS 11.4      | Chrome 67.0.3396.87 | No, `AudioSourceError`      | No, `SpeechRecognition` not implemented |
-| Apple iPod (6th gen) | iOS 11.4      | Edge 42.2.2.0       | No, `AudioSourceError`      | No, `SpeechRecognition` not implemented |
-| Apple iPod (6th gen) | iOS 11.4      | Safari              | No, `AudioSourceError`      | No, `SpeechRecognition` not implemented |
-| Google Pixel 2       | Android 8.1.0 | Chrome 67.0.3396.87 | Yes                         | Yes                                     |
-| Google Pixel 2       | Android 8.1.0 | Edge 42.0.0.2057    | Yes                         | Yes                                     |
-| Google Pixel 2       | Android 8.1.0 | Firefox 60.1.0      | Yes                         | Yes                                     |
+| Platform             | OS                | Browser             | Cognitive Services (WebRTC) | Web Speech API                          |
+| -                    | -                 | -                   | -                           | -                                       |
+| PC                   | Windows 10 (1803) | Chrome 67.0.3396.99 | Yes                         | Yes                                     |
+| PC                   | Windows 10 (1803) | Edge 42.17134.1.0   | Yes                         | No, `SpeechRecognition` not implemented |
+| PC                   | Windows 10 (1803) | Firefox 61.0        | Yes                         | No, `SpeechRecognition` not implemented |
+| Apple iPhone X       | iOS 11.4          | Chrome 67.0.3396.87 | No, `AudioSourceError`      | No, `SpeechRecognition` not implemented |
+| Apple iPhone X       | iOS 11.4          | Edge 42.2.2.0       | No, `AudioSourceError`      | No, `SpeechRecognition` not implemented |
+| Apple iPhone X       | iOS 11.4          | Safari              | Yes                         | No, `SpeechRecognition` not implemented |
+| Apple iPod (6th gen) | iOS 11.4          | Chrome 67.0.3396.87 | No, `AudioSourceError`      | No, `SpeechRecognition` not implemented |
+| Apple iPod (6th gen) | iOS 11.4          | Edge 42.2.2.0       | No, `AudioSourceError`      | No, `SpeechRecognition` not implemented |
+| Apple iPod (6th gen) | iOS 11.4          | Safari              | No, `AudioSourceError`      | No, `SpeechRecognition` not implemented |
+| Google Pixel 2       | Android 8.1.0     | Chrome 67.0.3396.87 | Yes                         | Yes                                     |
+| Google Pixel 2       | Android 8.1.0     | Edge 42.0.0.2057    | Yes                         | Yes                                     |
+| Google Pixel 2       | Android 8.1.0     | Firefox 60.1.0      | Yes                         | Yes                                     |
+| Microsoft Lumia 950  | Windows 10 (1709) | Edge 40.15254.489.0 | No, `AudioSourceError`      | No, `SpeechRecognition` not implemented |
 
 ## Event lifecycle mapping from Cognitive Services
 
