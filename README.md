@@ -6,7 +6,7 @@ Polyfill Web Speech API with Cognitive Services.
 
 ## Test matrix
 
-Latest as of 2018-06-28, except macOS.
+Browsers are all latest as of 2018-06-28, except macOS was 10.13.1 (2017-10-31), instead of 10.13.5. But there should be no change on the matrix since Safari does not support Web Speech API.
 
 | Platform             | OS                        | Browser             | Cognitive Services (WebRTC) | Web Speech API                          |
 | -                    | -                         | -                   | -                           | -                                       |
