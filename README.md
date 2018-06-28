@@ -6,7 +6,7 @@ Polyfill Web Speech API with Cognitive Services.
 
 ## Test matrix
 
-Latest as of 2018-06-28.
+Latest as of 2018-06-28, except macOS.
 
 | Platform             | OS                        | Browser             | Cognitive Services (WebRTC) | Web Speech API                          |
 | -                    | -                         | -                   | -                           | -                                       |
@@ -25,6 +25,7 @@ Latest as of 2018-06-28.
 | Google Pixel 2       | Android 8.1.0             | Edge 42.0.0.2057    | Yes                         | Yes                                     |
 | Google Pixel 2       | Android 8.1.0             | Firefox 60.1.0      | Yes                         | Yes                                     |
 | Microsoft Lumia 950  | Windows 10 (1709)         | Edge 40.15254.489.0 | No, `AudioSourceError`      | No, `SpeechRecognition` not implemented |
+| Microsoft Xbox One   | Windows 10 (?)            | Edge ?              | No, `AudioSourceError`      | No, `SpeechRecognition` not implemented |
 
 ## Event lifecycle mapping from Cognitive Services
 
