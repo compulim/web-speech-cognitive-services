@@ -8,6 +8,14 @@ Polyfill Web Speech API with Cognitive Services.
 
 Browsers are all latest as of 2018-06-28, except macOS was 10.13.1 (2017-10-31), instead of 10.13.5. But there should be no change on the matrix since Safari does not support Web Speech API.
 
+Overall in point form:
+
+* With Web Speech API only, web dev can enable speech recognition on most popular platforms, except iOS
+   * iOS: No browsers on iOS support Web Speech API
+   * Some platforms requires non-default browser
+* With Cognitive Services Speech-to-Text, all popular platforms with their default browsers are supported
+   * iOS: Chrome and Edge does not support Cognitive Services because WebRTC is disabled
+
 | Platform             | OS                        | Browser             | Cognitive Services (WebRTC) | Web Speech API                          |
 | -                    | -                         | -                   | -                           | -                                       |
 | PC                   | Windows 10 (1803)         | Chrome 67.0.3396.99 | Yes                         | Yes                                     |
