@@ -53,6 +53,9 @@ Polyfill Web Speech API with Cognitive Services.
    8. `RecognitionEndedEvent`
 * User abort
    * Essentially muted the speech, that could result in success, silent, or no match
+* Not authorized to use microphone
+   1. `RecognitionTriggeredEvent`
+   2. `RecognitionEndedEvent(Result.RecognitionStatus = 'AudioSourceError')`
 
 # Contributions
 
