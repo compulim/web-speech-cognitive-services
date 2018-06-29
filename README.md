@@ -20,6 +20,34 @@ Microsoft Azure [Cognitive Services Speech-to-Text](https://azure.microsoft.com/
 
 This package will polyfill Web Speech API by turning Cognitive Services Speech-to-Text API into Web Speech API. We test this package with popular combination of platforms and browsers.
 
+# How to use
+
+First, run `npm install web-speech-cognitive-services` for latest production build. Or `npm install web-speech-cognitive-services@master` for latest development build.
+
+```jsx
+import CognitiveServicesSpeechRecognition from 'web-speech-cognitive-services';
+
+const recognition = new CognitiveServicesSpeechRecognition();
+
+// There are two ways to provide your credential:
+// 1. Provide a subscription key (good for prototype, not for production)
+// 2. Provide a mechanism to obtain/refresh access token
+
+// If you are using subscription key
+recognition.subscriptionKey = 'your subscription key';
+
+// If you are using access token, refreshToken === true, if we are renewing the token, otherwise, false
+recognition.tokenFetch = async (authFetchEventID, refreshToken) => {
+};
+
+recognition.lang = 'en-US';
+recognition.onresult = ({ results }) => {
+  console.log(results);
+};
+
+recognition.start();
+```
+
 # Test matrix
 
 Browsers are all latest as of 2018-06-28, except:
