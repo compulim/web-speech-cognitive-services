@@ -126,7 +126,7 @@ Everything works, including multiple interim results.
 #### Abort before first recognition is made
 
 * Cognitive Services
-   * Essentially muted the microphone, very similar to [happy path](#happy-path), could still result in success, silent, or no match
+   * Essentially muted the microphone and receive `SpeechEndDetectedEvent` immediately, very similar to [happy path](#happy-path), could still result in success, silent, or no match
 * Web Speech API
    1. `start`
    2. `audiostart`
@@ -134,18 +134,18 @@ Everything works, including multiple interim results.
    9. `error(error = 'aborted')`
    10. `end`
 
-#### Abort after some speech is recognized
+#### Abort after some text has recognized
 
 * Cognitive Services
-   * Essentially muted the microphone, very similar to [happy path](#happy-path), could still result in success, silent, or no match
+   * Essentially muted the microphone and receive `SpeechEndDetectedEvent` immediately, very similar to [happy path](#happy-path), could still result in success, silent, or no match
 * Web Speech API
    1. `start`
    2. `audiostart`
-   3. `soundstart` (optional)
-   4. `speechstart` (optional)
-   5. `result` (optional)
-   6. `speechend` (optional)
-   7. `soundend` (optional)
+   3. `soundstart`
+   4. `speechstart`
+   5. `result` (one or more)
+   6. `speechend`
+   7. `soundend`
    8. `audioend`
    9. `error(error = 'aborted')`
    10. `end`
