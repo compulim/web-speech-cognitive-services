@@ -44,7 +44,6 @@
     "babel-polyfill": "^6.26.0",
     "babel-preset-stage-3": "^6.24.1",
     "classnames": "^2.2.6",
-    "event-as-promise": "^1.0.3",
     "glamor": "^2.20.40",
     "jest": "^22.4.4",
     "lerna": "^2.11.0",
@@ -56,6 +55,7 @@
     "rimraf": "^2.6.2"
   },
   "dependencies": {
+    "event-as-promise": "^1.0.3",
     "memoize-one": "^4.0.0"
   },
   "peerDependencies": {
