@@ -57,7 +57,7 @@ Quick grab:
 
 ## Event lifecycle scenarios
 
-We test multiple scenarios to make sure the package polyfill Web Speech API correctly. Following are events and its firing order.
+We test multiple scenarios to make sure the package polyfill Web Speech API correctly. Following are events and its firing order, in Cognitive Services and Web Speech API respectively.
 
 * [Happy path](#happy-path)
 * [Abort during recognition](#abort-during-recognition)
@@ -96,7 +96,7 @@ Everything works, including multiple interim results.
 #### Abort before first recognition is made
 
 * Cognitive Services
-   * Essentially muted the speech, that could still result in success, silent, or no match
+   * Essentially muted the microphone, very similar to [happy path](#happy-path), could still result in success, silent, or no match
 * Web Speech API
    1. `start`
    2. `audiostart`
@@ -107,7 +107,7 @@ Everything works, including multiple interim results.
 #### Abort after some speech is recognized
 
 * Cognitive Services
-   * Essentially muted the speech, that could still result in success, silent, or no match
+   * Essentially muted the microphone, very similar to [happy path](#happy-path), could still result in success, silent, or no match
 * Web Speech API
    1. `start`
    2. `audiostart`
