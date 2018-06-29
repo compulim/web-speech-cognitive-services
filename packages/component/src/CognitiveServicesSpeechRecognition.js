@@ -164,9 +164,10 @@ class CognitiveServicesSpeechRecognition {
       }
     } else {
       this.emit('start');
-      this.emit('audiostart');
 
       await promises.connectingToService;
+
+      this.emit('audiostart');
 
       const recognitionStarted = await Promise.race([
         promises.recognitionStarted,
@@ -273,7 +274,7 @@ function toPromise() {
       const { Name: name } = event;
       const eventAsPromise = events[name];
 
-      // console.log(`handling ${ name }`);
+      console.log(`handling ${ name }`);
 
       if (eventAsPromise) {
         eventAsPromise.eventListener.call(null, event);
