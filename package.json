@@ -1,8 +1,20 @@
 {
   "name": "web-speech-cognitive-services",
   "version": "0.0.1-0",
-  "description": "",
-  "keywords": [],
+  "description": "Polyfill Web Speech API with Cognitive Services Speech-to-Text service",
+  "keywords": [
+    "cognitive services",
+    "dictation",
+    "microphone",
+    "polyfill",
+    "speak",
+    "speech recognition",
+    "speech to text",
+    "voice recognition",
+    "web speech",
+    "webrtc",
+    "webspeech"
+  ],
   "main": "lib/index.js",
   "files": [
     "lib/**/*"
