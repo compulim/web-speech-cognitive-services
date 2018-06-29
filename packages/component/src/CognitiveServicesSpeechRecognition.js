@@ -2,30 +2,6 @@ import * as CognitiveSpeech from 'microsoft-speech-browser-sdk';
 import EventAsPromise from 'event-as-promise';
 import memoize from 'memoize-one';
 
-const UNINIT = 0;
-const IDLE = 1;
-const START = 2;
-const AUDIO_START = 3;
-const SOUND_START = 4;
-const SPEECH_START = 5;
-const SPEECH_END = 6;
-const SOUND_END = 7;
-const AUDIO_END = 8;
-const END = 9;
-
-const EVENT_TYPES = [
-  null,
-  null,
-  'start',
-  'audiostart',
-  'soundstart',
-  'speechstart',
-  'speechend',
-  'soundend',
-  'audioend',
-  'end'
-];
-
 function buildSpeechResult(transcript, confidence, isFinal) {
   const result = [{ confidence, transcript }];
 
