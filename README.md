@@ -67,13 +67,14 @@ export default props =>
   </DictateButton>
 ```
 
-You can also look at our [playground page](packages/playground/src/App.js) to see how it works.
+You can also look at our [playground page](packages/playground/src/DictationPane.js) to see how it works.
 
 # Test matrix
 
 Browsers are all latest as of 2018-06-28, except:
+
 * macOS was 10.13.1 (2017-10-31), instead of 10.13.5
-   * There should be no change on the matrix since Safari does not support Web Speech API
+   * Since Safari does not support Web Speech API, the test matrix remains the same
 * Xbox was tested on Insider build (1806) with Kinect sensor connected
    * The latest Insider build does not support both WebRTC and Web Speech API, so we suspect the production build also does not support both
 
@@ -108,7 +109,7 @@ Quick grab:
 
 ## Event lifecycle scenarios
 
-We test multiple scenarios to make sure the package polyfill Web Speech API correctly. Following are events and its firing order, in Cognitive Services and Web Speech API respectively.
+We test multiple scenarios to make sure we polyfill Web Speech API correctly. Following are events and its firing order, in Cognitive Services and Web Speech API respectively.
 
 * [Happy path](#happy-path)
 * [Abort during recognition](#abort-during-recognition)
@@ -246,7 +247,8 @@ The user click "deny" on the permission dialog, or there are no microphone detec
 * Interim results do not return confidence, final result do have confidence
    * We always return `0.5` for interim results
 * Cognitive Services support grammar list but not in JSGF format, more work to be done in this area
-   * Although Google Chrome support setting the grammar list, it seems the grammar list is not used at all
+   * Although Google Chrome support grammar list, it seems the grammar list is not used at all
+* Continuous mode does not work
 
 # Contributions
 

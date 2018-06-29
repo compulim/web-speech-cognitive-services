@@ -21,6 +21,10 @@ const ROOT_CSS = css({
   }
 });
 
+const ERROR_CSS = css({
+  color: 'Red'
+});
+
 export default class App extends React.Component {
   constructor(props) {
     super(props);
@@ -71,7 +75,9 @@ export default class App extends React.Component {
 
   render() {
     const { props, state } = this;
-    const extra = this.createExtra(new URLSearchParams(window.location.search).get('s') || window.localStorage.getItem('SPEECH_KEY'));
+    const keyFromSearch = typeof window.URLSearchParams !== 'undefined' && new URLSearchParams(window.location.search).get('s');
+    const keyFromStorage = window.localStorage.getItem('SPEECH_KEY');
+    const extra = this.createExtra(keyFromSearch || keyFromStorage);
 
     return (
       <article className={ classNames(ROOT_CSS + '', (props.className || '') + '') }>
@@ -95,15 +101,15 @@ export default class App extends React.Component {
           </header>
           {
             state.error ?
-              <div className="error">
-                { state.error }
-              </div>
+              <pre className={ ERROR_CSS + '' }>
+                Error: { state.error }
+              </pre>
             : state.final ?
-              <p className="final">
+              <p>
                 { state.final.transcript }
               </p>
             : state.interim ?
-              <p className="interim">
+              <p>
                 {
                   state.interim.map((interim, index) =>
                     <span
