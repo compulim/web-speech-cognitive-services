@@ -58,11 +58,13 @@ Browsers are all latest as of 2018-06-28, except:
 
 Quick grab:
 
-* Web Speech API works on most popular platforms, except iOS
-   * iOS: No browsers on iOS support Web Speech API
-   * Some platforms requires non-default browser (unsupported in Microsoft Edge)
-* Cognitive Services Speech-to-Text work on all popular platforms with their default browsers
-   * iOS: Chrome and Edge does not support Cognitive Services because iOS WebView does not support WebRTC
+* Web Speech API
+   * Works on most popular platforms, except iOS. Some requires non-default browser.
+   * iOS: None of the popular browsers support Web Speech API
+   * Windows: requires Chrome
+* Cognitive Services Speech-to-Text
+   * Works on default browsers on all popular platforms
+   * iOS: Chrome and Edge does not support Cognitive Services (WebRTC)
 
 | Platform             | OS                           | Browser              | Cognitive Services (WebRTC) | Web Speech API                          |
 | -                    | -                            | -                    | -                           | -                                       |
