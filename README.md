@@ -250,6 +250,12 @@ The user click "deny" on the permission dialog, or there are no microphone detec
    * Although Google Chrome support grammar list, it seems the grammar list is not used at all
 * Continuous mode does not work
 
+# Roadmap
+
+* [ ] Add grammar list
+* [ ] Add tests for lifecycle events
+* [ ] Investigate continuous mode
+
 # Contributions
 
 Like us? [Star](https://github.com/compulim/web-speech-cognitive-services/stargazers) us.
