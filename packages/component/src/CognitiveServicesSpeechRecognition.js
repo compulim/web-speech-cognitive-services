@@ -274,8 +274,6 @@ function toPromise() {
       const { Name: name } = event;
       const eventAsPromise = events[name];
 
-      console.log(`handling ${ name }`);
-
       if (eventAsPromise) {
         eventAsPromise.eventListener.call(null, event);
       } else {
