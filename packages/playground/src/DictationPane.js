@@ -76,7 +76,7 @@ export default class App extends React.Component {
   render() {
     const { props, state } = this;
     const keyFromSearch = typeof window.URLSearchParams !== 'undefined' && new URLSearchParams(window.location.search).get('s');
-    const keyFromStorage = window.localStorage.getItem('SPEECH_KEY');
+    const keyFromStorage = typeof window.localStorage !== 'undefined' && window.localStorage.getItem('SPEECH_KEY');
     const extra = this.createExtra(keyFromSearch || keyFromStorage);
 
     return (
