@@ -167,12 +167,12 @@ class CognitiveServicesSpeechRecognition {
 
       await promises.connectingToService;
 
-      this.emit('audiostart');
-
       const recognitionStarted = await Promise.race([
         promises.recognitionStarted,
         promises.recognitionEnded
       ]);
+
+      this.emit('audiostart');
 
       if (recognitionStarted.Name === 'RecognitionEndedEvent') {
         // Possibly network error
