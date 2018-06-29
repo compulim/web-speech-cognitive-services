@@ -16,7 +16,7 @@
     "memoize-one": "^4.0.0",
     "microsoft-speech-browser-sdk": "^0.0.12",
     "react": "^16.4.1",
-    "react-dictate-button": "^1.1.1",
+    "react-dictate-button": "^1.1.2",
     "react-dom": "^16.4.1",
     "react-scripts": "1.1.4"
   }
