@@ -5,9 +5,7 @@
   ],
   "presets": [
     ["env", {
-      "targets": {
-        "node": "10"
-      },
+      "forceAllTransforms": true,
       "modules": "commonjs"
     }],
     "react"
