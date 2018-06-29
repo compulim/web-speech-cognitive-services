@@ -20,6 +20,6 @@
   },
   "dependencies": {
     "event-as-promise": "^1.0.3",
-    "memoize-one": "^3.1.1"
+    "memoize-one": "^4.0.0"
   }
 }

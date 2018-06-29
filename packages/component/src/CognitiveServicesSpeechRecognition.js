@@ -55,20 +55,27 @@ class CognitiveServicesSpeechRecognition {
     this.createRecognizer = memoize((
       subscriptionKeyOrTokenFetch,
       lang = navigator.language,
-      mode = CognitiveSpeech.RecognitionMode.Interactive
+      mode = CognitiveSpeech.RecognitionMode.Interactive,
+      osPlatform = window.navigator.userAgent,
+      osName = window.navigator.appName,
+      osVersion = window.navigator.appVersion,
+      deviceManufacturer = 'microsoft-speech-browser-sdk',
+      deviceModel = 'web-speech-cognitive-services',
+      deviceVersion = VERSION
     ) => {
-      const platform = window.navigator.userAgent;
-      const name = 'Browser';
-      const osVersion = VERSION;
-      const manufacturer = 'web-speech-cognitive-services';
-      const model = 'web-speech-cognitive-services';
-      const deviceVersion = VERSION;
-
       const config = new CognitiveSpeech.RecognizerConfig(
         new CognitiveSpeech.SpeechConfig(
           new CognitiveSpeech.Context(
-            new CognitiveSpeech.OS(platform, name, osVersion),
-            new CognitiveSpeech.Device(manufacturer, model, deviceVersion)
+            new CognitiveSpeech.OS(
+              osPlatform,
+              osName,
+              osVersion
+            ),
+            new CognitiveSpeech.Device(
+              deviceManufacturer,
+              deviceModel,
+              deviceVersion
+            )
           )
         ),
         mode,
@@ -137,8 +144,14 @@ class CognitiveServicesSpeechRecognition {
 
   async start() {
     const recognizer = this.recognizer = this.createRecognizer(
-      window.localStorage.getItem('SPEECH_KEY'),
-      this.lang
+      this.subscriptionKey || this.tokenFetch,
+      this.lang,
+      this.osPlatform || window.navigator.userAgent,
+      this.osName || window.navigator.appName,
+      this.osVersion || window.navigator.appVersion,
+      this.deviceManufacturer || 'web-speech-cognitive-services',
+      this.deviceModel || 'web-speech-cognitive-services',
+      this.deviceVersion || VERSION
     );
 
     const { eventListener, ...promises } = toPromise();

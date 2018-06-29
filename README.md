@@ -48,6 +48,27 @@ recognition.onresult = ({ results }) => {
 recognition.start();
 ```
 
+## Integrating with React
+
+You can use [`react-dictate-button`](https://github.com/compulim/react-dictate-button/) to integrate speech recognition functionality to your React app.
+
+```jsx
+import CognitiveServicesSpeechRecognitionm, { CognitiveServicesSpeechGrammarList } from 'web-speech-recognition-services';
+import DictateButton from 'react-dictate-button';
+
+export default props =>
+  <DictateButton
+    extra={{ subscriptionKey: 'your subscription key' }}
+    onDictate={ ({ result }) => alert(result.transcript) }
+    speechGrammarList={ CognitiveServicesSpeechGrammarList }
+    speechRecognition={ CognitiveServicesSpeechRecognition }
+  >
+    Start dictation
+  </DictateButton>
+```
+
+You can also look at our [playground page](packages/playground/src/App.js) to see how it works.
+
 # Test matrix
 
 Browsers are all latest as of 2018-06-28, except:

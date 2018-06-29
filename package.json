@@ -49,13 +49,13 @@
     "lerna": "^2.11.0",
     "microsoft-speech-browser-sdk": "^0.0.12",
     "react": "^16.4.1",
-    "react-dictate-button": "^1.0.0",
+    "react-dictate-button": "^1.1.1",
     "react-dom": "^16.4.1",
     "react-scripts": "1.1.4",
     "rimraf": "^2.6.2"
   },
   "dependencies": {
-    "memoize-one": "^3.1.1"
+    "memoize-one": "^4.0.0"
   },
   "peerDependencies": {
     "microsoft-speech-browser-sdk": "^0.0.12",
