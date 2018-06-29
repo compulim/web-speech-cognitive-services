@@ -2,7 +2,7 @@
 
 [![npm version](https://badge.fury.io/js/web-speech-cognitive-services.svg)](https://badge.fury.io/js/web-speech-cognitive-services) [![Build Status](https://travis-ci.org/compulim/web-speech-cognitive-services.svg?branch=master)](https://travis-ci.org/compulim/web-speech-cognitive-services)
 
-Polyfill Web Speech API with Cognitive Services.
+Polyfill Web Speech API with Cognitive Services Speech-to-Text service.
 
 This scaffold is provided by [`react-component-template`](https://github.com/compulim/react-component-template/).
 
@@ -24,16 +24,17 @@ This package will polyfill Web Speech API by turning Cognitive Services Speech-t
 
 Browsers are all latest as of 2018-06-28, except:
 * macOS was 10.13.1 (2017-10-31), instead of 10.13.5
-   * Tthere should be no change on the matrix since Safari does not support Web Speech API
-* Xbox was tested on Insider build (1806)
+   * There should be no change on the matrix since Safari does not support Web Speech API
+* Xbox was tested on Insider build (1806) with Kinect sensor connected
+   * The latest Insider build does not support both WebRTC and Web Speech API, so we suspect the production build also does not support both
 
-Overall in point form:
+Quick grab:
 
-* With Web Speech API only, web dev can enable speech recognition on most popular platforms, except iOS
+* Web Speech API works on most popular platforms, except iOS
    * iOS: No browsers on iOS support Web Speech API
-   * Some platforms requires non-default browser
-* With Cognitive Services Speech-to-Text, all popular platforms with their default browsers are supported
-   * iOS: Chrome and Edge does not support Cognitive Services because WebRTC is disabled
+   * Some platforms requires non-default browser (unsupported in Microsoft Edge)
+* Cognitive Services Speech-to-Text work on all popular platforms with their default browsers
+   * iOS: Chrome and Edge does not support Cognitive Services because iOS WebView does not support WebRTC
 
 | Platform             | OS                           | Browser              | Cognitive Services (WebRTC) | Web Speech API                          |
 | -                    | -                            | -                    | -                           | -                                       |
