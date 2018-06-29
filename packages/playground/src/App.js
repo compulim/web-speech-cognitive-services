@@ -1,5 +1,3 @@
-import 'babel-polyfill';
-
 import { css } from 'glamor';
 import React from 'react';
 
