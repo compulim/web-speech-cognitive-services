@@ -1,6 +1,6 @@
 # web-speech-cognitive-services
 
-[![npm version](https://badge.fury.io/js/we-bspeech-cognitive-services.svg)](https://badge.fury.io/js/we-bspeech-cognitive-services) [![Build Status](https://travis-ci.org/compulim/we-bspeech-cognitive-services.svg?branch=master)](https://travis-ci.org/compulim/web-speech-cognitive-services)
+[![npm version](https://badge.fury.io/js/web-speech-cognitive-services.svg)](https://badge.fury.io/js/web-speech-cognitive-services) [![Build Status](https://travis-ci.org/compulim/web-speech-cognitive-services.svg?branch=master)](https://travis-ci.org/compulim/web-speech-cognitive-services)
 
 Polyfill Web Speech API with Cognitive Services.
 
@@ -142,8 +142,8 @@ Overall in point form:
 
 # Contributions
 
-Like us? [Star](https://github.com/compulim/we-bspeech-cognitive-services/stargazers) us.
+Like us? [Star](https://github.com/compulim/web-speech-cognitive-services/stargazers) us.
 
-Want to make it better? [File](https://github.com/compulim/we-bspeech-cognitive-services/issues) us an issue.
+Want to make it better? [File](https://github.com/compulim/web-speech-cognitive-services/issues) us an issue.
 
 Don't like something you see? [Submit](https://github.com/compulim/web-speech-cognitive-services/pulls) a pull request.
