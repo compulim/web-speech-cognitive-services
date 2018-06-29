@@ -1,4 +1,5 @@
 import * as CognitiveSpeech from 'microsoft-speech-browser-sdk';
+import EventAsPromise from 'event-as-promise';
 import memoize from 'memoize-one';
 
 const UNINIT = 0;
@@ -114,149 +115,173 @@ class CognitiveServicesSpeechRecognition {
   get serviceURI() { return null; }
   set serviceURI(nextServiceURI) { throw new Error('not supported'); }
 
-  _transitTo(nextReadyState) {
-    // console.log(`_transitTo: readyState = ${ this.readyState }, nextReadyState = ${ nextReadyState }`);
-
-    if (nextReadyState > this.readyState) {
-      const lifecycleEvents = [
-        null,
-        null,
-        this.onstart,
-        this.onaudiostart,
-        this.onsoundstart,
-        this.onspeechstart,
-        this.onspeechend,
-        this.onsoundend,
-        this.onaudioend,
-        this.onend
-      ];
-
-      if (
-        this.readyState === AUDIO_START
-        && nextReadyState >= AUDIO_END
-      ) {
-        // If soundstart, speechstart, speechend, and soundend are not fired after audiostart,
-        // we can skip them and just fire audioend directly
-        this.readyState = SOUND_END;
-      }
-
-      for (let transition = this.readyState + 1; transition <= nextReadyState; transition++) {
-        const eventListener = lifecycleEvents[transition];
-
-        // eventListener && console.log(`Firing "${ EVENT_TYPES[transition] }"`);
-        eventListener && eventListener({ type: EVENT_TYPES[transition] });
-      }
-
-      if (nextReadyState === END) {
-        this.readyState = IDLE;
-      } else {
-        this.readyState = nextReadyState;
-      }
-    }
-  }
-
-  _handleDetailedPhrase(event) {
-    console.log(event);
-
-    this._transitTo(AUDIO_END);
-
-    if (CognitiveSpeech.RecognitionStatus[event.Result.RecognitionStatus] === CognitiveSpeech.RecognitionStatus.Success) {
-      const { NBest: nBest } = event.Result;
-
-      this.onresult && this.onresult(buildSpeechResult(event.Result.NBest[0].Display, event.Result.NBest[0].Confidence, true));
-    } else {
-      this.onerror && this.onerror({ error: event.Result.RecognitionStatus, type: 'error' });
-    }
-  }
-
-  _handleHypothesis(event) {
-    console.log(event);
-
-    this.onresult && this.onresult(buildSpeechResult(event.Result.Text, .5, false));
-  }
-
   abort() {
+    // TODO: Should redesign how to stop a recognition session
+    //       After abort is called, we should not saw it is a "success", "silent", or "no match"
     const { AudioSource } = this.recognizer || {};
 
-    console.log(`ABORT: ${ AudioSource }`);
-
     AudioSource && AudioSource.TurnOff();
+
+    this._aborted = true;
   }
 
-  handleRecognize(event) {
-    try {
-      const { Name: name } = event;
+  emit(name, event) {
+    const listener = this[`on${ name }`];
 
-      console.log(`handleRecognize: ${ name }`);
-
-      switch (name) {
-      case 'ListeningStartedEvent':
-        this._transitTo(AUDIO_START);
-        break;
-
-      case 'RecognitionEndedEvent':
-        if (event.Status !== CognitiveSpeech.RecognitionCompletionStatus.Success) {
-          this._transitTo(AUDIO_END);
-          this.onerror && this.onerror({ error: CognitiveSpeech.RecognitionCompletionStatus[event.Status], type: 'error' });
-        }
-
-        this._transitTo(END);
-
-        break;
-
-      case 'RecognitionStartedEvent':
-        this._transitTo(SPEECH_START);
-        break;
-
-      case 'RecognitionTriggeredEvent':
-        this._transitTo(START);
-        break;
-
-      case 'SpeechEndDetectedEvent':
-        this._transitTo(SPEECH_END);
-        break;
-
-      case 'SpeechStartDetectedEvent':
-        this._transitTo(SPEECH_START);
-        break;
-
-      case 'SpeechHypothesisEvent':
-        this._handleHypothesis(event);
-        break;
-
-      case 'SpeechDetailedPhraseEvent':
-        this._handleDetailedPhrase(event);
-        break;
-
-      case 'ConnectingToServiceEvent':
-      case 'SpeechSimplePhraseEvent':
-        break;
-
-      default:
-        console.warn(`Unexpected event \"${ name }\" from Cognitive Services, please file a bug to https://github.com/compulim/web-speech-cognitive-services`);
-        break;
-      }
-    } catch (err) {
-      // Cognitive Services will hide all exceptions thrown in the event listener
-      // We need to show it otherwise when exception happen, we will not know what's going on
-      console.error(err);
-      throw err;
-    }
-  }
-
-  start() {
-    this.recognizer = this.createRecognizer(
-      window.localStorage.getItem('SPEECH_KEY'),
-      this.lang
-    );
-
-    this.recognizer.Recognize(this.handleRecognize.bind(this));
-    this._transitTo(START);
+    listener && listener.call(this, { ...event, type: name });
   }
 
   stop() {
     throw new Error('not supported');
   }
+
+  async start() {
+    const recognizer = this.recognizer = this.createRecognizer(
+      window.localStorage.getItem('SPEECH_KEY'),
+      this.lang
+    );
+
+    const { eventListener, ...promises } = toPromise();
+
+    recognizer.Recognize(eventListener);
+    this._aborted = false;
+
+    await promises.recognitionTriggered;
+
+    let error;
+
+    const listeningStarted = await Promise.race([
+      promises.listeningStarted,
+      promises.recognitionEnded
+    ]);
+
+    if (listeningStarted.Name === 'RecognitionEndedEvent') {
+      // Possibly not authorized to use microphone
+      if (listeningStarted.Status === CognitiveSpeech.RecognitionCompletionStatus.AudioSourceError) {
+        error = 'not-allowed';
+      } else {
+        error = CognitiveSpeech.RecognitionCompletionStatus[listeningStarted.Status];
+      }
+    } else {
+      this.emit('start');
+      this.emit('audiostart');
+
+      await promises.connectingToService;
+
+      const recognitionStarted = await Promise.race([
+        promises.recognitionStarted,
+        promises.recognitionEnded
+      ]);
+
+      if (recognitionStarted.Name === 'RecognitionEndedEvent') {
+        // Possibly network error
+        if (recognitionStarted.Status === CognitiveSpeech.RecognitionCompletionStatus.ConnectError) {
+          error = 'network';
+        } else {
+          error = CognitiveSpeech.RecognitionCompletionStatus[recognitionStarted.Status];
+        }
+      } else {
+        let gotFirstHypothesis;
+
+        for (;;) {
+          const speechHypothesis = await Promise.race([
+            promises.getSpeechHypothesisPromise(),
+            promises.speechEndDetected
+          ]);
+
+          if (speechHypothesis.Name === 'SpeechEndDetectedEvent') {
+            break;
+          }
+
+          if (!gotFirstHypothesis) {
+            gotFirstHypothesis = true;
+            this.emit('soundstart');
+            this.emit('speechstart');
+          }
+
+          this.emit('result', buildSpeechResult(speechHypothesis.Result.Text, .5, false));
+        }
+
+        if (gotFirstHypothesis) {
+          this.emit('speechend');
+          this.emit('soundend');
+        }
+      }
+
+      this.emit('audioend');
+
+      if (this._aborted) {
+        error = 'aborted';
+
+        await promises.recognitionEnded;
+      } else {
+        const speechDetailedPhrase = await Promise.race([
+          promises.speechDetailedPhrase,
+          promises.recognitionEnded
+        ]);
+
+        if (speechDetailedPhrase.Name !== 'RecognitionEndedEvent') {
+          const recognitionResult = CognitiveSpeech.RecognitionStatus[speechDetailedPhrase.Result.RecognitionStatus];
+
+          if (recognitionResult === CognitiveSpeech.RecognitionStatus.Success) {
+            this.emit('result', buildSpeechResult(speechDetailedPhrase.Result.NBest[0].Display, speechDetailedPhrase.Result.NBest[0].Confidence, true));
+          } else if (recognitionResult !== CognitiveSpeech.RecognitionStatus.NoMatch) {
+            // Possibly silent or muted
+            if (recognitionResult === CognitiveSpeech.RecognitionStatus.InitialSilenceTimeout) {
+              error = 'no-speech';
+            } else {
+              error = speechDetailedPhrase.Result.RecognitionStatus;
+            }
+          }
+
+          await promises.recognitionEnded;
+        }
+      }
+    }
+
+    error && this.emit('error', { error });
+    this.emit('end');
+  }
+}
+
+function toPromise() {
+  const events = {
+    ConnectingToServiceEvent: new EventAsPromise(),
+    ListeningStartedEvent: new EventAsPromise(),
+    RecognitionEndedEvent: new EventAsPromise(),
+    RecognitionStartedEvent: new EventAsPromise(),
+    RecognitionTriggeredEvent: new EventAsPromise(),
+    SpeechDetailedPhraseEvent: new EventAsPromise(),
+    SpeechEndDetectedEvent: new EventAsPromise(),
+    SpeechHypothesisEvent: new EventAsPromise(),
+    SpeechSimplePhraseEvent: new EventAsPromise(),
+    SpeechStartDetectedEvent: new EventAsPromise()
+  };
+
+  return {
+    connectingToService: events.ConnectingToServiceEvent.upcoming(),
+    listeningStarted: events.ListeningStartedEvent.upcoming(),
+    recognitionEnded: events.RecognitionEndedEvent.upcoming(),
+    recognitionStarted: events.RecognitionStartedEvent.upcoming(),
+    recognitionTriggered: events.RecognitionTriggeredEvent.upcoming(),
+    speechDetailedPhrase: events.SpeechDetailedPhraseEvent.upcoming(),
+    speechEndDetected: events.SpeechEndDetectedEvent.upcoming(),
+    getSpeechHypothesisPromise: () => events.SpeechHypothesisEvent.upcoming(),
+    speechSimplePhrase: events.SpeechSimplePhraseEvent.upcoming(),
+    speechStartDetected: events.SpeechStartDetectedEvent.upcoming(),
+    eventListener: event => {
+      const { Name: name } = event;
+      const eventAsPromise = events[name];
+
+      // console.log(`handling ${ name }`);
+
+      if (eventAsPromise) {
+        eventAsPromise.eventListener.call(null, event);
+      } else {
+        console.warn(`Unexpected event \"${ name }\" from Cognitive Services, please file a bug to https://github.com/compulim/web-speech-cognitive-services`);
+      }
+    }
+  };
 }
 
 export default CognitiveServicesSpeechRecognition

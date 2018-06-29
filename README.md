@@ -51,42 +51,94 @@ Overall in point form:
 ### Scenarios
 
 * Happy path
-   1. `RecognitionTriggeredEvent`
-   2. `ListeningStartedEvent`
-   3. `ConnectingToServiceEvent`
-   4. `RecognitionStartedEvent`
-   5. `SpeechHypothesisEvent` (could be more than one)
-   6. `SpeechEndDetectedEvent`
-   7. `SpeechSimplePhraseEvent`
-   8. `RecognitionEndedEvent`
+   * Cognitive Services
+      1. `RecognitionTriggeredEvent`
+      2. `ListeningStartedEvent`
+      3. `ConnectingToServiceEvent`
+      4. `RecognitionStartedEvent`
+      5. `SpeechHypothesisEvent` (could be more than one)
+      6. `SpeechEndDetectedEvent`
+      7. `SpeechDetailedPhraseEvent`
+      8. `RecognitionEndedEvent`
+   * Web Speech API
+      1. `start`
+      2. `audiostart`
+      3. `soundstart`
+      4. `speechstart`
+      5. `result` (multiple times)
+      6. `speechend`
+      7. `soundend`
+      8. `audioend`
+      9. `result(results = [{ isFinal = true }])`
+      10. `end`
+* Abort is called during recognition
+   * Cognitive Services
+      * Essentially muted the speech, that could still result in success, silent, or no match
+   * Web Speech API
+      1. `start`
+      2. `audiostart`
+      3. `soundstart` (optional)
+      4. `speechstart` (optional)
+      5. `result` (optional)
+      6. `speechend` (optional)
+      7. `soundend` (optional)
+      8. `audioend`
+      9. `error(error = 'aborted')`
+      10. `end`
 * Network issues
-   1. `RecognitionTriggeredEvent`
-   2. `ListeningStartedEvent`
-   3. `ConnectingToServiceEvent`
-   4. `SpeechSimplePhraseEvent`
-   5. `RecognitionEndedEvent`
+   * Cognitive Services
+      1. `RecognitionTriggeredEvent`
+      2. `ListeningStartedEvent`
+      3. `ConnectingToServiceEvent`
+      5. `RecognitionEndedEvent(Result.RecognitionStatus = 'ConnectError')`
+   * Web Speech API
+      1. `start`
+      2. `audiostart`
+      3. `audioend`
+      4. `error(error = 'network')`
+      5. `end`
 * Audio muted or volume too low
-   1. `RecognitionTriggeredEvent`
-   2. `ListeningStartedEvent`
-   3. `ConnectingToServiceEvent`
-   4. `RecognitionStartedEvent`
-   5. `SpeechEndDetectedEvent`
-   6. `SpeechSimplePhraseEvent(Result.RecognitionStatus = 'InitialSilenceTimeout')`
-   7. `RecognitionEndedEvent`
+   * Cognitive Services
+      1. `RecognitionTriggeredEvent`
+      2. `ListeningStartedEvent`
+      3. `ConnectingToServiceEvent`
+      4. `RecognitionStartedEvent`
+      5. `SpeechEndDetectedEvent`
+      6. `SpeechDetailedPhraseEvent(Result.RecognitionStatus = 'InitialSilenceTimeout')`
+      7. `RecognitionEndedEvent`
+   * Web Speech API
+      1. `start`
+      2. `audiostart`
+      3. `audioend`
+      4. `error(error = 'no-speech')`
+      5. `end`
 * Failed to recognize speech (a.k.a. no match)
-   1. `RecognitionTriggeredEvent`
-   2. `ListeningStartedEvent`
-   3. `ConnectingToServiceEvent`
-   4. `RecognitionStartedEvent`
-   5. `SpeechHypothesisEvent` (could be more than one)
-   6. `SpeechEndDetectedEvent`
-   7. `SpeechSimplePhraseEvent(Result.RecognitionStatus = 'NoMatch')`
-   8. `RecognitionEndedEvent`
-* User abort
-   * Essentially muted the speech, that could result in success, silent, or no match
+   * Cognitive Services
+      1. `RecognitionTriggeredEvent`
+      2. `ListeningStartedEvent`
+      3. `ConnectingToServiceEvent`
+      4. `RecognitionStartedEvent`
+      5. `SpeechHypothesisEvent` (could be more than one)
+      6. `SpeechEndDetectedEvent`
+      7. `SpeechDetailedPhraseEvent(Result.RecognitionStatus = 'NoMatch')`
+      8. `RecognitionEndedEvent`
+   * Web Speech API
+      1. `start`
+      2. `audiostart`
+      3. `soundstart`
+      4. `speechstart`
+      5. `result`
+      6. `speechend`
+      7. `soundend`
+      8. `audioend`
+      9. `end`
 * Not authorized to use microphone
-   1. `RecognitionTriggeredEvent`
-   2. `RecognitionEndedEvent(Result.RecognitionStatus = 'AudioSourceError')`
+   * Cognitive Services
+      1. `RecognitionTriggeredEvent`
+      2. `RecognitionEndedEvent(Result.RecognitionStatus = 'AudioSourceError')`
+   * Web Speech API
+      1. `error(error = 'not-allowed')`
+      2. `end`
 
 # Contributions
 

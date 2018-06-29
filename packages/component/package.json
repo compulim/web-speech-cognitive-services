@@ -19,6 +19,7 @@
     "rimraf": "^2.6.2"
   },
   "dependencies": {
+    "event-as-promise": "^1.0.2",
     "memoize-one": "^3.1.1"
   }
 }
