@@ -37,7 +37,6 @@ export default class App extends React.Component {
 
     this.createExtra = memoize(subscriptionKey => ({ subscriptionKey }));
 
-    this.handleClick = this.handleClick.bind(this);
     this.handleDictate = this.handleDictate.bind(this);
     this.handleError = this.handleError.bind(this);
     this.handleProgress = this.handleProgress.bind(this);
@@ -46,15 +45,6 @@ export default class App extends React.Component {
     this.state = {
       rawEvents: []
     };
-  }
-
-  handleClick() {
-    this.setState(() => ({
-      error: null,
-      final: null,
-      interim: null,
-      rawEvents: []
-    }));
   }
 
   handleDictate({ result }) {
@@ -84,7 +74,7 @@ export default class App extends React.Component {
 
     this.setState(({ rawEvents }) => ({
       rawEvents: [
-        ...rawEvents,
+        ...(type === 'start' ? [] : rawEvents),
         type === 'error' ?
           `error "${ error }"`
         : type === 'result' ?
@@ -109,7 +99,6 @@ export default class App extends React.Component {
         <section>
           <DictateButton
             extra={ extra }
-            onClick={ this.handleClick }
             onDictate={ this.handleDictate }
             onError={ this.handleError }
             onProgress={ this.handleProgress }
@@ -147,7 +136,7 @@ export default class App extends React.Component {
             : false
           }
           <header>
-            <h2>Events</h2>
+            <h2>Recent events</h2>
           </header>
           <ul>
             { state.rawEvents.map((event, index) => <li key={ index }><pre>{ event }</pre></li>) }
