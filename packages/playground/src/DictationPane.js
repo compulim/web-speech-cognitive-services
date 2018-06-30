@@ -18,6 +18,12 @@ const ROOT_CSS = css({
 
   '& h2': {
     fontSize: '125%'
+  },
+
+  '& ul': {
+    listStyleType: 'none',
+    margin: 0,
+    padding: 0
   }
 });
 
@@ -31,12 +37,24 @@ export default class App extends React.Component {
 
     this.createExtra = memoize(subscriptionKey => ({ subscriptionKey }));
 
+    this.handleClick = this.handleClick.bind(this);
     this.handleDictate = this.handleDictate.bind(this);
     this.handleError = this.handleError.bind(this);
     this.handleProgress = this.handleProgress.bind(this);
     this.handleRawEvent = this.handleRawEvent.bind(this);
 
-    this.state = {};
+    this.state = {
+      rawEvents: []
+    };
+  }
+
+  handleClick() {
+    this.setState(() => ({
+      error: null,
+      final: null,
+      interim: null,
+      rawEvents: []
+    }));
   }
 
   handleDictate({ result }) {
@@ -62,15 +80,19 @@ export default class App extends React.Component {
   }
 
   handleRawEvent(event) {
-    if (event.type === 'error') {
-      console.log(`Got "${ event.type }" of "${ event.error }"`);
-    } else {
-      console.log(`Got "${ event.type }"`);
+    const { error, results, type } = event;
 
-      if (event.type === 'onresult') {
-        console.log(event.results);
-      }
-    }
+    this.setState(({ rawEvents }) => ({
+      rawEvents: [
+        ...rawEvents,
+        type === 'error' ?
+          `error "${ error }"`
+        : type === 'result' ?
+          (results[0].isFinal ? '(final) ' : '(interim) ') +
+          `result "${ [].map.call(results[0], ({ transcript }) => transcript.trim()).join(' ') }"`
+        : type
+      ]
+    }));
   }
 
   render() {
@@ -87,6 +109,7 @@ export default class App extends React.Component {
         <section>
           <DictateButton
             extra={ extra }
+            onClick={ this.handleClick }
             onDictate={ this.handleDictate }
             onError={ this.handleError }
             onProgress={ this.handleProgress }
@@ -123,6 +146,12 @@ export default class App extends React.Component {
               </p>
             : false
           }
+          <header>
+            <h2>Events</h2>
+          </header>
+          <ul>
+            { state.rawEvents.map((event, index) => <li key={ index }><pre>{ event }</pre></li>) }
+          </ul>
         </section>
       </article>
     );
