@@ -1,8 +1,8 @@
 import { css } from 'glamor';
 import classNames from 'classnames';
-import React from 'react';
 import DictateButton from 'react-dictate-button';
 import memoize from 'memoize-one';
+import React from 'react';
 
 function fontFamily(...fonts) {
   return fonts.map(font => `'${ font }'`).join(', ');
