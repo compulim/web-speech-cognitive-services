@@ -255,6 +255,8 @@ The user click "deny" on the permission dialog, or there are no microphone detec
 * [ ] Add grammar list
 * [ ] Add tests for lifecycle events
 * [ ] Investigate continuous mode
+* [ ] Enable Opus (OGG) encoding
+   * Currently, there is a problem with `microsoft-speech-browser-sdk@0.0.12`, tracking on [this issue](https://github.com/Azure-Samples/SpeechToText-WebSockets-Javascript/issues/88)
 
 # Contributions
 

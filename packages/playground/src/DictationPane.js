@@ -11,16 +11,18 @@ function fontFamily(...fonts) {
 const ROOT_CSS = css({
   fontFamily: fontFamily('Calibri', 'Helvetica Neue', 'Arial', 'sans-serif'),
 
-  '& h1, & h2': {
-    fontFamily: fontFamily('Calibri Light', 'Helvetica Neue', 'Arial', 'sans-serif'),
-    fontWeight: 200
+  '& > header': {
+    '& > h1, & > h2': {
+      fontFamily: fontFamily('Calibri Light', 'Helvetica Neue', 'Arial', 'sans-serif'),
+      fontWeight: 200
+    },
+
+    '& > h2': {
+      fontSize: '125%'
+    }
   },
 
-  '& h2': {
-    fontSize: '125%'
-  },
-
-  '& ul': {
+  '& > section > ul': {
     listStyleType: 'none',
     margin: 0,
     padding: 0
@@ -108,36 +110,40 @@ export default class App extends React.Component {
           >
             { ({ readyState }) => readyState < 2 ? 'Start dictation' : 'Stop dictation' }
           </DictateButton>
-          <header>
-            <h2>Dictation result</h2>
-          </header>
-          {
-            state.error ?
-              <pre className={ ERROR_CSS + '' }>
-                Error: { state.error }
-              </pre>
-            : state.final ?
-              <p>
-                { state.final.transcript }
-              </p>
-            : state.interim ?
-              <p>
-                {
-                  state.interim.map((interim, index) =>
-                    <span
-                      key={ index }
-                      style={{ opacity: Math.ceil(interim.confidence * 2) / 2 }}
-                    >
-                      { interim.transcript }
-                    </span>
-                  )
-                }
-              </p>
-            : false
-          }
-          <header>
-            <h2>Recent events</h2>
-          </header>
+        </section>
+        <header>
+          <h2>Dictation result</h2>
+        </header>
+        <section>
+        {
+          state.error ?
+            <pre className={ ERROR_CSS + '' }>
+              Error: { state.error }
+            </pre>
+          : state.final ?
+            <p>
+              { state.final.transcript }
+            </p>
+          : state.interim ?
+            <p>
+              {
+                state.interim.map((interim, index) =>
+                  <span
+                    key={ index }
+                    style={{ opacity: Math.ceil(interim.confidence * 2) / 2 }}
+                  >
+                    { interim.transcript }
+                  </span>
+                )
+              }
+            </p>
+          : false
+        }
+        </section>
+        <header>
+          <h2>Recent events</h2>
+        </header>
+        <section>
           <ul>
             { state.rawEvents.map((event, index) => <li key={ index }><pre>{ event }</pre></li>) }
           </ul>
