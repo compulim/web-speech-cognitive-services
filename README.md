@@ -2,7 +2,7 @@
 
 [![npm version](https://badge.fury.io/js/web-speech-cognitive-services.svg)](https://badge.fury.io/js/web-speech-cognitive-services) [![Build Status](https://travis-ci.org/compulim/web-speech-cognitive-services.svg?branch=master)](https://travis-ci.org/compulim/web-speech-cognitive-services)
 
-Polyfill Web Speech API with Cognitive Services Speech-to-Text service.
+Polyfill Web Speech API with Cognitive Services Speech-to-Text and Speech-to-Text service.
 
 This scaffold is provided by [`react-component-template`](https://github.com/compulim/react-component-template/).
 

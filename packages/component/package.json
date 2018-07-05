@@ -4,7 +4,7 @@
   "description": "",
   "main": "lib/index.js",
   "scripts": {
-    "build": "babel --out-dir lib --ignore **/*.spec.js,**/*.test.js --source-maps inline src/",
+    "build": "babel --out-dir lib --ignore **/*.spec.js,**/*.test.js --source-maps true src/",
     "clean": "rimraf lib",
     "test": "jest"
   },
@@ -22,6 +22,7 @@
   },
   "dependencies": {
     "event-as-promise": "^1.0.3",
-    "memoize-one": "^4.0.0"
+    "memoize-one": "^4.0.0",
+    "react-say": "0.0.1-master.ca079e3"
   }
 }

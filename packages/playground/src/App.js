@@ -3,6 +3,7 @@ import React from 'react';
 
 import CognitiveServicesSpeechRecognition, { CognitiveServicesSpeechGrammarList } from 'component';
 import DictationPane from './DictationPane';
+import SayPane from './SayPane';
 
 const ROOT_CSS = css({
   display: 'flex'
@@ -24,4 +25,5 @@ export default () =>
       className={ DICTATION_PANE_CSS + '' }
       name="Web Speech API"
     />
+    <SayPane />
   </div>
