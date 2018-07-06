@@ -1,13 +1,13 @@
+import EventAsPromise from 'event-as-promise';
 import fetchSpeechData from './fetchSpeechData';
+import subscribeEvent from './subscribeEvent';
 
 function asyncDecodeAudioData(audioContext, arrayBuffer) {
   return new Promise((resolve, reject) => {
     const promise = audioContext.decodeAudioData(arrayBuffer, resolve, reject);
 
     // Newer implementation of "decodeAudioData" will return a Promise
-    if (typeof promise.then === 'function') {
-      resolve(promise);
-    }
+    typeof promise.then === 'function' && resolve(promise);
   });
 }
 
@@ -49,6 +49,7 @@ export default class CognitiveServicesSpeechSynthesisUtterance {
   async preload() {
     this.arrayBufferPromise = fetchSpeechData({
       lang: window.navigator.language,
+      outputFormat: this.outputFormat,
       speechToken: this.speechToken,
       text: this.text,
       voice: this.voice && this.voice.voiceURI
@@ -58,15 +59,25 @@ export default class CognitiveServicesSpeechSynthesisUtterance {
   }
 
   async play(audioContext) {
+    const audioContextClosed = new EventAsPromise();
+    const unsubscribe = subscribeEvent(audioContext, 'statechange', ({ target: { state } }) => state === 'closed' && audioContextClosed.eventListener());
+
     try {
       const audioBuffer = await asyncDecodeAudioData(audioContext, await this.arrayBufferPromise);
 
       this.onstart && this.onstart({ type: 'start' });
-      await playDecoded(audioContext, audioBuffer);
+
+      await Promise.race([
+        playDecoded(audioContext, audioBuffer),
+        audioContextClosed.upcoming()
+      ]);
+
       this.onend && this.onend({ type: 'end' });
     } catch (error) {
       this.onerror && this.onerror({ error, type: 'error' });
       throw error;
+    } finally {
+      unsubscribe();
     }
   }
 }
