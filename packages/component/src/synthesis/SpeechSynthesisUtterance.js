@@ -12,23 +12,32 @@ function asyncDecodeAudioData(audioContext, arrayBuffer) {
 }
 
 function playDecoded(audioContext, audioBuffer) {
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
+    const audioContextClosed = new EventAsPromise();
+    const unsubscribe = subscribeEvent(audioContext, 'statechange', ({ target: { state } }) => state === 'closed' && audioContextClosed.eventListener());
+
     try {
       const source = audioContext.createBufferSource();
 
       source.buffer = audioBuffer;
+      // "ended" may not fire if the underlying AudioContext is closed prematurely
+      source.onended = resolve;
+
       source.connect(audioContext.destination);
       source.start(0);
 
-      // "ended" may not fire if the underlying AudioContext is closed prematurely
-      source.onended = resolve;
+      await audioContextClosed.upcoming();
+
+      resolve();
     } catch (err) {
       reject(err);
+    } finally {
+      unsubscribe();
     }
   });
 }
 
-export default class CognitiveServicesSpeechSynthesisUtterance {
+export default class {
   constructor(text) {
     this.lang = null;
     this.pitch = 1;
@@ -59,25 +68,17 @@ export default class CognitiveServicesSpeechSynthesisUtterance {
   }
 
   async play(audioContext) {
-    const audioContextClosed = new EventAsPromise();
-    const unsubscribe = subscribeEvent(audioContext, 'statechange', ({ target: { state } }) => state === 'closed' && audioContextClosed.eventListener());
-
     try {
       const audioBuffer = await asyncDecodeAudioData(audioContext, await this.arrayBufferPromise);
 
       this.onstart && this.onstart({ type: 'start' });
 
-      await Promise.race([
-        playDecoded(audioContext, audioBuffer),
-        audioContextClosed.upcoming()
-      ]);
+      await playDecoded(audioContext, audioBuffer);
 
       this.onend && this.onend({ type: 'end' });
     } catch (error) {
       this.onerror && this.onerror({ error, type: 'error' });
       throw error;
-    } finally {
-      unsubscribe();
     }
   }
 }

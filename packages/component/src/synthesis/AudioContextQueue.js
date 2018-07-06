@@ -1,6 +1,6 @@
 import AudioContextConsumer from './AudioContextConsumer';
 
-export default class AudioContextQueue {
+export default class {
   constructor(audioContextClass = window.AudioContext || window.webkitAudioContext) {
     this.audioContextClass = audioContextClass;
     this.consumer = null;
@@ -22,6 +22,6 @@ export default class AudioContextQueue {
 
   stop() {
     this.queue.splice(0);
-    this.consumer.stop();
+    this.consumer && this.consumer.stop();
   }
 }

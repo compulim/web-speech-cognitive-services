@@ -1,4 +1,4 @@
-export default class AudioContextConsumer {
+export default class {
   async start(queue, audioContextClass = window.AudioContext || window.webkitAudioContext) {
     if (this.audioContext) {
       throw new Error('already started');

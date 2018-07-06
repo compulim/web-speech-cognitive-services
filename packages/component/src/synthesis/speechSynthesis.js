@@ -1,5 +1,5 @@
 import AudioContextQueue from './AudioContextQueue';
-import fetchSpeechToken from './fetchSpeechToken';
+import exchangeToken from './exchangeToken';
 import fetchVoices from './fetchVoices';
 
 // Supported output format can be found at https://docs.microsoft.com/en-us/azure/cognitive-services/Speech/API-Reference-REST/BingVoiceOutput#Subscription
@@ -10,7 +10,7 @@ const DEFAULT_OUTPUT_FORMAT = 'audio-16khz-128kbitrate-mono-mp3';
 const TOKEN_EXPIRATION = 600000;
 const TOKEN_EARLY_RENEWAL = 60000;
 
-class CognitiveServicesSpeechSynthesis {
+class SpeechSynthesis {
   constructor() {
     this.onvoiceschanged = null;
     this.outputFormat = DEFAULT_OUTPUT_FORMAT;
@@ -28,7 +28,7 @@ class CognitiveServicesSpeechSynthesis {
 
   async fetchToken() {
     if (!this.tokenPromise) {
-      this.tokenPromise = fetchSpeechToken(this.subscriptionKey).then(token => {
+      this.tokenPromise = exchangeToken(this.subscriptionKey).then(token => {
         setTimeout(() => {
           this.tokenPromise = null;
         }, TOKEN_EXPIRATION - TOKEN_EARLY_RENEWAL);
@@ -37,7 +37,7 @@ class CognitiveServicesSpeechSynthesis {
       }, err => {
         this.tokenPromise = null;
 
-        return Promise.rejects(err);
+        return Promise.reject(err);
       });
     }
 
@@ -53,4 +53,4 @@ class CognitiveServicesSpeechSynthesis {
   }
 }
 
-export default new CognitiveServicesSpeechSynthesis()
+export default new SpeechSynthesis()
