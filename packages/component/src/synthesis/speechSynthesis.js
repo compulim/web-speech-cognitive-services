@@ -1,8 +1,6 @@
-import memoize from 'memoize-one';
-
 import AudioContextQueue from './AudioContextQueue';
-import fetchSpeechToken from './synthesis/fetchSpeechToken';
-import fetchVoices from './synthesis/fetchVoices';
+import fetchSpeechToken from './fetchSpeechToken';
+import fetchVoices from './fetchVoices';
 
 // Token expiration is hardcoded at 10 minutes
 // https://docs.microsoft.com/en-us/azure/cognitive-services/Speech/how-to/how-to-authentication?tabs=Powershell#use-an-authorization-token

@@ -1,5 +1,4 @@
-import fetchSpeechData from './synthesis/fetchSpeechData';
-import playArrayBuffer from './synthesis/playArrayBuffer';
+import fetchSpeechData from './fetchSpeechData';
 
 function asyncDecodeAudioData(audioContext, arrayBuffer) {
   return new Promise((resolve, reject) => {

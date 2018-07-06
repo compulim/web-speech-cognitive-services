@@ -13,7 +13,7 @@ export default class AudioContextConsumer {
       while ((utterance = queue.shift())) {
         if (!this.audioContext) {
           this.audioContext = new audioContextClass();
-          this.audioContext.onstatechange = { target: { state } } => {
+          this.audioContext.onstatechange = ({ target: { state } }) => {
             state === 'closed' && closed.eventListener();
           };
         }

@@ -1,7 +1,7 @@
 import { css } from 'glamor';
 import React from 'react';
 
-import CognitiveServicesSpeechRecognition, { CognitiveServicesSpeechGrammarList } from 'component';
+import SpeechRecognition, { SpeechGrammarList } from 'component';
 import DictationPane from './DictationPane';
 import SayPane from './SayPane';
 
@@ -18,8 +18,8 @@ export default () =>
     <DictationPane
       className={ DICTATION_PANE_CSS + '' }
       name="Cognitive Services"
-      speechGrammarList={ CognitiveServicesSpeechGrammarList }
-      speechRecognition={ CognitiveServicesSpeechRecognition }
+      speechGrammarList={ SpeechGrammarList }
+      speechRecognition={ SpeechRecognition }
     />
     <DictationPane
       className={ DICTATION_PANE_CSS + '' }

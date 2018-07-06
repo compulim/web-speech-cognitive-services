@@ -1,6 +1,6 @@
 import React from 'react';
 import { Composer, Say } from 'react-say';
-import { CognitiveServicesSpeechSynthesis, CognitiveServicesSpeechSynthesisUtterance } from 'component';
+import { speechSynthesis, SpeechSynthesisUtterance } from 'component';
 
 export default class SayPane extends React.Component {
   constructor(props) {
@@ -19,7 +19,7 @@ export default class SayPane extends React.Component {
   }
 
   handleStopClick() {
-    CognitiveServicesSpeechSynthesis.cancel();
+    speechSynthesis.cancel();
     this.setState(() => ({ started: false }));
   }
 
@@ -33,8 +33,8 @@ export default class SayPane extends React.Component {
         {
           state.started &&
             <Composer
-              speechSynthesis={ CognitiveServicesSpeechSynthesis }
-              speechSynthesisUtterance={ CognitiveServicesSpeechSynthesisUtterance }
+              speechSynthesis={ speechSynthesis }
+              speechSynthesisUtterance={ SpeechSynthesisUtterance }
             >
               <Say text="Pooh is very social." />
               <Say text="After Christopher Robin, his closest friend is Piglet." />

@@ -1,15 +1,15 @@
 import 'babel-polyfill';
 
-import CognitiveServicesSpeechGrammarList from './CognitiveServicesSpeechGrammarList';
-import CognitiveServicesSpeechRecognition from './CognitiveServicesSpeechRecognition';
-import CognitiveServicesSpeechSynthesis from './CognitiveServicesSpeechSynthesis';
-import CognitiveServicesSpeechSynthesisUtterance from './CognitiveServicesSpeechSynthesisUtterance';
+import SpeechGrammarList from './recognition/SpeechGrammarList';
+import SpeechRecognition from './recognition/SpeechRecognition';
+import speechSynthesis from './synthesis/speechSynthesis';
+import SpeechSynthesisUtterance from './synthesis/SpeechSynthesisUtterance';
 
-export default CognitiveServicesSpeechRecognition
+export default SpeechRecognition
 
 export {
-  CognitiveServicesSpeechGrammarList,
-  CognitiveServicesSpeechRecognition,
-  CognitiveServicesSpeechSynthesis,
-  CognitiveServicesSpeechSynthesisUtterance
+  SpeechGrammarList,
+  SpeechRecognition,
+  speechSynthesis,
+  SpeechSynthesisUtterance
 }
