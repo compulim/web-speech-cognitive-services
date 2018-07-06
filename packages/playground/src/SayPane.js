@@ -36,7 +36,7 @@ export default class SayPane extends React.Component {
               speechSynthesis={ speechSynthesis }
               speechSynthesisUtterance={ SpeechSynthesisUtterance }
             >
-              <Say text="Pooh is very social." />
+              <Say text="Pooh is very social." volume={ 0.1 } />
               <Say text="After Christopher Robin, his closest friend is Piglet." />
               <Say text="And he must often chooses to spend his time with one or both of them." />
             </Composer>

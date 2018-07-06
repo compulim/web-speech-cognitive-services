@@ -11,19 +11,24 @@ function asyncDecodeAudioData(audioContext, arrayBuffer) {
   });
 }
 
-function playDecoded(audioContext, audioBuffer) {
+function playDecoded(audioContext, audioBuffer, volume) {
   return new Promise(async (resolve, reject) => {
     const audioContextClosed = new EventAsPromise();
     const unsubscribe = subscribeEvent(audioContext, 'statechange', ({ target: { state } }) => state === 'closed' && audioContextClosed.eventListener());
 
     try {
       const source = audioContext.createBufferSource();
+      const gainNode = audioContext.createGain();
 
       source.buffer = audioBuffer;
       // "ended" may not fire if the underlying AudioContext is closed prematurely
       source.onended = resolve;
 
-      source.connect(audioContext.destination);
+      gainNode.gain.setValueAtTime(volume, 0);
+
+      source.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+
       source.start(0);
 
       await audioContextClosed.upcoming();
@@ -39,12 +44,13 @@ function playDecoded(audioContext, audioBuffer) {
 
 export default class {
   constructor(text) {
-    this.lang = null;
-    this.pitch = 1;
-    this.rate = 1;
+    this._lang = null;
+    this._pitch = 1;
+    this._rate = 1;
+    this._voice = null;
+    this._volume = 1;
+
     this.text = text;
-    this.voice = null;
-    this.volume = 1;
 
     this.onboundary = null;
     this.onend = null;
@@ -55,9 +61,24 @@ export default class {
     this.onstart = null;
   }
 
+  get lang() { return this._lang; }
+  set lang(value) { this._lang = value; }
+
+  get pitch() { return this._pitch; }
+  set pitch(value) { this._pitch = value; }
+
+  get rate() { return this._rate; }
+  set rate(value) { this._rate = value; }
+
+  get voice() { return this._voice; }
+  set voice(value) { this._voice = value; }
+
+  get volume() { return this._volume; }
+  set volume(value) { this._volume = value; }
+
   async preload() {
     this.arrayBufferPromise = fetchSpeechData({
-      lang: window.navigator.language,
+      lang: this.lang || window.navigator.language,
       outputFormat: this.outputFormat,
       speechToken: this.speechToken,
       text: this.text,
@@ -73,7 +94,7 @@ export default class {
 
       this.onstart && this.onstart({ type: 'start' });
 
-      await playDecoded(audioContext, audioBuffer);
+      await playDecoded(audioContext, audioBuffer, this.volume);
 
       this.onend && this.onend({ type: 'end' });
     } catch (error) {

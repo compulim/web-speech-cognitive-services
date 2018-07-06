@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - SpeechSynthesis polyfill with Cognitive Services
 
+### Changed
+- Removed `CognitiveServices` prefix
+  - Renamed `CognitiveServicesSpeechGrammarList` to `SpeechGrammarList`
+  - Renamed `CognitiveServicesSpeechRecognition` to `SpeechRecognition`
+
 ## [1.0.0] - 2018-06-29
 ### Added
 - Initial release
