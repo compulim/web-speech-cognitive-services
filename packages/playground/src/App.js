@@ -1,7 +1,7 @@
 import { css } from 'glamor';
 import React from 'react';
 
-import { SpeechGrammarList, SpeechRecognition, speechSynthesis, SpeechSynthesisUtterance } from 'component';
+import { SpeechGrammarList, SpeechRecognition, speechSynthesis, SpeechSynthesisUtterance, SubscriptionKey } from 'component';
 import DictationPane from './DictationPane';
 
 const ROOT_CSS = css({
@@ -22,16 +22,20 @@ export default class extends React.Component {
 
     speechSynthesis.onvoicechanged = this.handleVoiceChanged;
 
+    const keyFromSearch = typeof window.URLSearchParams !== 'undefined' && new URLSearchParams(window.location.search).get('s');
+    const keyFromStorage = typeof window.localStorage !== 'undefined' && window.localStorage.getItem('SPEECH_KEY');
+    const speechToken = new SubscriptionKey(keyFromSearch || keyFromStorage);
+
+    speechSynthesis.speechToken = speechToken;
+
     this.state = {
-      cognitiveServicesVoice: getCognitiveServicesVoice()
+      cognitiveServicesVoice: getCognitiveServicesVoice(),
+      speechToken
     };
   }
 
   async componentDidMount() {
-    const keyFromSearch = typeof window.URLSearchParams !== 'undefined' && new URLSearchParams(window.location.search).get('s');
-    const keyFromStorage = typeof window.localStorage !== 'undefined' && window.localStorage.getItem('SPEECH_KEY');
-
-    await speechSynthesis.authorize(keyFromSearch || keyFromStorage);
+    await this.state.speechToken.authorized;
 
     this.setState(() => ({ ready: true }));
   }
@@ -55,6 +59,7 @@ export default class extends React.Component {
           speechRecognition={ SpeechRecognition }
           speechSynthesis={ speechSynthesis }
           speechSynthesisUtterance={ SpeechSynthesisUtterance }
+          speechToken={ state.speechToken }
           voice={ state.cognitiveServicesVoice }
         />
         <DictationPane

@@ -59,18 +59,15 @@ class CognitiveServicesSpeechRecognition {
         CognitiveSpeech.SpeechResultFormat.Detailed
       );
 
-      let auth;
+      const fetchToken = () => {
+        const sink = new CognitiveSpeech.Sink();
 
-      if (typeof subscriptionKeyOrTokenFetch === 'function') {
-        auth = new CognitiveSpeech.CognitiveTokenAuthentication(
-          async authFetchEventID => await subscriptionKeyOrTokenFetch(authFetchEventID, false),
-          async authFetchEventID => await subscriptionKeyOrTokenFetch(authFetchEventID, true)
-        );
-      } else {
-        auth = new CognitiveSpeech.CognitiveSubscriptionKeyAuthentication(subscriptionKeyOrTokenFetch);
-      }
+        this.speechToken.authorized.then(sink.Resolve, sink.Reject);
 
-      return CognitiveSpeech.CreateRecognizer(config, auth);
+        return new CognitiveSpeech.Promise(sink);
+      };
+
+      return CognitiveSpeech.CreateRecognizer(config, new CognitiveSpeech.CognitiveTokenAuthentication(fetchToken, fetchToken));
     });
   }
 

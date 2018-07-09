@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import DictateButton from 'react-dictate-button';
 import memoize from 'memoize-one';
 import React from 'react';
-import SayPane from './SayPane';
+import SynthesisPane from './SynthesisPane';
 
 function fontFamily(...fonts) {
   return fonts.map(font => `'${ font }'`).join(', ');
@@ -38,7 +38,7 @@ export default class App extends React.Component {
   constructor(props) {
     super(props);
 
-    this.createExtra = memoize(subscriptionKey => ({ subscriptionKey }));
+    this.createExtra = memoize(speechToken => ({ speechToken }));
 
     this.handleDictate = this.handleDictate.bind(this);
     this.handleError = this.handleError.bind(this);
@@ -90,9 +90,7 @@ export default class App extends React.Component {
 
   render() {
     const { props, state } = this;
-    const keyFromSearch = typeof window.URLSearchParams !== 'undefined' && new URLSearchParams(window.location.search).get('s');
-    const keyFromStorage = typeof window.localStorage !== 'undefined' && window.localStorage.getItem('SPEECH_KEY');
-    const extra = this.createExtra(keyFromSearch || keyFromStorage);
+    const extra = this.createExtra(props.speechToken);
 
     return (
       <article className={ classNames(ROOT_CSS + '', (props.className || '') + '') }>
@@ -153,7 +151,7 @@ export default class App extends React.Component {
           <h2>Synthesis</h2>
         </header>
         <section>
-          <SayPane
+          <SynthesisPane
             disabled={ props.disabled }
             speechSynthesis={ props.speechSynthesis }
             speechSynthesisUtterance={ props.speechSynthesisUtterance }
