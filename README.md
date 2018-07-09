@@ -148,6 +148,7 @@ For detailed test matrix, please refer to [`SPEC-RECOGNITION.md`](SPEC-RECOGNITI
 * Speech synthesis
    * [ ] Event: add `pause`/`resume` support
    * [ ] Properties: add `paused`/`pending`/`speaking` support
+* [ ] Unify token fetch mechanism
 
 # Contributions
 
