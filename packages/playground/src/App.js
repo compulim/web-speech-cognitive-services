@@ -20,7 +20,11 @@ export default class extends React.Component {
   constructor(props) {
     super(props);
 
+    const keyFromSearch = typeof window.URLSearchParams !== 'undefined' && new URLSearchParams(window.location.search).get('s');
+    const keyFromStorage = typeof window.localStorage !== 'undefined' && window.localStorage.getItem('SPEECH_KEY');
+
     speechSynthesis.onvoicechanged = this.handleVoiceChanged;
+    speechSynthesis.subscriptionKey = keyFromSearch || keyFromStorage;
 
     this.state = {
       cognitiveServicesVoice: getCognitiveServicesVoice()
