@@ -27,22 +27,13 @@ First, run `npm install web-speech-cognitive-services` for latest production bui
 ## Speech recognition (speech-to-text)
 
 ```jsx
-import SpeechRecognition from 'web-speech-cognitive-services';
+import { SpeechRecognition, SubscriptionKey } from 'web-speech-cognitive-services';
 
 const recognition = new SpeechRecognition();
 
-// There are two ways to provide your credential:
-// 1. Provide a subscription key (good for prototype, not for production)
-// 2. Provide a mechanism to obtain/refresh access token
-
-// If you are using subscription key
-recognition.subscriptionKey = 'your subscription key';
-
-// If you are using access token, refreshToken === true, if we are renewing the token, otherwise, false
-recognition.tokenFetch = async (authFetchEventID, refreshToken) => {
-};
-
 recognition.lang = 'en-US';
+recognition.speechToken = new SubscriptionKey('your subscription key');
+
 recognition.onresult = ({ results }) => {
   console.log(results);
 };
@@ -57,12 +48,14 @@ recognition.start();
 You can use [`react-dictate-button`](https://github.com/compulim/react-dictate-button/) to integrate speech recognition functionality to your React app.
 
 ```jsx
-import { SpeechGrammarList, SpeechRecognition } from 'web-speech-cognitive-services';
+import { SpeechGrammarList, SpeechRecognition, SubscriptionKey } from 'web-speech-cognitive-services';
 import DictateButton from 'react-dictate-button';
+
+const extra = { subscriptionKey: new SubscriptionKey('your subscription key') };
 
 export default props =>
   <DictateButton
-    extra={{ subscriptionKey: 'your subscription key' }}
+    extra={ extra }
     onDictate={ ({ result }) => alert(result.transcript) }
     speechGrammarList={ SpeechGrammarList }
     speechRecognition={ SpeechRecognition }
@@ -76,11 +69,15 @@ You can also look at our [playground page](packages/playground/src/DictationPane
 ## Speech synthesis (text-to-speech)
 
 ```jsx
-import { speechSynthesis, SpeechSynthesisUtterance } from 'web-speech-cognitive-services';
+import { speechSynthesis, SpeechSynthesisUtterance, SubscriptionKey } from 'web-speech-cognitive-services';
 
+const subscriptionKey = new SubscriptionKey('your subscription key');
 const utterance = new SpeechSynthesisUtterance('Hello, World!');
 
-await speechSynthesis.authorize('your subscription key');
+speechSynthesis.speechToken = subscriptionKey;
+
+// Need to wait until token exchange is complete before speak
+await subscriptionKey.authorized;
 await speechSynthesis.speak(utterance);
 ```
 
@@ -93,7 +90,7 @@ await speechSynthesis.speak(utterance);
 You can use [`react-say`](https://github.com/compulim/react-say/) to integrate speech synthesis functionality to your React app.
 
 ```jsx
-import { speechSynthesis, SpeechSynthesisUtterance } from 'web-speech-cognitive-services';
+import { speechSynthesis, SpeechSynthesisUtterance, SubscriptionKey } from 'web-speech-cognitive-services';
 import React from 'react';
 import Say from 'react-say';
 
@@ -101,14 +98,10 @@ export default class extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = { ready: false };
-  }
+    speechSynthesis.speechToken = new SubscriptionKey('your subscription key');
+    speechSynthesis.speechToken.authorized.then(() => this.setState(() => ({ ready: true })));
 
-  componentWillMount() {
-    // Speech synthesis is not ready to use until authorization complete
-    speechSynthesis.authorize('your subscription key').then(() => ({
-      this.setState(() => ({ ready: true }));
-    }));
+    this.state = { ready: false };
   }
 
   render() {
@@ -142,18 +135,21 @@ For detailed test matrix, please refer to [`SPEC-RECOGNITION.md`](SPEC-RECOGNITI
 # Roadmap
 
 * General
-   * [ ] Unify token fetch mechanism
+   * [x] Unified [token exchange mechanism](packages/component/src/util/SubscriptionKey.js)
 * Speech recognition
    * [ ] Add grammar list
    * [ ] Add tests for lifecycle events
    * [ ] Investigate continuous mode
    * [ ] Enable Opus (OGG) encoding
       * Currently, there is a problem with `microsoft-speech-browser-sdk@0.0.12`, tracking on [this issue](https://github.com/Azure-Samples/SpeechToText-WebSockets-Javascript/issues/88)
-   * [ ] Support custom endpoint (for custom speech and newer engine)
+   * [ ] Support custom speech
+   * [ ] Support new [Speech-to-Text](https://azure.microsoft.com/en-us/services/cognitive-services/speech-to-text/) service
+      * Point to [new URIs](https://docs.microsoft.com/en-us/azure/cognitive-services/Speech-Service/rest-apis)
 * Speech synthesis
    * [ ] Event: add `pause`/`resume` support
    * [ ] Properties: add `paused`/`pending`/`speaking` support
-   * [ ] Support voice font
+   * [ ] Support new [Text-to-Speech](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/how-to-text-to-speech) service
+      * Custom voice fonts
 
 # Contributions
 
