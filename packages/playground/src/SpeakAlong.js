@@ -40,7 +40,9 @@ export default class SpeakAlong extends React.Component {
     }));
   }
 
-  handleError() {
+  handleError({ error }) {
+    alert(error);
+
     this.setState(() => ({
       error: true
     }));

@@ -106,7 +106,7 @@ export default props =>
 
 # Test matrix
 
-For detailed test matrix, please refer to [`TESTMATRIX.md`](TESTMATRIX.md).
+For detailed test matrix, please refer to [`SPEC-RECOGNITION.md`](SPEC-RECOGNITION.md) or [`SPEC-SYNTHESIS.md`](SPEC-SYNTHESIS.md).
 
 # Known issues
 

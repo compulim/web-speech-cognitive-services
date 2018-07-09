@@ -1,8 +1,16 @@
 import EventEmitter from 'events';
 
 export default class DOMEventEmitter {
-  constructor() {
+  constructor(events = []) {
     this._events = new EventEmitter();
+
+    events.forEach(name => {
+      this._events.addListener(name, event => {
+        const handler = this[`on${ name }`];
+
+        handler && handler.call(this, event);
+      });
+    });
   }
 
   addEventListener(name, listener) {
@@ -14,9 +22,6 @@ export default class DOMEventEmitter {
   }
 
   emit(name, event = { type: name }) {
-    const legacy = this[`on${ name }`];
-
-    legacy && legacy.call(this, event);
     this._events.emit(name, event);
   }
 }

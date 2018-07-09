@@ -8,7 +8,7 @@ function asyncDecodeAudioData(audioContext, arrayBuffer) {
     const promise = audioContext.decodeAudioData(arrayBuffer, resolve, reject);
 
     // Newer implementation of "decodeAudioData" will return a Promise
-    typeof promise.then === 'function' && resolve(promise);
+    promise && typeof promise.then === 'function' && resolve(promise);
   });
 }
 
@@ -19,7 +19,6 @@ function playDecoded(audioContext, audioBuffer) {
 
     try {
       const source = audioContext.createBufferSource();
-      const gainNode = audioContext.createGain();
 
       source.buffer = audioBuffer;
       // "ended" may not fire if the underlying AudioContext is closed prematurely
@@ -41,7 +40,7 @@ function playDecoded(audioContext, audioBuffer) {
 
 export default class extends DOMEventEmitter {
   constructor(text) {
-    super();
+    super(['boundary', 'end', 'error', 'mark', 'pause', 'resume', 'start']);
 
     this._lang = null;
     this._pitch = 1;
