@@ -92,16 +92,34 @@ You can use [`react-say`](https://github.com/compulim/react-say/) to integrate s
 
 ```jsx
 import { speechSynthesis, SpeechSynthesisUtterance } from 'web-speech-cognitive-services';
+import React from 'react';
 import Say from 'react-say';
 
-speechSynthesis.subscriptionKey = 'your subscription key';
+export default class extends React.Component {
+  constructor(props) {
+    super(props);
 
-export default props =>
-  <Say
-    speechSynthesis={ speechSynthesis }
-    speechSynthesisUtterance={ SpeechSynthesisUtterance }
-    text="Hello, World!"
-  />
+    this.state = { ready: false };
+  }
+
+  componentWillMount() {
+    // Speech synthesis is not ready to use until authorization complete
+    speechSynthesis.authorize('your subscription key').then(() => ({
+      this.setState(() => ({ ready: true }));
+    }));
+  }
+
+  render() {
+    return (
+      this.state.ready &&
+        <Say
+          speechSynthesis={ speechSynthesis }
+          speechSynthesisUtterance={ SpeechSynthesisUtterance }
+          text="Hello, World!"
+        />
+    );
+  }
+}
 ```
 
 # Test matrix
@@ -113,8 +131,8 @@ For detailed test matrix, please refer to [`SPEC-RECOGNITION.md`](SPEC-RECOGNITI
 * Speech recognition
    * Interim results do not return confidence, final result do have confidence
       * We always return `0.5` for interim results
-   * Cognitive Services support grammar list but not in JSGF format, more work to    be done in this area
-      * Although Google Chrome support grammar list, it seems the grammar list is    not used at all
+   * Cognitive Services support grammar list but not in JSGF format, more work to be done in this area
+      * Although Google Chrome support grammar list, it seems the grammar list is not used at all
    * Continuous mode does not work
 * Speech synthesis
    * `onboundary`, `onmark`, `onpause`, and `onresume` are not supported/fired
