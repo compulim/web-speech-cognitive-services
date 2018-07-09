@@ -51,6 +51,14 @@ export default class extends React.Component {
 
     return (
       <div className={ ROOT_CSS }>
+        <a href="https://github.com/compulim/web-speech-cognitive-services">
+          <img
+            alt="Fork me on GitHub"
+            src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png"
+            style={{ position: 'absolute', top: 0, right: 0, border: 0 }}
+            target="_blank"
+          />
+        </a>
         <DictationPane
           className={ DICTATION_PANE_CSS + '' }
           disabled={ !state.ready }
