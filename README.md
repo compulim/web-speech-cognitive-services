@@ -16,7 +16,7 @@ We use [`react-dictate-button`](https://github.com/compulim/react-dictate-button
 
 Web Speech API is not widely adopted on popular browsers and platforms. Polyfilling the API using cloud services is a great way to enable wider adoption. Nonetheless, Web Speech API in Google Chrome is also backed by cloud services.
 
-Microsoft Azure [Cognitive Services Bing Speec](https://azure.microsoft.com/en-us/services/cognitive-services/speech/) service provide speech recognition with great accuracy. But unfortunately, the APIs are not based on Web Speech API.
+Microsoft Azure [Cognitive Services Bing Speech](https://azure.microsoft.com/en-us/services/cognitive-services/speech/) service provide speech recognition with great accuracy. But unfortunately, the APIs are not based on Web Speech API.
 
 This package will polyfill Web Speech API by turning Cognitive Services Bing Speech API into Web Speech API. We test this package with popular combination of platforms and browsers.
 
@@ -141,6 +141,8 @@ For detailed test matrix, please refer to [`SPEC-RECOGNITION.md`](SPEC-RECOGNITI
 
 # Roadmap
 
+* General
+   * [ ] Unify token fetch mechanism
 * Speech recognition
    * [ ] Add grammar list
    * [ ] Add tests for lifecycle events
@@ -152,7 +154,6 @@ For detailed test matrix, please refer to [`SPEC-RECOGNITION.md`](SPEC-RECOGNITI
    * [ ] Event: add `pause`/`resume` support
    * [ ] Properties: add `paused`/`pending`/`speaking` support
    * [ ] Support voice font
-* [ ] Unify token fetch mechanism
 
 # Contributions
 
