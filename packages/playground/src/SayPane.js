@@ -47,8 +47,8 @@ export default class SayPane extends React.Component {
               speechSynthesisUtterance={ props.speechSynthesisUtterance }
             >
               <SpeakAlong text="Pooh is very social." voice={ props.voice } volume={ 0.1 } />
-              <SpeakAlong text="After Christopher Robin, his closest friend is Piglet." voice={ props.voice } />
-              <SpeakAlong text="And he must often chooses to spend his time with one or both of them." voice={ props.voice } />
+              <SpeakAlong pitch={ 1.5 } text="After Christopher Robin, his closest friend is Piglet." voice={ props.voice } />
+              <SpeakAlong rate={ 1.5 } text="And he must often chooses to spend his time with one or both of them." voice={ props.voice } />
             </Composer>
         }
       </div>

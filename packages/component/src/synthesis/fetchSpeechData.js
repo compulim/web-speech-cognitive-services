@@ -7,11 +7,14 @@ const SYNTHESIS_URL = 'https://speech.platform.bing.com/synthesize';
 export default async function fetchSpeechData({
   lang = DEFAULT_LANGUAGE,
   outputFormat,
+  pitch,
+  rate,
   speechToken,
   text,
-  voice = DEFAULT_VOICE
+  voice = DEFAULT_VOICE,
+  volume
 }) {
-  const ssml = buildSSML({ lang, text, voice });
+  const ssml = buildSSML({ lang, pitch, rate, text, voice, volume });
 
   const res = await fetch(SYNTHESIS_URL, {
     headers: {

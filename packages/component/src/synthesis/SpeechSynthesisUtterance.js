@@ -12,7 +12,7 @@ function asyncDecodeAudioData(audioContext, arrayBuffer) {
   });
 }
 
-function playDecoded(audioContext, audioBuffer, volume) {
+function playDecoded(audioContext, audioBuffer) {
   return new Promise(async (resolve, reject) => {
     const audioContextClosed = new EventAsPromise();
     const unsubscribe = subscribeEvent(audioContext, 'statechange', ({ target: { state } }) => state === 'closed' && audioContextClosed.eventListener());
@@ -24,11 +24,7 @@ function playDecoded(audioContext, audioBuffer, volume) {
       source.buffer = audioBuffer;
       // "ended" may not fire if the underlying AudioContext is closed prematurely
       source.onended = resolve;
-
-      gainNode.gain.setValueAtTime(volume, 0);
-
-      source.connect(gainNode);
-      gainNode.connect(audioContext.destination);
+      source.connect(audioContext.destination);
 
       source.start(0);
 
@@ -83,9 +79,12 @@ export default class extends DOMEventEmitter {
     this.arrayBufferPromise = fetchSpeechData({
       lang: this.lang || window.navigator.language,
       outputFormat: this.outputFormat,
+      pitch: this.pitch,
+      rate: this.rate,
       speechToken: this.speechToken,
       text: this.text,
-      voice: this.voice && this.voice.voiceURI
+      voice: this.voice && this.voice.voiceURI,
+      volume: this.volume
     });
 
     await this.arrayBufferPromise;
@@ -97,7 +96,7 @@ export default class extends DOMEventEmitter {
 
       this.emit('start');
 
-      await playDecoded(audioContext, audioBuffer, this.volume);
+      await playDecoded(audioContext, audioBuffer);
 
       this.emit('end');
     } catch (error) {
