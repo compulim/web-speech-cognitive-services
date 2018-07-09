@@ -22,6 +22,7 @@
   },
   "dependencies": {
     "event-as-promise": "^1.0.3",
+    "events": "^3.0.0",
     "memoize-one": "^4.0.0",
     "react-say": "0.0.1-master.ca079e3"
   }

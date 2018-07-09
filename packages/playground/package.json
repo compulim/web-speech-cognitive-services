@@ -19,7 +19,7 @@
     "react": "^16.4.1",
     "react-dictate-button": "^1.1.2",
     "react-dom": "^16.4.1",
-    "react-say": "0.0.1-master.d7ce791",
+    "react-say": "0.0.1-master.3d780fb",
     "react-scripts": "1.1.4"
   }
 }

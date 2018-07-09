@@ -1,6 +1,6 @@
 import React from 'react';
-import { Composer, Say } from 'react-say';
-import { speechSynthesis, SpeechSynthesisUtterance } from 'component';
+import { Composer } from 'react-say';
+import SpeakAlong from './SpeakAlong';
 
 export default class SayPane extends React.Component {
   constructor(props) {
@@ -19,29 +19,44 @@ export default class SayPane extends React.Component {
   }
 
   handleStopClick() {
-    speechSynthesis.cancel();
+    this.props.speechSynthesis.cancel();
     this.setState(() => ({ started: false }));
   }
 
   render() {
-    const { state } = this;
+    const { props, state } = this;
 
     return (
       <div>
-        <button onClick={ this.handleStartClick }>Start</button>
-        <button onClick={ this.handleStopClick }>Stop</button>
+        <button
+          disabled={ !props.speechSynthesis }
+          onClick={ this.handleStartClick }
+        >
+          Start
+        </button>
+        <button
+          disabled={ !state.started }
+          onClick={ this.handleStopClick }
+        >
+          Stop
+        </button>
         {
           state.started &&
             <Composer
-              speechSynthesis={ speechSynthesis }
-              speechSynthesisUtterance={ SpeechSynthesisUtterance }
+              speechSynthesis={ props.speechSynthesis }
+              speechSynthesisUtterance={ props.speechSynthesisUtterance }
             >
-              <Say text="Pooh is very social." volume={ 0.1 } />
-              <Say text="After Christopher Robin, his closest friend is Piglet." />
-              <Say text="And he must often chooses to spend his time with one or both of them." />
+              <SpeakAlong text="Pooh is very social." voice={ props.voice } volume={ 0.1 } />
+              <SpeakAlong text="After Christopher Robin, his closest friend is Piglet." voice={ props.voice } />
+              <SpeakAlong text="And he must often chooses to spend his time with one or both of them." voice={ props.voice } />
             </Composer>
         }
       </div>
     );
   }
 }
+
+SayPane.defaultProps = {
+  speechSynthesis: window.speechSynthesis,
+  SpeechSynthesisUtterance: window.SpeechSynthesisUtterance
+};

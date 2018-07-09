@@ -3,6 +3,7 @@ import classNames from 'classnames';
 import DictateButton from 'react-dictate-button';
 import memoize from 'memoize-one';
 import React from 'react';
+import SayPane from './SayPane';
 
 function fontFamily(...fonts) {
   return fonts.map(font => `'${ font }'`).join(', ');
@@ -147,6 +148,16 @@ export default class App extends React.Component {
           <ul>
             { state.rawEvents.map((event, index) => <li key={ index }><pre>{ event }</pre></li>) }
           </ul>
+        </section>
+        <header>
+          <h2>Synthesis</h2>
+        </header>
+        <section>
+          <SayPane
+            speechSynthesis={ props.speechSynthesis }
+            speechSynthesisUtterance={ props.speechSynthesisUtterance }
+            voice={ props.voice }
+          />
         </section>
       </article>
     );

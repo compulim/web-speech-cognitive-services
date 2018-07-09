@@ -1,3 +1,4 @@
+import DOMEventEmitter from '../util/domEventEmitter';
 import EventAsPromise from 'event-as-promise';
 import fetchSpeechData from './fetchSpeechData';
 import subscribeEvent from './subscribeEvent';
@@ -42,8 +43,10 @@ function playDecoded(audioContext, audioBuffer, volume) {
   });
 }
 
-export default class {
+export default class extends DOMEventEmitter {
   constructor(text) {
+    super();
+
     this._lang = null;
     this._pitch = 1;
     this._rate = 1;
@@ -92,13 +95,14 @@ export default class {
     try {
       const audioBuffer = await asyncDecodeAudioData(audioContext, await this.arrayBufferPromise);
 
-      this.onstart && this.onstart({ type: 'start' });
+      this.emit('start');
 
       await playDecoded(audioContext, audioBuffer, this.volume);
 
-      this.onend && this.onend({ type: 'end' });
+      this.emit('end');
     } catch (error) {
-      this.onerror && this.onerror({ error, type: 'error' });
+      this.emit('error', { error, type: 'error' });
+
       throw error;
     }
   }
