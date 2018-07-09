@@ -29,7 +29,6 @@ export default class {
     this.onstart = null;
 
     this.createRecognizer = memoize((
-      subscriptionKeyOrTokenFetch,
       lang = navigator.language,
       mode = CognitiveSpeech.RecognitionMode.Interactive,
       osPlatform = window.navigator.userAgent,
@@ -117,7 +116,6 @@ export default class {
 
   async start() {
     const recognizer = this.recognizer = this.createRecognizer(
-      this.subscriptionKey || this.tokenFetch,
       this.lang,
       this.osPlatform || window.navigator.userAgent,
       this.osName || window.navigator.appName,
