@@ -50,6 +50,8 @@ recognition.onresult = ({ results }) => {
 recognition.start();
 ```
 
+> Note: most browsers requires HTTPS or `localhost` for WebRTC.
+
 ### Integrating with React
 
 You can use [`react-dictate-button`](https://github.com/compulim/react-dictate-button/) to integrate speech recognition functionality to your React app.
@@ -145,9 +147,11 @@ For detailed test matrix, please refer to [`SPEC-RECOGNITION.md`](SPEC-RECOGNITI
    * [ ] Investigate continuous mode
    * [ ] Enable Opus (OGG) encoding
       * Currently, there is a problem with `microsoft-speech-browser-sdk@0.0.12`, tracking on [this issue](https://github.com/Azure-Samples/SpeechToText-WebSockets-Javascript/issues/88)
+   * [ ] Support custom endpoint (for custom speech and newer engine)
 * Speech synthesis
    * [ ] Event: add `pause`/`resume` support
    * [ ] Properties: add `paused`/`pending`/`speaking` support
+   * [ ] Support voice font
 * [ ] Unify token fetch mechanism
 
 # Contributions
