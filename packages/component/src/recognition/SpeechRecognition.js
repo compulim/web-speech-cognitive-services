@@ -10,7 +10,7 @@ function buildSpeechResult(transcript, confidence, isFinal) {
   return { results: [result], type: 'result' };
 }
 
-class CognitiveServicesSpeechRecognition {
+export default class {
   constructor() {
     this._lang = '';
 
@@ -268,5 +268,3 @@ function toPromise() {
     }
   };
 }
-
-export default CognitiveServicesSpeechRecognition

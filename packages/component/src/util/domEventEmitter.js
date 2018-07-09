@@ -1,6 +1,6 @@
 import EventEmitter from 'events';
 
-export default class DOMEventEmitter {
+export default class {
   constructor(events = []) {
     this._events = new EventEmitter();
 

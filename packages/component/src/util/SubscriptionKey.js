@@ -5,7 +5,7 @@ import exchangeToken from './exchangeToken';
 const TOKEN_EXPIRATION = 600000;
 const TOKEN_EARLY_RENEWAL = 60000;
 
-export default class SubscriptionKey {
+export default class {
   constructor(subscriptionKey) {
     this.subscriptionKey = subscriptionKey;
 
