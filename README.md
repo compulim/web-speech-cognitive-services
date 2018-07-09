@@ -78,12 +78,13 @@ import { speechSynthesis, SpeechSynthesisUtterance } from 'web-speech-cognitive-
 
 const utterance = new SpeechSynthesisUtterance('Hello, World!');
 
+speechSynthesis.subscriptionKey = 'your subscription key';
 speechSynthesis.speak(utterance);
 ```
 
 > Note: `speechSynthesis` is camel-casing because it is an instance.
 
-`pitch`, `rate`, `voice`, and `volume` are supported. Only `onstart` and `onend` events are supported.
+`pitch`, `rate`, `voice`, and `volume` are supported. Only `onstart`, `onerror`, and `onend` events are supported.
 
 ### Integrating with React
 
@@ -93,11 +94,12 @@ You can use [`react-say`](https://github.com/compulim/react-say/) to integrate s
 import { speechSynthesis, SpeechSynthesisUtterance } from 'web-speech-cognitive-services';
 import Say from 'react-say';
 
+speechSynthesis.subscriptionKey = 'your subscription key';
+
 export default props =>
   <Say
-    extra={{ subscriptionKey: 'your subscription key' }}
     speechSynthesis={ speechSynthesis }
-    SpeechSynthesisUtterance={ SpeechSynthesisUtterance }
+    speechSynthesisUtterance={ SpeechSynthesisUtterance }
     text="Hello, World!"
   />
 ```
@@ -108,11 +110,14 @@ For detailed test matrix, please refer to [`TESTMATRIX.md`](TESTMATRIX.md).
 
 # Known issues
 
-* Interim results do not return confidence, final result do have confidence
-   * We always return `0.5` for interim results
-* Cognitive Services support grammar list but not in JSGF format, more work to be done in this area
-   * Although Google Chrome support grammar list, it seems the grammar list is not used at all
-* Continuous mode does not work
+* Speech recognition
+   * Interim results do not return confidence, final result do have confidence
+      * We always return `0.5` for interim results
+   * Cognitive Services support grammar list but not in JSGF format, more work to    be done in this area
+      * Although Google Chrome support grammar list, it seems the grammar list is    not used at all
+   * Continuous mode does not work
+* Speech synthesis
+   * `onboundary`, `onmark`, `onpause`, and `onresume` are not supported/fired
 
 # Roadmap
 
@@ -123,7 +128,8 @@ For detailed test matrix, please refer to [`TESTMATRIX.md`](TESTMATRIX.md).
    * [ ] Enable Opus (OGG) encoding
       * Currently, there is a problem with `microsoft-speech-browser-sdk@0.0.12`, tracking on [this issue](https://github.com/Azure-Samples/SpeechToText-WebSockets-Javascript/issues/88)
 * Speech synthesis
-   * No plan
+   * [ ] Event: add `pause`/`resume` support
+   * [ ] Properties: add `paused`/`pending`/`speaking` support
 
 # Contributions
 

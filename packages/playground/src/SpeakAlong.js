@@ -1,8 +1,8 @@
 import { css } from 'glamor';
-import { Say } from 'react-say';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import React from 'react';
+import Say from 'react-say';
 
 const ROOT_CSS = css({
   '&.error': {
@@ -51,17 +51,19 @@ export default class SpeakAlong extends React.Component {
 
     return (
       <p className={ classNames(ROOT_CSS + '', { error }) }>
-        <span className="spoken">{ props.text.slice(0, spoken) }</span>
-        <span className="unspoken">{ props.text.slice(spoken) }</span>
+        <span className="spoken">{ props.speak.slice(0, spoken) }</span>
+        <span className="unspoken">{ props.speak.slice(spoken) }</span>
         <Say
-          lang={ this.lang || '' }
+          lang={ props.lang || '' }
           onBoundary={ this.handleBoundary }
           onEnd={ this.handleEnd }
           onError={ this.handleError }
           pitch={ props.pitch || 1 }
           rate={ props.rate || 1 }
-          text={ props.text }
-          voice={ props.voice || null }
+          speak={ props.speak }
+          speechSynthesis={ props.speechSynthesis }
+          speechSynthesisUtterance={ props.speechSynthesisUtterance }
+          voice={ props.voice }
           volume={ props.volume || 1 }
         />
       </p>
@@ -69,11 +71,17 @@ export default class SpeakAlong extends React.Component {
   }
 }
 
+SpeakAlong.defaultProps = {
+  speak: ''
+};
+
 SpeakAlong.propTypes = {
   lang: PropTypes.string,
   pitch: PropTypes.number,
   rate: PropTypes.number,
-  text: PropTypes.string,
+  speak: PropTypes.string,
+  speechSynthesis: PropTypes.any,
+  speechSynthesisUtterance: PropTypes.any,
   voice: PropTypes.any,
   volume: PropTypes.number
 };

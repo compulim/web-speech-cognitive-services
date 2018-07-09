@@ -1,6 +1,7 @@
 import AudioContextQueue from './AudioContextQueue';
 import exchangeToken from './exchangeToken';
 import fetchVoices from './fetchVoices';
+import SpeechSynthesisUtterance from './SpeechSynthesisUtterance';
 
 // Supported output format can be found at https://docs.microsoft.com/en-us/azure/cognitive-services/Speech/API-Reference-REST/BingVoiceOutput#Subscription
 const DEFAULT_OUTPUT_FORMAT = 'audio-16khz-128kbitrate-mono-mp3';
@@ -15,7 +16,6 @@ class SpeechSynthesis {
     this.onvoiceschanged = null;
     this.outputFormat = DEFAULT_OUTPUT_FORMAT;
     this.queue = new AudioContextQueue();
-    this.subscriptionKey = localStorage.getItem('SPEECH_KEY');
   }
 
   cancel() {
@@ -45,6 +45,10 @@ class SpeechSynthesis {
   }
 
   async speak(utterance) {
+    if (!(utterance instanceof SpeechSynthesisUtterance)) {
+      throw new Error('invalid utterance');
+    }
+
     utterance.outputFormat = this.outputFormat;
     utterance.speechToken = await this.fetchToken();
     utterance.preload();
