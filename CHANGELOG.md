@@ -10,8 +10,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 - Removed `CognitiveServices` prefix
-  - Renamed `CognitiveServicesSpeechGrammarList` to `SpeechGrammarList`
-  - Renamed `CognitiveServicesSpeechRecognition` to `SpeechRecognition`
+   - Renamed `CognitiveServicesSpeechGrammarList` to `SpeechGrammarList`
+   - Renamed `CognitiveServicesSpeechRecognition` to `SpeechRecognition`
+   - Removed default export, now must use `import { SpeechRecognition } from 'web-speech-cognitive-services';`
+- Speech Recognition: changed speech token authorization
+   - `recognition.speechToken = new SubscriptionKey('your subscription key');`
 
 ## [1.0.0] - 2018-06-29
 ### Added
