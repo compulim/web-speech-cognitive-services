@@ -32,7 +32,7 @@ class SpeechSynthesis {
     this.speechToken = subscriptionKey && await exchangeToken(subscriptionKey);
 
     this._renewal = autoRenewal && setTimeout(() => {
-      this.fetchToken(subscriptionKey);
+      this.authorize(subscriptionKey);
     }, TOKEN_EXPIRATION - TOKEN_EARLY_RENEWAL);
   }
 
