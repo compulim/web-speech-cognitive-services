@@ -26,22 +26,14 @@ class SpeechSynthesis {
     return fetchVoices();
   }
 
-  async fetchToken() {
-    if (!this.tokenPromise) {
-      this.tokenPromise = exchangeToken(this.subscriptionKey).then(token => {
-        setTimeout(() => {
-          this.tokenPromise = null;
-        }, TOKEN_EXPIRATION - TOKEN_EARLY_RENEWAL);
+  async authorize(subscriptionKey, autoRenewal = true) {
+    clearTimeout(this._renewal);
 
-        return token;
-      }, err => {
-        this.tokenPromise = null;
+    this.speechToken = subscriptionKey && await exchangeToken(subscriptionKey);
 
-        return Promise.reject(err);
-      });
-    }
-
-    return await this.tokenPromise;
+    this._renewal = autoRenewal && setTimeout(() => {
+      this.fetchToken(subscriptionKey);
+    }, TOKEN_EXPIRATION - TOKEN_EARLY_RENEWAL);
   }
 
   async speak(utterance) {
@@ -49,11 +41,19 @@ class SpeechSynthesis {
       throw new Error('invalid utterance');
     }
 
-    utterance.outputFormat = this.outputFormat;
-    utterance.speechToken = await this.fetchToken();
-    utterance.preload();
+    if (!this.speechToken) {
+      throw new Error('authorize() must be called prior speak()');
+    }
 
-    this.queue.push(utterance);
+    return new Promise((resolve, reject) => {
+      utterance.addEventListener('end', resolve);
+      utterance.addEventListener('error', reject);
+      utterance.outputFormat = this.outputFormat;
+      utterance.speechToken = this.speechToken;
+      utterance.preload();
+
+      this.queue.push(utterance);
+    });
   }
 }
 

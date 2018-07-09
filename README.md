@@ -78,8 +78,8 @@ import { speechSynthesis, SpeechSynthesisUtterance } from 'web-speech-cognitive-
 
 const utterance = new SpeechSynthesisUtterance('Hello, World!');
 
-speechSynthesis.subscriptionKey = 'your subscription key';
-speechSynthesis.speak(utterance);
+await speechSynthesis.authorize('your subscription key');
+await speechSynthesis.speak(utterance);
 ```
 
 > Note: `speechSynthesis` is camel-casing because it is an instance.

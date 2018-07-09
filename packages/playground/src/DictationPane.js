@@ -154,6 +154,7 @@ export default class App extends React.Component {
         </header>
         <section>
           <SayPane
+            disabled={ props.disabled }
             speechSynthesis={ props.speechSynthesis }
             speechSynthesisUtterance={ props.speechSynthesisUtterance }
             voice={ props.voice }

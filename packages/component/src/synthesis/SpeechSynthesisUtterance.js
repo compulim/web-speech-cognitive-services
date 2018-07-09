@@ -12,19 +12,17 @@ function asyncDecodeAudioData(audioContext, arrayBuffer) {
   });
 }
 
-function playDecoded(audioContext, audioBuffer) {
+function playDecoded(audioContext, audioBuffer, source) {
   return new Promise(async (resolve, reject) => {
     const audioContextClosed = new EventAsPromise();
     const unsubscribe = subscribeEvent(audioContext, 'statechange', ({ target: { state } }) => state === 'closed' && audioContextClosed.eventListener());
 
     try {
-      const source = audioContext.createBufferSource();
-
       source.buffer = audioBuffer;
       // "ended" may not fire if the underlying AudioContext is closed prematurely
       source.onended = resolve;
-      source.connect(audioContext.destination);
 
+      source.connect(audioContext.destination);
       source.start(0);
 
       await audioContextClosed.upcoming();
@@ -91,11 +89,13 @@ export default class extends DOMEventEmitter {
 
   async play(audioContext) {
     try {
+      // HACK: iOS requires bufferSourceNode to be constructed before decoding data
+      const source = audioContext.createBufferSource();
       const audioBuffer = await asyncDecodeAudioData(audioContext, await this.arrayBufferPromise);
 
       this.emit('start');
 
-      await playDecoded(audioContext, audioBuffer);
+      await playDecoded(audioContext, audioBuffer, source);
 
       this.emit('end');
     } catch (error) {

@@ -28,13 +28,13 @@ export default class SayPane extends React.Component {
     return (
       <div>
         <button
-          disabled={ !props.speechSynthesis }
+          disabled={ !props.speechSynthesis && !props.disabled }
           onClick={ this.handleStartClick }
         >
           Start
         </button>
         <button
-          disabled={ !state.started }
+          disabled={ !state.started && !props.disabled }
           onClick={ this.handleStopClick }
         >
           Stop
