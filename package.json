@@ -1,6 +1,6 @@
 {
   "name": "web-speech-cognitive-services",
-  "version": "2.0.0",
+  "version": "2.0.1-0",
   "description": "Polyfill Web Speech API with Cognitive Services Speech-to-Text service",
   "keywords": [
     "cognitive services",
