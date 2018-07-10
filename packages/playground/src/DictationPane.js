@@ -38,7 +38,7 @@ export default class App extends React.Component {
   constructor(props) {
     super(props);
 
-    this.createExtra = memoize(speechToken => ({ speechToken }));
+    this.createExtra = memoize((grammars, speechToken) => ({ grammars, speechToken }));
 
     this.handleDictate = this.handleDictate.bind(this);
     this.handleError = this.handleError.bind(this);
@@ -90,7 +90,7 @@ export default class App extends React.Component {
 
   render() {
     const { props, state } = this;
-    const extra = this.createExtra(props.speechToken);
+    const extra = this.createExtra(props.grammars, props.speechToken);
 
     return (
       <article className={ classNames(ROOT_CSS + '', (props.className || '') + '') }>

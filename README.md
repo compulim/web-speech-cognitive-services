@@ -66,6 +66,30 @@ export default props =>
 
 You can also look at our [playground page](packages/playground/src/DictationPane.js) to see how it works.
 
+### Speech priming (a.k.a. grammars)
+
+You can prime the speech recognition by giving a list of words.
+
+Since Cognitive Services does not works with weighted grammars, we built another `SpeechGrammarList` to better fit the scenario.
+
+```jsx
+import { SpeechGrammarList, SpeechRecognition, SubscriptionKey } from 'web-speech-cognitive-services';
+
+const recognition = new SpeechRecognition();
+
+recognition.grammars = new SpeechGrammarList();
+recognition.grammars.words = ['Tuen Mun', 'Yuen Long'];
+recognition.speechToken = new SubscriptionKey('your subscription key');
+
+recognition.onresult = ({ results }) => {
+  console.log(results);
+};
+
+recognition.start();
+```
+
+> Note: you can also pass `grammars` to `react-dictate-button` via `extra` props.
+
 ## Speech synthesis (text-to-speech)
 
 ```jsx
@@ -137,8 +161,10 @@ For detailed test matrix, please refer to [`SPEC-RECOGNITION.md`](SPEC-RECOGNITI
 * General
    * [x] Unified [token exchange mechanism](packages/component/src/util/SubscriptionKey.js)
 * Speech recognition
-   * [ ] Add grammar list
+   * [x] Add grammar list
    * [ ] Add tests for lifecycle events
+   * [ ] Support `stop()` function
+      * Currently, only `abort()` is supported
    * [ ] Investigate continuous mode
    * [ ] Enable Opus (OGG) encoding
       * Currently, there is a problem with `microsoft-speech-browser-sdk@0.0.12`, tracking on [this issue](https://github.com/Azure-Samples/SpeechToText-WebSockets-Javascript/issues/88)

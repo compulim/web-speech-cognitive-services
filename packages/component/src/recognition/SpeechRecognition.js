@@ -2,6 +2,8 @@ import * as CognitiveSpeech from 'microsoft-speech-browser-sdk';
 import EventAsPromise from 'event-as-promise';
 import memoize from 'memoize-one';
 
+import SpeechGrammarList from './SpeechGrammarList';
+
 function buildSpeechResult(transcript, confidence, isFinal) {
   const result = [{ confidence, transcript }];
 
@@ -70,9 +72,13 @@ export default class {
     });
   }
 
-  get grammars() { return; }
+  get grammars() { return this._grammars; }
   set grammars(nextGrammars) {
-    // throw new Error('not supported');
+    if (nextGrammars && !(nextGrammars instanceof SpeechGrammarList)) {
+      throw new Error('must be instance of SpeechGrammarList from "web-speech-cognitive-services"');
+    }
+
+    this._grammars = nextGrammars;
   }
 
   get lang() { return this._lang; }
@@ -111,6 +117,7 @@ export default class {
   }
 
   stop() {
+    // TODO: Support stop
     throw new Error('not supported');
   }
 
@@ -127,7 +134,9 @@ export default class {
 
     const { eventListener, ...promises } = toPromise();
 
-    recognizer.Recognize(eventListener);
+    const speechContext = this.grammars && this.grammars.createSpeechContext();
+
+    recognizer.Recognize(eventListener, speechContext && JSON.stringify(speechContext));
     this._aborted = false;
 
     await promises.recognitionTriggered;

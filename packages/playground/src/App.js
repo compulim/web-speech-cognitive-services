@@ -1,7 +1,14 @@
 import { css } from 'glamor';
 import React from 'react';
 
-import { SpeechGrammarList, SpeechRecognition, speechSynthesis, SpeechSynthesisUtterance, SubscriptionKey } from 'component';
+import {
+  SpeechGrammarList,
+  SpeechRecognition,
+  speechSynthesis,
+  SpeechSynthesisUtterance,
+  SubscriptionKey
+} from 'component';
+
 import DictationPane from './DictationPane';
 
 const ROOT_CSS = css({
@@ -28,9 +35,20 @@ export default class extends React.Component {
 
     speechSynthesis.speechToken = speechToken;
 
+    const cognitiveServicesGrammars = new SpeechGrammarList();
+
+    cognitiveServicesGrammars.words = ['Tuen Mun', 'Yuen Long'];
+
+    const webSpeechGrammarListClass = window.SpeechGrammarList || window.webkitSpeechGrammarList;
+    const webSpeechGrammars = webSpeechGrammarListClass && new webSpeechGrammarListClass();
+
+    webSpeechGrammars && webSpeechGrammars.addFromString('#JSGF V1.0; grammar districts; public <district> = tuen mun | yuen long;', 1);
+
     this.state = {
+      cognitiveServicesGrammars,
       cognitiveServicesVoice: getCognitiveServicesVoice(),
-      speechToken
+      speechToken,
+      webSpeechGrammars
     };
   }
 
@@ -63,6 +81,7 @@ export default class extends React.Component {
           className={ DICTATION_PANE_CSS + '' }
           disabled={ !state.ready }
           name="Cognitive Services"
+          grammars={ state.cognitiveServicesGrammars }
           speechGrammarList={ SpeechGrammarList }
           speechRecognition={ SpeechRecognition }
           speechSynthesis={ speechSynthesis }
@@ -73,6 +92,7 @@ export default class extends React.Component {
         <DictationPane
           className={ DICTATION_PANE_CSS + '' }
           name="Web Speech API"
+          grammars={ state.webSpeechGrammars }
         />
       </div>
     );

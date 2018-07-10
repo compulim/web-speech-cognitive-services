@@ -72,5 +72,5 @@ export default class SayPane extends React.Component {
 
 SayPane.defaultProps = {
   speechSynthesis: window.speechSynthesis,
-  SpeechSynthesisUtterance: window.SpeechSynthesisUtterance
+  speechSynthesisUtterance: window.SpeechSynthesisUtterance
 };
