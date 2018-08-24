@@ -7,7 +7,7 @@
   "scripts": {
     "build": "babel --out-dir lib --ignore **/*.spec.js,**/*.test.js --source-maps true src/",
     "clean": "rimraf lib",
-    "test": "jest"
+    "test": "echo No tests defined"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
