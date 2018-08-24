@@ -1,5 +1,3 @@
-import 'babel-polyfill';
-
 import SpeechGrammarList from './recognition/SpeechGrammarList';
 import SpeechRecognition from './recognition/SpeechRecognition';
 import speechSynthesis from './synthesis/speechSynthesis';

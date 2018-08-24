@@ -3,24 +3,27 @@
   "version": "1.0.0",
   "description": "",
   "main": "lib/index.js",
+  "private": true,
   "scripts": {
     "build": "babel --out-dir lib --ignore **/*.spec.js,**/*.test.js --source-maps true src/",
     "clean": "rimraf lib",
-    "test": "jest"
+    "test": "echo No tests defined"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.3",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-plugin-transform-runtime": "^6.23.0",
     "babel-plugin-version-transform": "^1.0.0",
-    "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.7.0",
-    "babel-runtime": "^6.26.0",
+    "babel-preset-react": "^6.24.1",
     "jest": "^22.4.4",
     "microsoft-speech-browser-sdk": "^0.0.12",
+    "react": "^16.4.2",
     "rimraf": "^2.6.2"
   },
   "dependencies": {
+    "babel-runtime": "^6.26.0",
     "event-as-promise": "^1.0.3",
     "events": "^3.0.0",
     "memoize-one": "^4.0.0",
