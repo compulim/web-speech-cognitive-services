@@ -1,7 +1,8 @@
 {
   "plugins": [
     "transform-object-rest-spread",
-    "version-transform"
+    "version-transform",
+    "transform-runtime"
   ],
   "presets": [
     ["env", {

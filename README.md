@@ -158,6 +158,12 @@ For detailed test matrix, please refer to [`SPEC-RECOGNITION.md`](SPEC-RECOGNITI
 
 # Roadmap
 
+## To-do
+
+* Add `babel-runtime`, `microsoft-speech-browser-sdk`, and `simple-update-in`
+
+## Plan
+
 * General
    * [x] Unified [token exchange mechanism](packages/component/src/util/SubscriptionKey.js)
 * Speech recognition

@@ -27,7 +27,7 @@
     "lib/**/*"
   ],
   "scripts": {
-    "bootstrap": "lerna bootstrap --hoist",
+    "bootstrap": "lerna bootstrap",
     "build": "lerna run build",
     "test": "lerna run test"
   },
@@ -42,31 +42,17 @@
   },
   "homepage": "https://github.com/compulim/web-speech-cognitive-services#readme",
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-core": "^6.26.3",
-    "babel-env": "^2.4.1",
-    "babel-plugin-transform-object-rest-spread": "^6.26.0",
-    "babel-plugin-version-transform": "^1.0.0",
-    "babel-polyfill": "^6.26.0",
-    "babel-preset-stage-3": "^6.24.1",
-    "classnames": "^2.2.6",
-    "glamor": "^2.20.40",
-    "jest": "^22.4.4",
-    "lerna": "^2.11.0",
-    "microsoft-speech-browser-sdk": "^0.0.12",
-    "react": "^16.4.1",
-    "react-dictate-button": "^1.1.2",
-    "react-dom": "^16.4.1",
-    "react-scripts": "1.1.4",
-    "rimraf": "^2.6.2"
+    "lerna": "^3.1.4"
   },
   "dependencies": {
     "event-as-promise": "^1.0.3",
-    "memoize-one": "^4.0.0"
+    "events": "^3.0.0",
+    "memoize-one": "^4.0.0",
+    "react-say": "0.0.1-master.ca079e3",
+    "simple-update-in": "^1.2.0"
   },
   "peerDependencies": {
-    "babel-polyfill": "^6.26.0",
     "microsoft-speech-browser-sdk": "^0.0.12",
-    "react": "^16.4.1"
+    "react": "^16.4.2"
   }
 }
