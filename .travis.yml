@@ -6,8 +6,6 @@ before_script:
   - npm run bootstrap
   - node scripts/syncVersion
   - npm run build
-before_deploy:
-  - cp -r packages/component/lib .
 deploy:
   - provider: npm
     api_key:
