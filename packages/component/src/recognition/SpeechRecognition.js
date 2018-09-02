@@ -61,11 +61,15 @@ export default class {
       );
 
       const fetchToken = () => {
-        const sink = new CognitiveSpeech.Sink();
+        try {
+          const sink = new CognitiveSpeech.Sink();
 
-        this.speechToken.authorized.then(sink.Resolve, sink.Reject);
+          this.speechToken.authorized.then(sink.Resolve, sink.Reject);
 
-        return new CognitiveSpeech.Promise(sink);
+          return new CognitiveSpeech.Promise(sink);
+        } catch (err) {
+          sink.Reject(err.message);
+        }
       };
 
       return CognitiveSpeech.CreateRecognizer(config, new CognitiveSpeech.CognitiveTokenAuthentication(fetchToken, fetchToken));

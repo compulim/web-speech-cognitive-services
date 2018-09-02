@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 ### Changed
 - Use `babel-runtime` and `babel-plugin-tranform-runtime`, in favor of `babel-polyfill`
+- Better error handling on `null` token
 
 ## [2.1.0] - 2018-07-09
 ### Added
