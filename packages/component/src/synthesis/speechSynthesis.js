@@ -29,15 +29,13 @@ class SpeechSynthesis {
       throw new Error('speechToken must be set');
     }
 
-    if (!this.speechToken.value) {
-      throw new Error('must wait for token to be authorized prior speak()');
-    }
+    const speechToken = await this.speechToken.authorized;
 
     return new Promise((resolve, reject) => {
       utterance.addEventListener('end', resolve);
       utterance.addEventListener('error', reject);
       utterance.outputFormat = this.outputFormat;
-      utterance.speechToken = this.speechToken.value;
+      utterance.speechToken = speechToken;
       utterance.preload();
 
       this.queue.push(utterance);
