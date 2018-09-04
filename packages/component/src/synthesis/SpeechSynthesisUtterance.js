@@ -15,17 +15,21 @@ function asyncDecodeAudioData(audioContext, arrayBuffer) {
 function playDecoded(audioContext, audioBuffer, source) {
   return new Promise(async (resolve, reject) => {
     const audioContextClosed = new EventAsPromise();
+    const sourceEnded = new EventAsPromise();
     const unsubscribe = subscribeEvent(audioContext, 'statechange', ({ target: { state } }) => state === 'closed' && audioContextClosed.eventListener());
 
     try {
       source.buffer = audioBuffer;
       // "ended" may not fire if the underlying AudioContext is closed prematurely
-      source.onended = resolve;
+      source.onended = sourceEnded.eventListener;
 
       source.connect(audioContext.destination);
       source.start(0);
 
-      await audioContextClosed.upcoming();
+      await Promise.race([
+        audioContextClosed.upcoming(),
+        sourceEnded.upcoming()
+      ]);
 
       resolve();
     } catch (err) {
@@ -94,14 +98,20 @@ export default class extends DOMEventEmitter {
       const audioBuffer = await asyncDecodeAudioData(audioContext, await this.arrayBufferPromise);
 
       this.emit('start');
+      this._playingSource = source;
 
       await playDecoded(audioContext, audioBuffer, source);
 
+      this._playingSource = null;
       this.emit('end');
     } catch (error) {
       this.emit('error', { error, type: 'error' });
 
       throw error;
     }
+  }
+
+  stop() {
+    this._playingSource && this._playingSource.stop();
   }
 }
