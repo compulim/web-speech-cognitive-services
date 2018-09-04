@@ -24,6 +24,8 @@ This package will polyfill Web Speech API by turning Cognitive Services Bing Spe
 
 First, run `npm install web-speech-cognitive-services` for latest production build. Or `npm install web-speech-cognitive-services@master` for latest development build.
 
+Then, install peer dependency by running `npm install microsoft-speech-browser-sdk`.
+
 ## Speech recognition (speech-to-text)
 
 ```jsx

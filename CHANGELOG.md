@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - Use `babel-runtime` and `babel-plugin-tranform-runtime`, in favor of `babel-polyfill`
 - Better error handling on `null` token
+- Updated voice list from [https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/supported-languages](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/supported-languages)
 
 ## [2.1.0] - 2018-07-09
 ### Added
