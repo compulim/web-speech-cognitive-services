@@ -14,6 +14,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Updated voice list from [https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/supported-languages](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/supported-languages)
 - Reliability around cancelling a playing utterance
    - Instead of shutting down the `AudioContext`, we will stop the `AudioBufferSourceNode` for a graceful stop
+- Simplify speech token authorization
+   - `recognition.fetchToken = async () => return await 'your subscription key';`
+   - `recognition.fetchToken = createFetchTokenUsingSubscriptionKey('your subscription key');`
+   - `fetchToken` will be called every time a token is required, implementor should cache the token as needed
 
 ## [2.1.0] - 2018-07-09
 ### Added

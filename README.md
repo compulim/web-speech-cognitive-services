@@ -29,12 +29,12 @@ Then, install peer dependency by running `npm install microsoft-speech-browser-s
 ## Speech recognition (speech-to-text)
 
 ```jsx
-import { SpeechRecognition, SubscriptionKey } from 'web-speech-cognitive-services';
+import { createFetchTokenUsingSubscriptionKey, SpeechRecognition } from 'web-speech-cognitive-services';
 
 const recognition = new SpeechRecognition();
 
 recognition.lang = 'en-US';
-recognition.speechToken = new SubscriptionKey('your subscription key');
+recognition.fetchToken = createFetchTokenUsingSubscriptionKey('your subscription key');
 
 recognition.onresult = ({ results }) => {
   console.log(results);
@@ -50,10 +50,10 @@ recognition.start();
 You can use [`react-dictate-button`](https://github.com/compulim/react-dictate-button/) to integrate speech recognition functionality to your React app.
 
 ```jsx
-import { SpeechGrammarList, SpeechRecognition, SubscriptionKey } from 'web-speech-cognitive-services';
+import { createFetchTokenUsingSubscriptionKey, SpeechGrammarList, SpeechRecognition } from 'web-speech-cognitive-services';
 import DictateButton from 'react-dictate-button';
 
-const extra = { subscriptionKey: new SubscriptionKey('your subscription key') };
+const extra = { fetchToken: createFetchTokenUsingSubscriptionKey('your subscription key') };
 
 export default props =>
   <DictateButton
@@ -75,13 +75,13 @@ You can prime the speech recognition by giving a list of words.
 Since Cognitive Services does not works with weighted grammars, we built another `SpeechGrammarList` to better fit the scenario.
 
 ```jsx
-import { SpeechGrammarList, SpeechRecognition, SubscriptionKey } from 'web-speech-cognitive-services';
+import { createFetchTokenUsingSubscriptionKey, SpeechGrammarList, SpeechRecognition } from 'web-speech-cognitive-services';
 
 const recognition = new SpeechRecognition();
 
 recognition.grammars = new SpeechGrammarList();
 recognition.grammars.words = ['Tuen Mun', 'Yuen Long'];
-recognition.speechToken = new SubscriptionKey('your subscription key');
+recognition.fetchToken = createFetchTokenUsingSubscriptionKey('your subscription key');
 
 recognition.onresult = ({ results }) => {
   console.log(results);
@@ -95,15 +95,15 @@ recognition.start();
 ## Speech synthesis (text-to-speech)
 
 ```jsx
-import { speechSynthesis, SpeechSynthesisUtterance, SubscriptionKey } from 'web-speech-cognitive-services';
+import { createFetchTokenUsingSubscriptionKey, speechSynthesis, SpeechSynthesisUtterance } from 'web-speech-cognitive-services';
 
-const subscriptionKey = new SubscriptionKey('your subscription key');
+const fetchToken = createFetchTokenUsingSubscriptionKey('your subscription key');
 const utterance = new SpeechSynthesisUtterance('Hello, World!');
 
-speechSynthesis.speechToken = subscriptionKey;
+speechSynthesis.fetchToken = fetchToken;
 
 // Need to wait until token exchange is complete before speak
-await subscriptionKey.authorized;
+await fetchToken();
 await speechSynthesis.speak(utterance);
 ```
 
@@ -116,7 +116,7 @@ await speechSynthesis.speak(utterance);
 You can use [`react-say`](https://github.com/compulim/react-say/) to integrate speech synthesis functionality to your React app.
 
 ```jsx
-import { speechSynthesis, SpeechSynthesisUtterance, SubscriptionKey } from 'web-speech-cognitive-services';
+import { createFetchTokenUsingSubscriptionKey, speechSynthesis, SpeechSynthesisUtterance } from 'web-speech-cognitive-services';
 import React from 'react';
 import Say from 'react-say';
 
@@ -124,10 +124,18 @@ export default class extends React.Component {
   constructor(props) {
     super(props);
 
-    speechSynthesis.speechToken = new SubscriptionKey('your subscription key');
-    speechSynthesis.speechToken.authorized.then(() => this.setState(() => ({ ready: true })));
+    speechSynthesis.fetchToken = createFetchTokenUsingSubscriptionKey('your subscription key');
+
+    // We call it here to preload the token, the token is cached
+    speechSynthesis.fetchToken();
 
     this.state = { ready: false };
+  }
+
+  async componentDidMount() {
+    await speechSynthesis.fetchToken();
+
+    this.setState(() => ({ ready: true }));
   }
 
   render() {

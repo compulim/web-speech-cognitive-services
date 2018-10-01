@@ -9,7 +9,7 @@ export default async function fetchSpeechData({
   outputFormat,
   pitch,
   rate,
-  speechToken,
+  accessToken,
   text,
   voice = DEFAULT_VOICE,
   volume
@@ -18,7 +18,7 @@ export default async function fetchSpeechData({
 
   const res = await fetch(SYNTHESIS_URL, {
     headers: {
-      Authorization: speechToken,
+      Authorization: accessToken,
       'Content-Type': 'application/ssml+xml',
       'X-Microsoft-OutputFormat': outputFormat
     },

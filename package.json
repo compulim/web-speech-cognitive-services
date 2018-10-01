@@ -1,6 +1,6 @@
 {
   "name": "web-speech-cognitive-services",
-  "version": "2.1.1-0",
+  "version": "3.0.0-0",
   "description": "Polyfill Web Speech API with Cognitive Services Speech-to-Text service",
   "keywords": [
     "cognitive services",
@@ -28,8 +28,9 @@
   ],
   "scripts": {
     "bootstrap": "lerna bootstrap",
-    "build": "lerna run build",
-    "test": "lerna run test"
+    "build": "lerna run --stream build",
+    "test": "lerna run --stream test",
+    "watch": "lerna run --stream watch"
   },
   "author": "William Wong <compulim@hotmail.com> (http://compulim.info/)",
   "license": "MIT",

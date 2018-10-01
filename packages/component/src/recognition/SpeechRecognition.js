@@ -64,7 +64,13 @@ export default class {
         try {
           const sink = new CognitiveSpeech.Sink();
 
-          this.speechToken.authorized.then(sink.Resolve, sink.Reject);
+          if (!this.fetchToken) {
+            console.error('SpeechRecognition: fetchToken must be set');
+
+            return sink.Reject('fetchToken must be set');
+          }
+
+          this.fetchToken().then(sink.Resolve, sink.Reject);
 
           return new CognitiveSpeech.Promise(sink);
         } catch (err) {

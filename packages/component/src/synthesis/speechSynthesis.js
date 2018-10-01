@@ -25,17 +25,17 @@ class SpeechSynthesis {
       throw new Error('invalid utterance');
     }
 
-    if (!this.speechToken) {
-      throw new Error('speechToken must be set');
+    if (!this.fetchToken) {
+      throw new Error('fetchToken must be set');
     }
 
-    const speechToken = await this.speechToken.authorized;
+    const accessToken = await this.fetchToken();
 
     return new Promise((resolve, reject) => {
       utterance.addEventListener('end', resolve);
       utterance.addEventListener('error', reject);
+      utterance.accessToken = accessToken;
       utterance.outputFormat = this.outputFormat;
-      utterance.speechToken = speechToken;
       utterance.preload();
 
       this.queue.push(utterance);
