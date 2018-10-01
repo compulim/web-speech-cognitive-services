@@ -68,6 +68,10 @@ export default class {
             console.error('SpeechRecognition: fetchToken must be set');
 
             return sink.Reject('fetchToken must be set');
+          } else if (typeof this.fetchToken !== 'function') {
+            console.error('SpeechRecognition: fetchToken must be a function that returns a Promise and it will resolve to a string-based token');
+
+            return sink.Reject('fetchToken must be a function that returns a Promise and it will resolve to a string-based token');
           }
 
           this.fetchToken().then(sink.Resolve, sink.Reject);

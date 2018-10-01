@@ -26,7 +26,9 @@ class SpeechSynthesis {
     }
 
     if (!this.fetchToken) {
-      throw new Error('fetchToken must be set');
+      throw new Error('SpeechSynthesis: fetchToken must be set');
+    } else if (typeof this.fetchToken !== 'function') {
+      throw new Error('SpeechSynthesis: fetchToken must be a function that returns a Promise and it will resolve to a string-based token');
     }
 
     const accessToken = await this.fetchToken();
