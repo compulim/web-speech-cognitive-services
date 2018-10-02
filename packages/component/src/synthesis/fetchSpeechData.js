@@ -18,7 +18,7 @@ export default async function fetchSpeechData({
 
   const res = await fetch(SYNTHESIS_URL, {
     headers: {
-      Authorization: accessToken,
+      Authorization: 'Bearer ' + accessToken,
       'Content-Type': 'application/ssml+xml',
       'X-Microsoft-OutputFormat': outputFormat
     },
@@ -27,7 +27,7 @@ export default async function fetchSpeechData({
   });
 
   if (res.status !== 200) {
-    throw new Error(`Failed to syntheis speech, server returned ${ res.status }`);
+    throw new Error(`Failed to synthesize speech, server returned ${ res.status }`);
   }
 
   return res.arrayBuffer();
