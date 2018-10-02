@@ -1,2 +1,5 @@
 /lerna-debug.log
 /node_modules
+
+# misc
+.DS_Store
