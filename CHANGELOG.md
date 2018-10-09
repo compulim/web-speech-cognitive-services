@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Speech Synthesis: Will async fetch speech token instead of throwing exception
 
 ### Changed
-- Use `babel-runtime` and `babel-plugin-tranform-runtime`, in favor of `babel-polyfill`
+- Use `@babel/runtime` and `@babel/plugin-tranform-runtime`, in favor of `babel-polyfill`
 - Better error handling on `null` token
 - Updated voice list from [https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/supported-languages](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/supported-languages)
 - Reliability around cancelling a playing utterance
@@ -18,6 +18,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
    - `recognition.fetchToken = async () => return await 'your subscription key';`
    - `recognition.fetchToken = createFetchTokenUsingSubscriptionKey('your subscription key');`
    - `fetchToken` will be called every time a token is required, implementor should cache the token as needed
+- Bump to `@babel/core@7.1.2` and `jest@^23.6.0`
+- Bump to `react-scripts@2.0.4`
+- Publish `/packages/component/` instead of `/`
 
 ## [2.1.0] - 2018-07-09
 ### Added
