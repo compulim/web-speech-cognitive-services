@@ -1,8 +1,14 @@
 {
   "name": "playground",
   "version": "0.1.0",
-  "homepage": "/web-speech-cognitive-services",
+  "homepage": "https://compulim.github.io/web-speech-cognitive-services",
   "private": true,
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ],
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
@@ -11,7 +17,6 @@
   },
   "dependencies": {
     "classnames": "^2.2.6",
-    "component": "^1.0.0",
     "glamor": "^2.20.40",
     "memoize-one": "^4.0.0",
     "microsoft-speech-browser-sdk": "^0.0.12",
@@ -19,6 +24,7 @@
     "react-dictate-button": "^1.1.2",
     "react-dom": "^16.4.1",
     "react-say": "0.0.1-master.e4ee39e",
-    "react-scripts": "1.1.4"
+    "react-scripts": "^2.0.4",
+    "web-speech-cognitive-services": "^3.0.0-0"
   }
 }

@@ -1,34 +1,71 @@
 {
-  "name": "component",
-  "version": "1.0.0",
-  "description": "",
+  "name": "web-speech-cognitive-services",
+  "version": "3.0.0-0",
+  "description": "Polyfill Web Speech API with Cognitive Services Speech-to-Text service",
+  "keywords": [
+    "cognitive services",
+    "dictation",
+    "microphone",
+    "polyfill",
+    "react",
+    "speak",
+    "speech recognition",
+    "speech synthesis",
+    "speech to text",
+    "speechsynthesis",
+    "stt",
+    "text to speech",
+    "tts",
+    "utterance",
+    "voice recognition",
+    "web speech",
+    "webrtc",
+    "webspeech"
+  ],
   "main": "lib/index.js",
-  "private": true,
+  "files": [
+    "lib/**/*"
+  ],
   "scripts": {
     "build": "babel --out-dir lib --ignore **/*.spec.js,**/*.test.js --source-maps true src/",
     "clean": "rimraf lib",
     "test": "echo No tests defined",
     "watch": "npm run build -- --watch"
   },
+  "author": "William Wong <compulim@hotmail.com> (http://compulim.info/)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/compulim/web-speech-cognitive-services.git"
+  },
+  "bugs": {
+    "url": "https://github.com/compulim/web-speech-cognitive-services/issues"
+  },
+  "homepage": "https://github.com/compulim/web-speech-cognitive-services#readme",
+  "peerDependencies": {
+    "microsoft-speech-browser-sdk": "^0.0.12",
+    "react": "^16.4.2"
+  },
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-core": "^6.26.3",
-    "babel-plugin-transform-object-rest-spread": "^6.26.0",
-    "babel-plugin-transform-runtime": "^6.23.0",
+    "@babel/cli": "^7.1.2",
+    "@babel/core": "^7.1.2",
+    "@babel/plugin-proposal-object-rest-spread": "^7.0.0",
+    "@babel/plugin-transform-runtime": "^7.1.0",
+    "@babel/preset-env": "^7.1.0",
+    "@babel/preset-react": "^7.0.0",
+    "babel-core": "7.0.0-bridge.0",
+    "babel-jest": "^23.6.0",
     "babel-plugin-version-transform": "^1.0.0",
-    "babel-preset-env": "^1.7.0",
-    "babel-preset-react": "^6.24.1",
-    "jest": "^22.4.4",
+    "jest": "^23.6.0",
     "microsoft-speech-browser-sdk": "^0.0.12",
     "react": "^16.4.2",
     "rimraf": "^2.6.2"
   },
   "dependencies": {
-    "babel-runtime": "^6.26.0",
+    "@babel/runtime": "^7.1.2",
     "event-as-promise": "^1.0.3",
     "events": "^3.0.0",
     "memoize-one": "^4.0.0",
-    "react-say": "0.0.1-master.ca079e3",
     "simple-update-in": "^1.2.0"
   }
 }

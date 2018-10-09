@@ -1,59 +1,15 @@
 {
-  "name": "web-speech-cognitive-services",
-  "version": "3.0.0-0",
-  "description": "Polyfill Web Speech API with Cognitive Services Speech-to-Text service",
-  "keywords": [
-    "cognitive services",
-    "dictation",
-    "microphone",
-    "polyfill",
-    "react",
-    "speak",
-    "speech recognition",
-    "speech synthesis",
-    "speech to text",
-    "speechsynthesis",
-    "stt",
-    "text to speech",
-    "tts",
-    "utterance",
-    "voice recognition",
-    "web speech",
-    "webrtc",
-    "webspeech"
-  ],
-  "main": "lib/index.js",
-  "files": [
-    "lib/**/*"
-  ],
+  "name": "root",
+  "version": "0.0.0-0",
+  "description": "",
+  "private": true,
   "scripts": {
     "bootstrap": "lerna bootstrap",
     "build": "lerna run --stream build",
     "test": "lerna run --stream test",
     "watch": "lerna run --stream watch"
   },
-  "author": "William Wong <compulim@hotmail.com> (http://compulim.info/)",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/compulim/web-speech-cognitive-services.git"
-  },
-  "bugs": {
-    "url": "https://github.com/compulim/web-speech-cognitive-services/issues"
-  },
-  "homepage": "https://github.com/compulim/web-speech-cognitive-services#readme",
   "devDependencies": {
     "lerna": "^3.1.4"
-  },
-  "dependencies": {
-    "event-as-promise": "^1.0.3",
-    "events": "^3.0.0",
-    "memoize-one": "^4.0.0",
-    "react-say": "0.0.1-master.ca079e3",
-    "simple-update-in": "^1.2.0"
-  },
-  "peerDependencies": {
-    "microsoft-speech-browser-sdk": "^0.0.12",
-    "react": "^16.4.2"
   }
 }

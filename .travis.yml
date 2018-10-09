@@ -1,28 +1,25 @@
 language: node_js
+
 node_js:
   - "10"
-before_script:
+
+before_install:
+  - npm install
+  - sudo apt-get install jq
   - npx version-from-git --travis --no-git-tag-version
+  - git checkout -b temp-ci
+  - lerna version --force-publish --no-git-tag-version --no-push --yes `cat package.json | jq -r .version`
+
+install:
   - npm run bootstrap
   - npm run build
-before_deploy:
-  - cp -r packages/component/lib .
+
 deploy:
-  - provider: npm
-    api_key:
-      secure: "Rb//K/GKHFtXZViSQtwhlzxrCyPEAy2mgRnqz346VCtjqPKiwrpD3hhkbQNowOfSQjZ4TtY+5Pl7NS8tq0Kq51Exd9Yx+/xJoUXItcJaElT1z1AoeR8UXJLsjU6syP8RIHvb3yBNdLtZfoNpiIzEZcyDFB4H6XrycPWRviDER+oI1qdoVfL1uQGh2kbtcTpWYjc9+vI3qzlC0sWiopHRiaM+yIaM3IMEQM+5xZbTgfM90AN+qFATJ7b93vbqMX7tVDAuG+ceXRrncedonpHvmZaDWZUQgA67sCPMB4/d5C4cg6XFrGMoHKC82vJ1wvGY5g0Hb79thUQDSXrx69hit0lbFr5wb5G93xHyu6KfPgyz+zRRy3sbnVDzP7WJBFn8l/EKUV6WdoIHOq9VaemDiM8tAVnOtATGwylgu61120Xd6z9VgAq67ipiRbcll1nZ2jExX45NynM6SofBAffHOtJkK4gQh4f01N8KNwVePW30Q4mZkze4YYaptjvHcmoDnAK3vU6LX9nwpyKiseanx6ZfSn+ckRIGwXLPwtDWAFVcgeJjbvlVNe6cjboX0YGK8pBm4NBG6K+YpwLDT+m9Sn2ZepW+U2lm5R+2BwEIzFk4ZL5x+VbFrJ+7frbrcYqDOnZLeDC+kpLSX+uEVJTD1KlSeueoWt3zlfQzTB/X2K4="
-    email: "compulim@hotmail.com"
+  - provider: script
+    script: bash scripts/lerna_publish
+    skip_cleanup: true
     on:
       branch: master
-    skip_cleanup: true
-    tag: master
-  - provider: npm
-    api_key:
-      secure: "Rb//K/GKHFtXZViSQtwhlzxrCyPEAy2mgRnqz346VCtjqPKiwrpD3hhkbQNowOfSQjZ4TtY+5Pl7NS8tq0Kq51Exd9Yx+/xJoUXItcJaElT1z1AoeR8UXJLsjU6syP8RIHvb3yBNdLtZfoNpiIzEZcyDFB4H6XrycPWRviDER+oI1qdoVfL1uQGh2kbtcTpWYjc9+vI3qzlC0sWiopHRiaM+yIaM3IMEQM+5xZbTgfM90AN+qFATJ7b93vbqMX7tVDAuG+ceXRrncedonpHvmZaDWZUQgA67sCPMB4/d5C4cg6XFrGMoHKC82vJ1wvGY5g0Hb79thUQDSXrx69hit0lbFr5wb5G93xHyu6KfPgyz+zRRy3sbnVDzP7WJBFn8l/EKUV6WdoIHOq9VaemDiM8tAVnOtATGwylgu61120Xd6z9VgAq67ipiRbcll1nZ2jExX45NynM6SofBAffHOtJkK4gQh4f01N8KNwVePW30Q4mZkze4YYaptjvHcmoDnAK3vU6LX9nwpyKiseanx6ZfSn+ckRIGwXLPwtDWAFVcgeJjbvlVNe6cjboX0YGK8pBm4NBG6K+YpwLDT+m9Sn2ZepW+U2lm5R+2BwEIzFk4ZL5x+VbFrJ+7frbrcYqDOnZLeDC+kpLSX+uEVJTD1KlSeueoWt3zlfQzTB/X2K4="
-    email: "compulim@hotmail.com"
-    on:
-      tags: true
-    skip_cleanup: true
   - provider: pages
     skip-cleanup: true
     github-token:

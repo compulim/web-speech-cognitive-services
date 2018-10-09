@@ -7,7 +7,7 @@ import {
   SpeechRecognition,
   speechSynthesis,
   SpeechSynthesisUtterance
-} from 'component';
+} from 'web-speech-cognitive-services';
 
 import DictationPane from './DictationPane';
 
