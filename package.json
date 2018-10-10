@@ -23,6 +23,7 @@
     "webspeech"
   ],
   "main": "packages/component/lib/index.js",
+  "types": "packages/component/lib/index.d.ts",
   "files": [
     "packages/component/lib/**/*"
   ],
