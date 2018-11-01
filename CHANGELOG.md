@@ -18,9 +18,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
    - `recognition.fetchToken = async () => return await 'your subscription key';`
    - `recognition.fetchToken = createFetchTokenUsingSubscriptionKey('your subscription key');`
    - `fetchToken` will be called every time a token is required, implementor should cache the token as needed
-- Bump to `@babel/core@7.1.2` and `jest@^23.6.0`
-- Bump to `react-scripts@2.0.4`
+- Bump to [`@babel/core@7.1.2`](https://npmjs.com/package/@babel/core/v/7.1.2) and [`jest@^23.6.0`](https://npmjs.com/package/jest/v/23.6.0)
+- Bump to [`react-scripts@2.0.4`](https://npmjs.com/package/react-scripts/v/2.0.4)
 - Publish `/packages/component/` instead of `/`
+- Bump to [`event-as-promise@1.0.5`](https://npmjs.com/package/event-as-promise/v/1.0.5)
 
 ## [2.1.0] - 2018-07-09
 ### Added

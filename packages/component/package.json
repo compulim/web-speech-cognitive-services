@@ -63,7 +63,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.1.2",
-    "event-as-promise": "^1.0.3",
+    "event-as-promise": "^1.0.5",
     "events": "^3.0.0",
     "memoize-one": "^4.0.0",
     "simple-update-in": "^1.2.0"
