@@ -1,35 +1,37 @@
 language: node_js
 
 node_js:
-  - "10"
+- "10"
 
 before_install:
-  - npm install
-  - sudo apt-get install jq
-  - npx version-from-git --travis --no-git-tag-version
-  - git checkout -b temp-ci
-  - lerna version --force-publish --no-git-tag-version --no-push --yes `cat package.json | jq -r .version`
+- npm install
+- sudo apt-get install jq
+- npx version-from-git --travis --no-git-tag-version
+- git checkout -b temp-ci
+- lerna version --force-publish --no-git-tag-version --no-push --yes `cat package.json | jq -r .version`
 
 install:
-  - npm run bootstrap
-  - npm run build
+- npm run bootstrap
+- npm run build
 
 deploy:
-  - provider: script
-    script: bash scripts/lerna_publish
-    skip_cleanup: true
-    on:
-      branch: master
-  - provider: pages
-    skip-cleanup: true
-    github-token:
-      secure: "By9mOa/fbj3aLs7CF+zKD+9n4j6D4hR2oFRoLL6dCDmCbBXOo+ddxB0U8mR9dg2abxo5cXRXU5yxfYp304Lb47YHfC/ayJAAYzvbgkn92Gq0V3jBmZ2pZ8ldbjUJpPQfnavSPmy4zDB53YMYXxoG8vfaRUk6mltapKHvN+Mw0dwuc9Ez+w4XTpnOk1NEmFGpw6vTFcBKkQoj6yhzRljQKPY3cFZqUnx/FEWBC0pAsufrGR946itsZAuRSVjkRj6BnzFqs5zZeaHs07sdb75+RSqcS2yadilhJqIumD64f12qMYfQH6uICeyHMxnNZkvGwcXcc5034FTchUyAxQxc0mg2t6CZWztbSAQ9aCvQ4p2jZZLIkaATee32/MEkx9vaJP0IB/GBJ5sIoBlQdpAIRZljq6nyBkR+H18k3Pk2spePsaGaiqrggaPzGbGPHnj74ENMXoDym/lsehhNOSn8Wwzb1EfF+8AAOg3FOUq4m8G42/ed5J8WVKgP4B+Pd89tRWl2dD+DXly1dDD64vHvOyf0yzdL8FtWsGdKd6XKiOnA0GSWEjsMtj9LOaYmHEW1vANv9uBjqMcwBdRSA2xiR2+ADcP1kMYHJZcLWKjVSkPhMDlIyTQe4WAEMCyxqmufEtLbTVwhDwFtJbucSB2bS+TzrRYEjahqkTlVCnmPyYg="
-    on:
-      branch: master
-    local-dir: packages/playground/build
-  - provider: releases
-    api_key:
-      secure: "By9mOa/fbj3aLs7CF+zKD+9n4j6D4hR2oFRoLL6dCDmCbBXOo+ddxB0U8mR9dg2abxo5cXRXU5yxfYp304Lb47YHfC/ayJAAYzvbgkn92Gq0V3jBmZ2pZ8ldbjUJpPQfnavSPmy4zDB53YMYXxoG8vfaRUk6mltapKHvN+Mw0dwuc9Ez+w4XTpnOk1NEmFGpw6vTFcBKkQoj6yhzRljQKPY3cFZqUnx/FEWBC0pAsufrGR946itsZAuRSVjkRj6BnzFqs5zZeaHs07sdb75+RSqcS2yadilhJqIumD64f12qMYfQH6uICeyHMxnNZkvGwcXcc5034FTchUyAxQxc0mg2t6CZWztbSAQ9aCvQ4p2jZZLIkaATee32/MEkx9vaJP0IB/GBJ5sIoBlQdpAIRZljq6nyBkR+H18k3Pk2spePsaGaiqrggaPzGbGPHnj74ENMXoDym/lsehhNOSn8Wwzb1EfF+8AAOg3FOUq4m8G42/ed5J8WVKgP4B+Pd89tRWl2dD+DXly1dDD64vHvOyf0yzdL8FtWsGdKd6XKiOnA0GSWEjsMtj9LOaYmHEW1vANv9uBjqMcwBdRSA2xiR2+ADcP1kMYHJZcLWKjVSkPhMDlIyTQe4WAEMCyxqmufEtLbTVwhDwFtJbucSB2bS+TzrRYEjahqkTlVCnmPyYg="
-    on:
-      tags: true
-    skip_cleanup: true
+- provider: script
+  script: bash scripts/lerna_publish
+  skip_cleanup: true
+  on:
+    branch: master
+
+- provider: pages
+  skip-cleanup: true
+  github-token:
+    secure: "By9mOa/fbj3aLs7CF+zKD+9n4j6D4hR2oFRoLL6dCDmCbBXOo+ddxB0U8mR9dg2abxo5cXRXU5yxfYp304Lb47YHfC/ayJAAYzvbgkn92Gq0V3jBmZ2pZ8ldbjUJpPQfnavSPmy4zDB53YMYXxoG8vfaRUk6mltapKHvN+Mw0dwuc9Ez+w4XTpnOk1NEmFGpw6vTFcBKkQoj6yhzRljQKPY3cFZqUnx/FEWBC0pAsufrGR946itsZAuRSVjkRj6BnzFqs5zZeaHs07sdb75+RSqcS2yadilhJqIumD64f12qMYfQH6uICeyHMxnNZkvGwcXcc5034FTchUyAxQxc0mg2t6CZWztbSAQ9aCvQ4p2jZZLIkaATee32/MEkx9vaJP0IB/GBJ5sIoBlQdpAIRZljq6nyBkR+H18k3Pk2spePsaGaiqrggaPzGbGPHnj74ENMXoDym/lsehhNOSn8Wwzb1EfF+8AAOg3FOUq4m8G42/ed5J8WVKgP4B+Pd89tRWl2dD+DXly1dDD64vHvOyf0yzdL8FtWsGdKd6XKiOnA0GSWEjsMtj9LOaYmHEW1vANv9uBjqMcwBdRSA2xiR2+ADcP1kMYHJZcLWKjVSkPhMDlIyTQe4WAEMCyxqmufEtLbTVwhDwFtJbucSB2bS+TzrRYEjahqkTlVCnmPyYg="
+  on:
+    branch: master
+  local-dir: packages/playground/build
+
+- provider: releases
+  api_key:
+    secure: "By9mOa/fbj3aLs7CF+zKD+9n4j6D4hR2oFRoLL6dCDmCbBXOo+ddxB0U8mR9dg2abxo5cXRXU5yxfYp304Lb47YHfC/ayJAAYzvbgkn92Gq0V3jBmZ2pZ8ldbjUJpPQfnavSPmy4zDB53YMYXxoG8vfaRUk6mltapKHvN+Mw0dwuc9Ez+w4XTpnOk1NEmFGpw6vTFcBKkQoj6yhzRljQKPY3cFZqUnx/FEWBC0pAsufrGR946itsZAuRSVjkRj6BnzFqs5zZeaHs07sdb75+RSqcS2yadilhJqIumD64f12qMYfQH6uICeyHMxnNZkvGwcXcc5034FTchUyAxQxc0mg2t6CZWztbSAQ9aCvQ4p2jZZLIkaATee32/MEkx9vaJP0IB/GBJ5sIoBlQdpAIRZljq6nyBkR+H18k3Pk2spePsaGaiqrggaPzGbGPHnj74ENMXoDym/lsehhNOSn8Wwzb1EfF+8AAOg3FOUq4m8G42/ed5J8WVKgP4B+Pd89tRWl2dD+DXly1dDD64vHvOyf0yzdL8FtWsGdKd6XKiOnA0GSWEjsMtj9LOaYmHEW1vANv9uBjqMcwBdRSA2xiR2+ADcP1kMYHJZcLWKjVSkPhMDlIyTQe4WAEMCyxqmufEtLbTVwhDwFtJbucSB2bS+TzrRYEjahqkTlVCnmPyYg="
+  on:
+    tags: true
+  skip_cleanup: true

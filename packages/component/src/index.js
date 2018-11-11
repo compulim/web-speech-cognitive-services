@@ -1,13 +1,7 @@
-import createFetchTokenUsingSubscriptionKey from './util/createFetchTokenUsingSubscriptionKey';
-import SpeechGrammarList from './recognition/SpeechGrammarList';
-import SpeechRecognition from './recognition/SpeechRecognition';
-import speechSynthesis from './synthesis/speechSynthesis';
-import SpeechSynthesisUtterance from './synthesis/SpeechSynthesisUtterance';
+import BingSpeech from './BingSpeech/index';
+import SpeechServices from './UnifiedSpeech/index';
 
 export {
-  createFetchTokenUsingSubscriptionKey,
-  SpeechGrammarList,
-  SpeechRecognition,
-  speechSynthesis,
-  SpeechSynthesisUtterance
+  BingSpeech,
+  SpeechServices
 }
