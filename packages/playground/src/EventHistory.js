@@ -9,10 +9,36 @@ const ROOT_CSS = css({
   }
 });
 
-function* forEachMap(map) {
-  for (const name in map) {
-    yield map[name];
+function stringifyEvent(event) {
+  let keys;
+  const json = {};
+
+  if (event.type !== 'cognitiveservices') {
+    keys = ['emma', 'error', 'interpretation', 'resultIndex', 'results'];
+  } else {
+    keys = Object.keys(event);
   }
+
+  keys.forEach(name => {
+    if (name === 'results') {
+      json.results = event.results && [].map.call(event.results, result => {
+        const nextResult = {
+          isFinal: result.isFinal,
+          length: result.length
+        };
+
+        [].forEach.call(result, ({ confidence, transcript }, index) => {
+          nextResult[index] = { confidence, transcript };
+        });
+
+        return nextResult;
+      });
+    } else {
+      json[name] = event[name];
+    }
+  });
+
+  return JSON.stringify(json, null, 2);
 }
 
 const GROUP_WITHIN = 100;
@@ -70,6 +96,8 @@ export default class extends React.Component {
   handleEvent(targetName, event) {
     const now = Date.now();
 
+    console.log(event);
+
     this.setState(({ events }) => ({
       events: [...events, {
         event,
@@ -81,7 +109,7 @@ export default class extends React.Component {
 
   render() {
     const { props: { children }, state: { columns } } = this;
-    const customRender = typeof children === 'function' ? children : event => event && <pre>{ JSON.stringify(event, null, 2) }</pre>;
+    const customRender = typeof children === 'function' ? children : event => event && <pre>{ stringifyEvent(event) }</pre>;
     const table = [];
     let lastRow, lastRowTime;
 
@@ -116,13 +144,13 @@ export default class extends React.Component {
         </thead>
         <tbody>
           { table.map((row, index) =>
-            <React.Fragment>
-              <tr key={ index }>
+            <React.Fragment key={ index }>
+              <tr>
                 { row.map((cell, index) =>
                   <th key={ index }>{ cell && cell.type }</th>
                 ) }
               </tr>
-              <tr key={ index + .5 }>
+              <tr>
                 { row.map((cell, index) =>
                   <td key={ index }>
                     { customRender(cell) }

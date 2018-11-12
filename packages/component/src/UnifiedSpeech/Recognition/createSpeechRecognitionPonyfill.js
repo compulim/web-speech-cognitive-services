@@ -54,6 +54,10 @@ export default ({
         'cognitiveservices'
       ]);
 
+      this._continuous = false;
+      this._interimResults = false;
+      this._lang = typeof window !== 'undefined' ? (window.document.documentElement.getAttribute('lang') || window.navigator.language) : 'en-US';
+
       this.createRecognizer = memoize(({
         language
       } = {}) => {
@@ -62,6 +66,8 @@ export default ({
         speechConfig.speechRecognitionLanguage = language || 'en-US';
 
         const recognizer = new SpeechRecognizer(speechConfig, audioConfig);
+
+        console.log(speechConfig);
 
         recognizer.canceled = (_, { errorDetails, offset, reason, sessionId }) => {
           this.emitCognitiveServices('canceled', { errorDetails, offset, reason, sessionId });
@@ -88,8 +94,8 @@ export default ({
       });
     }
 
-    get continuous() { return false; }
-    set continuous(_) { throw new Error('not implemented'); }
+    get continuous() { return this._continuous; }
+    set continuous(value) { this._continuous = value; }
 
     get interimResults() { return this._interimResults; }
     set interimResults(value) { this._interimResults = value; }
@@ -106,23 +112,23 @@ export default ({
 
     start() {
       const recognizer = this._recognizer = this.createRecognizer();
+      const onStart = event => {
+        console.warn(event);
+        this.emit('cognitiveservices', { subType: 'start' });
+      };
 
-      console.log(recognizer);
+      const onError = error => {
+        console.warn(error);
+        this.emit('cognitiveservices', { error, subType: 'error on start' });
+      };
 
-      // recognizer.recognizeOnceAsync(
-      recognizer.startContinuousRecognitionAsync(
-        () => {
-          this.emit('cognitiveservices', {
-            subType: 'start'
-          });
-        },
-        error => {
-          this.emit('cognitiveservices', {
-            error,
-            subType: 'error on start'
-          });
-        }
-      );
+      if (this.continuous) {
+        console.log('startContinuousRecognitionAsync');
+        recognizer.startContinuousRecognitionAsync(onStart, onError);
+      } else {
+        console.log('recognizeOnceAsync');
+        recognizer.recognizeOnceAsync(onStart, onError);
+      }
     }
 
     stop() {
@@ -131,19 +137,17 @@ export default ({
         throw new Error('not started');
       }
 
-      this._recognizer.stopContinuousRecognitionAsync(
-        () => {
-          this.emit('cognitiveservices', {
-            subType: 'stop'
-          });
-        },
-        error => {
-          this.emit('cognitiveservices', {
-            error,
-            subType: 'error on stop'
-          });
-        }
-      );
+      const onStop = event => {
+        console.warn(event);
+        this.emit('cognitiveservices', { subType: 'stop' });
+      };
+
+      const onError = error => {
+        console.warn(error);
+        this.emit('cognitiveservices', { error, subType: 'error on stop' });
+      };
+
+      this._recognizer.stopContinuousRecognitionAsync(onStop, onError);
     }
   }
 

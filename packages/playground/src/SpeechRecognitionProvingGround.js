@@ -6,7 +6,6 @@ import {
 } from 'web-speech-cognitive-services/lib/UnifiedSpeech';
 
 import EventHistory from './EventHistory';
-import EventList from './EventList';
 
 const ROOT_CSS = css({
 });
@@ -31,8 +30,10 @@ export default class ProvingGround extends React.Component {
     super(props);
 
     this.handleAbort = this.handleAbort.bind(this);
+    this.handleClearHistory = this.handleClearHistory.bind(this);
     this.handleStart = this.handleStart.bind(this, true);
     this.handleStop = this.handleStop.bind(this, false);
+    this.handleContinuousChange = this.handleContinuousChange.bind(this);
 
     this.browserPonyfill = {
       SpeechRecognition: window.SpeechRecognition || window.webkitSpeechRecognition
@@ -43,6 +44,8 @@ export default class ProvingGround extends React.Component {
     this.state = {
       browserSpeechRecognition: null,
       cognitiveServicesSpeechRecognition: null,
+      continuous: false,
+      historyKey: Math.random(),
       started: false
     };
   }
@@ -67,9 +70,29 @@ export default class ProvingGround extends React.Component {
     }));
   }
 
+  handleClearHistory() {
+    // this.setState(({ historyKey }) => ({
+    //   historykey: historyKey + 1
+    // }));
+
+    this.setState(() => ({
+      historyKey: Math.random()
+    }));
+  }
+
+  handleContinuousChange({ target: { checked } }) {
+    this.setState(() => ({
+      continuous: checked
+    }));
+  }
+
   handleStart() {
+    const { state: { continuous } } = this;
     const browserSpeechRecognition = new this.browserPonyfill.SpeechRecognition();
     const cognitiveServicesSpeechRecognition = new this.cognitiveServicesPonyfill.SpeechRecognition();
+
+    browserSpeechRecognition.continuous = continuous;
+    cognitiveServicesSpeechRecognition.continuous = continuous;
 
     this.setState(() => ({
       browserSpeechRecognition,
@@ -80,7 +103,7 @@ export default class ProvingGround extends React.Component {
       },
       started: true
     }), () => {
-      browserSpeechRecognition.start();
+      // browserSpeechRecognition.start();
       cognitiveServicesSpeechRecognition.start();
     });
   }
@@ -101,7 +124,7 @@ export default class ProvingGround extends React.Component {
 
   render() {
     const {
-      state: { browserSpeechRecognition, cognitiveServicesSpeechRecognition, eventTargets, started }
+      state: { continuous, eventTargets, historyKey, started }
     } = this;
 
     return (
@@ -125,10 +148,24 @@ export default class ProvingGround extends React.Component {
           >
             Abort
           </button>
+          <button
+            onClick={ this.handleClearHistory }
+          >
+            Clear history
+          </button>
+          <label>
+            <input
+              onChange={ this.handleContinuousChange }
+              type="checkbox"
+              value={ continuous }
+            />
+            Continuous mode
+          </label>
         </div>
         <div className="grounds">
           <EventHistory
             events={ MONITORING_EVENTS }
+            key={ historyKey }
             targets={ eventTargets }
           />
         </div>
