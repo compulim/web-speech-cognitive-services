@@ -11,6 +11,12 @@ Object.defineProperty(exports, "createFetchTokenUsingSubscriptionKey", {
     return _createFetchTokenUsingSubscriptionKey.default;
   }
 });
+Object.defineProperty(exports, "getFetchTokenFromServer", {
+  enumerable: true,
+  get: function get() {
+    return _getFetchTokenFromServer.default;
+  }
+});
 Object.defineProperty(exports, "SpeechGrammarList", {
   enumerable: true,
   get: function get() {
@@ -37,6 +43,8 @@ Object.defineProperty(exports, "SpeechSynthesisUtterance", {
 });
 
 var _createFetchTokenUsingSubscriptionKey = _interopRequireDefault(require("./util/createFetchTokenUsingSubscriptionKey"));
+
+var _getFetchTokenFromServer = _interopRequireDefault(require("./util/getFetchTokenFromServer"));
 
 var _SpeechGrammarList = _interopRequireDefault(require("./recognition/SpeechGrammarList"));
 
