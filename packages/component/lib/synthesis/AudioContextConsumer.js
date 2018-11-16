@@ -1,51 +1,50 @@
-'use strict';
+"use strict";
+
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.default = void 0;
 
-var _regenerator = require('babel-runtime/regenerator');
+var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
-var _regenerator2 = _interopRequireDefault(_regenerator);
+var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
 
-var _asyncToGenerator2 = require('babel-runtime/helpers/asyncToGenerator');
+var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
 
-var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
+var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
 
-var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');
-
-var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
-
-var _createClass2 = require('babel-runtime/helpers/createClass');
-
-var _createClass3 = _interopRequireDefault(_createClass2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var _class = function () {
-  function _class() {
-    (0, _classCallCheck3.default)(this, _class);
+var _default =
+/*#__PURE__*/
+function () {
+  function _default() {
+    (0, _classCallCheck2.default)(this, _default);
   }
 
-  (0, _createClass3.default)(_class, [{
-    key: 'start',
+  (0, _createClass2.default)(_default, [{
+    key: "start",
     value: function () {
-      var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee(queue) {
-        var audioContextClass = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : window.AudioContext || window.webkitAudioContext;
-        var utterance;
-        return _regenerator2.default.wrap(function _callee$(_context) {
+      var _start = (0, _asyncToGenerator2.default)(
+      /*#__PURE__*/
+      _regenerator.default.mark(function _callee(queue) {
+        var audioContextClass,
+            utterance,
+            _args = arguments;
+        return _regenerator.default.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
+                audioContextClass = _args.length > 1 && _args[1] !== undefined ? _args[1] : window.AudioContext || window.webkitAudioContext;
+
                 if (!this.audioContext) {
-                  _context.next = 2;
+                  _context.next = 3;
                   break;
                 }
 
                 throw new Error('already started');
 
-              case 2:
-                utterance = void 0;
+              case 3:
                 _context.prev = 3;
 
               case 4:
@@ -55,12 +54,10 @@ var _class = function () {
                 }
 
                 this.playingUtterance = utterance;
-
                 _context.next = 8;
                 return utterance.play(this.audioContext || (this.audioContext = new audioContextClass()));
 
               case 8:
-
                 this.playingUtterance = null;
                 _context.next = 4;
                 break;
@@ -84,27 +81,25 @@ var _class = function () {
                 return _context.finish(11);
 
               case 18:
-              case 'end':
+              case "end":
                 return _context.stop();
             }
           }
         }, _callee, this, [[3,, 11, 18]]);
       }));
 
-      function start(_x2) {
-        return _ref.apply(this, arguments);
-      }
-
-      return start;
+      return function start(_x) {
+        return _start.apply(this, arguments);
+      };
     }()
   }, {
-    key: 'stop',
+    key: "stop",
     value: function stop() {
       this.playingUtterance && this.playingUtterance.stop();
     }
   }]);
-  return _class;
+  return _default;
 }();
 
-exports.default = _class;
+exports.default = _default;
 //# sourceMappingURL=AudioContextConsumer.js.map

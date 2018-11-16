@@ -1,35 +1,48 @@
-'use strict';
+"use strict";
+
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.SpeechSynthesisUtterance = exports.speechSynthesis = exports.SpeechRecognition = exports.SpeechGrammarList = exports.createFetchTokenUsingSubscriptionKey = undefined;
+Object.defineProperty(exports, "createFetchTokenUsingSubscriptionKey", {
+  enumerable: true,
+  get: function get() {
+    return _createFetchTokenUsingSubscriptionKey.default;
+  }
+});
+Object.defineProperty(exports, "SpeechGrammarList", {
+  enumerable: true,
+  get: function get() {
+    return _SpeechGrammarList.default;
+  }
+});
+Object.defineProperty(exports, "SpeechRecognition", {
+  enumerable: true,
+  get: function get() {
+    return _SpeechRecognition.default;
+  }
+});
+Object.defineProperty(exports, "speechSynthesis", {
+  enumerable: true,
+  get: function get() {
+    return _speechSynthesis.default;
+  }
+});
+Object.defineProperty(exports, "SpeechSynthesisUtterance", {
+  enumerable: true,
+  get: function get() {
+    return _SpeechSynthesisUtterance.default;
+  }
+});
 
-var _createFetchTokenUsingSubscriptionKey = require('./util/createFetchTokenUsingSubscriptionKey');
+var _createFetchTokenUsingSubscriptionKey = _interopRequireDefault(require("./util/createFetchTokenUsingSubscriptionKey"));
 
-var _createFetchTokenUsingSubscriptionKey2 = _interopRequireDefault(_createFetchTokenUsingSubscriptionKey);
+var _SpeechGrammarList = _interopRequireDefault(require("./recognition/SpeechGrammarList"));
 
-var _SpeechGrammarList = require('./recognition/SpeechGrammarList');
+var _SpeechRecognition = _interopRequireDefault(require("./recognition/SpeechRecognition"));
 
-var _SpeechGrammarList2 = _interopRequireDefault(_SpeechGrammarList);
+var _speechSynthesis = _interopRequireDefault(require("./synthesis/speechSynthesis"));
 
-var _SpeechRecognition = require('./recognition/SpeechRecognition');
-
-var _SpeechRecognition2 = _interopRequireDefault(_SpeechRecognition);
-
-var _speechSynthesis = require('./synthesis/speechSynthesis');
-
-var _speechSynthesis2 = _interopRequireDefault(_speechSynthesis);
-
-var _SpeechSynthesisUtterance = require('./synthesis/SpeechSynthesisUtterance');
-
-var _SpeechSynthesisUtterance2 = _interopRequireDefault(_SpeechSynthesisUtterance);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-exports.createFetchTokenUsingSubscriptionKey = _createFetchTokenUsingSubscriptionKey2.default;
-exports.SpeechGrammarList = _SpeechGrammarList2.default;
-exports.SpeechRecognition = _SpeechRecognition2.default;
-exports.speechSynthesis = _speechSynthesis2.default;
-exports.SpeechSynthesisUtterance = _SpeechSynthesisUtterance2.default;
+var _SpeechSynthesisUtterance = _interopRequireDefault(require("./synthesis/SpeechSynthesisUtterance"));
 //# sourceMappingURL=index.js.map

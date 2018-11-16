@@ -1,77 +1,65 @@
-'use strict';
+"use strict";
+
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.default = void 0;
 
-var _regenerator = require('babel-runtime/regenerator');
+var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
-var _regenerator2 = _interopRequireDefault(_regenerator);
+var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
 
-var _promise = require('babel-runtime/core-js/promise');
+var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
 
-var _promise2 = _interopRequireDefault(_promise);
+var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
 
-var _asyncToGenerator2 = require('babel-runtime/helpers/asyncToGenerator');
+var _AudioContextQueue = _interopRequireDefault(require("./AudioContextQueue"));
 
-var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
+var _fetchVoices = _interopRequireDefault(require("./fetchVoices"));
 
-var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');
+var _SpeechSynthesisUtterance = _interopRequireDefault(require("./SpeechSynthesisUtterance"));
 
-var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+var DEFAULT_REGION = 'westus'; // Supported output format can be found at https://docs.microsoft.com/en-us/azure/cognitive-services/Speech/API-Reference-REST/BingVoiceOutput#Subscription
 
-var _createClass2 = require('babel-runtime/helpers/createClass');
-
-var _createClass3 = _interopRequireDefault(_createClass2);
-
-var _AudioContextQueue = require('./AudioContextQueue');
-
-var _AudioContextQueue2 = _interopRequireDefault(_AudioContextQueue);
-
-var _fetchVoices = require('./fetchVoices');
-
-var _fetchVoices2 = _interopRequireDefault(_fetchVoices);
-
-var _SpeechSynthesisUtterance = require('./SpeechSynthesisUtterance');
-
-var _SpeechSynthesisUtterance2 = _interopRequireDefault(_SpeechSynthesisUtterance);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-// Supported output format can be found at https://docs.microsoft.com/en-us/azure/cognitive-services/Speech/API-Reference-REST/BingVoiceOutput#Subscription
 var DEFAULT_OUTPUT_FORMAT = 'audio-16khz-128kbitrate-mono-mp3';
 
-var SpeechSynthesis = function () {
+var SpeechSynthesis =
+/*#__PURE__*/
+function () {
   function SpeechSynthesis() {
-    (0, _classCallCheck3.default)(this, SpeechSynthesis);
-
+    (0, _classCallCheck2.default)(this, SpeechSynthesis);
     this.onvoiceschanged = null;
+    this.region = DEFAULT_REGION;
     this.outputFormat = DEFAULT_OUTPUT_FORMAT;
-    this.queue = new _AudioContextQueue2.default();
+    this.queue = new _AudioContextQueue.default();
   }
 
-  (0, _createClass3.default)(SpeechSynthesis, [{
-    key: 'cancel',
+  (0, _createClass2.default)(SpeechSynthesis, [{
+    key: "cancel",
     value: function cancel() {
       this.queue.stop();
     }
   }, {
-    key: 'getVoices',
+    key: "getVoices",
     value: function getVoices() {
-      return (0, _fetchVoices2.default)();
+      return (0, _fetchVoices.default)();
     }
   }, {
-    key: 'speak',
+    key: "speak",
     value: function () {
-      var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee(utterance) {
+      var _speak = (0, _asyncToGenerator2.default)(
+      /*#__PURE__*/
+      _regenerator.default.mark(function _callee(utterance) {
         var _this = this;
 
         var accessToken;
-        return _regenerator2.default.wrap(function _callee$(_context) {
+        return _regenerator.default.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                if (utterance instanceof _SpeechSynthesisUtterance2.default) {
+                if (utterance instanceof _SpeechSynthesisUtterance.default) {
                   _context.next = 2;
                   break;
                 }
@@ -100,10 +88,11 @@ var SpeechSynthesis = function () {
 
               case 10:
                 accessToken = _context.sent;
-                return _context.abrupt('return', new _promise2.default(function (resolve, reject) {
+                return _context.abrupt("return", new Promise(function (resolve, reject) {
                   utterance.addEventListener('end', resolve);
                   utterance.addEventListener('error', reject);
                   utterance.accessToken = accessToken;
+                  utterance.region = _this.region;
                   utterance.outputFormat = _this.outputFormat;
                   utterance.preload();
 
@@ -111,22 +100,22 @@ var SpeechSynthesis = function () {
                 }));
 
               case 12:
-              case 'end':
+              case "end":
                 return _context.stop();
             }
           }
         }, _callee, this);
       }));
 
-      function speak(_x) {
-        return _ref.apply(this, arguments);
-      }
-
-      return speak;
+      return function speak(_x) {
+        return _speak.apply(this, arguments);
+      };
     }()
   }]);
   return SpeechSynthesis;
 }();
 
-exports.default = new SpeechSynthesis();
+var _default = new SpeechSynthesis();
+
+exports.default = _default;
 //# sourceMappingURL=speechSynthesis.js.map

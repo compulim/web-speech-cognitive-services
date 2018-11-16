@@ -1,33 +1,31 @@
 "use strict";
 
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.default = void 0;
 
-var _classCallCheck2 = require("babel-runtime/helpers/classCallCheck");
+var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
 
-var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
 
-var _createClass2 = require("babel-runtime/helpers/createClass");
-
-var _createClass3 = _interopRequireDefault(_createClass2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var _class = function () {
-  function _class(_ref) {
+var _default =
+/*#__PURE__*/
+function () {
+  function _default(_ref) {
     var gender = _ref.gender,
         lang = _ref.lang,
         voiceURI = _ref.voiceURI;
-    (0, _classCallCheck3.default)(this, _class);
-
+    (0, _classCallCheck2.default)(this, _default);
     this._gender = gender;
     this._lang = lang;
     this._name = voiceURI;
     this._voiceURI = voiceURI;
   }
 
-  (0, _createClass3.default)(_class, [{
+  (0, _createClass2.default)(_default, [{
     key: "default",
     get: function get() {
       return false;
@@ -58,8 +56,8 @@ var _class = function () {
       return this._voiceURI;
     }
   }]);
-  return _class;
+  return _default;
 }();
 
-exports.default = _class;
+exports.default = _default;
 //# sourceMappingURL=SpeechSynthesisVoice.js.map

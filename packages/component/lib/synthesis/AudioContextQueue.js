@@ -1,46 +1,40 @@
-'use strict';
+"use strict";
+
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.default = void 0;
 
-var _regenerator = require('babel-runtime/regenerator');
+var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
-var _regenerator2 = _interopRequireDefault(_regenerator);
+var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
 
-var _asyncToGenerator2 = require('babel-runtime/helpers/asyncToGenerator');
+var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
 
-var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
+var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
 
-var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');
+var _AudioContextConsumer = _interopRequireDefault(require("./AudioContextConsumer"));
 
-var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
-
-var _createClass2 = require('babel-runtime/helpers/createClass');
-
-var _createClass3 = _interopRequireDefault(_createClass2);
-
-var _AudioContextConsumer = require('./AudioContextConsumer');
-
-var _AudioContextConsumer2 = _interopRequireDefault(_AudioContextConsumer);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var _class = function () {
-  function _class() {
+var _default =
+/*#__PURE__*/
+function () {
+  function _default() {
     var audioContextClass = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : window.AudioContext || window.webkitAudioContext;
-    (0, _classCallCheck3.default)(this, _class);
-
+    (0, _classCallCheck2.default)(this, _default);
     this.audioContextClass = audioContextClass;
     this.consumer = null;
     this.queue = [];
   }
 
-  (0, _createClass3.default)(_class, [{
-    key: 'startConsumer',
+  (0, _createClass2.default)(_default, [{
+    key: "startConsumer",
     value: function () {
-      var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee() {
-        return _regenerator2.default.wrap(function _callee$(_context) {
+      var _startConsumer = (0, _asyncToGenerator2.default)(
+      /*#__PURE__*/
+      _regenerator.default.mark(function _callee() {
+        return _regenerator.default.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
@@ -49,7 +43,7 @@ var _class = function () {
                   break;
                 }
 
-                this.consumer = new _AudioContextConsumer2.default();
+                this.consumer = new _AudioContextConsumer.default();
                 _context.next = 4;
                 return this.consumer.start(this.queue, this.audioContextClass);
 
@@ -59,34 +53,32 @@ var _class = function () {
                 break;
 
               case 7:
-              case 'end':
+              case "end":
                 return _context.stop();
             }
           }
         }, _callee, this);
       }));
 
-      function startConsumer() {
-        return _ref.apply(this, arguments);
-      }
-
-      return startConsumer;
+      return function startConsumer() {
+        return _startConsumer.apply(this, arguments);
+      };
     }()
   }, {
-    key: 'push',
+    key: "push",
     value: function push(utterance) {
       this.queue.push(utterance);
       this.startConsumer();
     }
   }, {
-    key: 'stop',
+    key: "stop",
     value: function stop() {
       this.queue.splice(0);
       this.consumer && this.consumer.stop();
     }
   }]);
-  return _class;
+  return _default;
 }();
 
-exports.default = _class;
+exports.default = _default;
 //# sourceMappingURL=AudioContextQueue.js.map

@@ -1,61 +1,58 @@
-'use strict';
+"use strict";
+
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.default = void 0;
 
-var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');
+var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
 
-var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
 
-var _createClass2 = require('babel-runtime/helpers/createClass');
+var _events = _interopRequireDefault(require("events"));
 
-var _createClass3 = _interopRequireDefault(_createClass2);
-
-var _events = require('events');
-
-var _events2 = _interopRequireDefault(_events);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var _class = function () {
-  function _class() {
+var _default =
+/*#__PURE__*/
+function () {
+  function _default() {
     var _this = this;
 
     var events = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
-    (0, _classCallCheck3.default)(this, _class);
-
-    this._events = new _events2.default();
-
+    (0, _classCallCheck2.default)(this, _default);
+    this._events = new _events.default();
     events.forEach(function (name) {
       _this._events.addListener(name, function (event) {
-        var handler = _this['on' + name];
+        var handler = _this["on".concat(name)];
 
         handler && handler.call(_this, event);
       });
     });
   }
 
-  (0, _createClass3.default)(_class, [{
-    key: 'addEventListener',
+  (0, _createClass2.default)(_default, [{
+    key: "addEventListener",
     value: function addEventListener(name, listener) {
       this._events.addListener(name, listener);
     }
   }, {
-    key: 'removeEventListener',
+    key: "removeEventListener",
     value: function removeEventListener(name, listener) {
       name ? this._events.removeListener(name, listener) : this._events.removeAllListeners(name);
     }
   }, {
-    key: 'emit',
+    key: "emit",
     value: function emit(name) {
-      var event = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : { type: name };
+      var event = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {
+        type: name
+      };
 
       this._events.emit(name, event);
     }
   }]);
-  return _class;
+  return _default;
 }();
 
-exports.default = _class;
+exports.default = _default;
 //# sourceMappingURL=domEventEmitter.js.map

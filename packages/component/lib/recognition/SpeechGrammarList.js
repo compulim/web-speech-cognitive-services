@@ -1,65 +1,62 @@
-'use strict';
+"use strict";
+
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.default = void 0;
 
-var _toConsumableArray2 = require('babel-runtime/helpers/toConsumableArray');
+var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers/toConsumableArray"));
 
-var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
+var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
 
-var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');
+var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
 
-var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+var _simpleUpdateIn = _interopRequireDefault(require("simple-update-in"));
 
-var _createClass2 = require('babel-runtime/helpers/createClass');
-
-var _createClass3 = _interopRequireDefault(_createClass2);
-
-var _simpleUpdateIn = require('simple-update-in');
-
-var _simpleUpdateIn2 = _interopRequireDefault(_simpleUpdateIn);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var _class = function () {
-  function _class() {
-    (0, _classCallCheck3.default)(this, _class);
-
+var _default =
+/*#__PURE__*/
+function () {
+  function _default() {
+    (0, _classCallCheck2.default)(this, _default);
     this._referenceGrammar = null;
     this._words = [];
   }
 
-  (0, _createClass3.default)(_class, [{
-    key: 'addFromString',
+  (0, _createClass2.default)(_default, [{
+    key: "addFromString",
     value: function addFromString() {
       throw new Error('JSGF is not supported');
     }
   }, {
-    key: 'createSpeechContext',
+    key: "createSpeechContext",
     value: function createSpeechContext() {
       var referenceGrammar = this.referenceGrammar,
           words = this.words;
-
-      var speechContext = void 0;
+      var speechContext;
 
       if (referenceGrammar) {
-        speechContext = (0, _simpleUpdateIn2.default)(speechContext, ['dgi', 'Groups'], function () {
+        speechContext = (0, _simpleUpdateIn.default)(speechContext, ['dgi', 'Groups'], function () {
           var groups = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
-          return [].concat((0, _toConsumableArray3.default)(groups), [{
+          return (0, _toConsumableArray2.default)(groups).concat([{
             Type: 'Generic',
-            Hints: { ReferenceGrammar: referenceGrammar }
+            Hints: {
+              ReferenceGrammar: referenceGrammar
+            }
           }]);
         });
       }
 
       if (words && words.length) {
-        speechContext = (0, _simpleUpdateIn2.default)(speechContext, ['dgi', 'Groups'], function () {
+        speechContext = (0, _simpleUpdateIn.default)(speechContext, ['dgi', 'Groups'], function () {
           var groups = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
-          return [].concat((0, _toConsumableArray3.default)(groups), [{
+          return (0, _toConsumableArray2.default)(groups).concat([{
             Type: 'Generic',
             Items: words.map(function (word) {
-              return { Text: word };
+              return {
+                Text: word
+              };
             })
           }]);
         });
@@ -68,7 +65,7 @@ var _class = function () {
       return speechContext;
     }
   }, {
-    key: 'referenceGrammar',
+    key: "referenceGrammar",
     get: function get() {
       return this._referenceGrammar;
     },
@@ -80,7 +77,7 @@ var _class = function () {
       this._referenceGrammar = nextReferenceGrammar;
     }
   }, {
-    key: 'words',
+    key: "words",
     get: function get() {
       return this._words;
     },
@@ -92,8 +89,8 @@ var _class = function () {
       this._words = nextWords;
     }
   }]);
-  return _class;
+  return _default;
 }();
 
-exports.default = _class;
+exports.default = _default;
 //# sourceMappingURL=SpeechGrammarList.js.map

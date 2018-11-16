@@ -85,7 +85,8 @@ export default class extends DOMEventEmitter {
       rate: this.rate,
       text: this.text,
       voice: this.voice && this.voice.voiceURI || undefined,
-      volume: this.volume
+      volume: this.volume,
+      region: this.region
     });
 
     await this.arrayBufferPromise;

@@ -1,59 +1,65 @@
-'use strict';
+"use strict";
+
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.default = _default;
 
-var _regenerator = require('babel-runtime/regenerator');
+var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
-var _regenerator2 = _interopRequireDefault(_regenerator);
+var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
 
-var _asyncToGenerator2 = require('babel-runtime/helpers/asyncToGenerator');
+var TOKEN_URL = 'api.cognitive.microsoft.com/sts/v1.0/issueToken';
+var DEFAULT_REGION = 'westus';
 
-var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
+function _default(_x) {
+  return _ref.apply(this, arguments);
+}
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var TOKEN_URL = 'https://api.cognitive.microsoft.com/sts/v1.0/issueToken';
-
-exports.default = function () {
-  var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee(subscriptionKey) {
-    var res;
-    return _regenerator2.default.wrap(function _callee$(_context) {
+function _ref() {
+  _ref = (0, _asyncToGenerator2.default)(
+  /*#__PURE__*/
+  _regenerator.default.mark(function _callee(subscriptionKey) {
+    var region,
+        tokenUrl,
+        res,
+        _args = arguments;
+    return _regenerator.default.wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
-            _context.next = 2;
-            return fetch(TOKEN_URL, {
+            region = _args.length > 1 && _args[1] !== undefined ? _args[1] : DEFAULT_REGION;
+            tokenUrl = _args.length > 2 && _args[2] !== undefined ? _args[2] : null;
+            _context.next = 4;
+            return fetch(tokenUrl || "https://".concat(region, ".").concat(TOKEN_URL), tokenUrl && {
               headers: {
                 'Ocp-Apim-Subscription-Key': subscriptionKey
               },
               method: 'POST'
             });
 
-          case 2:
+          case 4:
             res = _context.sent;
 
             if (!(res.status !== 200)) {
-              _context.next = 5;
+              _context.next = 7;
               break;
             }
 
-            throw new Error('Failed to fetch speech token, server returned ' + res.status);
+            throw new Error("Failed to fetch speech token, server returned ".concat(res.status));
 
-          case 5:
-            return _context.abrupt('return', res.text());
+          case 7:
+            return _context.abrupt("return", res.text());
 
-          case 6:
-          case 'end':
+          case 8:
+          case "end":
             return _context.stop();
         }
       }
     }, _callee, this);
   }));
-
-  return function (_x) {
-    return _ref.apply(this, arguments);
-  };
-}();
+  return _ref.apply(this, arguments);
+}
 //# sourceMappingURL=exchangeToken.js.map
