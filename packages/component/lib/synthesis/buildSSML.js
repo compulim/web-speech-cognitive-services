@@ -27,6 +27,6 @@ function buildSSML(_ref) {
       text = _ref.text,
       voice = _ref.voice,
       volume = _ref.volume;
-  return "<speak version=\"1.0\" xml:lang=\"".concat(lang, "\">\n  <voice") + (lang && " xml:lang=\"".concat(lang, "\"")) + (gender && " xml:gender=\"".concat(gender, "\"")) + (voice && " name=\"".concat(voice, "\"")) + ">\n    <prosody pitch=\"".concat(relativePercentage(pitch), "\" rate=\"").concat(relativePercentage(rate), "\" volume=\"").concat(relativePercentage(volume), "\">\n      ").concat(text, "\n    </prosody>\n  </voice>\n</speak>");
+  return "<speak version=\"1.0\" xml:lang=\"".concat(lang, "\">\n  <voice") + (lang ? " xml:lang=\"".concat(lang, "\"") : '') + (gender ? " xml:gender=\"".concat(gender, "\"") : '') + (voice ? " name=\"".concat(voice, "\"") : '') + ">\n    <prosody pitch=\"".concat(relativePercentage(pitch), "\" rate=\"").concat(relativePercentage(rate), "\" volume=\"").concat(relativePercentage(volume), "\">\n      ").concat(text, "\n    </prosody>\n  </voice>\n</speak>");
 }
 //# sourceMappingURL=buildSSML.js.map

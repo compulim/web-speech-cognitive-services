@@ -12,7 +12,7 @@ function relativePercentage(value) {
 
 export default function buildSSML({ gender, lang, pitch = 1, rate = 1, text, voice, volume }) {
   return `<speak version="1.0" xml:lang="${ lang }">
-  <voice` + (lang && ` xml:lang="${ lang }"`) + (gender && ` xml:gender="${ gender }"`) + (voice && ` name="${ voice }"`) + `>
+  <voice` + (lang ? ` xml:lang="${ lang }"` : '') + (gender ? ` xml:gender="${ gender }"` : '') + (voice ? ` name="${ voice }"` : '') + `>
     <prosody pitch="${ relativePercentage(pitch) }" rate="${ relativePercentage(rate) }" volume="${ relativePercentage(volume) }">
       ${ text }
     </prosody>
