@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <script src="external/microsoft.cognitiveservices.speech.sdk.bundle.js"></script>
+  </head>
+  <body>
+    <button class="start">Start</button>
+    <script>
+      (async function () {
+        const {
+          SpeechSDK: { AudioConfig, SpeechRecognizer, SpeechConfig }
+        } = window;
+
+        const audioConfig = AudioConfig.fromDefaultMicrophoneInput();
+        const speechConfig = SpeechConfig.fromSubscription('fcade773a43541ccbb33edeb6b1d30a5', 'westus');
+
+        speechConfig.speechRecognitionLanguage = 'en-US';
+
+        const recognizer = new SpeechRecognizer(speechConfig, audioConfig);
+
+        recognizer.canceled = (_, event) => {
+          console.log('canceled');
+          console.log(event);
+        };
+
+        recognizer.recognized = (_, event) => {
+          console.log('recognized');
+          console.log(event);
+        };
+
+        recognizer.recognizing = (_, event) => {
+          console.log('recognizing');
+          console.log(event);
+        };
+
+        document.querySelector('button.start').addEventListener('click', () => {
+          recognizer.recognizeOnceAsync(
+            event => {
+              console.log('start');
+              console.log(event);
+            },
+            error => {
+              console.log('error (on start)');
+              console.log(error);
+            }
+          );
+        });
+      })().catch(console.error.bind(console));
+    </script>
+  </body>
+</html>

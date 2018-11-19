@@ -1,0 +1,41 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Happy path without interims 1`] = `
+Array [
+  Object {
+    "type": "start",
+  },
+  Object {
+    "type": "audiostart",
+  },
+  Object {
+    "type": "soundstart",
+  },
+  Object {
+    "type": "speechstart",
+  },
+  Object {
+    "type": "speechend",
+  },
+  Object {
+    "type": "soundend",
+  },
+  Object {
+    "type": "audioend",
+  },
+  Object {
+    "results": Array [
+      Array [
+        Object {
+          "confidence": 0.2331869,
+          "transcript": "No.",
+        },
+      ],
+    ],
+    "type": "result",
+  },
+  Object {
+    "type": "end",
+  },
+]
+`;

@@ -29,7 +29,7 @@
   "scripts": {
     "build": "babel --out-dir lib --ignore **/*.spec.js,**/*.test.js --source-maps true src/",
     "clean": "rimraf lib",
-    "test": "echo No tests defined",
+    "test": "jest",
     "watch": "npm run build -- --watch"
   },
   "author": "William Wong <compulim@hotmail.com> (http://compulim.info/)",

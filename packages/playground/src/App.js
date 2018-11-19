@@ -4,10 +4,6 @@ import React from 'react';
 import GitHubForkMe from './GitHubForkMe';
 import SpeechRecognitionProvingGround from './SpeechRecognitionProvingGround';
 
-import {
-  createSpeechRecognitionPonyfill
-} from 'web-speech-cognitive-services/lib/UnifiedSpeech';
-
 const ROOT_CSS = css({
   display: 'flex',
   flex: 1,
@@ -27,22 +23,10 @@ export default class extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      browserPonyfill: {
-        SpeechRecognition: window.SpeechRecognition
-      },
-      cognitiveServicesPonyfill: createSpeechRecognitionPonyfill()
-    };
+    this.state = {};
   }
 
   render() {
-    const {
-      state: {
-        browserPonyfill,
-        cognitiveServicesPonyfill
-      }
-    } = this;
-
     return (
       <div className={ ROOT_CSS }>
         <div className="proving-grounds">

@@ -71,10 +71,6 @@ export default class ProvingGround extends React.Component {
   }
 
   handleClearHistory() {
-    // this.setState(({ historyKey }) => ({
-    //   historykey: historyKey + 1
-    // }));
-
     this.setState(() => ({
       historyKey: Math.random()
     }));
@@ -103,7 +99,7 @@ export default class ProvingGround extends React.Component {
       },
       started: true
     }), () => {
-      // browserSpeechRecognition.start();
+      browserSpeechRecognition.start();
       cognitiveServicesSpeechRecognition.start();
     });
   }
