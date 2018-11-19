@@ -33,8 +33,8 @@ function _ref() {
             region = _args.length > 1 && _args[1] !== undefined ? _args[1] : DEFAULT_REGION;
             tokenUrl = _args.length > 2 && _args[2] !== undefined ? _args[2] : null;
             _context.next = 4;
-            return fetch(tokenUrl || "https://".concat(region, ".").concat(TOKEN_URL), subscriptionKey && {
-              headers: {
+            return fetch(tokenUrl || "https://".concat(region, ".").concat(TOKEN_URL), {
+              headers: subscriptionKey && {
                 'Ocp-Apim-Subscription-Key': subscriptionKey
               },
               method: 'POST'
