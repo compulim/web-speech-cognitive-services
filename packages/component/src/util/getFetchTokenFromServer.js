@@ -1,3 +1,3 @@
 import createFetchTokenUsingSubscriptionKey from './createFetchTokenUsingSubscriptionKey';
 
-export default (tokenUrl) => createFetchTokenUsingSubscriptionKey(null, null, tokenUrl);
+export default (tokenUrl) => createFetchTokenUsingSubscriptionKey(undefined, undefined, tokenUrl);

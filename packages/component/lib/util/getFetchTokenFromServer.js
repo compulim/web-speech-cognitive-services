@@ -10,7 +10,7 @@ exports.default = void 0;
 var _createFetchTokenUsingSubscriptionKey = _interopRequireDefault(require("./createFetchTokenUsingSubscriptionKey"));
 
 var _default = function _default(tokenUrl) {
-  return (0, _createFetchTokenUsingSubscriptionKey.default)(null, null, tokenUrl);
+  return (0, _createFetchTokenUsingSubscriptionKey.default)(undefined, undefined, tokenUrl);
 };
 
 exports.default = _default;

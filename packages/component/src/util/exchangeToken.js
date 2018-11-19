@@ -3,9 +3,9 @@ const DEFAULT_REGION = 'westus';
 
 export default async function (subscriptionKey, region = DEFAULT_REGION, tokenUrl = null) {
   const res = await fetch(tokenUrl || `https://${ region }.${ TOKEN_URL }`, {
-    headers: subscriptionKey && {
+    headers: subscriptionKey ? {
       'Ocp-Apim-Subscription-Key': subscriptionKey
-    },
+    } : undefined,
     method: 'POST'
   });
 

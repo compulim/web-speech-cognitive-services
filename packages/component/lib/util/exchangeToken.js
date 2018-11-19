@@ -34,9 +34,9 @@ function _ref() {
             tokenUrl = _args.length > 2 && _args[2] !== undefined ? _args[2] : null;
             _context.next = 4;
             return fetch(tokenUrl || "https://".concat(region, ".").concat(TOKEN_URL), {
-              headers: subscriptionKey && {
+              headers: subscriptionKey ? {
                 'Ocp-Apim-Subscription-Key': subscriptionKey
-              },
+              } : undefined,
               method: 'POST'
             });
 
