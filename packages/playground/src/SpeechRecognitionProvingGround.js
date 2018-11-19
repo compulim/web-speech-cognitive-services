@@ -1,4 +1,5 @@
 import { css } from 'glamor';
+import memoize from 'memoize-one';
 import React from 'react';
 
 import {
@@ -29,10 +30,28 @@ export default class ProvingGround extends React.Component {
   constructor(props) {
     super(props);
 
+    this.createEventTargets = memoize((browser, cognitiveServices) => {
+      const eventTargets = {};
+
+      if (browser) {
+        eventTargets.browser = browser;
+      }
+
+      if (cognitiveServices) {
+        eventTargets.cognitiveServices = cognitiveServices;
+      }
+
+      return eventTargets;
+    });
+
     this.handleAbort = this.handleAbort.bind(this);
     this.handleClearHistory = this.handleClearHistory.bind(this);
-    this.handleStart = this.handleStart.bind(this, true);
-    this.handleStop = this.handleStop.bind(this, false);
+    this.handleStartBrowserWebSpeech = this.handleStartBrowserWebSpeech.bind(this);
+    this.handleStartCognitiveServicesSpeechService = this.handleStartCognitiveServicesSpeechService.bind(this);
+    this.handleStartBoth = this.handleStartBoth.bind(this, true);
+    this.handleStopBoth = this.handleStopBoth.bind(this, false);
+    this.handleStopBrowserWebSpeech = this.handleStopBrowserWebSpeech.bind(this);
+    this.handleStopCognitiveServicesSpeechService = this.handleStopCognitiveServicesSpeechService.bind(this);
     this.handleContinuousChange = this.handleContinuousChange.bind(this);
 
     this.browserPonyfill = {
@@ -45,8 +64,7 @@ export default class ProvingGround extends React.Component {
       browserSpeechRecognition: null,
       cognitiveServicesSpeechRecognition: null,
       continuous: false,
-      historyKey: Math.random(),
-      started: false
+      historyKey: Math.random()
     };
   }
 
@@ -65,7 +83,6 @@ export default class ProvingGround extends React.Component {
     this.setState(() => ({
       browserSpeechRecognition: null,
       cognitiveServicesSpeechRecognition: null,
-      eventTargets: {},
       started: false
     }));
   }
@@ -82,64 +99,116 @@ export default class ProvingGround extends React.Component {
     }));
   }
 
-  handleStart() {
+  handleStartBoth() {
+    !this.state.browserSpeechRecognition && this.handleStartBrowserWebSpeech();
+    !this.state.cognitiveServicesSpeechRecognition && this.handleStartCognitiveServicesSpeechService();
+  }
+
+  handleStartBrowserWebSpeech() {
     const { state: { continuous } } = this;
     const browserSpeechRecognition = new this.browserPonyfill.SpeechRecognition();
-    const cognitiveServicesSpeechRecognition = new this.cognitiveServicesPonyfill.SpeechRecognition();
 
     browserSpeechRecognition.continuous = continuous;
-    cognitiveServicesSpeechRecognition.continuous = continuous;
 
     this.setState(() => ({
       browserSpeechRecognition,
-      cognitiveServicesSpeechRecognition,
-      eventTargets: {
-        browser: browserSpeechRecognition,
-        cognitiveServices: cognitiveServicesSpeechRecognition
-      },
       started: true
     }), () => {
       browserSpeechRecognition.start();
+    });
+  }
+
+  handleStartCognitiveServicesSpeechService() {
+    const { state: { continuous } } = this;
+    const cognitiveServicesSpeechRecognition = new this.cognitiveServicesPonyfill.SpeechRecognition();
+
+    cognitiveServicesSpeechRecognition.continuous = continuous;
+
+    this.setState(() => ({
+      cognitiveServicesSpeechRecognition,
+      started: true
+    }), () => {
       cognitiveServicesSpeechRecognition.start();
     });
   }
 
-  handleStop() {
-    const { browserSpeechRecognition, cognitiveServicesSpeechRecognition } = this.state;
+  handleStopBoth() {
+    this.state.browserSpeechRecognition && this.handleStopBrowserWebSpeech();
+    this.state.cognitiveServicesSpeechRecognition && this.handleStopCognitiveServicesSpeechService();
+  }
 
-    browserSpeechRecognition && browserSpeechRecognition.stop();
-    cognitiveServicesSpeechRecognition && cognitiveServicesSpeechRecognition.stop();
+  handleStopBrowserWebSpeech() {
+    const { browserSpeechRecognition } = this.state;
 
-    this.setState(() => ({
-      browserSpeechRecognition: null,
-      cognitiveServicesSpeechRecognition: null,
-      eventTargets: {},
-      started: false
-    }));
+    this.setState(
+      () => ({ browserSpeechRecognition: null }),
+      () => browserSpeechRecognition.stop()
+    );
+  }
+
+  handleStopCognitiveServicesSpeechService() {
+    const { cognitiveServicesSpeechRecognition } = this.state;
+
+    this.setState(
+      () => ({ cognitiveServicesSpeechRecognition: null }),
+      () => cognitiveServicesSpeechRecognition.stop()
+    );
   }
 
   render() {
     const {
-      state: { continuous, eventTargets, historyKey, started }
+      state: { browserSpeechRecognition, cognitiveServicesSpeechRecognition, continuous, historyKey }
     } = this;
+
+    const eventTargets = this.createEventTargets(
+      browserSpeechRecognition,
+      cognitiveServicesSpeechRecognition
+    );
 
     return (
       <div className={ ROOT_CSS }>
         <div className="button-bar">
           <button
-            disabled={ started }
-            onClick={ this.handleStart }
+            disabled={ !this.browserPonyfill.SpeechRecognition || !!browserSpeechRecognition }
+            onClick={ this.handleStartBrowserWebSpeech }
           >
-            Start
+            Start browser
           </button>
           <button
-            disabled={ !started }
-            onClick={ this.handleStop }
+            disabled={ !!cognitiveServicesSpeechRecognition }
+            onClick={ this.handleStartCognitiveServicesSpeechService }
           >
-            Stop
+            Start Cognitive Services
           </button>
           <button
-            disabled={ !started }
+            disabled={
+              (!this.browserPonyfill.SpeechRecognition || !!browserSpeechRecognition)
+              && !!this.cognitiveServicesPonyfill
+            }
+            onClick={ this.handleStartBoth }
+          >
+            Start both
+          </button>
+          <button
+            disabled={ !browserSpeechRecognition }
+            onClick={ this.handleStopBrowserWebSpeech }
+          >
+            Stop browser
+          </button>
+          <button
+            disabled={ !cognitiveServicesSpeechRecognition }
+            onClick={ this.handleStopCognitiveServicesSpeechService }
+          >
+            Stop Cognitive Services
+          </button>
+          <button
+            disabled={ !browserSpeechRecognition && !cognitiveServicesSpeechRecognition }
+            onClick={ this.handleStopBoth }
+          >
+            Stop both
+          </button>
+          <button
+            disabled={ true }
             onClick={ this.handleAbort }
           >
             Abort

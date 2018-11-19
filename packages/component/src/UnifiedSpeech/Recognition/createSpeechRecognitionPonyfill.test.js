@@ -62,7 +62,8 @@ test('Happy path without interims', async () => {
         MaskedITN: 'no',
         Display: 'No.'
       }]
-    })
+    }),
+    reason: 3
   };
 
   jest.setMock('../SpeechSDK', ({

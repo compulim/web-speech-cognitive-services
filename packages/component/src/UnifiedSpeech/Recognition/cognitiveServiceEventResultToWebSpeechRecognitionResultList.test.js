@@ -17,7 +17,8 @@ test('Multiple results with RecognitionStatus === "Success"', () => {
         MaskedITN: 'yes'
       }],
       RecognitionStatus: 'Success'
-    }
+    },
+    reason: 3
   });
 
   expect([].slice.call(resultList)).toEqual([
@@ -35,6 +36,22 @@ test('Multiple results with RecognitionStatus === "Success"', () => {
 
 test('Single interim results', () => {
   const resultList = cognitiveServiceEventResultToWebSpeechRecognitionResultList({
+    reason: 2,
+    text: 'No.'
+  });
+
+  expect([].slice.call(resultList)).toEqual([
+    [{
+      confidence: .5,
+      transcript: 'No.'
+    }]
+  ]);
+
+  expect(resultList).not.toHaveProperty('isFinal');
+});
+
+test('Single final results', () => {
+  const resultList = cognitiveServiceEventResultToWebSpeechRecognitionResultList({
     json: {
       NBest: [{
         Confidence: .25,
@@ -43,7 +60,8 @@ test('Single interim results', () => {
         Lexical: 'no',
         MaskedITN: 'no'
       }]
-    }
+    },
+    reason: 3
   });
 
   expect([].slice.call(resultList)).toEqual([
