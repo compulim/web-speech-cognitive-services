@@ -221,21 +221,27 @@ export default ({
 
       this.stop = () => queue.push({ stop: {} });
 
+      let audioStarted;
+      let finalEvent;
+
       for (let loop = 0;; loop++) {
+        const result = await queue.shift();
         const {
           canceled,
           error,
           recognized,
           recognizing,
-          stop
-        } = await queue.shift();
+          stop,
+          success
+        } = result;
 
-        if (error) {
-          if (/Permission\sdenied/.test(error)) {
-            this.emit('error', { error: 'not-allowed' });
-          } else {
-            this.emit('error', { error: 'unknown' });
-          }
+        let errorMessage = error ? error : canceled && canceled.errorDetails;
+
+        if (errorMessage && /Permission\sdenied/.test(errorMessage)) {
+          finalEvent = {
+            error: 'not-allowed',
+            type: 'error'
+          };
 
           break;
         }
@@ -243,50 +249,58 @@ export default ({
         if (!loop) {
           this.emit('start');
           this.emit('audiostart');
+
+          audioStarted = true;
         }
 
-        if (canceled) {
-          if (/1006/.test(canceled.errorDetails)) {
-            this.emit('audioend');
-            this.emit('error', { error: 'network' });
-
-            break;
+        if (errorMessage) {
+          if (/1006/.test(errorMessage)) {
+            finalEvent = {
+              error: 'network',
+              type: 'error'
+            };
+          } else {
+            finalEvent = {
+              error: 'unknown',
+              type: 'error'
+            };
           }
+
+          break;
         } else if (stop) {
           stopped = true;
-
-          if (speechStarted) {
-            this.emit('speechend');
-            this.emit('soundend');
-          }
-
-          this.emit('audioend');
 
           if (lastRecognizingResults) {
             lastRecognizingResults.isFinal = true;
 
-            this.emit('result', {
-              results: lastRecognizingResults
-            });
+            finalEvent = {
+              results: lastRecognizingResults,
+              type: 'result'
+            };
+
+            break;
           }
         } else if (!stopped) {
           if (recognized && recognized.result && recognized.result.reason === ResultReason.NoMatch) {
-            this.emit('audioend');
-            this.emit('error', { error: 'no-speech' });
+            finalEvent = {
+              error: 'no-speech',
+              type: 'error'
+            };
           } else {
             if (!loop) {
-              speechStarted = true;
               this.emit('soundstart');
               this.emit('speechstart');
+
+              speechStarted = true;
             }
 
             if (recognized) {
-              this.emit('speechend');
-              this.emit('soundend');
-              this.emit('audioend');
-              this.emit('result', {
-                results: cognitiveServiceEventResultToWebSpeechRecognitionResultList(recognized.result)
-              });
+              finalEvent = {
+                results: cognitiveServiceEventResultToWebSpeechRecognitionResultList(recognized.result),
+                type: 'result'
+              };
+
+              break;
             } else if (recognizing) {
               lastRecognizingResults = cognitiveServiceEventResultToWebSpeechRecognitionResultList(recognizing.result);
 
@@ -298,7 +312,7 @@ export default ({
         }
 
         // TODO: Can we turn this from "recognized" event into "success" event?
-        if (recognized) {
+        if (error || success) {
           break;
         }
       }
@@ -306,6 +320,21 @@ export default ({
       // TODO: We should emit "audioend", "result", or "error" here
       //       This is for mimicking stop() behavior, "audioend" should not fire too early until we received the last "recognized" event
 
+      if (speechStarted) {
+        this.emit('speechend');
+        this.emit('soundend');
+      }
+
+      if (audioStarted) {
+        this.emit('audioend');
+      }
+
+      if (finalEvent) {
+        this.emit(finalEvent.type, finalEvent);
+      }
+
+      // Even though there is no "start" event emitted, we will still emit "end" event
+      // This is mainly for "microphone blocked" story.
       this.emit('end');
     }
 

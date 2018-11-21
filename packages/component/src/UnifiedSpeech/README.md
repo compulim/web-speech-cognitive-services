@@ -287,6 +287,7 @@ Some sounds are heard, but they cannot be recognized as text. There could be som
 
 - Interactive mode
    - W3C Web Speech API
+      1. (No `start` event was received)
       1. `error`
          - `error === 'not-allowed'`
       1. `end`
