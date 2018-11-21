@@ -143,3 +143,12 @@ Array [
   },
 ]
 `;
+
+exports[`Microphone blocked 1`] = `
+Array [
+  Object {
+    "error": "not-allowed",
+    "type": "error",
+  },
+]
+`;

@@ -271,9 +271,35 @@ test('Network error before start', async () => {
           }
         ));
 
-        setImmediate(() => error({
-          error: 'Unable to contact server. StatusCode: 1006, Reason: ',
-        }));
+        setImmediate(() => error('Unable to contact server. StatusCode: 1006, Reason: '));
+      }
+    }
+  }));
+
+  const { default: createSpeechRecognitionPonyfill } = require('./createSpeechRecognitionPonyfill');
+  const { SpeechRecognition } = createSpeechRecognitionPonyfill({
+    region: 'westus',
+    subscriptionKey: 'SUBSCRIPTION_KEY'
+  });
+
+  const speechRecognition = new SpeechRecognition();
+  const getEvents = captureSpeechEvents(speechRecognition);
+
+  await new Promise(resolve => {
+    speechRecognition.addEventListener('error', resolve);
+    speechRecognition.start();
+    jest.runAllImmediates();
+  });
+
+  expect(getEvents()).toMatchSnapshot();
+});
+
+test('Microphone blocked', async () => {
+  jest.setMock('../SpeechSDK', ({
+    ...MOCK_SPEECH_SDK,
+    SpeechRecognizer: class extends MOCK_SPEECH_SDK.SpeechRecognizer {
+      recognizeOnceAsync(_, error) {
+        setImmediate(() => error('Runtime error: \'Error handler for error Error occurred during microphone initialization: NotAllowedError: Permission denied threw error Error: Error occurred during microphone initialization: NotAllowedError: Permission denied\''));
       }
     }
   }));

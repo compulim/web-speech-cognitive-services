@@ -221,18 +221,29 @@ export default ({
         }
       );
 
-      this.emit('start');
-
       for (let loop = 0;; loop++) {
         const {
           canceled,
+          error,
           event
         } = await racePromiseMap({
           canceled: canceledQueue.shift(),
+          error: errorQueue.shift(),
           event: recognizingAndRecognizedQueue.shift()
         });
 
+        if (error) {
+          if (/Permission\sdenied/.test(error.error)) {
+            this.emit('error', { error: 'not-allowed' });
+          } else {
+            this.emit('error', { error: 'unknown' });
+          }
+
+          break;
+        }
+
         if (!loop) {
+          this.emit('start');
           this.emit('audiostart');
         }
 
@@ -240,6 +251,7 @@ export default ({
           if (/1006/.test(canceled.errorDetails)) {
             this.emit('audioend');
             this.emit('error', { error: 'network' });
+            this.emit('end');
 
             break;
           }
@@ -274,12 +286,11 @@ export default ({
           }
 
           if (event.type === 'recognized') {
+            this.emit('end');
             break;
           }
         }
       }
-
-      this.emit('end');
     }
 
     stop() {
