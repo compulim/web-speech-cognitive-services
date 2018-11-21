@@ -54,28 +54,6 @@ Continuous mode means `continuous` is set to `true`, which is `startContinuousRe
 
 ## Stop
 
-### Stop before first recognition is made
-
-- Interactive mode (with interim results)
-   - W3C Web Speech API
-      1. `start`
-      1. `audiostart`
-      1. `soundstart`
-      1. `speechstart`
-      1. `speechend`
-      1. `soundend`
-      1. `audioend`
-      1. `end`
-   - Cognitive Services
-      - TBD
-- Continuous mode
-   - W3C Web Speech API
-      - TBD
-   - Cognitive Services
-      - TBD
-
-### Stop after some recognition is made
-
 `stop()` is a supported feature in Web Speech API for push-to-talk operation.
 
 ❗ Cognitive Services does not support push-to-talk natively, we are trying to mimic the behavior by hiding the output after `stop()` is called.
@@ -85,7 +63,31 @@ Continuous mode means `continuous` is set to `true`, which is `startContinuousRe
    - Cognitive Services does not return confidence for interims, thus, we will assume it is `0.5`
 - Microphone will not stop recording immediately
 
-The actual event flow is below.
+### Stop before first recognition is made
+
+- Interactive mode (with interim results)
+   - W3C Web Speech API
+      1. `start`
+      1. `audiostart`
+      1. Optional, `soundstart`
+      1. Optional, `speechstart`
+      1. Optional, `speechend`
+      1. Optional, `soundend`
+      1. `audioend`
+      1. `end`
+   - Cognitive Services
+      - `recognizeOnceAsync` does not support stop or cancellation, thus, we need to mimic the behavior by ignoring some `recognizing` and the final `recognized` event
+      1. Call `recognizeOnceAsync()`
+      1. (`stop()` is called)
+      1. Receive a final `recognized` event
+      1. `onSuccess(result)` callback from `recognizeOnceAsync()`
+- Continuous mode
+   - W3C Web Speech API
+      - TBD
+   - Cognitive Services
+      - TBD
+
+### Stop after some recognition is made
 
 - Interactive mode (with interim results)
    - W3C Web Speech API
@@ -110,7 +112,6 @@ The actual event flow is below.
       1. Receive a final `recognized` event
          - `result.json` is similar to `{"RecognitionStatus":"Success","Offset":1800000,"Duration":48100000,"NBest":[{"Confidence":0.2331869,"Lexical":"no","ITN":"no","MaskedITN":"no","Display":"No."}]}`
       1. `onSuccess(result)` callback from `recognizeOnceAsync()`
-         - `result` is similar to or same as the `event.result` object received from `recognized(event)`
 - Continuous mode
    - W3C Web Speech API
       - TBD
@@ -119,15 +120,18 @@ The actual event flow is below.
 
 ## Abort
 
-On Cognitive Services, there is no `abort()` function, thus, we are using `stop()` function for the study.
-
 ### Abort before first recognition is made
 
 - Interactive mode (with interim results)
    - W3C Web Speech API
-      - TBD
+      1. `start`
+      1. `audiostart`
+      1. `audioend`
+      1. `error`
+         - `error === 'aborted'`
+      1. `end`
    - Cognitive Services
-      - TBD
+      - There is no `abort()` equivalent for `recognizeOnceAsync()`, thus, microphone will not stop recording immediately
 - Continuous mode
    - W3C Web Speech API
       - TBD
@@ -292,7 +296,7 @@ Some sounds are heard, but they cannot be recognized as text. There could be som
          - `error === 'not-allowed'`
       1. `end`
    - Cognitive Services Speech Services
-      1. `recognizeOnceAsync(success, error)` returned with error callback
+      1. `recognizeOnceAsync(success, error)` returned with `error` callback
          - `"Runtime error: 'Error handler for error Error occurred during microphone initialization: NotAllowedError: Permission denied threw error Error: Error occurred during microphone initialization: NotAllowedError: Permission denied'"`
 - Continuous mode
    - W3C Web Speech API
