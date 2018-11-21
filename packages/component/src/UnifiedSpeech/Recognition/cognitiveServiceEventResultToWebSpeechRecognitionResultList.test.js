@@ -1,3 +1,7 @@
+/**
+ * @jest-environment jsdom
+ */
+
 import cognitiveServiceEventResultToWebSpeechRecognitionResultList from './cognitiveServiceEventResultToWebSpeechRecognitionResultList';
 
 test('Multiple results with RecognitionStatus === "Success"', () => {
