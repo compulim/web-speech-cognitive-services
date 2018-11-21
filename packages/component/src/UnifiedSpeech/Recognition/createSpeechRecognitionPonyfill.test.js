@@ -359,7 +359,8 @@ test('Push-to-talk with partial recognized text', async () => {
           }
         }), 0);
 
-        setTimeout(() => this.recognizing(this, {
+        setTimeout(() => {
+          this.recognizing(this, {
           result: {
             duration: 1,
             json: JSON.stringify({
@@ -371,7 +372,8 @@ test('Push-to-talk with partial recognized text', async () => {
             reason: 2,
             text: 'one two three'
           }
-        }), 1000);
+        })
+        }, 1000);
 
         setTimeout(() => this.recognized(this, {
           result: {

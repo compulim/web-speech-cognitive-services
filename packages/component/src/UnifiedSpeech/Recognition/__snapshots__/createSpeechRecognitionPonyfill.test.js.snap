@@ -165,18 +165,6 @@ Array [
     "type": "audiostart",
   },
   Object {
-    "type": "soundstart",
-  },
-  Object {
-    "type": "speechstart",
-  },
-  Object {
-    "type": "speechend",
-  },
-  Object {
-    "type": "soundend",
-  },
-  Object {
     "type": "audioend",
   },
   Object {

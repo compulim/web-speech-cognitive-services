@@ -166,74 +166,72 @@ export default ({
 
     async _startOnce() {
       const recognizer = this._recognizer = this.createRecognizer();
-      const canceledQueue = createPromiseQueue();
-      const errorQueue = createPromiseQueue();
-      const recognizingAndRecognizedQueue = createPromiseQueue();
-      const successQueue = createPromiseQueue();
+      const queue = createPromiseQueue();
+      let lastRecognizingResults;
+      let speechStarted;
+      let stopped;
 
       recognizer.canceled = (_, { errorDetails, offset, reason, sessionId }) => {
         this.emitCognitiveServices('canceled', { errorDetails, offset, reason, sessionId });
 
-        canceledQueue.push({
-          errorDetails,
-          offset,
-          reason,
-          sessionId
+        queue.push({
+          canceled: {
+            errorDetails,
+            offset,
+            reason,
+            sessionId
+          }
         });
       };
 
       recognizer.recognized = (_, { offset, result, sessionId }) => {
         this.emitCognitiveServices('recognized', { offset, result: serializeRecognitionResult(result), sessionId });
 
-        recognizingAndRecognizedQueue.push({
-          offset,
-          result: serializeRecognitionResult(result),
-          sessionId,
-          type: 'recognized'
+        queue.push({
+          recognized: {
+            offset,
+            result: serializeRecognitionResult(result),
+            sessionId
+          }
         });
       };
 
       recognizer.recognizing = (_, { offset, result, sessionId }) => {
         this.emitCognitiveServices('recognizing', { offset, result: serializeRecognitionResult(result), sessionId });
 
-        recognizingAndRecognizedQueue.push({
-          offset,
-          result: serializeRecognitionResult(result),
-          sessionId,
-          type: 'recognizing'
+        queue.push({
+          recognizing: {
+            offset,
+            result: serializeRecognitionResult(result),
+            sessionId
+          }
         });
       };
 
       recognizer.recognizeOnceAsync(
         result => {
-          // console.log('success');
-          // console.log(result);
-
           this.emitCognitiveServices('success', { result: serializeRecognitionResult(result) });
-          successQueue.push({ result: serializeRecognitionResult(result) });
+          queue.push({ success: serializeRecognitionResult(result) });
         },
         err => {
-          // console.log('error');
-          // console.log(err);
-
           this.emitCognitiveServices('error', { error: err });
-          errorQueue.push({ error: err });
+          queue.push({ error: err });
         }
       );
+
+      this.stop = () => queue.push({ stop: {} });
 
       for (let loop = 0;; loop++) {
         const {
           canceled,
           error,
-          event
-        } = await racePromiseMap({
-          canceled: canceledQueue.shift(),
-          error: errorQueue.shift(),
-          event: recognizingAndRecognizedQueue.shift()
-        });
+          recognized,
+          recognizing,
+          stop
+        } = await queue.shift();
 
         if (error) {
-          if (/Permission\sdenied/.test(error.error)) {
+          if (/Permission\sdenied/.test(error)) {
             this.emit('error', { error: 'not-allowed' });
           } else {
             this.emit('error', { error: 'unknown' });
@@ -254,65 +252,81 @@ export default ({
 
             break;
           }
-        } else {
-          if (event.type === 'recognized' && event.result && event.result.reason === ResultReason.NoMatch) {
+        } else if (stop) {
+          stopped = true;
+
+          if (speechStarted) {
+            this.emit('speechend');
+            this.emit('soundend');
+          }
+
+          this.emit('audioend');
+
+          if (lastRecognizingResults) {
+            lastRecognizingResults.isFinal = true;
+
+            this.emit('result', {
+              results: lastRecognizingResults
+            });
+          }
+        } else if (!stopped) {
+          if (recognized && recognized.result && recognized.result.reason === ResultReason.NoMatch) {
             this.emit('audioend');
             this.emit('error', { error: 'no-speech' });
           } else {
             if (!loop) {
+              speechStarted = true;
               this.emit('soundstart');
               this.emit('speechstart');
             }
 
-            switch (event.type) {
-              case 'recognized':
-                this.emit('speechend');
-                this.emit('soundend');
-                this.emit('audioend');
-                this.emit('result', {
-                  results: cognitiveServiceEventResultToWebSpeechRecognitionResultList(event.result)
-                });
+            if (recognized) {
+              this.emit('speechend');
+              this.emit('soundend');
+              this.emit('audioend');
+              this.emit('result', {
+                results: cognitiveServiceEventResultToWebSpeechRecognitionResultList(recognized.result)
+              });
+            } else if (recognizing) {
+              lastRecognizingResults = cognitiveServiceEventResultToWebSpeechRecognitionResultList(recognizing.result);
 
-                break;
-
-              case 'recognizing':
-                this.interimResults && this.emit('result', {
-                  results: cognitiveServiceEventResultToWebSpeechRecognitionResultList(event.result)
-                });
-
-                break;
+              this.interimResults && this.emit('result', {
+                results: lastRecognizingResults
+              });
             }
           }
+        }
 
-          if (event.type === 'recognized') {
-            break;
-          }
+        if (recognized) {
+          break;
         }
       }
 
       this.emit('end');
     }
 
-    stop() {
-      if (!this._recognizer) {
-        // TODO: [P3] Should we throw an error or leave it as-is?
-        throw new Error('not started');
-      }
+    stop() {}
 
-      if (this.continuous) {
-        const onStop = event => {
-          console.warn(event);
-          this.emit('cognitiveservices', { subType: 'stop' });
-        };
+    // stop() {
+    //   if (!this._recognizer) {
+    //     // TODO: [P3] Should we throw an error or leave it as-is?
+    //     throw new Error('not started');
+    //   }
 
-        const onError = error => {
-          console.warn(error);
-          this.emit('cognitiveservices', { error, subType: 'error on stop' });
-        };
+    //   if (this.continuous) {
+    //     const onStop = event => {
+    //       console.warn(event);
+    //       this.emit('cognitiveservices', { subType: 'stop' });
+    //     };
 
-        this._recognizer.stopContinuousRecognitionAsync(onStop, onError);
-      }
-    }
+    //     const onError = error => {
+    //       console.warn(error);
+    //       this.emit('cognitiveservices', { error, subType: 'error on stop' });
+    //     };
+
+    //     this._recognizer.stopContinuousRecognitionAsync(onStop, onError);
+    //   }
+    // }
   }
 
   return { SpeechRecognition };
