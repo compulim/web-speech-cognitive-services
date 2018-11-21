@@ -95,7 +95,7 @@ Continuous mode means `continuous` is set to `true`, which is `startContinuousRe
       1. `audiostart`
       1. `soundstart`
       1. `speechstart`
-      1. One or more `result`
+      1. One or more `result` events, if `interimResults` is set to `true`
       1. `speechend`
       1. `soundend`
       1. `audioend`
@@ -146,7 +146,7 @@ Continuous mode means `continuous` is set to `true`, which is `startContinuousRe
       1. `audiostart`
       1. `soundstart`
       1. `speechstart`
-      1. One or more `result`
+      1. One or more `result` events, if `interimResults` is set to `true`
       1. `speechend`
       1. `soundend`
       1. `audioend`
