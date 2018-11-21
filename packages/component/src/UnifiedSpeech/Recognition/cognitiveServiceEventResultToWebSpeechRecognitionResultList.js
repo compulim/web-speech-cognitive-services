@@ -1,12 +1,21 @@
+import SpeechSDK from '../SpeechSDK';
+
+const {
+  ResultReason: {
+    RecognizingSpeech,
+    RecognizedSpeech
+  }
+} = SpeechSDK;
+
 export default function (result) {
   let resultList = [];
 
-  if (result.reason === 2) {
+  if (result.reason === RecognizingSpeech) {
     resultList = [[{
       confidence: .5,
       transcript: result.text
     }]];
-  } else if (result.reason === 3) {
+  } else if (result.reason === RecognizedSpeech) {
     resultList = [(result.json.NBest || []).map(
       ({
         Confidence: confidence,
@@ -17,7 +26,7 @@ export default function (result) {
       })
     )];
 
-    if (result.json.RecognitionStatus === 'Success') {
+    if (result.reason === RecognizedSpeech) {
       resultList.isFinal = true;
     }
   }

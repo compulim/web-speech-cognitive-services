@@ -33,7 +33,7 @@ function stringifyEvent(event) {
 
         return nextResult;
       });
-    } else {
+    } else if (name !== 'target') {
       json[name] = event[name];
     }
   });
@@ -46,6 +46,8 @@ const GROUP_WITHIN = 100;
 export default class extends React.Component {
   constructor(props) {
     super(props);
+
+    this.handleEvent = this.handleEvent.bind(this);
 
     this.state = {
       columns: [],
@@ -66,37 +68,42 @@ export default class extends React.Component {
   }
 
   attach({ events, targets } = {}, { events: nextEvents, targets: nextTargets } = {}) {
-    targets && Object.keys(targets).forEach(targetName => {
-      const target = targets[targetName];
+    if (targets !== nextTargets) {
+      targets && Object.keys(targets).forEach(targetName => {
+        const target = targets[targetName];
 
-      (events || []).forEach(event => target.removeEventListener(event, this.handleEvent.bind(this, targetName)));
-    });
-
-    if (nextTargets) {
-      Object.keys(nextTargets).forEach(nextTargetName => {
-        const nextTarget = nextTargets[nextTargetName];
-
-        (nextEvents || []).forEach(event => nextTarget.addEventListener(event, this.handleEvent.bind(this, nextTargetName)));
+        target && (events || []).forEach(event => target.removeEventListener(event, this.handleEvent));
       });
 
-      this.setState(({ columns }) => {
-        const nextColumns = [...columns];
-
+      if (nextTargets) {
         Object.keys(nextTargets).forEach(nextTargetName => {
-          if (!~nextColumns.indexOf(nextTargetName)) {
-            nextColumns.push(nextTargetName);
-          }
+          const nextTarget = nextTargets[nextTargetName];
+
+          nextTarget && (nextEvents || []).forEach(event => nextTarget.addEventListener(event, this.handleEvent));
         });
 
-        return { columns: nextColumns };
-      });
+        this.setState(({ columns }) => {
+          const nextColumns = [...columns];
+
+          Object.keys(nextTargets).forEach(nextTargetName => {
+            if (!~nextColumns.indexOf(nextTargetName)) {
+              nextColumns.push(nextTargetName);
+            }
+          });
+
+          return { columns: nextColumns };
+        });
+      }
     }
   }
 
-  handleEvent(targetName, event) {
+  handleEvent(event) {
     const now = Date.now();
+    const { props: { targets } } = this;
 
     console.log(event);
+
+    const targetName = Object.keys(targets).find(targetName => targets[targetName] === event.target);
 
     this.setState(({ events }) => ({
       events: [...events, {

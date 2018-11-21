@@ -4,7 +4,6 @@ import createPromiseQueue from '../createPromiseQueue';
 import cognitiveServiceEventResultToWebSpeechRecognitionResultList from './cognitiveServiceEventResultToWebSpeechRecognitionResultList';
 import DOMEventEmitter from '../DOMEventEmitter';
 import SpeechSDK from '../SpeechSDK';
-import racePromiseMap from '../racePromiseMap';
 
 // https://docs.microsoft.com/en-us/javascript/api/microsoft-cognitiveservices-speech-sdk/speechconfig?view=azure-node-latest#outputformat
 // {
@@ -31,6 +30,7 @@ import racePromiseMap from '../racePromiseMap';
 const {
   AudioConfig,
   OutputFormat,
+  ResultReason,
   SpeechConfig,
   SpeechRecognizer
 } = SpeechSDK;
@@ -59,7 +59,7 @@ function serializeRecognitionResult({
 
 export default ({
   region = 'westus',
-  subscriptionKey = 'fcade773a43541ccbb33edeb6b1d30a5'
+  subscriptionKey
 } = {}) => {
   const audioConfig = AudioConfig.fromDefaultMicrophoneInput();
 
@@ -142,12 +142,12 @@ export default ({
       const recognizer = this._recognizer = this.createRecognizer();
       const onStart = event => {
         console.warn(event);
-        this.emit('cognitiveservices', { subType: 'start' });
+        this.emitCognitiveServices('start');
       };
 
       const onError = error => {
         console.warn(error);
-        this.emit('cognitiveservices', { error, subType: 'error on start' });
+        this.emitCognitiveServices('error', { error, subType: 'error on start' });
       };
 
       if (this.continuous) {
@@ -156,7 +156,10 @@ export default ({
         // TODO: [P2] When to call resolve/reject event?
         recognizer.startContinuousRecognitionAsync(onStart, onError);
       } else {
-        this._startOnce().catch(err => console.error(err));
+        this._startOnce().catch(err => {
+          console.error(err);
+          this.emit('error', { error: err, message: err && err.message });
+        });
       }
     }
 
@@ -168,6 +171,8 @@ export default ({
       const success = createPromiseQueue();
 
       recognizer.canceled = (_, { errorDetails, offset, reason, sessionId }) => {
+        this.emitCognitiveServices('canceled', { errorDetails, offset, reason, sessionId });
+
         canceled.push({
           errorDetails,
           offset,
@@ -177,6 +182,8 @@ export default ({
       };
 
       recognizer.recognized = (_, { offset, result, sessionId }) => {
+        this.emitCognitiveServices('recognized', { offset, result: serializeRecognitionResult(result), sessionId });
+
         recognizingAndRecognized.push({
           offset,
           result: serializeRecognitionResult(result),
@@ -186,6 +193,8 @@ export default ({
       };
 
       recognizer.recognizing = (_, { offset, result, sessionId }) => {
+        this.emitCognitiveServices('recognizing', { offset, result: serializeRecognitionResult(result), sessionId });
+
         recognizingAndRecognized.push({
           offset,
           result: serializeRecognitionResult(result),
@@ -196,9 +205,17 @@ export default ({
 
       recognizer.recognizeOnceAsync(
         result => {
+          // console.log('success');
+          // console.log(result);
+
+          this.emitCognitiveServices('success', { result: serializeRecognitionResult(result) });
           success.push({ result: serializeRecognitionResult(result) });
         },
         err => {
+          // console.log('error');
+          // console.log(err);
+
+          this.emitCognitiveServices('error', { error: err });
           error.push({ error: err });
         }
       );
@@ -209,35 +226,44 @@ export default ({
         if (!loop) {
           this.emit('start');
           this.emit('audiostart');
-          this.emit('soundstart');
-          this.emit('speechstart');
         }
 
-        switch (event.type) {
-          case 'recognized':
-            this.emit('speechend');
-            this.emit('soundend');
-            this.emit('audioend');
-            this.emit('result', {
-              results: cognitiveServiceEventResultToWebSpeechRecognitionResultList(event.result)
-            });
+        // if (event.type === 'recognized' && event.result && event.result.json && event.result.json.RecognitionStatus === 'InitialSilenceTimeout') {
 
-            break;
+        if (event.type === 'recognized' && event.result && event.result.reason === ResultReason.NoMatch) {
+          this.emit('audioend');
+          this.emit('error', { error: 'no-speech' });
+        } else {
+          if (!loop) {
+            this.emit('soundstart');
+            this.emit('speechstart');
+          }
 
-          case 'recognizing':
-            this.emit('result', {
-              results: cognitiveServiceEventResultToWebSpeechRecognitionResultList(event.result)
-            });
+          switch (event.type) {
+            case 'recognized':
+              this.emit('speechend');
+              this.emit('soundend');
+              this.emit('audioend');
+              this.emit('result', {
+                results: cognitiveServiceEventResultToWebSpeechRecognitionResultList(event.result)
+              });
+              this.emit('end');
 
-            break;
+              break;
+
+            case 'recognizing':
+              this.emit('result', {
+                results: cognitiveServiceEventResultToWebSpeechRecognitionResultList(event.result)
+              });
+
+              break;
+          }
         }
 
         if (event.type === 'recognized') {
           break;
         }
       }
-
-      this.emit('end');
     }
 
     stop() {
@@ -246,17 +272,19 @@ export default ({
         throw new Error('not started');
       }
 
-      const onStop = event => {
-        console.warn(event);
-        this.emit('cognitiveservices', { subType: 'stop' });
-      };
+      if (this.continuous) {
+        const onStop = event => {
+          console.warn(event);
+          this.emit('cognitiveservices', { subType: 'stop' });
+        };
 
-      const onError = error => {
-        console.warn(error);
-        this.emit('cognitiveservices', { error, subType: 'error on stop' });
-      };
+        const onError = error => {
+          console.warn(error);
+          this.emit('cognitiveservices', { error, subType: 'error on stop' });
+        };
 
-      this._recognizer.stopContinuousRecognitionAsync(onStop, onError);
+        this._recognizer.stopContinuousRecognitionAsync(onStop, onError);
+      }
     }
   }
 

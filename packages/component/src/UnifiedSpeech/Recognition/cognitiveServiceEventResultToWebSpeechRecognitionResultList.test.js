@@ -71,5 +71,5 @@ test('Single final results', () => {
     }]
   ]);
 
-  expect(resultList).not.toHaveProperty('isFinal');
+  expect(resultList).toHaveProperty('isFinal', true);
 });

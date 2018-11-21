@@ -39,3 +39,21 @@ Array [
   },
 ]
 `;
+
+exports[`Muted microphone 1`] = `
+Array [
+  Object {
+    "type": "start",
+  },
+  Object {
+    "type": "audiostart",
+  },
+  Object {
+    "type": "audioend",
+  },
+  Object {
+    "error": "no-speech",
+    "type": "error",
+  },
+]
+`;

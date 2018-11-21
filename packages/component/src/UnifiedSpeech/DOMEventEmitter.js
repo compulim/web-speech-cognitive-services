@@ -24,6 +24,7 @@ export default class {
   emit(name, event) {
     this._events.emit(name, {
       ...event,
+      target: this,
       type: name
     });
   }
