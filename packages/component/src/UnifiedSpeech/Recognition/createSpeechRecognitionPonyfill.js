@@ -297,10 +297,14 @@ export default ({
           }
         }
 
+        // TODO: Can we turn this from "recognized" event into "success" event?
         if (recognized) {
           break;
         }
       }
+
+      // TODO: We should emit "audioend", "result", or "error" here
+      //       This is for mimicking stop() behavior, "audioend" should not fire too early until we received the last "recognized" event
 
       this.emit('end');
     }
