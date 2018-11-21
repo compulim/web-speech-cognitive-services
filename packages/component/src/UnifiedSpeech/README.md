@@ -94,6 +94,8 @@ On Cognitive Services, there is no `abort()` function, thus, we are using `stop(
 
 ## Network issues
 
+### Airplane mode
+
 Turn on airplane mode.
 
 - Interactive mode
@@ -105,12 +107,37 @@ Turn on airplane mode.
          - `error === 'network'`
       1. `end`
    - Cognitive Services Speech Services
-      1. (TODO: Check if microphone is turned on)
       1. Received `canceled` event
          - `errorDetails === 'Unable to contact server. StatusCode: 1006, Reason: '`
       1. `error` callback is received
          - `errorDetails === 'Unable to contact server. StatusCode: 1006, Reason: '`
-      1. Microphone is turned off
+      - (Microphone was not turned on, or too short to detect if it has turned on)
+- Continuous mode
+   - W3C Web Speech API
+      - TBD
+   - Cognitive Services Speech Services
+      - TBD
+
+### Invalid subscription key
+
+Since browser speech does not requires subscription key, we assume this flow should be same as airplane mode.
+
+- Interactive mode
+   - W3C Web Speech API
+      1. `start`
+      1. `audiostart`
+      1. `audioend`
+      1. `error`
+         - `error === 'network'`
+      1. `end`
+   - Cognitive Services Speech Services
+      1. Console (on Chrome) logged `WebSocket connection to 'wss://westus.stt.speech.microsoft.com/speech/recognition/interactive/cognitiveservices/v1?language=en-US&format=detailed&Ocp-Apim-Subscription-Key=...&X-ConnectionId=...' failed: HTTP Authentication failed; no valid credentials available`.
+      1. Received `canceled` event
+         - `errorDetails === 'Unable to contact server. StatusCode: 1006, Reason: '`
+         - `reason === 0`
+      1. `error` callback is received
+         - `errorDetails === 'Unable to contact server. StatusCode: 1006, Reason: '`
+      - (Microphone was not turned on, or too short to detect if it has turned on)
 - Continuous mode
    - W3C Web Speech API
       - TBD

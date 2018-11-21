@@ -259,6 +259,9 @@ test('Muted microphone', async () => {
 });
 
 test('Network error before start', async () => {
+  // This flow is same as "invalid subscription key".
+  // This is because Speech SDK do not distinguish between them and both return with status code 1006.
+
   jest.setMock('../SpeechSDK', ({
     ...MOCK_SPEECH_SDK,
     SpeechRecognizer: class extends MOCK_SPEECH_SDK.SpeechRecognizer {
@@ -286,7 +289,7 @@ test('Network error before start', async () => {
   const getEvents = captureSpeechEvents(speechRecognition);
 
   await new Promise(resolve => {
-    speechRecognition.addEventListener('error', resolve);
+    speechRecognition.addEventListener('end', resolve);
     speechRecognition.start();
     jest.runAllImmediates();
   });
