@@ -278,7 +278,12 @@ export default ({
               type: 'result'
             };
 
-            break;
+            if (speechStarted) {
+              this.emit('speechend');
+              this.emit('soundend');
+
+              speechStarted = false;
+            }
           }
         } else if (!stopped) {
           if (recognized && recognized.result && recognized.result.reason === ResultReason.NoMatch) {
