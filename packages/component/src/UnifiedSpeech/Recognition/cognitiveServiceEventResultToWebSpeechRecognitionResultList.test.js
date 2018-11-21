@@ -25,17 +25,9 @@ test('Multiple results with RecognitionStatus === "Success"', () => {
     reason: 3
   });
 
-  expect([].slice.call(resultList)).toEqual([
-    [{
-      confidence: .25,
-      transcript: 'No.'
-    }, {
-      confidence: .1,
-      transcript: 'Yes.'
-    }]
-  ]);
-
-  expect(resultList).toHaveProperty('isFinal', true);
+  expect(resultList[0][0]).toEqual({ confidence: .25, transcript: 'No.' });
+  expect(resultList[0][1]).toEqual({ confidence: .1, transcript: 'Yes.' });
+  expect(resultList[0]).toHaveProperty('isFinal', true);
 });
 
 test('Single interim results', () => {
@@ -44,14 +36,8 @@ test('Single interim results', () => {
     text: 'No.'
   });
 
-  expect([].slice.call(resultList)).toEqual([
-    [{
-      confidence: .5,
-      transcript: 'No.'
-    }]
-  ]);
-
-  expect(resultList).not.toHaveProperty('isFinal');
+  expect(resultList[0][0]).toEqual({ confidence: .5, transcript: 'No.' });
+  expect(resultList[0]).not.toHaveProperty('isFinal');
 });
 
 test('Single final results', () => {
@@ -68,12 +54,6 @@ test('Single final results', () => {
     reason: 3
   });
 
-  expect([].slice.call(resultList)).toEqual([
-    [{
-      confidence: .25,
-      transcript: 'No.'
-    }]
-  ]);
-
-  expect(resultList).toHaveProperty('isFinal', true);
+  expect(resultList[0][0]).toEqual({ confidence: .25, transcript: 'No.' });
+  expect(resultList[0]).toHaveProperty('isFinal', true);
 });

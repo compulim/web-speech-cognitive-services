@@ -47,12 +47,13 @@ Array [
   },
   Object {
     "results": Array [
-      Array [
-        Object {
+      Object {
+        "0": Object {
           "confidence": 0.9,
           "transcript": "Hello, John.",
         },
-      ],
+        "isFinal": true,
+      },
     ],
     "type": "result",
   },
@@ -87,12 +88,13 @@ Array [
   },
   Object {
     "results": Array [
-      Array [
-        Object {
+      Object {
+        "0": Object {
           "confidence": 0.2331869,
           "transcript": "No.",
         },
-      ],
+        "isFinal": true,
+      },
     ],
     "type": "result",
   },

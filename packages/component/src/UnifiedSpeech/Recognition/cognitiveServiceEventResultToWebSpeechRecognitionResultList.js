@@ -7,6 +7,17 @@ const {
   }
 } = SpeechSDK;
 
+function arrayToMap(array, extras) {
+  return {
+    ...array.reduce((map, value, index) => {
+      map[index] = value;
+
+      return map;
+    }, {}),
+    ...extras
+  };
+}
+
 export default function (result) {
   if (result.reason === RecognizingSpeech) {
     return [[{
@@ -14,17 +25,20 @@ export default function (result) {
       transcript: result.text
     }]];
   } else if (result.reason === RecognizedSpeech) {
-    const resultList = [(result.json.NBest || []).map(
-      ({
-        Confidence: confidence,
-        Display: transcript
-      }) => ({
-        confidence,
-        transcript
-      })
-    )];
-
-    resultList.isFinal = true;
+    const resultList = [
+      arrayToMap(
+        (result.json.NBest || []).map(
+          ({
+            Confidence: confidence,
+            Display: transcript
+          }) => ({
+            confidence,
+            transcript
+          })
+        ),
+        { isFinal: true }
+      )
+    ];
 
     return resultList;
   } else {
