@@ -314,7 +314,7 @@ test('Microphone blocked', async () => {
   const getEvents = captureSpeechEvents(speechRecognition);
 
   await new Promise(resolve => {
-    speechRecognition.addEventListener('error', resolve);
+    speechRecognition.addEventListener('end', resolve);
     speechRecognition.start();
     jest.runAllImmediates();
   });

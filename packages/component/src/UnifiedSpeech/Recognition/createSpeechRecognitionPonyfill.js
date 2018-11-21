@@ -251,7 +251,6 @@ export default ({
           if (/1006/.test(canceled.errorDetails)) {
             this.emit('audioend');
             this.emit('error', { error: 'network' });
-            this.emit('end');
 
             break;
           }
@@ -286,11 +285,12 @@ export default ({
           }
 
           if (event.type === 'recognized') {
-            this.emit('end');
             break;
           }
         }
       }
+
+      this.emit('end');
     }
 
     stop() {

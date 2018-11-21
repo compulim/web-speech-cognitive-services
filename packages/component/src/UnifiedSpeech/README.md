@@ -197,9 +197,12 @@ Some sounds are heard, but they cannot be recognized as text. There could be som
          - `error === 'not-allowed'`
       1. `end`
    - Cognitive Services Speech Services
-      - TBD
+      1. `recognizeOnceAsync(success, error)` returned with error callback
+         - `"Runtime error: 'Error handler for error Error occurred during microphone initialization: NotAllowedError: Permission denied threw error Error: Error occurred during microphone initialization: NotAllowedError: Permission denied'"`
 - Continuous mode
    - W3C Web Speech API
-      - TBD
+      1. `error`
+         - `error === 'not-allowed'`
+      1. `end`
    - Cognitive Services Speech Services
       - TBD

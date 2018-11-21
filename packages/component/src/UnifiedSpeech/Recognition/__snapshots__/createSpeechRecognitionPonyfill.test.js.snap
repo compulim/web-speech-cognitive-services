@@ -150,5 +150,8 @@ Array [
     "error": "not-allowed",
     "type": "error",
   },
+  Object {
+    "type": "end",
+  },
 ]
 `;

@@ -42,6 +42,9 @@
     "url": "https://github.com/compulim/web-speech-cognitive-services/issues"
   },
   "homepage": "https://github.com/compulim/web-speech-cognitive-services#readme",
+  "jest": {
+    "testEnvironment": "node"
+  },
   "peerDependencies": {
     "microsoft-speech-browser-sdk": "^0.0.12",
     "react": "^16.4.2"
