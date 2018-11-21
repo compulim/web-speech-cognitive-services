@@ -176,6 +176,10 @@ Array [
 exports[`Push-to-talk with partial recognized text 1`] = `
 Array [
   Object {
+    "subType": "recognizing",
+    "type": "cognitiveservices",
+  },
+  Object {
     "type": "start",
   },
   Object {
@@ -199,6 +203,10 @@ Array [
     "type": "result",
   },
   Object {
+    "subType": "recognizing",
+    "type": "cognitiveservices",
+  },
+  Object {
     "results": Array [
       Array [
         Object {
@@ -210,10 +218,26 @@ Array [
     "type": "result",
   },
   Object {
+    "subType": "stop",
+    "type": "cognitiveservices",
+  },
+  Object {
     "type": "speechend",
   },
   Object {
     "type": "soundend",
+  },
+  Object {
+    "subType": "recognizing",
+    "type": "cognitiveservices",
+  },
+  Object {
+    "subType": "recognized",
+    "type": "cognitiveservices",
+  },
+  Object {
+    "subType": "success",
+    "type": "cognitiveservices",
   },
   Object {
     "type": "audioend",

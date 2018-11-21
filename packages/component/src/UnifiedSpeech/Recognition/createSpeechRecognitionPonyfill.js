@@ -172,8 +172,6 @@ export default ({
       let stopped;
 
       recognizer.canceled = (_, { errorDetails, offset, reason, sessionId }) => {
-        this.emitCognitiveServices('canceled', { errorDetails, offset, reason, sessionId });
-
         queue.push({
           canceled: {
             errorDetails,
@@ -185,8 +183,6 @@ export default ({
       };
 
       recognizer.recognized = (_, { offset, result, sessionId }) => {
-        this.emitCognitiveServices('recognized', { offset, result: serializeRecognitionResult(result), sessionId });
-
         queue.push({
           recognized: {
             offset,
@@ -197,8 +193,6 @@ export default ({
       };
 
       recognizer.recognizing = (_, { offset, result, sessionId }) => {
-        this.emitCognitiveServices('recognizing', { offset, result: serializeRecognitionResult(result), sessionId });
-
         queue.push({
           recognizing: {
             offset,
@@ -209,14 +203,8 @@ export default ({
       };
 
       recognizer.recognizeOnceAsync(
-        result => {
-          this.emitCognitiveServices('success', { result: serializeRecognitionResult(result) });
-          queue.push({ success: serializeRecognitionResult(result) });
-        },
-        err => {
-          this.emitCognitiveServices('error', { error: err });
-          queue.push({ error: err });
-        }
+        result => queue.push({ success: serializeRecognitionResult(result) }),
+        err => queue.push({ error: err })
       );
 
       this.stop = () => queue.push({ stop: {} });
@@ -225,7 +213,7 @@ export default ({
       let finalEvent;
 
       for (let loop = 0;; loop++) {
-        const result = await queue.shift();
+        const event = await queue.shift();
         const {
           canceled,
           error,
@@ -233,7 +221,10 @@ export default ({
           recognizing,
           stop,
           success
-        } = result;
+        } = event;
+
+        // We are emitting event "cognitiveservices" for debugging purpose
+        Object.keys(event).forEach(name => this.emitCognitiveServices(name, event[name]));
 
         let errorMessage = error ? error : canceled && canceled.errorDetails;
 

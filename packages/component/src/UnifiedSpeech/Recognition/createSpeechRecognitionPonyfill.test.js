@@ -51,11 +51,15 @@ function removeKeys(map, keys) {
   }, {});
 }
 
-function captureSpeechEvents(speech) {
+function captureSpeechEvents(speech, includeCognitiveServicesEvents) {
   const queue = [];
 
   for (let eventName of SPEECH_EVENTS) {
     speech.addEventListener(eventName, event => queue.push(removeKeys(event, ['target'])));
+  }
+
+  if (includeCognitiveServicesEvents) {
+    speech.addEventListener('cognitiveservices', event => queue.push({ subType: event.subType, type: event.type }));
   }
 
   return () => [...queue];
@@ -425,7 +429,7 @@ test('Push-to-talk with partial recognized text', async () => {
   });
 
   const speechRecognition = new SpeechRecognition();
-  const getEvents = captureSpeechEvents(speechRecognition);
+  const getEvents = captureSpeechEvents(speechRecognition, true);
 
   await new Promise(resolve => {
     speechRecognition.addEventListener('end', resolve);
