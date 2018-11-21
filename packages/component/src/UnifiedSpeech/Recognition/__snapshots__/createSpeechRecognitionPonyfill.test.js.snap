@@ -1,5 +1,67 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Happy path with 2 interims 1`] = `
+Array [
+  Object {
+    "type": "start",
+  },
+  Object {
+    "type": "audiostart",
+  },
+  Object {
+    "type": "soundstart",
+  },
+  Object {
+    "type": "speechstart",
+  },
+  Object {
+    "results": Array [
+      Array [
+        Object {
+          "confidence": 0.5,
+          "transcript": "hello",
+        },
+      ],
+    ],
+    "type": "result",
+  },
+  Object {
+    "results": Array [
+      Array [
+        Object {
+          "confidence": 0.5,
+          "transcript": "john",
+        },
+      ],
+    ],
+    "type": "result",
+  },
+  Object {
+    "type": "speechend",
+  },
+  Object {
+    "type": "soundend",
+  },
+  Object {
+    "type": "audioend",
+  },
+  Object {
+    "results": Array [
+      Array [
+        Object {
+          "confidence": 0.9,
+          "transcript": "Hello, John.",
+        },
+      ],
+    ],
+    "type": "result",
+  },
+  Object {
+    "type": "end",
+  },
+]
+`;
+
 exports[`Happy path without interims 1`] = `
 Array [
   Object {

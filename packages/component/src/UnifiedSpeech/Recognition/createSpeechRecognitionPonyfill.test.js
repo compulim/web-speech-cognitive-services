@@ -112,6 +112,116 @@ test('Happy path without interims', async () => {
   expect(getEvents()).toMatchSnapshot();
 });
 
+test('Happy path with 2 interims', async () => {
+  const recognizedResult = {
+    duration: 48100000,
+    json: JSON.stringify({
+      RecognitionStatus: 'Success',
+      Offset: 1800000,
+      Duration: 48100000,
+      NBest: [{
+        Confidence: 0.2331869,
+        Lexcial: 'no',
+        ITN: 'no',
+        MaskedITN: 'no',
+        Display: 'No.'
+      }]
+    }),
+    offset: 1800000,
+    reason: 3
+  };
+
+  jest.setMock('../SpeechSDK', ({
+    ...MOCK_SPEECH_SDK,
+    SpeechRecognizer: class extends MOCK_SPEECH_SDK.SpeechRecognizer {
+      recognizeOnceAsync(success) {
+        setImmediate(() => this.recognizing(this, {
+          result: {
+            duration: 1,
+            json: JSON.stringify({
+              Duration: 1,
+              Offset: 0,
+              Text: 'hello'
+            }),
+            offset: 0,
+            reason: 2,
+            text: 'hello'
+          }
+        }));
+
+        setImmediate(() => this.recognizing(this, {
+          result: {
+            duration: 1,
+            json: JSON.stringify({
+              Duration: 1,
+              Offset: 1,
+              Text: 'john'
+            }),
+            offset: 1,
+            reason: 2,
+            text: 'john'
+          }
+        }));
+
+        setImmediate(() => this.recognized(this, {
+          result: {
+            duration: 2,
+            json: JSON.stringify({
+              Duration: 2,
+              Offset: 0,
+              NBest: [{
+                Confidence: 0.9,
+                Lexical: 'hello john',
+                ITN: 'hello John',
+                MaskedITN: 'hello John',
+                Display: 'Hello, John.'
+              }]
+            }),
+            offset: 0,
+            reason: 3,
+            text: 'Hello, John.'
+          }
+        }));
+
+        setImmediate(() => success({
+          duration: 2,
+          json: JSON.stringify({
+            Duration: 2,
+            Offset: 0,
+            NBest: [{
+              Confidence: 0.9,
+              Lexical: 'hello john',
+              ITN: 'hello John',
+              MaskedITN: 'hello John',
+              Display: 'Hello, John.'
+            }]
+          }),
+          offset: 0,
+          reason: 3,
+          text: 'Hello, John.'
+        }));
+      }
+    }
+  }));
+
+  const { default: createSpeechRecognitionPonyfill } = require('./createSpeechRecognitionPonyfill');
+  const { SpeechRecognition } = createSpeechRecognitionPonyfill({
+    region: 'westus',
+    subscriptionKey: 'SUBSCRIPTION_KEY'
+  });
+
+  const speechRecognition = new SpeechRecognition();
+  const getEvents = captureSpeechEvents(speechRecognition);
+
+  await new Promise(resolve => {
+    speechRecognition.addEventListener('end', resolve);
+    speechRecognition.start();
+    jest.runAllImmediates();
+  });
+
+  expect(getEvents()).toMatchSnapshot();
+});
+
 test('Muted microphone', async () => {
   jest.setMock('../SpeechSDK', ({
     ...MOCK_SPEECH_SDK,

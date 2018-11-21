@@ -8,15 +8,13 @@ const {
 } = SpeechSDK;
 
 export default function (result) {
-  let resultList = [];
-
   if (result.reason === RecognizingSpeech) {
-    resultList = [[{
+    return [[{
       confidence: .5,
       transcript: result.text
     }]];
   } else if (result.reason === RecognizedSpeech) {
-    resultList = [(result.json.NBest || []).map(
+    const resultList = [(result.json.NBest || []).map(
       ({
         Confidence: confidence,
         Display: transcript
@@ -26,10 +24,10 @@ export default function (result) {
       })
     )];
 
-    if (result.reason === RecognizedSpeech) {
-      resultList.isFinal = true;
-    }
-  }
+    resultList.isFinal = true;
 
-  return resultList;
+    return resultList;
+  } else {
+    return [];
+  }
 }
