@@ -135,9 +135,7 @@ export default ({
     get lang() { return this._lang; }
     set lang(value) { this._lang = value; }
 
-    abort() {
-      throw new Error('not implemented');
-    }
+    abort() {}
 
     start() {
       const recognizer = this._recognizer = this.createRecognizer();
@@ -169,7 +167,7 @@ export default ({
       const queue = createPromiseQueue();
       let lastRecognizingResults;
       let speechStarted;
-      let stopped;
+      let stopping;
 
       recognizer.canceled = (_, { errorDetails, offset, reason, sessionId }) => {
         queue.push({
@@ -207,6 +205,7 @@ export default ({
         err => queue.push({ error: err })
       );
 
+      this.abort = () => queue.push({ abort: {} });
       this.stop = () => queue.push({ stop: {} });
 
       let audioStarted;
@@ -215,6 +214,7 @@ export default ({
       for (let loop = 0;; loop++) {
         const event = await queue.shift();
         const {
+          abort,
           canceled,
           error,
           recognized,
@@ -258,25 +258,30 @@ export default ({
           }
 
           break;
-        } else if (stop) {
-          stopped = true;
+        } else if (abort || stop) {
+          stopping = true;
 
-          if (lastRecognizingResults) {
+          if (abort) {
+            finalEvent = {
+              error: 'aborted',
+              type: 'error'
+            };
+          } else if (lastRecognizingResults) {
             lastRecognizingResults.isFinal = true;
 
             finalEvent = {
               results: lastRecognizingResults,
               type: 'result'
             };
-
-            if (speechStarted) {
-              this.emit('speechend');
-              this.emit('soundend');
-
-              speechStarted = false;
-            }
           }
-        } else if (!stopped) {
+
+          if (speechStarted) {
+            this.emit('speechend');
+            this.emit('soundend');
+
+            speechStarted = false;
+          }
+        } else if (!stopping) {
           if (recognized && recognized.result && recognized.result.reason === ResultReason.NoMatch) {
             finalEvent = {
               error: 'no-speech',
