@@ -113,24 +113,6 @@ test('Happy path without interims', async () => {
 });
 
 test('Happy path with 2 interims', async () => {
-  const recognizedResult = {
-    duration: 48100000,
-    json: JSON.stringify({
-      RecognitionStatus: 'Success',
-      Offset: 1800000,
-      Duration: 48100000,
-      NBest: [{
-        Confidence: 0.2331869,
-        Lexcial: 'no',
-        ITN: 'no',
-        MaskedITN: 'no',
-        Display: 'No.'
-      }]
-    }),
-    offset: 1800000,
-    reason: 3
-  };
-
   jest.setMock('../SpeechSDK', ({
     ...MOCK_SPEECH_SDK,
     SpeechRecognizer: class extends MOCK_SPEECH_SDK.SpeechRecognizer {
@@ -253,6 +235,44 @@ test('Muted microphone', async () => {
           }),
           offset: 50000000,
           reason: 0
+        }));
+      }
+    }
+  }));
+
+  const { default: createSpeechRecognitionPonyfill } = require('./createSpeechRecognitionPonyfill');
+  const { SpeechRecognition } = createSpeechRecognitionPonyfill({
+    region: 'westus',
+    subscriptionKey: 'SUBSCRIPTION_KEY'
+  });
+
+  const speechRecognition = new SpeechRecognition();
+  const getEvents = captureSpeechEvents(speechRecognition);
+
+  await new Promise(resolve => {
+    speechRecognition.addEventListener('error', resolve);
+    speechRecognition.start();
+    jest.runAllImmediates();
+  });
+
+  expect(getEvents()).toMatchSnapshot();
+});
+
+test('Network error before start', async () => {
+  jest.setMock('../SpeechSDK', ({
+    ...MOCK_SPEECH_SDK,
+    SpeechRecognizer: class extends MOCK_SPEECH_SDK.SpeechRecognizer {
+      recognizeOnceAsync(_, error) {
+        setImmediate(() => this.canceled(
+          this,
+          {
+            errorDetails: 'Unable to contact server. StatusCode: 1006, Reason: ',
+            reason: 0
+          }
+        ));
+
+        setImmediate(() => error({
+          error: 'Unable to contact server. StatusCode: 1006, Reason: ',
         }));
       }
     }

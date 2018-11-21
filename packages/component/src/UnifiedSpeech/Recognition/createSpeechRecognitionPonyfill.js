@@ -4,6 +4,7 @@ import createPromiseQueue from '../createPromiseQueue';
 import cognitiveServiceEventResultToWebSpeechRecognitionResultList from './cognitiveServiceEventResultToWebSpeechRecognitionResultList';
 import DOMEventEmitter from '../DOMEventEmitter';
 import SpeechSDK from '../SpeechSDK';
+import racePromiseMap from '../racePromiseMap';
 
 // https://docs.microsoft.com/en-us/javascript/api/microsoft-cognitiveservices-speech-sdk/speechconfig?view=azure-node-latest#outputformat
 // {
@@ -165,15 +166,15 @@ export default ({
 
     async _startOnce() {
       const recognizer = this._recognizer = this.createRecognizer();
-      const canceled = createPromiseQueue();
-      const error = createPromiseQueue();
-      const recognizingAndRecognized = createPromiseQueue();
-      const success = createPromiseQueue();
+      const canceledQueue = createPromiseQueue();
+      const errorQueue = createPromiseQueue();
+      const recognizingAndRecognizedQueue = createPromiseQueue();
+      const successQueue = createPromiseQueue();
 
       recognizer.canceled = (_, { errorDetails, offset, reason, sessionId }) => {
         this.emitCognitiveServices('canceled', { errorDetails, offset, reason, sessionId });
 
-        canceled.push({
+        canceledQueue.push({
           errorDetails,
           offset,
           reason,
@@ -184,7 +185,7 @@ export default ({
       recognizer.recognized = (_, { offset, result, sessionId }) => {
         this.emitCognitiveServices('recognized', { offset, result: serializeRecognitionResult(result), sessionId });
 
-        recognizingAndRecognized.push({
+        recognizingAndRecognizedQueue.push({
           offset,
           result: serializeRecognitionResult(result),
           sessionId,
@@ -195,7 +196,7 @@ export default ({
       recognizer.recognizing = (_, { offset, result, sessionId }) => {
         this.emitCognitiveServices('recognizing', { offset, result: serializeRecognitionResult(result), sessionId });
 
-        recognizingAndRecognized.push({
+        recognizingAndRecognizedQueue.push({
           offset,
           result: serializeRecognitionResult(result),
           sessionId,
@@ -209,61 +210,76 @@ export default ({
           // console.log(result);
 
           this.emitCognitiveServices('success', { result: serializeRecognitionResult(result) });
-          success.push({ result: serializeRecognitionResult(result) });
+          successQueue.push({ result: serializeRecognitionResult(result) });
         },
         err => {
           // console.log('error');
           // console.log(err);
 
           this.emitCognitiveServices('error', { error: err });
-          error.push({ error: err });
+          errorQueue.push({ error: err });
         }
       );
 
+      this.emit('start');
+
       for (let loop = 0;; loop++) {
-        const event = await recognizingAndRecognized.shift();
+        const {
+          canceled,
+          event
+        } = await racePromiseMap({
+          canceled: canceledQueue.shift(),
+          event: recognizingAndRecognizedQueue.shift()
+        });
 
         if (!loop) {
-          this.emit('start');
           this.emit('audiostart');
         }
 
-        // if (event.type === 'recognized' && event.result && event.result.json && event.result.json.RecognitionStatus === 'InitialSilenceTimeout') {
+        if (canceled) {
+          if (/1006/.test(canceled.errorDetails)) {
+            this.emit('audioend');
+            this.emit('error', { error: 'network' });
 
-        if (event.type === 'recognized' && event.result && event.result.reason === ResultReason.NoMatch) {
-          this.emit('audioend');
-          this.emit('error', { error: 'no-speech' });
+            break;
+          }
         } else {
-          if (!loop) {
-            this.emit('soundstart');
-            this.emit('speechstart');
+          if (event.type === 'recognized' && event.result && event.result.reason === ResultReason.NoMatch) {
+            this.emit('audioend');
+            this.emit('error', { error: 'no-speech' });
+          } else {
+            if (!loop) {
+              this.emit('soundstart');
+              this.emit('speechstart');
+            }
+
+            switch (event.type) {
+              case 'recognized':
+                this.emit('speechend');
+                this.emit('soundend');
+                this.emit('audioend');
+                this.emit('result', {
+                  results: cognitiveServiceEventResultToWebSpeechRecognitionResultList(event.result)
+                });
+
+                break;
+
+              case 'recognizing':
+                this.emit('result', {
+                  results: cognitiveServiceEventResultToWebSpeechRecognitionResultList(event.result)
+                });
+
+                break;
+            }
           }
 
-          switch (event.type) {
-            case 'recognized':
-              this.emit('speechend');
-              this.emit('soundend');
-              this.emit('audioend');
-              this.emit('result', {
-                results: cognitiveServiceEventResultToWebSpeechRecognitionResultList(event.result)
-              });
-              this.emit('end');
-
-              break;
-
-            case 'recognizing':
-              this.emit('result', {
-                results: cognitiveServiceEventResultToWebSpeechRecognitionResultList(event.result)
-              });
-
-              break;
+          if (event.type === 'recognized') {
+            break;
           }
-        }
-
-        if (event.type === 'recognized') {
-          break;
         }
       }
+
+      this.emit('end');
     }
 
     stop() {

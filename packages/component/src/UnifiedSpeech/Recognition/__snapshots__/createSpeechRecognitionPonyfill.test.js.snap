@@ -117,5 +117,29 @@ Array [
     "error": "no-speech",
     "type": "error",
   },
+  Object {
+    "type": "end",
+  },
+]
+`;
+
+exports[`Network error before start 1`] = `
+Array [
+  Object {
+    "type": "start",
+  },
+  Object {
+    "type": "audiostart",
+  },
+  Object {
+    "type": "audioend",
+  },
+  Object {
+    "error": "network",
+    "type": "error",
+  },
+  Object {
+    "type": "end",
+  },
 ]
 `;
