@@ -197,6 +197,7 @@ test('Happy path with 2 interims', async () => {
 
   await new Promise(resolve => {
     speechRecognition.addEventListener('end', resolve);
+    speechRecognition.interimResults = true;
     speechRecognition.start();
     jest.runAllImmediates();
   });
@@ -320,6 +321,228 @@ test('Microphone blocked', async () => {
     speechRecognition.addEventListener('end', resolve);
     speechRecognition.start();
     jest.runAllImmediates();
+  });
+
+  expect(getEvents()).toMatchSnapshot();
+});
+
+test('Push-to-talk with partial recognized text', async () => {
+  jest.setMock('../SpeechSDK', ({
+    ...MOCK_SPEECH_SDK,
+    SpeechRecognizer: class extends MOCK_SPEECH_SDK.SpeechRecognizer {
+      recognizeOnceAsync(success) {
+        setTimeout(() => this.recognizing(this, {
+          result: {
+            duration: 1,
+            json: JSON.stringify({
+              Duration: 1,
+              Offset: 0,
+              Text: 'one'
+            }),
+            offset: 0,
+            reason: 2,
+            text: 'one'
+          }
+        }), 0);
+
+        setTimeout(() => this.recognizing(this, {
+          result: {
+            duration: 1,
+            json: JSON.stringify({
+              Duration: 1,
+              Offset: 1,
+              Text: 'one two'
+            }),
+            offset: 1,
+            reason: 2,
+            text: 'one two'
+          }
+        }), 0);
+
+        setTimeout(() => this.recognizing(this, {
+          result: {
+            duration: 1,
+            json: JSON.stringify({
+              Duration: 1,
+              Offset: 2,
+              Text: 'one two three'
+            }),
+            offset: 2,
+            reason: 2,
+            text: 'one two three'
+          }
+        }), 1000);
+
+        setTimeout(() => this.recognized(this, {
+          result: {
+            duration: 3,
+            json: JSON.stringify({
+              RecognitionStatus: 'Success',
+              Offset: 0,
+              Duration: 3,
+              NBest: [{
+                Confidence: 0.2,
+                Lexcial: 'one two three',
+                ITN: '123',
+                MaskedITN: '123',
+                Display: '123.'
+              }]
+            }),
+            offset: 0,
+            reason: 3,
+            text: '123.'
+          }
+        }), 1000);
+
+        setTimeout(() => success({
+          duration: 3,
+          json: JSON.stringify({
+            RecognitionStatus: 'Success',
+            Offset: 0,
+            Duration: 3,
+            NBest: [{
+              Confidence: 0.2,
+              Lexcial: 'one two three',
+              ITN: '123',
+              MaskedITN: '123',
+              Display: '123.'
+            }]
+          }),
+          offset: 0,
+          reason: 3,
+          text: '123.'
+        }), 1000);
+      }
+    }
+  }));
+
+  const { default: createSpeechRecognitionPonyfill } = require('./createSpeechRecognitionPonyfill');
+  const { SpeechRecognition } = createSpeechRecognitionPonyfill({
+    region: 'westus',
+    subscriptionKey: 'SUBSCRIPTION_KEY'
+  });
+
+  const speechRecognition = new SpeechRecognition();
+  const getEvents = captureSpeechEvents(speechRecognition);
+
+  await new Promise(resolve => {
+    speechRecognition.addEventListener('end', resolve);
+    speechRecognition.interimResults = true;
+    speechRecognition.start();
+    jest.advanceTimersByTime(0);
+    speechRecognition.stop();
+    jest.advanceTimersByTime(1000);
+  });
+
+  expect(getEvents()).toMatchSnapshot();
+});
+
+test('Push-to-talk stop before first recognized text', async () => {
+  jest.setMock('../SpeechSDK', ({
+    ...MOCK_SPEECH_SDK,
+    SpeechRecognizer: class extends MOCK_SPEECH_SDK.SpeechRecognizer {
+      recognizeOnceAsync(success) {
+        setTimeout(() => this.recognizing(this, {
+          result: {
+            duration: 1,
+            json: JSON.stringify({
+              Duration: 1,
+              Offset: 0,
+              Text: 'one'
+            }),
+            offset: 0,
+            reason: 2,
+            text: 'one'
+          }
+        }), 1000);
+
+        setTimeout(() => this.recognizing(this, {
+          result: {
+            duration: 1,
+            json: JSON.stringify({
+              Duration: 1,
+              Offset: 1,
+              Text: 'one two'
+            }),
+            offset: 1,
+            reason: 2,
+            text: 'one two'
+          }
+        }), 1000);
+
+        setTimeout(() => this.recognizing(this, {
+          result: {
+            duration: 1,
+            json: JSON.stringify({
+              Duration: 1,
+              Offset: 2,
+              Text: 'one two three'
+            }),
+            offset: 2,
+            reason: 2,
+            text: 'one two three'
+          }
+        }), 1000);
+
+        setTimeout(() => this.recognized(this, {
+          result: {
+            duration: 3,
+            json: JSON.stringify({
+              RecognitionStatus: 'Success',
+              Offset: 0,
+              Duration: 3,
+              NBest: [{
+                Confidence: 0.2,
+                Lexcial: 'one two three',
+                ITN: '123',
+                MaskedITN: '123',
+                Display: '123.'
+              }]
+            }),
+            offset: 0,
+            reason: 3,
+            text: '123.'
+          }
+        }), 1000);
+
+        setTimeout(() => success({
+          duration: 3,
+          json: JSON.stringify({
+            RecognitionStatus: 'Success',
+            Offset: 0,
+            Duration: 3,
+            NBest: [{
+              Confidence: 0.2,
+              Lexcial: 'one two three',
+              ITN: '123',
+              MaskedITN: '123',
+              Display: '123.'
+            }]
+          }),
+          offset: 0,
+          reason: 3,
+          text: '123.'
+        }), 1000);
+      }
+    }
+  }));
+
+  const { default: createSpeechRecognitionPonyfill } = require('./createSpeechRecognitionPonyfill');
+  const { SpeechRecognition } = createSpeechRecognitionPonyfill({
+    region: 'westus',
+    subscriptionKey: 'SUBSCRIPTION_KEY'
+  });
+
+  const speechRecognition = new SpeechRecognition();
+  const getEvents = captureSpeechEvents(speechRecognition);
+
+  await new Promise(resolve => {
+    speechRecognition.addEventListener('end', resolve);
+    speechRecognition.interimResults = true;
+    speechRecognition.start();
+    jest.advanceTimersByTime(0);
+    speechRecognition.stop();
+    jest.advanceTimersByTime(1000);
   });
 
   expect(getEvents()).toMatchSnapshot();

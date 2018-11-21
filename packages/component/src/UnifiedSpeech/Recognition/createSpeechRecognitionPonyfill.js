@@ -276,7 +276,7 @@ export default ({
                 break;
 
               case 'recognizing':
-                this.emit('result', {
+                this.interimResults && this.emit('result', {
                   results: cognitiveServiceEventResultToWebSpeechRecognitionResultList(event.result)
                 });
 

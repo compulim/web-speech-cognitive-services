@@ -33,6 +33,7 @@ export default class ProvingGround extends React.Component {
     this.handleAbortBrowserWebSpeech = this.handleAbortBrowserWebSpeech.bind(this);
     this.handleAbortCognitiveServices = this.handleAbortCognitiveServices.bind(this);
     this.handleClearHistory = this.handleClearHistory.bind(this);
+    this.handleInterimResultsChange = this.handleInterimResultsChange.bind(this);
     this.handleStartBrowserWebSpeechContinuous = this.handleStartBrowserWebSpeech.bind(this, true);
     this.handleStartBrowserWebSpeechInteractive = this.handleStartBrowserWebSpeech.bind(this, false);
     this.handleStartCognitiveServicesSpeechServiceContinuous = this.handleStartCognitiveServicesSpeechService.bind(this, true);
@@ -57,7 +58,8 @@ export default class ProvingGround extends React.Component {
         browser: null,
         cognitiveServices: null
       },
-      historyKey: Math.random()
+      historyKey: Math.random(),
+      interimResults: false
     };
   }
 
@@ -97,6 +99,12 @@ export default class ProvingGround extends React.Component {
     }));
   }
 
+  handleInterimResultsChange({ target: { checked } }) {
+    this.setState(() => ({
+      interimResults: checked
+    }));
+  }
+
   handleStartBoth(continuous) {
     this.handleStartBrowserWebSpeech(continuous);
     this.handleStartCognitiveServicesSpeechService(continuous);
@@ -107,6 +115,7 @@ export default class ProvingGround extends React.Component {
       const browserSpeechRecognition = new this.browserPonyfill.SpeechRecognition();
 
       browserSpeechRecognition.continuous = continuous;
+      browserSpeechRecognition.interimResults = this.state.interimResults;
 
       browserSpeechRecognition.addEventListener('end', () => {
         this.state.browserSpeechRecognition === browserSpeechRecognition && this.handleStopBrowserWebSpeech();
@@ -131,6 +140,7 @@ export default class ProvingGround extends React.Component {
       const cognitiveServicesSpeechRecognition = new this.cognitiveServicesPonyfill.SpeechRecognition();
 
       cognitiveServicesSpeechRecognition.continuous = continuous;
+      cognitiveServicesSpeechRecognition.interimResults = this.state.interimResults;
 
       cognitiveServicesSpeechRecognition.addEventListener('end', () => {
         this.state.cognitiveServicesSpeechRecognition === cognitiveServicesSpeechRecognition && this.handleStopCognitiveServicesSpeechService();
@@ -175,7 +185,13 @@ export default class ProvingGround extends React.Component {
 
   render() {
     const {
-      state: { browserSpeechRecognition, cognitiveServicesSpeechRecognition, eventTargets, historyKey }
+      state: {
+        browserSpeechRecognition,
+        cognitiveServicesSpeechRecognition,
+        eventTargets,
+        historyKey,
+        interimResults
+      }
     } = this;
 
     return (
@@ -294,11 +310,23 @@ export default class ProvingGround extends React.Component {
           </tbody>
         </table>
         <div>
-          <button
-            onClick={ this.handleClearHistory }
-          >
-            Clear history
-          </button>
+          <div>
+            <button
+              onClick={ this.handleClearHistory }
+            >
+              Clear history
+            </button>
+          </div>
+          <div>
+            <label>
+              Interim results
+              <input
+                onChange={ this.handleInterimResultsChange }
+                type="checkbox"
+                value={ interimResults }
+              />
+            </label>
+          </div>
         </div>
         <div className="grounds">
           <EventHistory

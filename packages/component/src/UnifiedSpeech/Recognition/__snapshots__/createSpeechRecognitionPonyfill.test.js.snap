@@ -102,6 +102,18 @@ Array [
 ]
 `;
 
+exports[`Microphone blocked 1`] = `
+Array [
+  Object {
+    "error": "not-allowed",
+    "type": "error",
+  },
+  Object {
+    "type": "end",
+  },
+]
+`;
+
 exports[`Muted microphone 1`] = `
 Array [
   Object {
@@ -144,11 +156,90 @@ Array [
 ]
 `;
 
-exports[`Microphone blocked 1`] = `
+exports[`Push-to-talk stop before first recognized text 1`] = `
 Array [
   Object {
-    "error": "not-allowed",
-    "type": "error",
+    "type": "start",
+  },
+  Object {
+    "type": "audiostart",
+  },
+  Object {
+    "type": "soundstart",
+  },
+  Object {
+    "type": "speechstart",
+  },
+  Object {
+    "type": "speechend",
+  },
+  Object {
+    "type": "soundend",
+  },
+  Object {
+    "type": "audioend",
+  },
+  Object {
+    "type": "end",
+  },
+]
+`;
+
+exports[`Push-to-talk with partial recognized text 1`] = `
+Array [
+  Object {
+    "type": "start",
+  },
+  Object {
+    "type": "audiostart",
+  },
+  Object {
+    "type": "soundstart",
+  },
+  Object {
+    "type": "speechstart",
+  },
+  Object {
+    "results": Array [
+      Array [
+        Object {
+          "confidence": 0.5,
+          "transcript": "one",
+        },
+      ],
+    ],
+    "type": "result",
+  },
+  Object {
+    "results": Array [
+      Array [
+        Object {
+          "confidence": 0.5,
+          "transcript": "one two",
+        },
+      ],
+    ],
+    "type": "result",
+  },
+  Object {
+    "type": "speechend",
+  },
+  Object {
+    "type": "soundend",
+  },
+  Object {
+    "type": "audioend",
+  },
+  Object {
+    "results": Array [
+      Array [
+        Object {
+          "confidence": 0.5,
+          "transcript": "one two",
+        },
+      ],
+    ],
+    "type": "result",
   },
   Object {
     "type": "end",
