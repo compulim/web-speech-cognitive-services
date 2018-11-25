@@ -223,8 +223,6 @@ For detailed test matrix, please refer to [`SPEC-RECOGNITION.md`](SPEC-RECOGNITI
 
 # Roadmap
 
-## Plan
-
 * Speech recognition
    * [x] Add grammar list
    * [x] Add tests for lifecycle events
