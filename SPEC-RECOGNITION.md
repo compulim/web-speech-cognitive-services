@@ -1,4 +1,10 @@
-# Speech recognition
+```
+ __   __   ___  ___  __           __   ___  __   __   __         ___    __
+/__` |__) |__  |__  /  ` |__|    |__) |__  /  ` /  \ / _` |\ | |  |  | /  \ |\ |
+.__/ |    |___ |___ \__, |  |    |  \ |___ \__, \__/ \__> | \| |  |  | \__/ | \|
+```
+
+# Browser compatibilities
 
 Browsers are all latest as of 2018-06-28, except:
 
@@ -36,137 +42,310 @@ Quick grab:
 | Microsoft Lumia 950  | Windows 10 (1709)            | Edge 40.15254.489.0  | No, `AudioSourceError`      | No, `SpeechRecognition` not implemented |
 | Microsoft Xbox One   | Windows 10 (1806) 17134.4054 | Edge 42.17134.4054.0 | No, `AudioSourceError`      | No, `SpeechRecognition` not implemented |
 
-## Event lifecycle scenarios
+# Behaviors
 
-We test multiple scenarios to make sure we polyfill Web Speech API correctly. Following are events and its firing order, in Cognitive Services and Web Speech API respectively.
+Interactive mode means `continuous` is set to `false`. In Cognitive Services Speech Services SDK, this translate to `recognizeOnceAsync`.
 
-* [Happy path](#happy-path)
-* [Abort during recognition](#abort-during-recognition)
-* [Network issues](#network-issues)
-* [Audio muted or volume too low](#audio-muted-or-volume-too-low)
-* [No speech is recognized](#no-speech-is-recognized)
-* [Not authorized to use microphone](#not-authorized-to-use-microphone)
+Continuous mode means `continuous` is set to `true`, which is `startContinuousRecognitionAsync` in Cognitive Services Speech SDK.
 
-### Happy path
+## Happy path
 
-Everything works, including multiple interim results.
+- Interactive mode (with interim results)
+   - W3C Web Speech API
+      1. `start`
+      1. `audiostart`
+      1. `soundstart`
+      1. `speechstart`
+      1. One or more `result` events, if `interimResults` is set to `true`
+      1. `speechend`
+      1. `soundend`
+      1. `audioend`
+      1. `result`
+         - `results === [{ isFinal: true }]`
+      1. `end`
+   - Cognitive Services Speech Services
+      1. Call `recognizeOnceAsync()`
+      1. Receive zero or more `recognizing` event
+         - With notable text in `result.text`
+         - `result.json` is similar to `{"Text":"text","Offset":200000,"Duration":32400000}`
+      1. Receive a final `recognized` event
+         - `result.json` is similar to `{"RecognitionStatus":"Success","Offset":1800000,"Duration":48100000,"NBest":[{"Confidence":0.2331869,"Lexical":"no","ITN":"no","MaskedITN":"no","Display":"No."}]}`
+      1. `onSuccess(result)` callback from `recognizeOnceAsync()`
+         - `result` is similar to or same as the `event.result` object received from `recognized(event)`
+- Continuous mode
+   - W3C Web Speech API
+      1. `start`
+      1. `audiostart`
+      1. `soundstart`
+      1. `speechstart`
+      1. One or more `results`, if `interimResults` is set to `true`
+         - `results === [{ isFinal: true }, { isFinal: true }]`
+         - All with `isFinal === true`
+      1. (When `stop()` is called)
+      1. `speechend`
+      1. `soundend`
+      1. `audioend`
+      1. `end`
+   - Cognitive Services Speech Services
+      - TBD
+      1. ~~Call `startContinuousRecognitionAsync()`~~
+      1. ~~Receive `start` event~~
+      1. ~~Receive multiple `recognizing` event~~
+         - ~~❗ When speaking slowly with significant delay between sentences, the SDK is only able to recognize first sentence~~
+      1. ~~Call `stopContinuousRecognitionAsync()`~~
+         - ~~Observed microphone stop recording~~
+      1. ~~Receive `stop` event~~
 
-* Cognitive Services
-   1. `RecognitionTriggeredEvent`
-   2. `ListeningStartedEvent`
-   3. `ConnectingToServiceEvent`
-   4. `RecognitionStartedEvent`
-   5. `SpeechHypothesisEvent` (could be more than one)
-   6. `SpeechEndDetectedEvent`
-   7. `SpeechDetailedPhraseEvent`
-   8. `RecognitionEndedEvent`
-* Web Speech API
-   1. `start`
-   2. `audiostart`
-   3. `soundstart`
-   4. `speechstart`
-   5. `result` (multiple times)
-   6. `speechend`
-   7. `soundend`
-   8. `audioend`
-   9. `result(results = [{ isFinal = true }])`
-   10. `end`
+## Stop
 
-### Abort during recognition
+`stop()` is a supported feature in Web Speech API for push-to-talk operation.
 
-#### Abort before first recognition is made
+❗ Cognitive Services does not support push-to-talk natively, we are trying to mimic the behavior by hiding the output after `stop()` is called.
 
-* Cognitive Services
-   * Essentially muted the microphone and receive `SpeechEndDetectedEvent` immediately, very similar to [happy path](#happy-path), could still result in success, silent, or no match
-* Web Speech API
-   1. `start`
-   2. `audiostart`
-   8. `audioend`
-   9. `error(error = 'aborted')`
-   10. `end`
+- We are taking the latest interim results as the final results
+   - Lexical ("one two three") does not get converted into ITN ("123") for interim results
+   - Cognitive Services does not return confidence for interims, thus, we will assume it is `0.5`
+- Microphone will not stop recording immediately
 
-#### Abort after some text has recognized
+### Stop before first recognition is made
 
-* Cognitive Services
-   * Essentially muted the microphone and receive `SpeechEndDetectedEvent` immediately, very similar to [happy path](#happy-path), could still result in success, silent, or no match
-* Web Speech API
-   1. `start`
-   2. `audiostart`
-   3. `soundstart`
-   4. `speechstart`
-   5. `result` (one or more)
-   6. `speechend`
-   7. `soundend`
-   8. `audioend`
-   9. `error(error = 'aborted')`
-   10. `end`
+- Interactive mode (with interim results)
+   - W3C Web Speech API
+      1. `start`
+      1. `audiostart`
+      1. Optional, `soundstart`
+      1. Optional, `speechstart`
+      1. Optional, `speechend`
+      1. Optional, `soundend`
+      1. `audioend`
+      1. `end`
+   - Cognitive Services
+      - `recognizeOnceAsync` does not support stop or cancellation, thus, we need to mimic the behavior by ignoring some `recognizing` and the final `recognized` event
+      1. Call `recognizeOnceAsync()`
+      1. (`stop()` is called)
+      1. Receive a final `recognized` event
+      1. `onSuccess(result)` callback from `recognizeOnceAsync()`
+- Continuous mode
+   - W3C Web Speech API
+      - TBD
+   - Cognitive Services
+      - TBD
 
-### Network issues
+### Stop after some recognition is made
+
+- Interactive mode (with interim results)
+   - W3C Web Speech API
+      1. `start`
+      1. `audiostart`
+      1. `soundstart`
+      1. `speechstart`
+      1. One or more `result` events, if `interimResults` is set to `true`
+      1. `speechend`
+      1. `soundend`
+      1. `audioend`
+      1. ❓ One or more `result` with `results === [{ isFinal: false }]`
+      1. `result`
+         - `results === [{ isFinal: true }]`
+      1. `end`
+   - Cognitive Services
+      - `recognizeOnceAsync` does not support stop or cancellation, thus, we need to mimic the behavior by ignoring some `recognizing` and the final `recognized` event
+      1. Call `recognizeOnceAsync()`
+      1. Receive zero or more `recognizing` event
+         - With notable text in `result.text`
+         - `result.json` is similar to `{"Text":"text","Offset":200000,"Duration":32400000}`
+      1. Receive a final `recognized` event
+         - `result.json` is similar to `{"RecognitionStatus":"Success","Offset":1800000,"Duration":48100000,"NBest":[{"Confidence":0.2331869,"Lexical":"no","ITN":"no","MaskedITN":"no","Display":"No."}]}`
+      1. `onSuccess(result)` callback from `recognizeOnceAsync()`
+- Continuous mode
+   - W3C Web Speech API
+      - TBD
+   - Cognitive Services
+      - TBD
+
+## Abort
+
+### Abort before first recognition is made
+
+- Interactive mode (with interim results)
+   - W3C Web Speech API
+      1. `start`
+      1. `audiostart`
+      1. `audioend`
+      1. `error`
+         - `error === 'aborted'`
+      1. `end`
+   - Cognitive Services
+      - There is no `abort()` equivalent for `recognizeOnceAsync()`, thus, microphone will not stop recording immediately
+- Continuous mode
+   - W3C Web Speech API
+      - TBD
+   - Cognitive Services
+      - TBD
+
+### Abort after some speech is recognized
+
+- Interactive mode
+   - W3C Web Speech API
+      1. `start`
+      1. `audiostart`
+      1. `soundstart`
+      1. `speechstart`
+      1. One or more `result` events, if `interimResults` is set to `true`
+      1. `speechend`
+      1. `soundend`
+      1. `audioend`
+      1. `error`
+         - `error === 'aborted'`
+      1. `end`
+   - Cognitive Services
+      - TBD
+- Continuous mode
+   - W3C Web Speech API
+      - TBD
+   - Cognitive Services
+      - TBD
+
+## Network issues
+
+### Airplane mode
 
 Turn on airplane mode.
 
-* Cognitive Services
-   1. `RecognitionTriggeredEvent`
-   2. `ListeningStartedEvent`
-   3. `ConnectingToServiceEvent`
-   5. `RecognitionEndedEvent(Result.RecognitionStatus = 'ConnectError')`
-* Web Speech API
-   1. `start`
-   2. `audiostart`
-   3. `audioend`
-   4. `error(error = 'network')`
-   5. `end`
+- Interactive mode
+   - W3C Web Speech API
+      1. `start`
+      1. `audiostart`
+      1. `audioend`
+      1. `error`
+         - `error === 'network'`
+      1. `end`
+   - Cognitive Services Speech Services
+      1. Received `canceled` event
+         - `errorDetails === 'Unable to contact server. StatusCode: 1006, Reason: '`
+      1. `error` callback is received
+         - `errorDetails === 'Unable to contact server. StatusCode: 1006, Reason: '`
+      - (Microphone was not turned on, or too short to detect if it has turned on)
+- Continuous mode
+   - W3C Web Speech API
+      - TBD
+   - Cognitive Services Speech Services
+      - TBD
 
-### Audio muted or volume too low
+### Invalid subscription key
 
-* Cognitive Services
-   1. `RecognitionTriggeredEvent`
-   2. `ListeningStartedEvent`
-   3. `ConnectingToServiceEvent`
-   4. `RecognitionStartedEvent`
-   5. `SpeechEndDetectedEvent`
-   6. `SpeechDetailedPhraseEvent(Result.RecognitionStatus = 'InitialSilenceTimeout')`
-   7. `RecognitionEndedEvent`
-* Web Speech API
-   1. `start`
-   2. `audiostart`
-   3. `audioend`
-   4. `error(error = 'no-speech')`
-   5. `end`
+Since browser speech does not requires subscription key, we assume this flow should be same as airplane mode.
 
-### No speech is recognized
+- Interactive mode
+   - W3C Web Speech API
+      1. `start`
+      1. `audiostart`
+      1. `audioend`
+      1. `error`
+         - `error === 'network'`
+      1. `end`
+   - Cognitive Services Speech Services
+      1. Console (on Chrome) logged `WebSocket connection to 'wss://westus.stt.speech.microsoft.com/speech/recognition/interactive/cognitiveservices/v1?language=en-US&format=detailed&Ocp-Apim-Subscription-Key=...&X-ConnectionId=...' failed: HTTP Authentication failed; no valid credentials available`.
+      1. Received `canceled` event
+         - `errorDetails === 'Unable to contact server. StatusCode: 1006, Reason: '`
+         - `reason === 0`
+      1. `error` callback is received
+         - `errorDetails === 'Unable to contact server. StatusCode: 1006, Reason: '`
+      - (Microphone was not turned on, or too short to detect if it has turned on)
+- Continuous mode
+   - W3C Web Speech API
+      - TBD
+   - Cognitive Services Speech Services
+      - TBD
+
+## No speech is recognized
+
+### Microphone muted
+
+Microphone is muted and record level is at zero. This should be distinguishable by missing of `soundstart` event on Web Speech API.
+
+- Interactive mode
+   - W3C Web Speech API
+      1. `start`
+      1. `audiostart`
+      1. `audioend`
+      1. `error`
+         - `error === 'no-speech'`
+      1. `end`
+   - Cognitive Services Speech Services
+      1. After 5 seconds of silence, `recognized`
+         - `result.json.RecognitionStatus === 'InitialSilenceTimeout'`
+         - `result.offset === 50000000`
+         - Microphone is off after this event
+- Continuous mode
+   - W3C Web Speech API
+      1. `start`
+      1. `audiostart`
+      1. `audioend`
+      1. `error`
+         - `error === 'no-speech'`
+         - Even in continuous mode, browser will timeout with `no-speech` after 5 seconds
+      1. `end`
+   - Cognitive Services Speech Services
+      1. ~~`start`~~
+      1. ~~After 15 seconds of silence, `recognized`~~
+         - ~~`json.RecognitionStatus === 'InitialSilenceTimeout'`~~
+         - ~~`offset === 150000000`~~
+      1. ~~(When `stop()`), `stop`~~
+
+### Unrecognizable sound
 
 Some sounds are heard, but they cannot be recognized as text. There could be some interim results with recognized text, but the confidence is so low it dropped out of final result.
 
-* Cognitive Services
-   1. `RecognitionTriggeredEvent`
-   2. `ListeningStartedEvent`
-   3. `ConnectingToServiceEvent`
-   4. `RecognitionStartedEvent`
-   5. `SpeechHypothesisEvent` (could be more than one)
-   6. `SpeechEndDetectedEvent`
-   7. `SpeechDetailedPhraseEvent(Result.RecognitionStatus = 'NoMatch')`
-   8. `RecognitionEndedEvent`
-* Web Speech API
-   1. `start`
-   2. `audiostart`
-   3. `soundstart`
-   4. `speechstart`
-   5. `result`
-   6. `speechend`
-   7. `soundend`
-   8. `audioend`
-   9. `end`
+- Interactive mode
+   - W3C Web Speech API
+      1. `start`
+      1. `audiostart`
+      1. `soundstart`
+      1. `speechstart`
+      1. `speechend`
+      1. `soundend`
+      1. `audioend`
+      1. `end`
+   - Cognitive Services Speech Services
+      1. TBD
+      1. ~~After 5 seconds of unrecognizable sound, `recognized`~~
+         - ~~`json.RecognitionStatus === 'InitialSilenceTimeout'`~~
+         - ~~`offset === 50000000`~~
+         - ~~Microphone is off after this event~~
+- Continuous mode
+   - W3C Web Speech API
+      1. `start`
+      1. `audiostart`
+      1. `soundstart`
+      1. `speechstart`
+      1. (When `stop()`)
+      1. `speechend`
+      1. `soundend`
+      1. `audioend`
+      1. `end`
+   - Cognitive Services Speech Services
+      1. ~~`start`~~
+      1. ~~After 15 seconds of unrecognizable sound, `recognized`~~
+         - ~~`json.RecognitionStatus === 'InitialSilenceTimeout'`~~
+         - ~~`offset === 150000000`~~
+      1. ~~(When `stop()`)~~
+      1. ~~`stop`~~
 
-> Note: the Web Speech API has `onnomatch` event, but unfortunately, Google Chrome did not fire this event.
+## Not authorized to use microphone
 
-### Not authorized to use microphone
-
-The user click "deny" on the permission dialog, or there are no microphone detected in the system.
-
-* Cognitive Services
-   1. `RecognitionTriggeredEvent`
-   2. `RecognitionEndedEvent(Result.RecognitionStatus = 'AudioSourceError')`
-* Web Speech API
-   1. `error(error = 'not-allowed')`
-   2. `end`
+- Interactive mode
+   - W3C Web Speech API
+      1. (No `start` event was received)
+      1. `error`
+         - `error === 'not-allowed'`
+      1. `end`
+   - Cognitive Services Speech Services
+      1. `recognizeOnceAsync(success, error)` returned with `error` callback
+         - `"Runtime error: 'Error handler for error Error occurred during microphone initialization: NotAllowedError: Permission denied threw error Error: Error occurred during microphone initialization: NotAllowedError: Permission denied'"`
+- Continuous mode
+   - W3C Web Speech API
+      1. `error`
+         - `error === 'not-allowed'`
+      1. `end`
+   - Cognitive Services Speech Services
+      - TBD

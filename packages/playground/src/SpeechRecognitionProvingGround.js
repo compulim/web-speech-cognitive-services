@@ -2,7 +2,7 @@ import { css } from 'glamor';
 import memoize from 'memoize-one-with-dispose';
 import React from 'react';
 
-import createPonyfill from 'web-speech-cognitive-services/lib/UnifiedSpeech';
+import createPonyfill from 'web-speech-cognitive-services';
 import EventHistory from './EventHistory';
 
 const ROOT_CSS = css({

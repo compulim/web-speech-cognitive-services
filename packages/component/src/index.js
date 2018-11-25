@@ -1,7 +1,11 @@
-import BingSpeech from './BingSpeech/index';
-import SpeechServices from './UnifiedSpeech';
+import createSpeechRecognitionPonyfill from './SpeechToText';
+
+export default async function (...args) {
+  return {
+    ...(await createSpeechRecognitionPonyfill(...args))
+  };
+};
 
 export {
-  BingSpeech,
-  SpeechServices
+  createSpeechRecognitionPonyfill
 }

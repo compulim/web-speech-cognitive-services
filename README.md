@@ -41,7 +41,7 @@ In this package, we prefer ponyfill because it do not pollute the hosting enviro
 If the library you are using do not support ponyfill, you can polyfill `window` object with our ponyfill.
 
 ```jsx
-import createPonyfill from 'web-speech-cognitive-services/lib/UnifiedSpeech';
+import createPonyfill from 'web-speech-cognitive-services';
 
 const ponyfill = await createPonyfill({
   region: 'westus',
@@ -60,7 +60,7 @@ for (let key in ponyfill) {
 You can choose to only create ponyfill for speech recognition.
 
 ```jsx
-import { createSpeechRecognitionPonyfill } from 'web-speech-cognitive-services/lib/UnifiedSpeech';
+import { createSpeechRecognitionPonyfill } from 'web-speech-cognitive-services/lib/SpeechToText';
 
 const {
   SpeechRecognition
@@ -88,7 +88,7 @@ recognition.start();
 You can use [`react-dictate-button`](https://github.com/compulim/react-dictate-button/) to integrate speech recognition functionality to your React app.
 
 ```jsx
-import createPonyfill from 'web-speech-cognitive-services/lib/UnifiedSpeech';
+import createPonyfill from 'web-speech-cognitive-services';
 import DictateButton from 'react-dictate-button';
 
 const {
@@ -145,7 +145,7 @@ recognition.start();
 ## Speech synthesis (text-to-speech)
 
 ```jsx
-import { createSpeechSynthesisPonyfill } from 'web-speech-cognitive-services/lib/UnifiedSpeech';
+import { createSpeechSynthesisPonyfill } from 'web-speech-cognitive-services/lib/TextToSpeech';
 
 const {
   speechSynthesis,
