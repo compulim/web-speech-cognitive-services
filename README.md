@@ -1,10 +1,10 @@
 # web-speech-cognitive-services
 
+Polyfill Web Speech API with Cognitive Services Speech Service for both speech-to-text and text-to-speech service.
+
+> This scaffold is provided by [`react-component-template`](https://github.com/compulim/react-component-template/).
+
 [![npm version](https://badge.fury.io/js/web-speech-cognitive-services.svg)](https://badge.fury.io/js/web-speech-cognitive-services) [![Build Status](https://travis-ci.org/compulim/web-speech-cognitive-services.svg?branch=master)](https://travis-ci.org/compulim/web-speech-cognitive-services)
-
-Polyfill Web Speech API with Cognitive Services Bing Speech for both speech-to-text and text-to-speech service.
-
-This scaffold is provided by [`react-component-template`](https://github.com/compulim/react-component-template/).
 
 # Demo
 
@@ -16,7 +16,7 @@ We use [`react-dictate-button`](https://github.com/compulim/react-dictate-button
 
 Web Speech API is not widely adopted on popular browsers and platforms. Polyfilling the API using cloud services is a great way to enable wider adoption. Nonetheless, Web Speech API in Google Chrome is also backed by cloud services.
 
-Microsoft Azure [Cognitive Services Bing Speech](https://azure.microsoft.com/en-us/services/cognitive-services/speech/) service provide speech recognition with great accuracy. But unfortunately, the APIs are not based on Web Speech API.
+Microsoft Azure [Cognitive Services Speech Services](https://azure.microsoft.com/en-us/services/cognitive-services/speech-services/) service provide speech recognition with great accuracy. But unfortunately, the APIs are not based on Web Speech API.
 
 This package will polyfill Web Speech API by turning Cognitive Services Bing Speech API into Web Speech API. We test this package with popular combination of platforms and browsers.
 
@@ -29,12 +29,19 @@ Then, install peer dependency by running `npm install microsoft-speech-browser-s
 ## Speech recognition (speech-to-text)
 
 ```jsx
-import { createFetchTokenUsingSubscriptionKey, SpeechRecognition } from 'web-speech-cognitive-services';
+import { createSpeechRecognitionPonyfill } from 'web-speech-cognitive-services/lib/UnifiedSpeech';
+
+const {
+  SpeechRecognition
+} = createSpeechRecognitionPonyfill({
+  region: 'westus',
+  subscriptionKey: ''
+});
 
 const recognition = new SpeechRecognition();
 
+recognition.interimResults = true;
 recognition.lang = 'en-US';
-recognition.fetchToken = createFetchTokenUsingSubscriptionKey('your subscription key');
 
 recognition.onresult = ({ results }) => {
   console.log(results);
@@ -178,15 +185,13 @@ For detailed test matrix, please refer to [`SPEC-RECOGNITION.md`](SPEC-RECOGNITI
    * [x] Unified [token exchange mechanism](packages/component/src/util/SubscriptionKey.js)
 * Speech recognition
    * [x] Add grammar list
-   * [ ] Add tests for lifecycle events
-   * [ ] Support `stop()` function
-      * Currently, only `abort()` is supported
+   * [x] Add tests for lifecycle events
+   * [x] Support `stop()` and `abort()` function
+   * [x] Support new [Speech-to-Text](https://azure.microsoft.com/en-us/services/cognitive-services/speech-to-text/) service
    * [ ] Investigate continuous mode
-   * [ ] Enable Opus (OGG) encoding
-      * Currently, there is a problem with `microsoft-speech-browser-sdk@0.0.12`, tracking on [this issue](https://github.com/Azure-Samples/SpeechToText-WebSockets-Javascript/issues/88)
    * [ ] Support custom speech
-   * [ ] Support new [Speech-to-Text](https://azure.microsoft.com/en-us/services/cognitive-services/speech-to-text/) service
-      * Point to [new URIs](https://docs.microsoft.com/en-us/azure/cognitive-services/Speech-Service/rest-apis)
+   * [ ] Investigate support of Opus (OGG) encoding
+      * Currently, there is a problem with `microsoft-speech-browser-sdk@0.0.12`, tracking on [this issue](https://github.com/Azure-Samples/SpeechToText-WebSockets-Javascript/issues/88)
 * Speech synthesis
    * [ ] Event: add `pause`/`resume` support
    * [ ] Properties: add `paused`/`pending`/`speaking` support

@@ -10,21 +10,23 @@
     "not op_mini all"
   ],
   "scripts": {
-    "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "clean": "npx rimraf build",
+    "eject": "react-scripts eject",
+    "start": "react-scripts start",
+    "test": "react-scripts test --env=jsdom"
   },
   "dependencies": {
     "classnames": "^2.2.6",
     "glamor": "^2.20.40",
     "memoize-one": "^4.0.0",
+    "memoize-one-with-dispose": "^1.0.0",
     "microsoft-speech-browser-sdk": "^0.0.12",
     "react": "^16.4.1",
     "react-dictate-button": "^1.1.2",
     "react-dom": "^16.4.1",
     "react-say": "0.0.1-master.e4ee39e",
     "react-scripts": "^2.0.4",
-    "web-speech-cognitive-services": "^3.0.0-0"
+    "web-speech-cognitive-services": "4.0.0-0"
   }
 }

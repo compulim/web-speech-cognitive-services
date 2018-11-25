@@ -1,6 +1,6 @@
 {
   "name": "web-speech-cognitive-services",
-  "version": "3.0.0-0",
+  "version": "4.0.0-0",
   "description": "Polyfill Web Speech API with Cognitive Services Speech-to-Text service",
   "keywords": [
     "cognitive services",
@@ -16,6 +16,7 @@
     "stt",
     "text to speech",
     "tts",
+    "unified speech",
     "utterance",
     "voice recognition",
     "web speech",

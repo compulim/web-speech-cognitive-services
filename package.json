@@ -6,6 +6,7 @@
   "scripts": {
     "bootstrap": "lerna bootstrap",
     "build": "lerna run --stream build",
+    "clean": "lerna run --parallel --stream clean",
     "test": "lerna run --stream test",
     "watch": "lerna run --stream watch"
   },

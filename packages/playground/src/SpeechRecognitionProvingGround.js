@@ -1,10 +1,8 @@
 import { css } from 'glamor';
+import memoize from 'memoize-one-with-dispose';
 import React from 'react';
 
-import {
-  createSpeechRecognitionPonyfill
-} from 'web-speech-cognitive-services/lib/UnifiedSpeech';
-
+import createPonyfill from 'web-speech-cognitive-services/lib/UnifiedSpeech';
 import EventHistory from './EventHistory';
 
 const ROOT_CSS = css({
@@ -48,7 +46,20 @@ export default class ProvingGround extends React.Component {
       SpeechRecognition: window.SpeechRecognition || window.webkitSpeechRecognition
     };
 
-    this.cognitiveServicesPonyfill = createSpeechRecognitionPonyfill({ subscriptionKey: props.subscriptionKey });
+    this.createCognitiveServicesPonyfill = memoize(
+      async ({ region, subscriptionKey }) => {
+        const cognitiveServicesPonyfill = await createPonyfill({ region, subscriptionKey });
+
+        this.setState(() => ({ cognitiveServicesPonyfill }));
+      },
+      undefined,
+      () => {
+        this.handleAbortCognitiveServices();
+        this.setState(() => ({ cognitiveServicesPonyfill: null }));
+      }
+    );
+
+    // this.cognitiveServicesPonyfill = createPonyfill({ subscriptionKey: props.subscriptionKey });
 
     this.state = {
       browserSpeechRecognition: null,
@@ -63,11 +74,12 @@ export default class ProvingGround extends React.Component {
     };
   }
 
+  componentDidMount() {
+    this.createCognitiveServicesPonyfill(this.props);
+  }
+
   componentWillReceiveProps(nextProps) {
-    if (this.props.subscriptionKey !== nextProps.subscriptionKey) {
-      this.handleAbortCognitiveServices();
-      this.cognitiveServicesPonyfill = createSpeechRecognitionPonyfill({ subscriptionKey: nextProps.subscriptionKey });
-    }
+    this.createCognitiveServicesPonyfill(nextProps);
   }
 
   handleAbortBoth() {
@@ -136,8 +148,12 @@ export default class ProvingGround extends React.Component {
   }
 
   handleStartCognitiveServicesSpeechService(continuous) {
-    if (!this.state.cognitiveServicesSpeechRecognition) {
-      const cognitiveServicesSpeechRecognition = new this.cognitiveServicesPonyfill.SpeechRecognition();
+    if (
+      !this.state.cognitiveServicesSpeechRecognition
+      && this.state.cognitiveServicesPonyfill
+    ) {
+      const { SpeechRecognition } = this.state.cognitiveServicesPonyfill;
+      const cognitiveServicesSpeechRecognition = new SpeechRecognition();
 
       cognitiveServicesSpeechRecognition.continuous = continuous;
       cognitiveServicesSpeechRecognition.interimResults = this.state.interimResults;
@@ -187,6 +203,7 @@ export default class ProvingGround extends React.Component {
     const {
       state: {
         browserSpeechRecognition,
+        cognitiveServicesPonyfill,
         cognitiveServicesSpeechRecognition,
         eventTargets,
         historyKey,
@@ -222,13 +239,13 @@ export default class ProvingGround extends React.Component {
               </td>
               <td>
                 <button
-                  disabled={ !!cognitiveServicesSpeechRecognition }
+                  disabled={ !cognitiveServicesPonyfill || !!cognitiveServicesSpeechRecognition }
                   onClick={ this.handleStartCognitiveServicesSpeechServiceInteractive }
                 >
                   Start interactive
                 </button>
                 <button
-                  disabled={ !!cognitiveServicesSpeechRecognition }
+                  disabled={ !cognitiveServicesPonyfill || !!cognitiveServicesSpeechRecognition }
                   onClick={ this.handleStartCognitiveServicesSpeechServiceContinuous }
                 >
                   Start continuous
@@ -238,7 +255,7 @@ export default class ProvingGround extends React.Component {
                 <button
                   disabled={
                     (!this.browserPonyfill.SpeechRecognition || !!browserSpeechRecognition)
-                    && !!this.cognitiveServicesPonyfill
+                    && !!cognitiveServicesPonyfill
                   }
                   onClick={ this.handleStartBothInteractive }
                 >
@@ -247,7 +264,7 @@ export default class ProvingGround extends React.Component {
                 <button
                   disabled={
                     (!this.browserPonyfill.SpeechRecognition || !!browserSpeechRecognition)
-                    && !!this.cognitiveServicesPonyfill
+                    && !!cognitiveServicesPonyfill
                   }
                   onClick={ this.handleStartBothContinuous }
                 >

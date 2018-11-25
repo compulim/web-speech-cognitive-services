@@ -14,7 +14,8 @@ function arrayToMap(array, extras) {
 
       return map;
     }, {}),
-    ...extras
+    ...extras,
+    length: array.length
   };
 }
 

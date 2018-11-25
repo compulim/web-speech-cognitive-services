@@ -67,6 +67,25 @@ function captureSpeechEvents(speech, includeCognitiveServicesEvents) {
 
 beforeEach(() => {
   jest.resetModules();
+
+  global.window = {
+    document: {
+      documentElement: {
+        getAttribute: attributeName => {
+          if (attributeName === 'lang') {
+            return 'en-US';
+          } else {
+            throw new Error('not implemented');
+          }
+        }
+      }
+    },
+    navigator: {
+      mediaDevices: {
+        getUserMedia: () => {}
+      }
+    }
+  };
 });
 
 test('Happy path without interims', async () => {
@@ -99,7 +118,7 @@ test('Happy path without interims', async () => {
   }));
 
   const { default: createSpeechRecognitionPonyfill } = require('./createSpeechRecognitionPonyfill');
-  const { SpeechRecognition } = createSpeechRecognitionPonyfill({
+  const { SpeechRecognition } = await createSpeechRecognitionPonyfill({
     region: 'westus',
     subscriptionKey: 'SUBSCRIPTION_KEY'
   });
@@ -191,7 +210,7 @@ test('Happy path with 2 interims', async () => {
   }));
 
   const { default: createSpeechRecognitionPonyfill } = require('./createSpeechRecognitionPonyfill');
-  const { SpeechRecognition } = createSpeechRecognitionPonyfill({
+  const { SpeechRecognition } = await createSpeechRecognitionPonyfill({
     region: 'westus',
     subscriptionKey: 'SUBSCRIPTION_KEY'
   });
@@ -246,7 +265,7 @@ test('Muted microphone', async () => {
   }));
 
   const { default: createSpeechRecognitionPonyfill } = require('./createSpeechRecognitionPonyfill');
-  const { SpeechRecognition } = createSpeechRecognitionPonyfill({
+  const { SpeechRecognition } = await createSpeechRecognitionPonyfill({
     region: 'westus',
     subscriptionKey: 'SUBSCRIPTION_KEY'
   });
@@ -285,7 +304,7 @@ test('Network error before start', async () => {
   }));
 
   const { default: createSpeechRecognitionPonyfill } = require('./createSpeechRecognitionPonyfill');
-  const { SpeechRecognition } = createSpeechRecognitionPonyfill({
+  const { SpeechRecognition } = await createSpeechRecognitionPonyfill({
     region: 'westus',
     subscriptionKey: 'SUBSCRIPTION_KEY'
   });
@@ -313,7 +332,7 @@ test('Microphone blocked', async () => {
   }));
 
   const { default: createSpeechRecognitionPonyfill } = require('./createSpeechRecognitionPonyfill');
-  const { SpeechRecognition } = createSpeechRecognitionPonyfill({
+  const { SpeechRecognition } = await createSpeechRecognitionPonyfill({
     region: 'westus',
     subscriptionKey: 'SUBSCRIPTION_KEY'
   });
@@ -423,7 +442,7 @@ test('Push-to-talk with partial recognized text', async () => {
   }));
 
   const { default: createSpeechRecognitionPonyfill } = require('./createSpeechRecognitionPonyfill');
-  const { SpeechRecognition } = createSpeechRecognitionPonyfill({
+  const { SpeechRecognition } = await createSpeechRecognitionPonyfill({
     region: 'westus',
     subscriptionKey: 'SUBSCRIPTION_KEY'
   });
@@ -506,7 +525,7 @@ test('Push-to-talk stop before first recognized text', async () => {
   }));
 
   const { default: createSpeechRecognitionPonyfill } = require('./createSpeechRecognitionPonyfill');
-  const { SpeechRecognition } = createSpeechRecognitionPonyfill({
+  const { SpeechRecognition } = await createSpeechRecognitionPonyfill({
     region: 'westus',
     subscriptionKey: 'SUBSCRIPTION_KEY'
   });
@@ -617,7 +636,7 @@ test('Abort with partial recognized text', async () => {
   }));
 
   const { default: createSpeechRecognitionPonyfill } = require('./createSpeechRecognitionPonyfill');
-  const { SpeechRecognition } = createSpeechRecognitionPonyfill({
+  const { SpeechRecognition } = await createSpeechRecognitionPonyfill({
     region: 'westus',
     subscriptionKey: 'SUBSCRIPTION_KEY'
   });
@@ -700,7 +719,7 @@ test('Abort before first recognized text', async () => {
   }));
 
   const { default: createSpeechRecognitionPonyfill } = require('./createSpeechRecognitionPonyfill');
-  const { SpeechRecognition } = createSpeechRecognitionPonyfill({
+  const { SpeechRecognition } = await createSpeechRecognitionPonyfill({
     region: 'westus',
     subscriptionKey: 'SUBSCRIPTION_KEY'
   });

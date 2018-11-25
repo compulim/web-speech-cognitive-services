@@ -4,7 +4,6 @@ import createPromiseQueue from '../createPromiseQueue';
 import cognitiveServiceEventResultToWebSpeechRecognitionResultList from './cognitiveServiceEventResultToWebSpeechRecognitionResultList';
 import DOMEventEmitter from '../DOMEventEmitter';
 import SpeechSDK from '../SpeechSDK';
-import racePromiseMap from '../racePromiseMap';
 
 // https://docs.microsoft.com/en-us/javascript/api/microsoft-cognitiveservices-speech-sdk/speechconfig?view=azure-node-latest#outputformat
 // {
@@ -58,10 +57,16 @@ function serializeRecognitionResult({
   };
 }
 
-export default ({
+export default async ({
   region = 'westus',
   subscriptionKey
 } = {}) => {
+  if (!subscriptionKey) {
+    return {};
+  } else if (!window.navigator.mediaDevices || !window.navigator.mediaDevices.getUserMedia) {
+    return {};
+  }
+
   const audioConfig = AudioConfig.fromDefaultMicrophoneInput();
 
   class SpeechRecognition extends DOMEventEmitter {
@@ -312,7 +317,6 @@ export default ({
           }
         }
 
-        // TODO: Can we turn this from "recognized" event into "success" event?
         if (error || success) {
           break;
         }
