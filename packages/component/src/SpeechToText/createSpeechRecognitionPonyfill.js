@@ -1,8 +1,9 @@
 import memoize from 'memoize-one';
 
-import createPromiseQueue from '../createPromiseQueue';
 import cognitiveServiceEventResultToWebSpeechRecognitionResultList from './cognitiveServiceEventResultToWebSpeechRecognitionResultList';
+import createPromiseQueue from '../createPromiseQueue';
 import DOMEventEmitter from '../DOMEventEmitter';
+import SpeechGrammarList from './SpeechGrammarList';
 import SpeechSDK from '../SpeechSDK';
 
 // https://docs.microsoft.com/en-us/javascript/api/microsoft-cognitiveservices-speech-sdk/speechconfig?view=azure-node-latest#outputformat
@@ -367,5 +368,8 @@ export default async ({
     // }
   }
 
-  return { SpeechRecognition };
+  return {
+    SpeechGrammarList,
+    SpeechRecognition
+  };
 }

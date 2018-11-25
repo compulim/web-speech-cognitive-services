@@ -70,6 +70,7 @@ export default function () {
     new SpeechSynthesisVoice({ lang: 'sl-SI', gender: 'Male', voiceURI: 'Microsoft Server Speech Text to Speech Voice (sl-SI, Lado)' }),
     new SpeechSynthesisVoice({ lang: 'sv-SE', gender: 'Female', voiceURI: 'Microsoft Server Speech Text to Speech Voice (sv-SE, HedvigRUS)' }),
     new SpeechSynthesisVoice({ lang: 'ta-IN', gender: 'Male', voiceURI: 'Microsoft Server Speech Text to Speech Voice (ta-IN, Valluvar)' }),
+    new SpeechSynthesisVoice({ lang: 'te-IN', gender: 'Female', voiceURI: 'Microsoft Server Speech Text to Speech Voice (te-IN, Chitra)' }),
     new SpeechSynthesisVoice({ lang: 'th-TH', gender: 'Male', voiceURI: 'Microsoft Server Speech Text to Speech Voice (th-TH, Pattara)' }),
     new SpeechSynthesisVoice({ lang: 'tr-TR', gender: 'Female', voiceURI: 'Microsoft Server Speech Text to Speech Voice (tr-TR, SedaRUS)' }),
     new SpeechSynthesisVoice({ lang: 'vi-VN', gender: 'Male', voiceURI: 'Microsoft Server Speech Text to Speech Voice (vi-VN, An)' }),

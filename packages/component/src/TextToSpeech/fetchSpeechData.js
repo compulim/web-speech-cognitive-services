@@ -2,7 +2,7 @@ import buildSSML from './buildSSML';
 
 const DEFAULT_LANGUAGE = 'en-US';
 const DEFAULT_VOICE = 'Microsoft Server Speech Text to Speech Voice (en-US, JessaRUS)'
-const SYNTHESIS_URL = 'https://speech.platform.bing.com/synthesize';
+const SYNTHESIS_URL_TEMPLATE = 'https://{region}.tts.speech.microsoft.com/cognitiveservices/v1';
 
 export default async function fetchSpeechData({
   accessToken,
@@ -10,15 +10,17 @@ export default async function fetchSpeechData({
   outputFormat,
   pitch,
   rate,
+  region,
   text,
   voice = DEFAULT_VOICE,
   volume
 }) {
   const ssml = buildSSML({ lang, pitch, rate, text, voice, volume });
+  const url = SYNTHESIS_URL_TEMPLATE.replace(/\{region\}/, region);
 
-  const res = await fetch(SYNTHESIS_URL, {
+  const res = await fetch(url, {
     headers: {
-      Authorization: accessToken,
+      Authorization: `Bearer ${ accessToken }`,
       'Content-Type': 'application/ssml+xml',
       'X-Microsoft-OutputFormat': outputFormat
     },

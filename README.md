@@ -162,6 +162,8 @@ await speechSynthesis.speak(utterance);
 
 > Note: `speechSynthesis` is camel-casing because it is an instance.
 
+> List of supported regions can be found in [this article](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/rest-apis#text-to-speech-api).
+
 `pitch`, `rate`, `voice`, and `volume` are supported. Only `onstart`, `onerror`, and `onend` events are supported.
 
 ### Integrating with React
