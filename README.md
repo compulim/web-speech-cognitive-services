@@ -226,19 +226,17 @@ For detailed test matrix, please refer to [`SPEC-RECOGNITION.md`](SPEC-RECOGNITI
 # Roadmap
 
 * Speech recognition
-   * [x] Add grammar list
    * [x] Add tests for lifecycle events
    * [x] Support `stop()` and `abort()` function
-   * [x] Support new [Speech-to-Text](https://azure.microsoft.com/en-us/services/cognitive-services/speech-to-text/) service
+   * [ ] Add grammar list
    * [ ] Investigate continuous mode
-   * [ ] Support custom speech
    * [ ] Investigate support of Opus (OGG) encoding
       * Currently, there is a problem with `microsoft-speech-browser-sdk@0.0.12`, tracking on [this issue](https://github.com/Azure-Samples/SpeechToText-WebSockets-Javascript/issues/88)
+   * [ ] Support custom speech
 * Speech synthesis
    * [ ] Event: add `pause`/`resume` support
    * [ ] Properties: add `paused`/`pending`/`speaking` support
-   * [ ] Support new [Text-to-Speech](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/how-to-text-to-speech) service
-      * Custom voice fonts
+   * [ ] Support [custom voice fonts](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/rest-apis#text-to-speech-api)
 
 # Contributions
 
