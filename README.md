@@ -55,6 +55,8 @@ for (let key in ponyfill) {
 
 > Note: if you do not specify `region`, we will default to `"westus"`.
 
+> List of supported regions can be found in [this article](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/rest-apis#regions-and-endpoints).
+
 ## Speech recognition (speech-to-text)
 
 You can choose to only create ponyfill for speech recognition.
@@ -233,6 +235,7 @@ For detailed test matrix, please refer to [`SPEC-RECOGNITION.md`](SPEC-RECOGNITI
    * [ ] Investigate support of Opus (OGG) encoding
       * Currently, there is a problem with `microsoft-speech-browser-sdk@0.0.12`, tracking on [this issue](https://github.com/Azure-Samples/SpeechToText-WebSockets-Javascript/issues/88)
    * [ ] Support custom speech
+   * [ ] Support ITN, masked ITN, and lexical output
 * Speech synthesis
    * [ ] Event: add `pause`/`resume` support
    * [ ] Properties: add `paused`/`pending`/`speaking` support

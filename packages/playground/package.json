@@ -22,11 +22,15 @@
     "memoize-one": "^4.0.0",
     "memoize-one-with-dispose": "^1.0.0",
     "microsoft-speech-browser-sdk": "^0.0.12",
+    "on-error-resume-next": "^1.1.0",
     "react": "^16.4.1",
     "react-dictate-button": "^1.1.2",
     "react-dom": "^16.4.1",
+    "react-redux": "^5.1.1",
     "react-say": "0.0.1-master.e4ee39e",
     "react-scripts": "^2.0.4",
+    "redux": "^4.0.1",
+    "redux-saga": "^0.16.2",
     "web-speech-cognitive-services": "4.0.0-0"
   }
 }
