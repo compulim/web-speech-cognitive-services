@@ -13,11 +13,10 @@ export default function* () {
   for (;;) {
     let cancelReason;
 
-    const start = yield take(START_SPEECH_RECOGNITION);
+    yield take(START_SPEECH_RECOGNITION);
+
     const task = yield fork(startSpeechRecognition, {
-      continuous: start.continuous,
-      getCancelReason: () => cancelReason,
-      interimResults: start.interimResults
+      getCancelReason: () => cancelReason
     });
 
     const { abort, stop } = yield race({
@@ -54,6 +53,7 @@ function* startSpeechRecognition({ getCancelReason }) {
       region,
       speechRecognitionContinuous: continuous,
       speechRecognitionInterimResults: interimResults,
+      speechRecognitionMaxAlternatives: maxAlternatives,
       subscriptionKey
     } = yield select();
 
@@ -62,6 +62,11 @@ function* startSpeechRecognition({ getCancelReason }) {
     speechRecognition = new SpeechRecognition();
     speechRecognition.continuous = continuous;
     speechRecognition.interimResults = interimResults;
+
+    // TODO: Cognitive Services currently does not return multiple alternatives
+    if (ponyfillType === 'browser') {
+      speechRecognition.maxAlternatives = maxAlternatives;
+    }
 
     yield put(setSpeechRecognitionInstance(speechRecognition));
 

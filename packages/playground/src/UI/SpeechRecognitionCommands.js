@@ -1,6 +1,8 @@
 import { connect } from 'react-redux';
 import React from 'react';
 
+import Select from '../Bootstrap/Select';
+
 import abortSpeechRecognition from '../data/actions/abortSpeechRecognition';
 import startSpeechRecognition from '../data/actions/startSpeechRecognition';
 import stopSpeechRecognition from '../data/actions/stopSpeechRecognition';
@@ -8,6 +10,7 @@ import stopSpeechRecognition from '../data/actions/stopSpeechRecognition';
 import clearSpeechRecognitionEvent from '../data/actions/clearSpeechRecognitionEvent';
 import setSpeechRecognitionContinuous from '../data/actions/setSpeechRecognitionContinuous';
 import setSpeechRecognitionInterimResults from '../data/actions/setSpeechRecognitionInterimResults';
+import setSpeechRecognitionMaxAlternatives from '../data/actions/setSpeechRecognitionMaxAlternatives';
 
 const SpeechRecognitionCommands = ({
   abortSpeechRecognition,
@@ -15,9 +18,12 @@ const SpeechRecognitionCommands = ({
   continuous,
   empty,
   interimResults,
+  maxAlternatives,
+  ponyfillType,
   setSpeechRecognitionContinuous,
   setSpeechRecognitionHideInterimResults,
   setSpeechRecognitionInteractive,
+  setSpeechRecognitionMaxAlternatives,
   setSpeechRecognitionShowInterimResults,
   started,
   startSpeechRecognition,
@@ -78,6 +84,20 @@ const SpeechRecognitionCommands = ({
       </div>
     </div>
     &nbsp;
+    <div className="form-group-inline">
+      <Select
+        disabled={ started || ponyfillType !== 'browser' }
+        onChange={ setSpeechRecognitionMaxAlternatives }
+        value={ maxAlternatives }
+        values={{
+          '1': 'One alternative',
+          '3': '3 alternatives',
+          '5': '5 alternatives',
+          '10': '10 alternatives'
+        }}
+      />
+    </div>
+    &nbsp;
     <div className="btn-group">
       <button
         className="btn btn-secondary"
@@ -103,14 +123,18 @@ const SpeechRecognitionCommands = ({
 
 export default connect(
   ({
+    ponyfillType,
     speechRecognitionEvents,
     speechRecognitionContinuous,
     speechRecognitionInterimResults,
+    speechRecognitionMaxAlternatives,
     speechRecognitionStarted
   }) => ({
     empty: !speechRecognitionEvents.length,
     continuous: speechRecognitionContinuous,
     interimResults: speechRecognitionInterimResults,
+    maxAlternatives: speechRecognitionMaxAlternatives,
+    ponyfillType,
     started: speechRecognitionStarted
   }),
   {
@@ -119,6 +143,7 @@ export default connect(
     setSpeechRecognitionContinuous: () => setSpeechRecognitionContinuous(true),
     setSpeechRecognitionHideInterimResults: () => setSpeechRecognitionInterimResults(false),
     setSpeechRecognitionInteractive: () => setSpeechRecognitionContinuous(false),
+    setSpeechRecognitionMaxAlternatives: value => setSpeechRecognitionMaxAlternatives(+value),
     setSpeechRecognitionShowInterimResults: () => setSpeechRecognitionInterimResults(true),
     startSpeechRecognition,
     stopSpeechRecognition

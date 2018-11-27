@@ -6,6 +6,7 @@ import region from './reducers/region';
 import speechRecognitionContinuous from './reducers/speechRecognitionContinuous';
 import speechRecognitionEvents from './reducers/speechRecognitionEvents';
 import speechRecognitionInterimResults from './reducers/speechRecognitionInterimResults';
+import speechRecognitionMaxAlternatives from './reducers/speechRecognitionMaxAlternatives';
 import speechRecognitionStarted from './reducers/speechRecognitionStarted';
 import subscriptionKey from './reducers/subscriptionKey';
 
@@ -16,6 +17,7 @@ export default combineReducers({
   speechRecognitionContinuous,
   speechRecognitionEvents,
   speechRecognitionInterimResults,
+  speechRecognitionMaxAlternatives,
   speechRecognitionStarted,
   subscriptionKey
 })
