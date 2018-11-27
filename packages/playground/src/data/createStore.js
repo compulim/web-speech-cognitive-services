@@ -40,7 +40,7 @@ export default function () {
     const {
       ponyfill,
       speechRecognizedStarted,
-      speechSynthesisVoices,
+      speechSynthesisNativeVoices,
       ...serializableState
     } = state;
 

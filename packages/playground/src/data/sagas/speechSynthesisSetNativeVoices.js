@@ -5,13 +5,9 @@ import {
 } from 'redux-saga/effects';
 
 import { SET_PONYFILL } from '../actions/setPonyfill';
-import setSpeechSynthesisVoices from '../actions/setSpeechSynthesisVoices';
+import setSpeechSynthesisNativeVoices from '../actions/setSpeechSynthesisNativeVoices';
 
 import createPromiseQueue from '../utils/createPromiseQueue';
-
-function serializeVoices(voices) {
-  return [].map.call(voices, ({ name, voiceURI }) => ({ name, voiceURI }));
-}
 
 export default function* () {
   yield takeEvery(SET_PONYFILL, function* ({ payload: { ponyfill: { speechSynthesis } = {} } }) {
@@ -25,10 +21,7 @@ export default function* () {
 
       for (;;) {
         yield call(events.shift);
-
-        const voices = serializeVoices(speechSynthesis.getVoices());
-
-        yield put(setSpeechSynthesisVoices(voices));
+        yield put(setSpeechSynthesisNativeVoices(speechSynthesis.getVoices()));
       }
     } finally {
       speechSynthesis && speechSynthesis.removeEventListener('voiceschanged', events.push);

@@ -84,6 +84,7 @@ export default class extends DOMEventEmitter {
       outputFormat: this.outputFormat,
       pitch: this.pitch,
       rate: this.rate,
+      region: this.region,
       text: this.text,
       voice: this.voice && this.voice.voiceURI,
       volume: this.volume

@@ -6,14 +6,14 @@ import Select, { Option } from '../Bootstrap/Select';
 
 const SpeechSynthesisVoiceSelector = ({
   setSpeechSynthesisVoiceURI,
-  speechSynthesisVoices,
+  speechSynthesisNativeVoices,
   speechSynthesisVoiceURI
 }) =>
   <Select
     onChange={ setSpeechSynthesisVoiceURI }
     value={ speechSynthesisVoiceURI }
   >
-    { speechSynthesisVoices.map(({ name, voiceURI }) =>
+    { speechSynthesisNativeVoices.map(({ name, voiceURI }) =>
       <Option
         key={ voiceURI }
         text={ name }
@@ -25,11 +25,11 @@ const SpeechSynthesisVoiceSelector = ({
 export default connect(
   ({
     ponyfill,
-    speechSynthesisVoices,
+    speechSynthesisNativeVoices,
     speechSynthesisVoiceURI
   }) => ({
     ponyfill,
-    speechSynthesisVoices,
+    speechSynthesisNativeVoices,
     speechSynthesisVoiceURI
   }),
   { setSpeechSynthesisVoiceURI }

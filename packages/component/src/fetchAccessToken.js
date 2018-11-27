@@ -1,12 +1,15 @@
-const TOKEN_URL = 'https://speech.platform.bing.com/speech/recognition/interactive/cognitiveservices/v1?language=en-US&format=detailed';
+const TOKEN_URL_TEMPLATE = 'https://{region}.api.cognitive.microsoft.com/sts/v1.0/issueToken';
 
-export default async function (subscriptionKey) {
-  const res = await fetch(TOKEN_URL, {
-    headers: {
-      'Ocp-Apim-Subscription-Key': subscriptionKey
-    },
-    method: 'POST'
-  });
+export default async function ({ region, subscriptionKey }) {
+  const res = await fetch(
+    TOKEN_URL_TEMPLATE.replace(/\{region\}/, region),
+    {
+      headers: {
+        'Ocp-Apim-Subscription-Key': subscriptionKey
+      },
+      method: 'POST'
+    }
+  );
 
   if (res.status !== 200) {
     throw new Error(`Failed to fetch access token, server returned ${ res.status }`);

@@ -1,10 +1,10 @@
 const ADD_SPEECH_SYNTHESIS_UTTERANCE = 'ADD_SPEECH_SYNTHESIS_UTTERANCE';
 
-export default function (utterance) {
+export default function ({ text, voiceURI }) {
   return {
     type: ADD_SPEECH_SYNTHESIS_UTTERANCE,
     payload: {
-      utterance
+      utterance: { text, voiceURI }
     }
   };
 }

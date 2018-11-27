@@ -23,9 +23,10 @@ export default async ({
   }
 
   const fetchMemoizedAccessToken = memoize(
-    ({ subscriptionKey }) => fetchAccessToken(subscriptionKey),
+    ({ region, subscriptionKey }) => fetchAccessToken({ region, subscriptionKey }),
     (arg, prevArg) => (
-      arg.subscriptionKey === prevArg.subscriptionKey
+      arg.region === prevArg.region
+      && arg.subscriptionKey === prevArg.subscriptionKey
       && arg.now - prevArg.now < TOKEN_EXPIRATION - TOKEN_EARLY_RENEWAL
     )
   );
@@ -56,6 +57,7 @@ export default async ({
 
       const accessToken = await fetchMemoizedAccessToken({
         now: Date.now,
+        region,
         subscriptionKey
       });
 

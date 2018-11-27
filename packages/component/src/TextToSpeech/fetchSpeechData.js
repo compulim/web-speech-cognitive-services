@@ -4,7 +4,7 @@ const DEFAULT_LANGUAGE = 'en-US';
 const DEFAULT_VOICE = 'Microsoft Server Speech Text to Speech Voice (en-US, JessaRUS)'
 const SYNTHESIS_URL_TEMPLATE = 'https://{region}.tts.speech.microsoft.com/cognitiveservices/v1';
 
-export default async function fetchSpeechData({
+export default async function ({
   accessToken,
   lang = DEFAULT_LANGUAGE,
   outputFormat,
