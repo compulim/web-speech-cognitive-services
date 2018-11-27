@@ -24,7 +24,7 @@ const SpeechRecognitionSimpleEvents = ({
                 <span>&nbsp;
                   {
                     [].map.call(event.results, (result, index) =>
-                      <React.Fragment>
+                      <React.Fragment key={ index }>
                         { !!result.isFinal &&
                           <React.Fragment>
                             <span className="badge badge-dark">isFinal</span>&nbsp;
