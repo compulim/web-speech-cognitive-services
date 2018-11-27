@@ -1,14 +1,8 @@
 import { connect } from 'react-redux';
 import React from 'react';
 
-import Select from '../Bootstrap/Select';
+import Select, { Option } from '../Bootstrap/Select';
 import setPonyfillType from '../data/actions/setPonyfillType';
-
-const PONYFILLS = {
-  browser: 'Browser',
-  cognitiveservices: 'Cognitive Services',
-  both: 'Both'
-};
 
 const PonyfillSelector = ({
   browserSupportedSpeechRecognition,
@@ -19,8 +13,16 @@ const PonyfillSelector = ({
     disabledValues={ browserSupportedSpeechRecognition ? [] : ['browser'] }
     onChange={ setPonyfillType }
     value={ ponyfillType }
-    values={ PONYFILLS }
-  />
+  >
+    <Option
+      text="Browser"
+      value="browser"
+    />
+    <Option
+      text="Cognitive Services"
+      value="cognitiveservices"
+    />
+  </Select>
 
 export default connect(
   ({

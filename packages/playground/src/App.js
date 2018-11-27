@@ -31,7 +31,8 @@ class App extends React.Component {
         default:
           ponyfill = {
             SpeechGrammarList: window.SpeechGrammarList || window.webkitSpeechGrammarList,
-            SpeechRecognition: window.SpeechRecognition || window.webkitSpeechRecognition
+            SpeechRecognition: window.SpeechRecognition || window.webkitSpeechRecognition,
+            speechSynthesis: window.speechSynthesis
           };
 
           break;

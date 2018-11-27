@@ -1,4 +1,5 @@
 import AudioContextQueue from './AudioContextQueue';
+import DOMEventEmitter from '../DOMEventEmitter';
 import fetchAccessToken from '../fetchAccessToken';
 import fetchVoices from './fetchVoices';
 import memoize from 'memoize-one';
@@ -29,9 +30,10 @@ export default async ({
     )
   );
 
-  class SpeechSynthesis {
+  class SpeechSynthesis extends DOMEventEmitter {
     constructor() {
-      this.onvoiceschanged = null;
+      super(['voiceschanged']);
+
       this.outputFormat = DEFAULT_OUTPUT_FORMAT;
       this.queue = new AudioContextQueue();
     }

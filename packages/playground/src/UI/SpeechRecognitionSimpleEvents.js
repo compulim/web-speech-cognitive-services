@@ -33,10 +33,9 @@ const SpeechRecognitionSimpleEvents = ({
                           }
                           {
                             [].map.call(result, ({ confidence, transcript }, index) =>
-                              <React.Fragment>
+                              <React.Fragment key={ index }>
                                 <span
                                   className="badge badge-pill badge-primary"
-                                  key={ index }
                                 >{ transcript }</span>
                                 &nbsp;
                                 <span

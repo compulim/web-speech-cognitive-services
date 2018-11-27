@@ -1,19 +1,8 @@
 import { connect } from 'react-redux';
 import React from 'react';
 
-import Select from '../Bootstrap/Select';
+import Select, { Option } from '../Bootstrap/Select';
 import setRegion from '../data/actions/setRegion';
-
-const REGIONS = {
-  westus: 'West US',
-  westus2: 'West US 2',
-  eastus: 'East US',
-  eastus2: 'East US 2',
-  eastasia: 'East Asia',
-  southeastasia: 'South East Asia',
-  northeurope: 'North Europe',
-  westeurope: 'West Europe'
-};
 
 const RegionSelector = ({
   disabled,
@@ -24,8 +13,16 @@ const RegionSelector = ({
     disabled={ disabled }
     onChange={ setRegion }
     value={ region }
-    values={ REGIONS }
-  />
+  >
+    <Option text="West US" value="westus" />
+    <Option text="West US 2" value="westus2" />
+    <Option text="East US" value="eastus" />
+    <Option text="East US 2" value="eastus2" />
+    <Option text="East Asia" value="eastasia" />
+    <Option text="South East Asia" value="southeastasia" />
+    <Option text="North Europe" value="northeurope" />
+    <Option text="West Europe" value="westeurope" />
+  </Select>
 
 export default connect(
   ({

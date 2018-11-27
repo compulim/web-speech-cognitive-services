@@ -1,23 +1,28 @@
 import React from 'react';
 
+const Option = ({
+  disabled,
+  text,
+  value
+}) =>
+  <option
+    disabled={ disabled }
+    value={ value }
+  >{ text }</option>
+
 export default ({
+  children,
   disabled,
   onChange,
-  value,
-  values
+  value
 }) =>
   <select
     className="custom-select"
     disabled={ disabled }
-    onChange={ ({ target: { value } }) => onChange(value) }
+    onChange={ ({ target: { value } }) => onChange && onChange(value) }
     value={ value }
   >
-    {
-      Object.keys(values).map(key =>
-        <option
-          key={ key }
-          value={ key }
-        >{ values[key] }</option>
-      )
-    }
+    { children }
   </select>
+
+export { Option }

@@ -9,6 +9,8 @@ import speechRecognitionEvents from './reducers/speechRecognitionEvents';
 import speechRecognitionInterimResults from './reducers/speechRecognitionInterimResults';
 import speechRecognitionMaxAlternatives from './reducers/speechRecognitionMaxAlternatives';
 import speechRecognitionStarted from './reducers/speechRecognitionStarted';
+import speechSynthesisText from './reducers/speechSynthesisText';
+import speechSynthesisVoiceURI from './reducers/speechSynthesisVoiceURI';
 import subscriptionKey from './reducers/subscriptionKey';
 
 export default combineReducers({
@@ -21,5 +23,7 @@ export default combineReducers({
   speechRecognitionInterimResults,
   speechRecognitionMaxAlternatives,
   speechRecognitionStarted,
+  speechSynthesisText,
+  speechSynthesisVoiceURI,
   subscriptionKey
 })

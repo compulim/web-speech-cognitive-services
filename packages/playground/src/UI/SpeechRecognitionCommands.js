@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import React from 'react';
 
-import Select from '../Bootstrap/Select';
+import Select, { Option } from '../Bootstrap/Select';
 
 import abortSpeechRecognition from '../data/actions/abortSpeechRecognition';
 import startSpeechRecognition from '../data/actions/startSpeechRecognition';
@@ -89,13 +89,12 @@ const SpeechRecognitionCommands = ({
         disabled={ started || ponyfillType !== 'browser' }
         onChange={ setSpeechRecognitionMaxAlternatives }
         value={ ponyfillType === 'browser' ? maxAlternatives : 1 }
-        values={{
-          '1': 'One alternative',
-          '3': '3 alternatives',
-          '5': '5 alternatives',
-          '10': '10 alternatives'
-        }}
-      />
+      >
+        <Option text="One alternative" value="1" />
+        <Option text="3 alternatives" value="3" />
+        <Option text="5 alternatives" value="5" />
+        <Option text="10 alternatives" value="10" />
+      </Select>
     </div>
     &nbsp;
     <div className="btn-group">
