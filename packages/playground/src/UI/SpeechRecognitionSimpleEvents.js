@@ -1,4 +1,5 @@
 import { connect } from 'react-redux';
+import classNames from 'classnames';
 import React from 'react';
 
 const SpeechRecognitionSimpleEvents = ({
@@ -25,12 +26,30 @@ const SpeechRecognitionSimpleEvents = ({
                   {
                     [].map.call(event.results, (result, index) =>
                       <React.Fragment key={ index }>
-                        { !!result.isFinal &&
-                          <React.Fragment>
-                            <span className="badge badge-dark">isFinal</span>&nbsp;
-                          </React.Fragment>
-                        }
-                        <span key={ index }>{ result[0].transcript }</span>
+                        <div style={{ display: 'inline-block' }}>
+                          { !!result.isFinal &&
+                            <React.Fragment>
+                              <span className="badge badge-dark">isFinal</span>&nbsp;
+                            </React.Fragment>
+                          }
+                          {
+                            [].map.call(result, ({ confidence, transcript }, index) =>
+                              <React.Fragment>
+                                <span
+                                  className="badge badge-pill badge-primary"
+                                  key={ index }
+                                >{ transcript }</span>
+                                &nbsp;
+                                <span
+                                  className="badge badge-pill badge-success"
+                                  key={ index }
+                                >{ Math.round(confidence * 100) }%</span>
+                                <br />
+                              </React.Fragment>
+                            )
+                          }
+                        </div>
+                        &nbsp;
                       </React.Fragment>
                     )
                   }
