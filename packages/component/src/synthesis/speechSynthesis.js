@@ -12,9 +12,12 @@ class SpeechSynthesis {
     this.region = DEFAULT_REGION;
     this.outputFormat = DEFAULT_OUTPUT_FORMAT;
     this.queue = new AudioContextQueue();
+    this._isAboutToSpeak = false;
   }
 
   cancel() {
+    this._isAboutToSpeak = false;
+
     this.queue.stop();
   }
 
@@ -33,17 +36,25 @@ class SpeechSynthesis {
       throw new Error('SpeechSynthesis: fetchToken must be a function that returns a Promise and it will resolve to a string-based token');
     }
 
+    this._isAboutToSpeak = true;
+
     const accessToken = await this.fetchToken();
 
     return new Promise((resolve, reject) => {
-      utterance.addEventListener('end', resolve);
-      utterance.addEventListener('error', reject);
-      utterance.accessToken = accessToken;
-      utterance.region = this.region;
-      utterance.outputFormat = this.outputFormat;
-      utterance.preload();
+      if (this._isAboutToSpeak) {
+        utterance.addEventListener('end', resolve);
+        utterance.addEventListener('error', reject);
+        utterance.accessToken = accessToken;
+        utterance.region = this.region;
+        utterance.outputFormat = this.outputFormat;
+        utterance.preload();
+      }
 
-      this.queue.push(utterance);
+      if (this._isAboutToSpeak) {
+        this._isAboutToSpeak = false;
+
+        this.queue.push(utterance);
+      }
     });
   }
 }

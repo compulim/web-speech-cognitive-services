@@ -23,6 +23,6 @@
     "simple-update-in": "^1.4.0"
   },
   "devDependencies": {
-    "lerna": "^3.4.3"
+    "lerna": "^3.5.0"
   }
 }

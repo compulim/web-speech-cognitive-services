@@ -34,11 +34,13 @@ function () {
     this.region = DEFAULT_REGION;
     this.outputFormat = DEFAULT_OUTPUT_FORMAT;
     this.queue = new _AudioContextQueue.default();
+    this._isAboutToSpeak = false;
   }
 
   (0, _createClass2.default)(SpeechSynthesis, [{
     key: "cancel",
     value: function cancel() {
+      this._isAboutToSpeak = false;
       this.queue.stop();
     }
   }, {
@@ -83,23 +85,30 @@ function () {
                 throw new Error('SpeechSynthesis: fetchToken must be a function that returns a Promise and it will resolve to a string-based token');
 
               case 8:
-                _context.next = 10;
+                this._isAboutToSpeak = true;
+                _context.next = 11;
                 return this.fetchToken();
 
-              case 10:
+              case 11:
                 accessToken = _context.sent;
                 return _context.abrupt("return", new Promise(function (resolve, reject) {
-                  utterance.addEventListener('end', resolve);
-                  utterance.addEventListener('error', reject);
-                  utterance.accessToken = accessToken;
-                  utterance.region = _this.region;
-                  utterance.outputFormat = _this.outputFormat;
-                  utterance.preload();
+                  if (_this._isAboutToSpeak) {
+                    utterance.addEventListener('end', resolve);
+                    utterance.addEventListener('error', reject);
+                    utterance.accessToken = accessToken;
+                    utterance.region = _this.region;
+                    utterance.outputFormat = _this.outputFormat;
+                    utterance.preload();
+                  }
 
-                  _this.queue.push(utterance);
+                  if (_this._isAboutToSpeak) {
+                    _this._isAboutToSpeak = false;
+
+                    _this.queue.push(utterance);
+                  }
                 }));
 
-              case 12:
+              case 13:
               case "end":
                 return _context.stop();
             }
