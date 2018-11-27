@@ -5,12 +5,15 @@ import abortSpeechRecognition from '../data/actions/abortSpeechRecognition';
 import startSpeechRecognition from '../data/actions/startSpeechRecognition';
 import stopSpeechRecognition from '../data/actions/stopSpeechRecognition';
 
+import clearSpeechRecognitionEvent from '../data/actions/clearSpeechRecognitionEvent';
 import setSpeechRecognitionContinuous from '../data/actions/setSpeechRecognitionContinuous';
 import setSpeechRecognitionInterimResults from '../data/actions/setSpeechRecognitionInterimResults';
 
 const SpeechRecognitionCommands = ({
   abortSpeechRecognition,
+  clearSpeechRecognitionEvent,
   continuous,
+  empty,
   interimResults,
   setSpeechRecognitionContinuous,
   setSpeechRecognitionHideInterimResults,
@@ -89,20 +92,30 @@ const SpeechRecognitionCommands = ({
         type="button"
       >Abort</button>
     </div>
+    &nbsp;
+    <button
+      className="btn btn-danger"
+      disabled={ empty }
+      onClick={ clearSpeechRecognitionEvent }
+      type="button"
+    >Clear events</button>
   </div>
 
 export default connect(
   ({
+    speechRecognitionEvents,
     speechRecognitionContinuous,
     speechRecognitionInterimResults,
     speechRecognitionStarted
   }) => ({
+    empty: !speechRecognitionEvents.length,
     continuous: speechRecognitionContinuous,
     interimResults: speechRecognitionInterimResults,
     started: speechRecognitionStarted
   }),
   {
     abortSpeechRecognition,
+    clearSpeechRecognitionEvent,
     setSpeechRecognitionContinuous: () => setSpeechRecognitionContinuous(true),
     setSpeechRecognitionHideInterimResults: () => setSpeechRecognitionInterimResults(false),
     setSpeechRecognitionInteractive: () => setSpeechRecognitionContinuous(false),
