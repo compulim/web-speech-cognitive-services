@@ -3,12 +3,16 @@ import React from 'react';
 
 import cancelSpeechSynthesis from '../data/actions/cancelSpeechSynthesis';
 import clearSpeechSynthesisUtterance from '../data/actions/clearSpeechSynthesisUtterance';
+import pauseSpeechSynthesisUtterance from '../data/actions/pauseSpeechSynthesis';
+import resumeSpeechSynthesisUtterance from '../data/actions/resumeSpeechSynthesis';
 import speechSynthesisSpeakUtterance from '../data/actions/speechSynthesisSpeakUtterance';
 
 const SpeechSynthesisCommands = ({
   cancelSpeechSynthesis,
   clearSpeechSynthesisUtterance,
   hasUtterances,
+  pauseSpeechSynthesisUtterance,
+  resumeSpeechSynthesisUtterance,
   speechSynthesisSpeakUtterance,
   text
 }) =>
@@ -28,11 +32,13 @@ const SpeechSynthesisCommands = ({
       <button
         className="btn btn-primary"
         disabled={ !text }
+        onClick={ pauseSpeechSynthesisUtterance }
         type="button"
       >Pause</button>
       <button
         className="btn btn-primary"
         disabled={ !text }
+        onClick={ resumeSpeechSynthesisUtterance }
         type="button"
       >Resume</button>
     </div>
@@ -65,6 +71,8 @@ export default connect(
   {
     cancelSpeechSynthesis,
     clearSpeechSynthesisUtterance,
+    pauseSpeechSynthesisUtterance,
+    resumeSpeechSynthesisUtterance,
     speechSynthesisSpeakUtterance
   },
   (stateProps, dispatchProps, ownProps) => ({
