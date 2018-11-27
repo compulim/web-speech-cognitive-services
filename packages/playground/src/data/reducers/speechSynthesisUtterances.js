@@ -4,11 +4,12 @@ import { ADD_SPEECH_SYNTHESIS_NATIVE_UTTERANCE } from '../actions/addSpeechSynth
 import { ADD_SPEECH_SYNTHESIS_NATIVE_UTTERANCE_EVENT } from '../actions/addSpeechSynthesisNativeUtteranceEvent';
 import { CLEAR_SPEECH_SYNTHESIS_UTTERANCE } from '../actions/clearSpeechSynthesisUtterance';
 
-function serializeEvent({ charIndex, elapsedTime, name }) {
+function serializeEvent({ charIndex, elapsedTime, name, type }) {
   return {
     charIndex,
     elapsedTime,
-    name
+    name,
+    type
   };
 }
 
