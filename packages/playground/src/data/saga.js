@@ -5,6 +5,7 @@ import speechRecognitionSetInstance from './sagas/speechRecognitionSetInstance';
 import speechRecognitionStart from './sagas/speechRecognitionStart';
 import speechSynthesisSetNativeVoices from './sagas/speechSynthesisSetNativeVoices';
 import speechSynthesisSpeakUtterance from './sagas/speechSynthesisSpeakUtterance';
+import speechSynthesisUtteranceEvent from './sagas/speechSynthesisUtteranceEvent';
 
 export default function* () {
   yield fork(setPonyfill);
@@ -12,4 +13,5 @@ export default function* () {
   yield fork(speechRecognitionStart);
   yield fork(speechSynthesisSetNativeVoices);
   yield fork(speechSynthesisSpeakUtterance);
+  yield fork(speechSynthesisUtteranceEvent);
 }
