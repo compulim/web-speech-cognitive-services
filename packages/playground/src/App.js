@@ -1,9 +1,9 @@
 import { connect } from 'react-redux';
+import classNames from 'classnames';
 import React from 'react';
 import memoize from 'memoize-one';
 
 import GitHubForkMe from './GitHubForkMe';
-// import SpeechRecognitionProvingGround from './SpeechRecognitionProvingGround';
 
 import createPonyfill from 'web-speech-cognitive-services';
 
@@ -11,6 +11,9 @@ import PonyfillSelector from './UI/PonyfillSelector';
 import RegionSelector from './UI/RegionSelector';
 import SubscriptionKeyInput from './UI/SubscriptionKeyInput';
 import SpeechRecognitionProvingGround from './SpeechRecognitionProvingGround2';
+import SpeechSynthesisProvingGround from './SpeechSynthesisProvingGround';
+
+import setNavPane from './data/actions/setNavPane';
 
 class App extends React.Component {
   constructor() {
@@ -53,7 +56,15 @@ class App extends React.Component {
   }
 
   render() {
-    const { ponyfill } = this.state;
+    const {
+      props: {
+        ponyfillType,
+        navPane,
+        setNavPaneToSpeechRecognition,
+        setNavPaneToSpeechSynthesis
+      },
+      state: { ponyfill }
+    } = this;
 
     return (
       <div>
@@ -84,12 +95,40 @@ class App extends React.Component {
           </div>
           <div className="row">
             <div className="col">
+              <ul className="nav nav-tabs">
+                <li className="nav-item">
+                  <a
+                    className={ classNames('nav-link', { active: navPane === 'speech recognition' }) }
+                    href="#"
+                    onClick={ setNavPaneToSpeechRecognition }
+                  >Speech recognition</a>
+                </li>
+                <li className="nav-item">
+                  <a
+                    className={ classNames('nav-link', { active: navPane === 'speech synthesis' }) }
+                    href="#"
+                    onClick={ setNavPaneToSpeechSynthesis }
+                  >Speech synthesis</a>
+                </li>
+              </ul>
+              <br />
+            </div>
+          </div>
+          <div className="row">
+            <div className="col">
               {
-                !!ponyfill &&
-                  <SpeechRecognitionProvingGround
-                    key={ ponyfill }
-                    ponyfill={ ponyfill }
-                  />
+                !!ponyfill && (
+                  navPane === 'speech synthesis' ?
+                    <SpeechSynthesisProvingGround
+                      key={ ponyfillType }
+                      ponyfill={ ponyfill }
+                    />
+                  :
+                    <SpeechRecognitionProvingGround
+                      key={ ponyfillType }
+                      ponyfill={ ponyfill }
+                    />
+                )
               }
             </div>
           </div>
@@ -102,12 +141,26 @@ class App extends React.Component {
 
 export default connect(
   ({
+    navPane,
     ponyfillType,
     region,
     subscriptionKey
   }) => ({
+    navPane,
     ponyfillType,
     region,
     subscriptionKey
-  })
+  }),
+  {
+    setNavPaneToSpeechRecognition: event => {
+      event.preventDefault();
+
+      return setNavPane('speech recognition');
+    },
+    setNavPaneToSpeechSynthesis: event => {
+      event.preventDefault();
+
+      return setNavPane('speech synthesis');
+    }
+  }
 )(App)

@@ -1,6 +1,7 @@
 import { combineReducers } from 'redux';
 
 import browserSupportedSpeechRecognition from './reducers/browserSupportedSpeechRecognition';
+import navPane from './reducers/navPane';
 import ponyfillType from './reducers/ponyfillType';
 import region from './reducers/region';
 import speechRecognitionContinuous from './reducers/speechRecognitionContinuous';
@@ -12,6 +13,7 @@ import subscriptionKey from './reducers/subscriptionKey';
 
 export default combineReducers({
   browserSupportedSpeechRecognition,
+  navPane,
   ponyfillType,
   region,
   speechRecognitionContinuous,
