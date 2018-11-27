@@ -88,7 +88,7 @@ const SpeechRecognitionCommands = ({
       <Select
         disabled={ started || ponyfillType !== 'browser' }
         onChange={ setSpeechRecognitionMaxAlternatives }
-        value={ maxAlternatives }
+        value={ ponyfillType === 'browser' ? maxAlternatives : 1 }
         values={{
           '1': 'One alternative',
           '3': '3 alternatives',
