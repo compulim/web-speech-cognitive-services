@@ -2,6 +2,7 @@ import { combineReducers } from 'redux';
 
 import browserSupportedSpeechRecognition from './reducers/browserSupportedSpeechRecognition';
 import navPane from './reducers/navPane';
+import ponyfill from './reducers/ponyfill';
 import ponyfillType from './reducers/ponyfillType';
 import region from './reducers/region';
 import speechRecognitionContinuous from './reducers/speechRecognitionContinuous';
@@ -10,12 +11,15 @@ import speechRecognitionInterimResults from './reducers/speechRecognitionInterim
 import speechRecognitionMaxAlternatives from './reducers/speechRecognitionMaxAlternatives';
 import speechRecognitionStarted from './reducers/speechRecognitionStarted';
 import speechSynthesisText from './reducers/speechSynthesisText';
+import speechSynthesisUtterances from './reducers/speechSynthesisUtterances';
+import speechSynthesisVoices from './reducers/speechSynthesisVoices';
 import speechSynthesisVoiceURI from './reducers/speechSynthesisVoiceURI';
 import subscriptionKey from './reducers/subscriptionKey';
 
 export default combineReducers({
   browserSupportedSpeechRecognition,
   navPane,
+  ponyfill,
   ponyfillType,
   region,
   speechRecognitionContinuous,
@@ -24,6 +28,8 @@ export default combineReducers({
   speechRecognitionMaxAlternatives,
   speechRecognitionStarted,
   speechSynthesisText,
+  speechSynthesisUtterances,
+  speechSynthesisVoices,
   speechSynthesisVoiceURI,
   subscriptionKey
 })

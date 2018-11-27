@@ -1,5 +1,4 @@
 import { call, cancel, fork, join, put, race, select, take } from 'redux-saga/effects';
-import createCognitiveServicesPonyfill from 'web-speech-cognitive-services';
 
 import addSpeechRecognitionEvent from '../actions/addSpeechRecognitionEvent';
 import clearSpeechRecognitionEvent from '../actions/clearSpeechRecognitionEvent';
@@ -49,15 +48,12 @@ function* startSpeechRecognition({ getCancelReason }) {
 
   try {
     const {
+      ponyfill: { SpeechRecognition },
       ponyfillType,
-      region,
       speechRecognitionContinuous: continuous,
       speechRecognitionInterimResults: interimResults,
-      speechRecognitionMaxAlternatives: maxAlternatives,
-      subscriptionKey
+      speechRecognitionMaxAlternatives: maxAlternatives
     } = yield select();
-
-    const { SpeechRecognition } = yield call(createPonyfill, ponyfillType, region, subscriptionKey);
 
     speechRecognition = new SpeechRecognition();
     speechRecognition.continuous = continuous;
@@ -83,18 +79,5 @@ function* startSpeechRecognition({ getCancelReason }) {
         speechRecognition.stop();
       }
     }
-  }
-}
-
-async function createPonyfill(ponyfillType, region, subscriptionKey) {
-  switch (ponyfillType) {
-    case 'cognitiveservices':
-      return await createCognitiveServicesPonyfill({ region, subscriptionKey });
-
-    default:
-      return {
-        SpeechGrammarList: window.SpeechGrammarList || window.webkitSpeechGrammarList,
-        SpeechRecognition: window.SpeechRecognition || window.webkitSpeechRecognition
-      };
   }
 }

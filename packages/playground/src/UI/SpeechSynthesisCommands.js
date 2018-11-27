@@ -1,13 +1,20 @@
 import { connect } from 'react-redux';
 import React from 'react';
 
+import clearSpeechSynthesisUtterance from '../data/actions/clearSpeechSynthesisUtterance';
+import speechSynthesisSpeakUtterance from '../data/actions/speechSynthesisSpeakUtterance';
+
 const SpeechSynthesisCommands = ({
-  hasText
+  clearSpeechSynthesisUtterance,
+  hasUtterances,
+  speechSynthesisSpeakUtterance,
+  text
 }) =>
   <div>
     <button
       className="btn btn-primary"
-      disabled={ !hasText }
+      disabled={ !text }
+      onClick={ speechSynthesisSpeakUtterance }
       type="button"
     >Speak</button>
     &nbsp;
@@ -18,27 +25,51 @@ const SpeechSynthesisCommands = ({
     >
       <button
         className="btn btn-primary"
-        disabled={ !hasText }
+        disabled={ !text }
         type="button"
       >Pause</button>
       <button
         className="btn btn-primary"
-        disabled={ !hasText }
+        disabled={ !text }
         type="button"
       >Resume</button>
     </div>
     &nbsp;
     <button
       className="btn btn-primary"
-      disabled={ !hasText }
+      disabled={ !text }
       type="button"
     >Cancel</button>
+    &nbsp;
+    <button
+      className="btn btn-danger"
+      disabled={ !hasUtterances }
+      onClick={ clearSpeechSynthesisUtterance }
+      type="button"
+    >Clear utterances</button>
   </div>
 
 export default connect(
   ({
-    speechSynthesisText
+    speechSynthesisUtterances,
+    speechSynthesisText,
+    speechSynthesisVoiceURI
   }) => ({
-    hasText: !!speechSynthesisText
+    hasUtterances: speechSynthesisUtterances.length,
+    text: speechSynthesisText,
+    voiceURI: speechSynthesisVoiceURI
+  }),
+  {
+    clearSpeechSynthesisUtterance,
+    speechSynthesisSpeakUtterance
+  },
+  (stateProps, dispatchProps, ownProps) => ({
+    ...ownProps,
+    ...stateProps,
+    ...dispatchProps,
+    speechSynthesisSpeakUtterance: () => dispatchProps.speechSynthesisSpeakUtterance({
+      text: stateProps.text,
+      voiceURI: stateProps.voiceURI
+    })
   })
 )(SpeechSynthesisCommands)

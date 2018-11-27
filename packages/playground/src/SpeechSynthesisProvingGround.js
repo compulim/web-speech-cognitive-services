@@ -1,13 +1,11 @@
-import { connect } from 'react-redux';
 import React from 'react';
 
 import SpeechSynthesisCommands from './UI/SpeechSynthesisCommands';
 import SpeechSynthesisTextBox from './UI/SpeechSynthesisTextBox';
+import SpeechSynthesisUtterances from './UI/SpeechSynthesisUtterances';
 import SpeechSynthesisVoiceSelector from './UI/SpeechSynthesisVoiceSelector';
 
-const SpeechSynthesisProvingGround = ({
-  ponyfill
-}) =>
+export default () =>
   <div>
     <form>
       <div className="row">
@@ -19,7 +17,8 @@ const SpeechSynthesisProvingGround = ({
       <br />
       <div className="row">
         <div className="col">
-          <SpeechSynthesisVoiceSelector ponyfill={ ponyfill } />
+          <label>Voice</label>
+          <SpeechSynthesisVoiceSelector />
         </div>
       </div>
     </form>
@@ -29,8 +28,10 @@ const SpeechSynthesisProvingGround = ({
         <SpeechSynthesisCommands />
       </div>
     </div>
+    <br />
+    <div className="row">
+      <div className="col">
+        <SpeechSynthesisUtterances />
+      </div>
+    </div>
   </div>
-
-export default connect(
-  ({}) => ({})
-)(SpeechSynthesisProvingGround)

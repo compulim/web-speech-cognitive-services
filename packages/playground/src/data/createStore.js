@@ -36,12 +36,15 @@ export default function () {
   sagaMiddleware.run(saga);
 
   store.subscribe(() => {
-    const serializableStore = {
-      ...store.getState(),
-      speechRecognitionStarted: false
-    };
+    const state = store.getState();
+    const {
+      ponyfill,
+      speechRecognizedStarted,
+      speechSynthesisVoices,
+      ...serializableState
+    } = state;
 
-    window.sessionStorage.setItem('REDUX_STORE', JSON.stringify(serializableStore));
+    window.sessionStorage.setItem('REDUX_STORE', JSON.stringify(serializableState));
   });
 
   return store;
