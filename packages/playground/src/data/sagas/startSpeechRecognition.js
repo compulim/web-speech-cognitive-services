@@ -4,26 +4,10 @@ import createCognitiveServicesPonyfill from 'web-speech-cognitive-services';
 import addSpeechRecognitionEvent from '../actions/addSpeechRecognitionEvent';
 import clearSpeechRecognitionEvent from '../actions/clearSpeechRecognitionEvent';
 
-import { START_SPEECH_RECOGNITION } from '../actions/startSpeechRecognition';
-import stopSpeechRecognition, { STOP_SPEECH_RECOGNITION } from '../actions/stopSpeechRecognition';
 import { ABORT_SPEECH_RECOGNITION } from '../actions/abortSpeechRecognition';
-
-import createPromiseQueue from '../utils/createPromiseQueue';
-
-const MONITORING_EVENTS = [
-  'audiostart',
-  'soundstart',
-  'speechstart',
-  'speechend',
-  'soundend',
-  'audioend',
-  'result',
-  'nomatch',
-  'error',
-  'start',
-  'end',
-  'cognitiveservices'
-];
+import { START_SPEECH_RECOGNITION } from '../actions/startSpeechRecognition';
+import setSpeechRecognitionInstance from '../actions/setSpeechRecognitionInstance';
+import stopSpeechRecognition, { STOP_SPEECH_RECOGNITION } from '../actions/stopSpeechRecognition';
 
 export default function* () {
   for (;;) {
@@ -44,8 +28,10 @@ export default function* () {
 
     if (abort || stop) {
       if (abort) {
+        yield put(addSpeechRecognitionEvent({ type: 'ui:abort' }));
         cancelReason = 'abort';
       } else if (stop) {
+        yield put(addSpeechRecognitionEvent({ type: 'ui:stop' }));
         cancelReason = 'stop';
       }
 
@@ -60,6 +46,7 @@ function* startSpeechRecognition({ getCancelReason }) {
   let speechRecognition;
 
   yield put(clearSpeechRecognitionEvent());
+  yield put(addSpeechRecognitionEvent({ type: 'ui:start' }));
 
   try {
     const {
@@ -76,22 +63,14 @@ function* startSpeechRecognition({ getCancelReason }) {
     speechRecognition.continuous = continuous;
     speechRecognition.interimResults = interimResults;
 
-    const events = createPromiseQueue();
+    yield put(setSpeechRecognitionInstance(speechRecognition));
 
-    MONITORING_EVENTS.forEach(name => speechRecognition.addEventListener(name, events.push));
-
-    speechRecognition.start();
-
-    for (;;) {
-      const event = yield call(events.shift);
-
-      yield put(addSpeechRecognitionEvent(event));
-
-      if (event.type === 'end') {
-        break;
-      }
-    }
-  } catch (err) {
+    yield call(() => new Promise(resolve => {
+      speechRecognition.addEventListener('error', resolve);
+      speechRecognition.addEventListener('end', resolve);
+      speechRecognition.start();
+    }));
+  } finally {
     if (speechRecognition) {
       if (getCancelReason() === 'abort') {
         speechRecognition.abort();
