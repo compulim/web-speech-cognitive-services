@@ -1,10 +1,12 @@
 import { connect } from 'react-redux';
 import React from 'react';
 
+import cancelSpeechSynthesis from '../data/actions/cancelSpeechSynthesis';
 import clearSpeechSynthesisUtterance from '../data/actions/clearSpeechSynthesisUtterance';
 import speechSynthesisSpeakUtterance from '../data/actions/speechSynthesisSpeakUtterance';
 
 const SpeechSynthesisCommands = ({
+  cancelSpeechSynthesis,
   clearSpeechSynthesisUtterance,
   hasUtterances,
   speechSynthesisSpeakUtterance,
@@ -38,6 +40,7 @@ const SpeechSynthesisCommands = ({
     <button
       className="btn btn-primary"
       disabled={ !text }
+      onClick={ cancelSpeechSynthesis }
       type="button"
     >Cancel</button>
     &nbsp;
@@ -60,6 +63,7 @@ export default connect(
     voiceURI: speechSynthesisVoiceURI
   }),
   {
+    cancelSpeechSynthesis,
     clearSpeechSynthesisUtterance,
     speechSynthesisSpeakUtterance
   },

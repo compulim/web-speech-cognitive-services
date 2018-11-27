@@ -11,7 +11,7 @@ const SpeechSynthesisVoiceSelector = ({
 }) =>
   <Select
     onChange={ setSpeechSynthesisVoiceURI }
-    value={ speechSynthesisVoiceURI }
+    value={ speechSynthesisVoiceURI || '' }
   >
     { speechSynthesisNativeVoices.map(({ name, voiceURI }) =>
       <Option

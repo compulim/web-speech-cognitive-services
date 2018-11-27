@@ -20,7 +20,7 @@ export default function (state = [], { payload, type }) {
         nativeUtterance: {
           id,
           text,
-          voice: { name, voiceURI } = {}
+          voice
         }
       } = payload;
 
@@ -30,9 +30,9 @@ export default function (state = [], { payload, type }) {
           events: [],
           id,
           text,
-          voice: {
-            name,
-            voiceURI
+          voice: voice && {
+            name: voice.name,
+            voiceURI: voice.voiceURI
           }
         }
       ];
