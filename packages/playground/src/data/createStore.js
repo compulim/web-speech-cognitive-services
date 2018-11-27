@@ -5,8 +5,20 @@ import onErrorResumeNext from 'on-error-resume-next';
 import reducer from './reducer';
 import saga from './saga';
 
+function loadState() {
+  const state = onErrorResumeNext(() => JSON.parse(window.sessionStorage.getItem('REDUX_STORE'))) || {};
+  const urlSearchParams = new URLSearchParams(window.location.search);
+  const subscriptionKeyFromURL = urlSearchParams.get('s');
+
+  if (subscriptionKeyFromURL) {
+    state.subscriptionKey = subscriptionKeyFromURL;
+  }
+
+  return state;
+}
+
 export default function () {
-  const initialState = onErrorResumeNext(() => JSON.parse(window.sessionStorage.getItem('REDUX_STORE'))) || {};
+  const initialState = loadState();
   const sagaMiddleware = createSagaMiddleware();
   const store = createStore(
     reducer,
