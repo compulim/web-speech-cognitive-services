@@ -1,16 +1,16 @@
 import AudioContextConsumer from './AudioContextConsumer';
 
 export default class {
-  constructor(audioContextClass = window.AudioContext || window.webkitAudioContext) {
-    this.audioContextClass = audioContextClass;
+  constructor(ponyfill) {
     this.consumer = null;
+    this.ponyfill = ponyfill;
     this.queue = [];
   }
 
   async startConsumer() {
     while (this.queue.length && !this.consumer) {
       this.consumer = new AudioContextConsumer();
-      await this.consumer.start(this.queue, this.audioContextClass);
+      await this.consumer.start(this.queue, this.ponyfill);
       this.consumer = null;
     }
   }

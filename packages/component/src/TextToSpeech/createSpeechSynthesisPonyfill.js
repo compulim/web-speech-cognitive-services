@@ -12,13 +12,20 @@ const TOKEN_EXPIRATION = 600000;
 const TOKEN_EARLY_RENEWAL = 60000;
 
 export default async ({
+  ponyfill = {
+    AudioContext: window.AudioContext || window.webkitAudioContext
+  },
   region = 'westus',
   subscriptionKey
 }) => {
-  if (
-    !subscriptionKey
-    || (!window.AudioContext && !window.webkitAudioContext)
-  ) {
+  // TODO: Provide either subscription key or access token
+  if (!subscriptionKey) {
+    console.warn('Subscription key must be specified');
+
+    return {};
+  } else if (!ponyfill.AudioContext) {
+    console.warn('This browser does not support Web Audio and it will not work with Cognitive Services Speech Services.');
+
     return {};
   }
 
@@ -36,7 +43,7 @@ export default async ({
       super(['voiceschanged']);
 
       this.outputFormat = DEFAULT_OUTPUT_FORMAT;
-      this.queue = new AudioContextQueue();
+      this.queue = new AudioContextQueue(ponyfill);
     }
 
     cancel() {
