@@ -1,5 +1,6 @@
 import createSpeechRecognitionPonyfill from './SpeechToText';
 import createSpeechSynthesisPonyfill from './TextToSpeech';
+import fetchAuthorizationToken from './fetchAuthorizationToken';
 
 export default async function (...args) {
   return {
@@ -10,5 +11,6 @@ export default async function (...args) {
 
 export {
   createSpeechRecognitionPonyfill,
-  createSpeechSynthesisPonyfill
+  createSpeechSynthesisPonyfill,
+  fetchAuthorizationToken
 }

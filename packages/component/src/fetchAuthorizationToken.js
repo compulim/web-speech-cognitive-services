@@ -12,7 +12,7 @@ export default async function ({ region, subscriptionKey }) {
   );
 
   if (res.status !== 200) {
-    throw new Error(`Failed to fetch access token, server returned ${ res.status }`);
+    throw new Error(`Failed to fetch authorization token, server returned ${ res.status }`);
   }
 
   return res.text();

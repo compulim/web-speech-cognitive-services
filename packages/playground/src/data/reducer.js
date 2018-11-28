@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux';
 
+import authorizationToken from './reducers/authorizationToken';
 import browserSupportedSpeechRecognition from './reducers/browserSupportedSpeechRecognition';
 import navPane from './reducers/navPane';
 import ponyfill from './reducers/ponyfill';
@@ -17,6 +18,7 @@ import speechSynthesisVoiceURI from './reducers/speechSynthesisVoiceURI';
 import subscriptionKey from './reducers/subscriptionKey';
 
 export default combineReducers({
+  authorizationToken,
   browserSupportedSpeechRecognition,
   navPane,
   ponyfill,

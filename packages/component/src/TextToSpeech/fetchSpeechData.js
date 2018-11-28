@@ -5,7 +5,7 @@ const DEFAULT_VOICE = 'Microsoft Server Speech Text to Speech Voice (en-US, Jess
 const SYNTHESIS_URL_TEMPLATE = 'https://{region}.tts.speech.microsoft.com/cognitiveservices/v1';
 
 export default async function ({
-  accessToken,
+  authorizationToken,
   lang = DEFAULT_LANGUAGE,
   outputFormat,
   pitch,
@@ -20,7 +20,7 @@ export default async function ({
 
   const res = await fetch(url, {
     headers: {
-      Authorization: `Bearer ${ accessToken }`,
+      Authorization: `Bearer ${ authorizationToken }`,
       'Content-Type': 'application/ssml+xml',
       'X-Microsoft-OutputFormat': outputFormat
     },

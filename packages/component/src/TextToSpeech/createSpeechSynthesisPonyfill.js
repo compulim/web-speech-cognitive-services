@@ -1,6 +1,6 @@
 import AudioContextQueue from './AudioContextQueue';
 import DOMEventEmitter from '../DOMEventEmitter';
-import fetchAccessToken from '../fetchAccessToken';
+import fetchAuthorizationToken from '../fetchAuthorizationToken';
 import fetchVoices from './fetchVoices';
 import memoize from 'memoize-one';
 import SpeechSynthesisUtterance from './SpeechSynthesisUtterance';
@@ -12,13 +12,14 @@ const TOKEN_EXPIRATION = 600000;
 const TOKEN_EARLY_RENEWAL = 60000;
 
 export default async ({
+  authorizationToken,
   ponyfill = {
     AudioContext: window.AudioContext || window.webkitAudioContext
   },
   region = 'westus',
   subscriptionKey
 }) => {
-  // TODO: Provide either subscription key or access token
+  // TODO: Provide either subscription key or authorization token
   if (!subscriptionKey) {
     console.warn('Subscription key must be specified');
 
@@ -29,8 +30,8 @@ export default async ({
     return {};
   }
 
-  const fetchMemoizedAccessToken = memoize(
-    ({ region, subscriptionKey }) => fetchAccessToken({ region, subscriptionKey }),
+  const fetchMemoizedAuthorizationToken = memoize(
+    ({ region, subscriptionKey }) => fetchAuthorizationToken({ region, subscriptionKey }),
     (arg, prevArg) => (
       arg.region === prevArg.region
       && arg.subscriptionKey === prevArg.subscriptionKey
@@ -62,7 +63,7 @@ export default async ({
       if (subscriptionKey) {
       }
 
-      const accessToken = await fetchMemoizedAccessToken({
+      const authorizationToken = await fetchMemoizedAuthorizationToken({
         now: Date.now,
         region,
         subscriptionKey
@@ -71,7 +72,7 @@ export default async ({
       return new Promise((resolve, reject) => {
         utterance.addEventListener('end', resolve);
         utterance.addEventListener('error', reject);
-        utterance.accessToken = accessToken;
+        utterance.authorizationToken = authorizationToken;
         utterance.region = region;
         utterance.outputFormat = this.outputFormat;
         utterance.preload();

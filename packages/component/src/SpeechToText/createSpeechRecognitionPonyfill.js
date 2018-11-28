@@ -59,6 +59,7 @@ function serializeRecognitionResult({
 }
 
 export default async ({
+  authorizationToken,
   region = 'westus',
   subscriptionKey
 } = {}) => {
@@ -94,7 +95,7 @@ export default async ({
       this.createRecognizer = memoize(({
         language
       } = {}) => {
-        const speechConfig = SpeechConfig.fromSubscription(subscriptionKey, region);
+        const speechConfig = authorizationToken ? SpeechConfig.fromAuthorizationToken(authorizationToken, region ) : SpeechConfig.fromSubscription(subscriptionKey, region);
 
         speechConfig.outputFormat = OutputFormat.Detailed;
         speechConfig.speechRecognitionLanguage = language || 'en-US';

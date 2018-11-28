@@ -37,7 +37,10 @@ export default function () {
 
   store.subscribe(() => {
     const state = store.getState();
+
+    // Remove keys that should not be serialized
     const {
+      authorizationToken,
       ponyfill,
       speechRecognizedStarted,
       speechSynthesisNativeVoices,

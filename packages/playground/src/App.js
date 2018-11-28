@@ -18,6 +18,7 @@ import { css } from 'glamor';
 css.global('button.nav-link', { backgroundColor: 'Transparent' });
 
 const App = ({
+  authorizationToken,
   ponyfill,
   ponyfillType,
   navPane,
@@ -43,7 +44,7 @@ const App = ({
                 <RegionSelector />
               </div>
               <div className="form-group col">
-                <label>Subscription key</label>
+                <label>{ authorizationToken ? 'Authorization token' : 'Subscription key' }</label>
                 <SubscriptionKeyInput />
               </div>
             </div>
@@ -95,12 +96,14 @@ const App = ({
 
 export default connect(
   ({
+    authorizationToken,
     navPane,
     ponyfill,
     ponyfillType,
     region,
     subscriptionKey
   }) => ({
+    authorizationToken,
     navPane,
     ponyfill,
     ponyfillType,

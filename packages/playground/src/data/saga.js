@@ -1,5 +1,6 @@
 import { fork } from 'redux-saga/effects';
 
+import convertSubscriptionKeyToAuthorizationToken from './sagas/convertSubscriptionKeyToAuthorizationToken';
 import setPonyfill from './sagas/setPonyfill';
 import speechRecognitionSetInstance from './sagas/speechRecognitionSetInstance';
 import speechRecognitionStart from './sagas/speechRecognitionStart';
@@ -9,6 +10,7 @@ import speechSynthesisSpeakUtterance from './sagas/speechSynthesisSpeakUtterance
 import speechSynthesisUtteranceEvent from './sagas/speechSynthesisUtteranceEvent';
 
 export default function* () {
+  yield fork(convertSubscriptionKeyToAuthorizationToken);
   yield fork(setPonyfill);
   yield fork(speechRecognitionSetInstance);
   yield fork(speechRecognitionStart);
