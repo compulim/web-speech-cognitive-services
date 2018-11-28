@@ -12,6 +12,11 @@ import SpeechSynthesisProvingGround from './SpeechSynthesisProvingGround';
 
 import setNavPane from './data/actions/setNavPane';
 
+import { css } from 'glamor';
+
+// Patching Bootstrap
+css.global('button.nav-link', { backgroundColor: 'Transparent' });
+
 const App = ({
   ponyfill,
   ponyfillType,
@@ -49,18 +54,18 @@ const App = ({
         <div className="col">
           <ul className="nav nav-tabs">
             <li className="nav-item">
-              <a
+              <button
                 className={ classNames('nav-link', { active: navPane === 'speech recognition' }) }
-                href="#"
                 onClick={ setNavPaneToSpeechRecognition }
-              >Speech recognition</a>
+                type="button"
+              >Speech recognition</button>
             </li>
             <li className="nav-item">
-              <a
+              <button
                 className={ classNames('nav-link', { active: navPane === 'speech synthesis' }) }
-                href="#"
                 onClick={ setNavPaneToSpeechSynthesis }
-              >Speech synthesis</a>
+                type="button"
+              >Speech synthesis</button>
             </li>
           </ul>
           <br />
