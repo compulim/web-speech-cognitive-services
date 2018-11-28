@@ -49,6 +49,7 @@ export default class extends DOMEventEmitter {
     this._rate = 1;
     this._voice = null;
     this._volume = 1;
+    this._isAboutToPlay = false;
 
     this.text = text;
 
@@ -94,6 +95,8 @@ export default class extends DOMEventEmitter {
 
   async play(audioContext) {
     try {
+      this._isAboutToPlay = true;
+
       // HACK: iOS requires bufferSourceNode to be constructed before decoding data
       const source = audioContext.createBufferSource();
       const audioBuffer = await asyncDecodeAudioData(audioContext, await this.arrayBufferPromise);
@@ -101,7 +104,10 @@ export default class extends DOMEventEmitter {
       this.emit('start');
       this._playingSource = source;
 
-      await playDecoded(audioContext, audioBuffer, source);
+      if (this._isAboutToPlay) {
+        this._isAboutToPlay = false;
+        await playDecoded(audioContext, audioBuffer, source);
+      }
 
       this._playingSource = null;
       this.emit('end');
@@ -113,6 +119,8 @@ export default class extends DOMEventEmitter {
   }
 
   stop() {
+    this._isAboutToPlay = false;
+
     this._playingSource && this._playingSource.stop();
   }
 }

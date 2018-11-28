@@ -96,6 +96,7 @@ function () {
     key: "stop",
     value: function stop() {
       this.playingUtterance && this.playingUtterance.stop();
+      this.playingUtterance = null;
     }
   }]);
   return _default;

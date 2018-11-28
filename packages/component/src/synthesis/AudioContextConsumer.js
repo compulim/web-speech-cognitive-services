@@ -21,5 +21,6 @@ export default class {
 
   stop() {
     this.playingUtterance && this.playingUtterance.stop();
+    this.playingUtterance = null;
   }
 }

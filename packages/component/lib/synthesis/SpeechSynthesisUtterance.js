@@ -108,6 +108,7 @@ function (_DOMEventEmitter) {
     _this._rate = 1;
     _this._voice = null;
     _this._volume = 1;
+    _this._isAboutToPlay = false;
     _this.text = text;
     _this.onboundary = null;
     _this.onend = null;
@@ -167,33 +168,41 @@ function (_DOMEventEmitter) {
             switch (_context3.prev = _context3.next) {
               case 0:
                 _context3.prev = 0;
-                // HACK: iOS requires bufferSourceNode to be constructed before decoding data
+                this._isAboutToPlay = true; // HACK: iOS requires bufferSourceNode to be constructed before decoding data
+
                 source = audioContext.createBufferSource();
                 _context3.t0 = asyncDecodeAudioData;
                 _context3.t1 = audioContext;
-                _context3.next = 6;
+                _context3.next = 7;
                 return this.arrayBufferPromise;
 
-              case 6:
+              case 7:
                 _context3.t2 = _context3.sent;
-                _context3.next = 9;
+                _context3.next = 10;
                 return (0, _context3.t0)(_context3.t1, _context3.t2);
 
-              case 9:
+              case 10:
                 audioBuffer = _context3.sent;
                 this.emit('start');
                 this._playingSource = source;
-                _context3.next = 14;
+
+                if (!this._isAboutToPlay) {
+                  _context3.next = 17;
+                  break;
+                }
+
+                this._isAboutToPlay = false;
+                _context3.next = 17;
                 return playDecoded(audioContext, audioBuffer, source);
 
-              case 14:
+              case 17:
                 this._playingSource = null;
                 this.emit('end');
-                _context3.next = 22;
+                _context3.next = 25;
                 break;
 
-              case 18:
-                _context3.prev = 18;
+              case 21:
+                _context3.prev = 21;
                 _context3.t3 = _context3["catch"](0);
                 this.emit('error', {
                   error: _context3.t3,
@@ -201,12 +210,12 @@ function (_DOMEventEmitter) {
                 });
                 throw _context3.t3;
 
-              case 22:
+              case 25:
               case "end":
                 return _context3.stop();
             }
           }
-        }, _callee3, this, [[0, 18]]);
+        }, _callee3, this, [[0, 21]]);
       }));
 
       return function play(_x3) {
@@ -216,6 +225,7 @@ function (_DOMEventEmitter) {
   }, {
     key: "stop",
     value: function stop() {
+      this._isAboutToPlay = false;
       this._playingSource && this._playingSource.stop();
     }
   }, {
