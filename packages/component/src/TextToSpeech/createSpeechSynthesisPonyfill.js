@@ -60,9 +60,6 @@ export default async ({
         throw new Error('invalid utterance');
       }
 
-      if (subscriptionKey) {
-      }
-
       const authorizationToken = await fetchMemoizedAuthorizationToken({
         now: Date.now,
         region,
