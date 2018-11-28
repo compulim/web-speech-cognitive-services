@@ -44,6 +44,7 @@ const SubscriptionKeyInput = ({
           <div className="input-group-append">
             <button
               className="btn btn-outline-secondary"
+              disabled={ disabled }
               onClick={ convertSubscriptionKeyToAuthorizationToken }
               type="button"
             >Convert to authorization token</button>

@@ -23,10 +23,10 @@ export default function* () {
 }
 
 function* setPonyfillSaga() {
-  const { accessToken, ponyfillType, region, subscriptionKey } = yield select();
+  const { authorizationToken, ponyfillType, region, subscriptionKey } = yield select();
 
   if (ponyfillType === 'cognitiveservices') {
-    const ponyfill = yield call(createPonyfill, accessToken ? { accessToken, region } : { region, subscriptionKey });
+    const ponyfill = yield call(createPonyfill, authorizationToken ? { authorizationToken, region } : { region, subscriptionKey });
 
     yield put(setPonyfill(ponyfill));
   } else {

@@ -20,8 +20,8 @@ export default async ({
   subscriptionKey
 }) => {
   // TODO: Provide either subscription key or authorization token
-  if (!subscriptionKey) {
-    console.warn('Subscription key must be specified');
+  if (!authorizationToken && !subscriptionKey) {
+    console.warn('Either authorization token or subscription key must be specified');
 
     return {};
   } else if (!ponyfill.AudioContext) {
@@ -55,21 +55,19 @@ export default async ({
       return fetchVoices();
     }
 
-    async speak(utterance) {
+    speak(utterance) {
       if (!(utterance instanceof SpeechSynthesisUtterance)) {
         throw new Error('invalid utterance');
       }
 
-      const authorizationToken = await fetchMemoizedAuthorizationToken({
-        now: Date.now,
-        region,
-        subscriptionKey
-      });
-
-      return new Promise((resolve, reject) => {
+      return new Promise(async (resolve, reject) => {
         utterance.addEventListener('end', resolve);
         utterance.addEventListener('error', reject);
-        utterance.authorizationToken = authorizationToken;
+        utterance.authorizationToken = authorizationToken || await fetchMemoizedAuthorizationToken({
+          now: Date.now,
+          region,
+          subscriptionKey
+        });
         utterance.region = region;
         utterance.outputFormat = this.outputFormat;
         utterance.preload();
