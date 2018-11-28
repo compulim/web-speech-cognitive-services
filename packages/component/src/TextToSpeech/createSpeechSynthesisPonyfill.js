@@ -55,6 +55,14 @@ export default async ({
       return fetchVoices();
     }
 
+    pause() {
+      this.queue.pause();
+    }
+
+    resume() {
+      this.queue.resume();
+    }
+
     speak(utterance) {
       if (!(utterance instanceof SpeechSynthesisUtterance)) {
         throw new Error('invalid utterance');
