@@ -25,7 +25,7 @@ export default connect(
     ponyfillType,
     speechRecognitionTextNormalization
   }) => ({
-    disabled: ponyfillType !== 'speechservices',
+    disabled: ponyfillType !== 'bingspeech' && ponyfillType !== 'speechservices',
     speechRecognitionTextNormalization
   }),
   { setSpeechRecognitionTextNormalization }

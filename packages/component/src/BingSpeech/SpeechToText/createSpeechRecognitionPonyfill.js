@@ -30,7 +30,8 @@ function bingSpeechPromisify(fn) {
 
 export default ({
   authorizationToken,
-  subscriptionKey
+  subscriptionKey,
+  textNormalization
 }) => {
   if (!authorizationToken && !subscriptionKey) {
     console.warn('Either authorization token or subscription key must be specified');
@@ -172,8 +173,9 @@ export default ({
       recognizer.Recognize(eventListener, speechContext && JSON.stringify(speechContext));
       this._aborted = false;
 
-      await promises.recognitionTriggered;
-      this.emitCognitiveServices('recognitionTriggered');
+      const recognitionTriggered = await promises.recognitionTriggered;
+
+      this.emitCognitiveServices('recognitionTriggered', recognitionTriggered);
 
       let error;
 
@@ -182,7 +184,7 @@ export default ({
         promises.recognitionEnded
       ]);
 
-      this.emitCognitiveServices(listeningStarted.Name === 'RecognitionEndedEvent' ? 'recognitionEnded' : ' listeningStarted');
+      this.emitCognitiveServices(listeningStarted.Name === 'RecognitionEndedEvent' ? 'recognitionEnded' : ' listeningStarted', listeningStarted);
 
       if (listeningStarted.Name === 'RecognitionEndedEvent') {
         // Possibly not authorized to use microphone
@@ -194,15 +196,20 @@ export default ({
       } else {
         this.emit('start');
 
-        await promises.connectingToService;
-        this.emitCognitiveServices('connectingToService');
+        const connectingToService = await promises.connectingToService;
+
+        this.emitCognitiveServices('connectingToService', connectingToService);
 
         const recognitionStarted = await Promise.race([
           promises.recognitionStarted,
           promises.recognitionEnded
         ]);
 
-        this.emitCognitiveServices(recognitionStarted.Name === 'RecognitionEndedEvent' ? 'recognitionEnded' : 'recognitionStarted');
+        this.emitCognitiveServices(
+          recognitionStarted.Name === 'RecognitionEndedEvent' ? 'recognitionEnded' : 'recognitionStarted',
+          recognitionStarted
+        );
+
         this.emit('audiostart');
 
         if (recognitionStarted.Name === 'RecognitionEndedEvent') {
@@ -221,7 +228,10 @@ export default ({
               promises.speechEndDetected
             ]);
 
-            this.emitCognitiveServices(speechHypothesis.Name === 'SpeechEndDetectedEvent' ? 'speechEndDetected' : 'speechHypothesis');
+            this.emitCognitiveServices(
+              speechHypothesis.Name === 'SpeechEndDetectedEvent' ? 'speechEndDetected' : 'speechHypothesis',
+              speechHypothesis
+            );
 
             if (speechHypothesis.Name === 'SpeechEndDetectedEvent') {
               break;
@@ -247,21 +257,41 @@ export default ({
         if (this._aborted) {
           error = 'aborted';
 
-          await promises.recognitionEnded;
-          this.emitCognitiveServices('recognitionEnded');
+          const recognitionEnded = await promises.recognitionEnded;
+
+          this.emitCognitiveServices('recognitionEnded', recognitionEnded);
         } else {
           const speechDetailedPhrase = await Promise.race([
             promises.speechDetailedPhrase,
             promises.recognitionEnded
           ]);
 
-          this.emitCognitiveServices(speechDetailedPhrase.Name === 'RecognitionEndedEvent' ? 'recognitionEnded' : 'speechDetailedPhrase');
+          this.emitCognitiveServices(
+            speechDetailedPhrase.Name === 'RecognitionEndedEvent' ? 'recognitionEnded' : 'speechDetailedPhrase',
+            speechDetailedPhrase
+          );
 
           if (speechDetailedPhrase.Name !== 'RecognitionEndedEvent') {
             const recognitionResult = CognitiveSpeech.RecognitionStatus[speechDetailedPhrase.Result.RecognitionStatus];
 
             if (recognitionResult === CognitiveSpeech.RecognitionStatus.Success) {
-              this.emit('result', buildSpeechResult(speechDetailedPhrase.Result.NBest[0].Display, speechDetailedPhrase.Result.NBest[0].Confidence, true));
+              const best = speechDetailedPhrase.Result.NBest[0];
+
+              this.emit(
+                'result',
+                buildSpeechResult(
+                  textNormalization === 'itn' ?
+                    best.ITN
+                  : textNormalization === 'lexical' ?
+                    best.Lexical
+                  : textNormalization === 'maskeditn' ?
+                    best.MaskedITN
+                  :
+                    best.Display,
+                  best.Confidence,
+                  true
+                )
+              );
             } else if (recognitionResult !== CognitiveSpeech.RecognitionStatus.NoMatch) {
               // Possibly silent or muted
               if (recognitionResult === CognitiveSpeech.RecognitionStatus.InitialSilenceTimeout) {
@@ -271,8 +301,9 @@ export default ({
               }
             }
 
-            await promises.recognitionEnded;
-            this.emitCognitiveServices('recognitionEnded');
+            const recognitionEnded = await promises.recognitionEnded;
+
+            this.emitCognitiveServices('recognitionEnded', recognitionEnded);
           }
         }
       }

@@ -55,12 +55,14 @@ function* setPonyfillSaga() {
       SpeechSynthesisUtterance: window.SpeechSynthesisUtterance
     }));
   } else if (ponyfillType === 'bingspeech') {
+    const options = { textNormalization };
     const ponyfill = yield call(
       createBingSpeechPonyfill,
       bingSpeechAuthorizationToken ?
-        { authorizationToken: bingSpeechAuthorizationToken }
+        { ...options, authorizationToken: bingSpeechAuthorizationToken }
       :
         {
+          ...options,
           authorizationToken: onDemandAuthorizationToken ? () => {
             console.log('On-demand fetching Bing Speech authorization token');
 
