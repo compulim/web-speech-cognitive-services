@@ -3,7 +3,7 @@ import EventAsPromise from 'event-as-promise';
 import memoize from 'memoize-one';
 
 import DOMEventEmitter from '../Util/DOMEventEmitter';
-import fetchAuthorizationToken from '../Util/fetchAuthorizationToken';
+import fetchAuthorizationToken from '../fetchAuthorizationToken';
 import SpeechGrammarList from './SpeechGrammarList';
 
 function buildSpeechResult(transcript, confidence, isFinal) {
