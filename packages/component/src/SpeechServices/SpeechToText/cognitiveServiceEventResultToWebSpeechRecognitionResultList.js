@@ -19,7 +19,7 @@ function arrayToMap(array, extras) {
   };
 }
 
-export default function (result, textNormalization) {
+export default function (result, { maxAlternatives = Infinity, textNormalization = 'display' } = {}) {
   if (result.reason === RecognizingSpeech) {
     return [[{
       confidence: .5,
@@ -28,7 +28,7 @@ export default function (result, textNormalization) {
   } else if (result.reason === RecognizedSpeech) {
     const resultList = [
       arrayToMap(
-        (result.json.NBest || []).map(
+        (result.json.NBest || []).slice(0, maxAlternatives).map(
           ({
             Confidence: confidence,
             Display: display,

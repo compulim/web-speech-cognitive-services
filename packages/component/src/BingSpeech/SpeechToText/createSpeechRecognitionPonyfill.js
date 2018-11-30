@@ -275,6 +275,7 @@ export default ({
             const recognitionResult = CognitiveSpeech.RecognitionStatus[speechDetailedPhrase.Result.RecognitionStatus];
 
             if (recognitionResult === CognitiveSpeech.RecognitionStatus.Success) {
+              // TODO: [P2] Support maxAlternatives
               const best = speechDetailedPhrase.Result.NBest[0];
 
               this.emit(

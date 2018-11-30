@@ -88,9 +88,9 @@ const SpeechRecognitionCommands = ({
     &nbsp;
     <div className="form-group-inline">
       <Select
-        disabled={ started || ponyfillType !== 'browser' }
+        disabled={ started || (ponyfillType !== 'browser' && ponyfillType !== 'speechservices') }
         onChange={ setSpeechRecognitionMaxAlternatives }
-        value={ ponyfillType === 'browser' ? maxAlternatives : 1 }
+        value={ (ponyfillType === 'browser' || ponyfillType === 'speechservices') ? maxAlternatives : 1 }
       >
         <Option text="One alternative" value="1" />
         <Option text="3 alternatives" value="3" />

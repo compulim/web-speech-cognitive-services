@@ -70,7 +70,9 @@ test('Single final results with ITN', () => {
       }]
     },
     reason: 3
-  }, 'itn');
+  }, {
+    textNormalization: 'itn'
+  });
 
   expect(resultList[0][0]).toEqual({ confidence: .25, transcript: 'no (ITN)' });
   expect(resultList[0]).toHaveProperty('isFinal', true);
@@ -88,7 +90,9 @@ test('Single final results with lexical', () => {
       }]
     },
     reason: 3
-  }, 'lexical');
+  }, {
+    textNormalization: 'lexical'
+  });
 
   expect(resultList[0][0]).toEqual({ confidence: .25, transcript: 'no (Lexical)' });
   expect(resultList[0]).toHaveProperty('isFinal', true);
@@ -106,7 +110,9 @@ test('Single final results with masked ITN', () => {
       }]
     },
     reason: 3
-  }, 'maskeditn');
+  }, {
+    textNormalization: 'maskeditn'
+  });
 
   expect(resultList[0][0]).toEqual({ confidence: .25, transcript: 'no (MaskedITN)' });
   expect(resultList[0]).toHaveProperty('isFinal', true);

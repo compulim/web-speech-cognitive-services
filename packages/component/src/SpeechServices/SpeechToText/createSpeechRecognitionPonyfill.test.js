@@ -747,3 +747,213 @@ test('Abort before first recognized text', async () => {
 
   expect(getEvents()).toMatchSnapshot();
 });
+
+test('Happy path with ITN result', async () => {
+  const recognizedResult = {
+    duration: 48100000,
+    json: JSON.stringify({
+      RecognitionStatus: 'Success',
+      Offset: 1800000,
+      Duration: 48100000,
+      NBest: [{
+        Confidence: 0.2331869,
+        Lexical: 'no (Lexical)',
+        ITN: 'no (ITN)',
+        MaskedITN: 'no (MaskedITN)',
+        Display: 'No.'
+      }]
+    }),
+    offset: 1800000,
+    reason: 3
+  };
+
+  jest.setMock('../SpeechSDK', ({
+    ...MOCK_SPEECH_SDK,
+    SpeechRecognizer: class extends MOCK_SPEECH_SDK.SpeechRecognizer {
+      recognizeOnceAsync(success) {
+        setImmediate(() => this.recognized(this, { result: recognizedResult }));
+        setImmediate(() => success(recognizedResult));
+      }
+    }
+  }));
+
+  const { default: createSpeechRecognitionPonyfill } = require('./createSpeechRecognitionPonyfill');
+  const { SpeechRecognition } = await createSpeechRecognitionPonyfill({
+    region: 'westus',
+    subscriptionKey: 'SUBSCRIPTION_KEY',
+    textNormalization: 'itn'
+  });
+
+  const speechRecognition = new SpeechRecognition();
+  const getEvents = captureSpeechEvents(speechRecognition);
+
+  await new Promise(async resolve => {
+    speechRecognition.addEventListener('end', resolve);
+    speechRecognition.start();
+    await 0;
+    jest.runAllImmediates();
+  });
+
+  expect(getEvents()).toMatchSnapshot();
+});
+
+test('Happy path with lexical result', async () => {
+  const recognizedResult = {
+    duration: 48100000,
+    json: JSON.stringify({
+      RecognitionStatus: 'Success',
+      Offset: 1800000,
+      Duration: 48100000,
+      NBest: [{
+        Confidence: 0.2331869,
+        Lexical: 'no (Lexical)',
+        ITN: 'no (ITN)',
+        MaskedITN: 'no (MaskedITN)',
+        Display: 'No.'
+      }]
+    }),
+    offset: 1800000,
+    reason: 3
+  };
+
+  jest.setMock('../SpeechSDK', ({
+    ...MOCK_SPEECH_SDK,
+    SpeechRecognizer: class extends MOCK_SPEECH_SDK.SpeechRecognizer {
+      recognizeOnceAsync(success) {
+        setImmediate(() => this.recognized(this, { result: recognizedResult }));
+        setImmediate(() => success(recognizedResult));
+      }
+    }
+  }));
+
+  const { default: createSpeechRecognitionPonyfill } = require('./createSpeechRecognitionPonyfill');
+  const { SpeechRecognition } = await createSpeechRecognitionPonyfill({
+    region: 'westus',
+    subscriptionKey: 'SUBSCRIPTION_KEY',
+    textNormalization: 'lexical'
+  });
+
+  const speechRecognition = new SpeechRecognition();
+  const getEvents = captureSpeechEvents(speechRecognition);
+
+  await new Promise(async resolve => {
+    speechRecognition.addEventListener('end', resolve);
+    speechRecognition.start();
+    await 0;
+    jest.runAllImmediates();
+  });
+
+  expect(getEvents()).toMatchSnapshot();
+});
+
+test('Happy path with masked ITN result', async () => {
+  const recognizedResult = {
+    duration: 48100000,
+    json: JSON.stringify({
+      RecognitionStatus: 'Success',
+      Offset: 1800000,
+      Duration: 48100000,
+      NBest: [{
+        Confidence: 0.2331869,
+        Lexical: 'no (Lexical)',
+        ITN: 'no (ITN)',
+        MaskedITN: 'no (MaskedITN)',
+        Display: 'No.'
+      }]
+    }),
+    offset: 1800000,
+    reason: 3
+  };
+
+  jest.setMock('../SpeechSDK', ({
+    ...MOCK_SPEECH_SDK,
+    SpeechRecognizer: class extends MOCK_SPEECH_SDK.SpeechRecognizer {
+      recognizeOnceAsync(success) {
+        setImmediate(() => this.recognized(this, { result: recognizedResult }));
+        setImmediate(() => success(recognizedResult));
+      }
+    }
+  }));
+
+  const { default: createSpeechRecognitionPonyfill } = require('./createSpeechRecognitionPonyfill');
+  const { SpeechRecognition } = await createSpeechRecognitionPonyfill({
+    region: 'westus',
+    subscriptionKey: 'SUBSCRIPTION_KEY',
+    textNormalization: 'maskeditn'
+  });
+
+  const speechRecognition = new SpeechRecognition();
+  const getEvents = captureSpeechEvents(speechRecognition);
+
+  await new Promise(async resolve => {
+    speechRecognition.addEventListener('end', resolve);
+    speechRecognition.start();
+    await 0;
+    jest.runAllImmediates();
+  });
+
+  expect(getEvents()).toMatchSnapshot();
+});
+
+test('Happy path with maximum 2 alternatives', async () => {
+  const recognizedResult = {
+    duration: 48100000,
+    json: JSON.stringify({
+      RecognitionStatus: 'Success',
+      Offset: 1800000,
+      Duration: 48100000,
+      NBest: [{
+        Confidence: 0.9,
+        Lexical: 'one',
+        ITN: 'one',
+        MaskedITN: 'one',
+        Display: 'One.'
+      }, {
+        Confidence: 0.8,
+        Lexical: 'two',
+        ITN: 'two',
+        MaskedITN: 'two',
+        Display: 'Two.'
+      }, {
+        Confidence: 0.7,
+        Lexical: 'three',
+        ITN: 'three',
+        MaskedITN: 'three',
+        Display: 'Three.'
+      }]
+    }),
+    offset: 1800000,
+    reason: 3
+  };
+
+  jest.setMock('../SpeechSDK', ({
+    ...MOCK_SPEECH_SDK,
+    SpeechRecognizer: class extends MOCK_SPEECH_SDK.SpeechRecognizer {
+      recognizeOnceAsync(success) {
+        setImmediate(() => this.recognized(this, { result: recognizedResult }));
+        setImmediate(() => success(recognizedResult));
+      }
+    }
+  }));
+
+  const { default: createSpeechRecognitionPonyfill } = require('./createSpeechRecognitionPonyfill');
+  const { SpeechRecognition } = await createSpeechRecognitionPonyfill({
+    region: 'westus',
+    subscriptionKey: 'SUBSCRIPTION_KEY'
+  });
+
+  const speechRecognition = new SpeechRecognition();
+
+  speechRecognition.maxAlternatives = 2;
+
+  const getEvents = captureSpeechEvents(speechRecognition);
+
+  await new Promise(async resolve => {
+    speechRecognition.addEventListener('end', resolve);
+    speechRecognition.start();
+    await 0;
+    jest.runAllImmediates();
+  });
+
+  expect(getEvents()).toMatchSnapshot();
+});

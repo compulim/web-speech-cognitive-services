@@ -96,6 +96,7 @@ export default async ({
       this._continuous = false;
       this._interimResults = false;
       this._lang = typeof window !== 'undefined' ? (window.document.documentElement.getAttribute('lang') || window.navigator.language) : 'en-US';
+      this._maxAlternatives = 1;
 
       this.createRecognizer = memoize(async ({ language } = {}) => {
         const speechConfig = authorizationToken ?
@@ -125,8 +126,8 @@ export default async ({
     get interimResults() { return this._interimResults; }
     set interimResults(value) { this._interimResults = value; }
 
-    get maxAlternatives() { return 1; }
-    set maxAlternatives(value) { console.warn(`Speech Services: Cannot set maxAlternatives to ${ value }, this feature is not supported.`); }
+    get maxAlternatives() { return this._maxAlternatives; }
+    set maxAlternatives(value) { this._maxAlternatives = value; }
 
     get lang() { return this._lang; }
     set lang(value) { this._lang = value; }
@@ -279,13 +280,25 @@ export default async ({
 
             if (recognized) {
               finalEvent = {
-                results: cognitiveServiceEventResultToWebSpeechRecognitionResultList(recognized.result, textNormalization),
+                results: cognitiveServiceEventResultToWebSpeechRecognitionResultList(
+                  recognized.result,
+                  {
+                    maxAlternatives: this.maxAlternatives,
+                    textNormalization
+                  }
+                ),
                 type: 'result'
               };
 
               break;
             } else if (recognizing) {
-              lastRecognizingResults = cognitiveServiceEventResultToWebSpeechRecognitionResultList(recognizing.result, textNormalization);
+              lastRecognizingResults = cognitiveServiceEventResultToWebSpeechRecognitionResultList(
+                recognizing.result,
+                {
+                  maxAlternatives: this.maxAlternatives,
+                  textNormalization
+                }
+              );
 
               this.interimResults && this.emit('result', {
                 results: lastRecognizingResults

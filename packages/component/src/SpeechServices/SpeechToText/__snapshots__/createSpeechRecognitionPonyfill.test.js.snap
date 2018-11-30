@@ -180,6 +180,178 @@ Array [
 ]
 `;
 
+exports[`Happy path with ITN result 1`] = `
+Array [
+  Object {
+    "type": "start",
+  },
+  Object {
+    "type": "audiostart",
+  },
+  Object {
+    "type": "soundstart",
+  },
+  Object {
+    "type": "speechstart",
+  },
+  Object {
+    "type": "speechend",
+  },
+  Object {
+    "type": "soundend",
+  },
+  Object {
+    "type": "audioend",
+  },
+  Object {
+    "results": Array [
+      Object {
+        "0": Object {
+          "confidence": 0.2331869,
+          "transcript": "no (ITN)",
+        },
+        "isFinal": true,
+        "length": 1,
+      },
+    ],
+    "type": "result",
+  },
+  Object {
+    "type": "end",
+  },
+]
+`;
+
+exports[`Happy path with lexical result 1`] = `
+Array [
+  Object {
+    "type": "start",
+  },
+  Object {
+    "type": "audiostart",
+  },
+  Object {
+    "type": "soundstart",
+  },
+  Object {
+    "type": "speechstart",
+  },
+  Object {
+    "type": "speechend",
+  },
+  Object {
+    "type": "soundend",
+  },
+  Object {
+    "type": "audioend",
+  },
+  Object {
+    "results": Array [
+      Object {
+        "0": Object {
+          "confidence": 0.2331869,
+          "transcript": "no (Lexical)",
+        },
+        "isFinal": true,
+        "length": 1,
+      },
+    ],
+    "type": "result",
+  },
+  Object {
+    "type": "end",
+  },
+]
+`;
+
+exports[`Happy path with masked ITN result 1`] = `
+Array [
+  Object {
+    "type": "start",
+  },
+  Object {
+    "type": "audiostart",
+  },
+  Object {
+    "type": "soundstart",
+  },
+  Object {
+    "type": "speechstart",
+  },
+  Object {
+    "type": "speechend",
+  },
+  Object {
+    "type": "soundend",
+  },
+  Object {
+    "type": "audioend",
+  },
+  Object {
+    "results": Array [
+      Object {
+        "0": Object {
+          "confidence": 0.2331869,
+          "transcript": "no (MaskedITN)",
+        },
+        "isFinal": true,
+        "length": 1,
+      },
+    ],
+    "type": "result",
+  },
+  Object {
+    "type": "end",
+  },
+]
+`;
+
+exports[`Happy path with maximum 2 alternatives 1`] = `
+Array [
+  Object {
+    "type": "start",
+  },
+  Object {
+    "type": "audiostart",
+  },
+  Object {
+    "type": "soundstart",
+  },
+  Object {
+    "type": "speechstart",
+  },
+  Object {
+    "type": "speechend",
+  },
+  Object {
+    "type": "soundend",
+  },
+  Object {
+    "type": "audioend",
+  },
+  Object {
+    "results": Array [
+      Object {
+        "0": Object {
+          "confidence": 0.9,
+          "transcript": "One.",
+        },
+        "1": Object {
+          "confidence": 0.8,
+          "transcript": "Two.",
+        },
+        "isFinal": true,
+        "length": 2,
+      },
+    ],
+    "type": "result",
+  },
+  Object {
+    "type": "end",
+  },
+]
+`;
+
 exports[`Happy path without interims 1`] = `
 Array [
   Object {
