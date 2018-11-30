@@ -96,10 +96,11 @@ export default async ({
       this._interimResults = false;
       this._lang = typeof window !== 'undefined' ? (window.document.documentElement.getAttribute('lang') || window.navigator.language) : 'en-US';
 
-      this.createRecognizer = memoize(({
-        language
-      } = {}) => {
-        const speechConfig = authorizationToken ? SpeechConfig.fromAuthorizationToken(authorizationToken, region) : SpeechConfig.fromSubscription(subscriptionKey, region);
+      this.createRecognizer = memoize(async ({ language } = {}) => {
+        const speechConfig = authorizationToken ?
+          SpeechConfig.fromAuthorizationToken(typeof authorizationToken === 'function' ? await authorizationToken() : authorizationToken, region)
+        :
+          SpeechConfig.fromSubscription(subscriptionKey, region);
 
         speechConfig.outputFormat = OutputFormat.Detailed;
         speechConfig.speechRecognitionLanguage = language || 'en-US';

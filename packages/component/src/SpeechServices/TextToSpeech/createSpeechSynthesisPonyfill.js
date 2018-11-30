@@ -71,11 +71,17 @@ export default async ({
       return new Promise(async (resolve, reject) => {
         utterance.addEventListener('end', resolve);
         utterance.addEventListener('error', reject);
-        utterance.authorizationToken = authorizationToken || await fetchMemoizedAuthorizationToken({
-          now: Date.now,
-          region,
-          subscriptionKey
-        });
+
+        utterance.authorizationToken =
+          typeof authorizationToken === 'function' ?
+            await authorizationToken()
+          : authorizationToken ?
+            authorizationToken
+          : await fetchMemoizedAuthorizationToken({
+            now: Date.now,
+            region,
+            subscriptionKey
+          });
         utterance.region = region;
         utterance.outputFormat = this.outputFormat;
         utterance.preload();

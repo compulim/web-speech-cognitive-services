@@ -59,6 +59,30 @@ for (let key in ponyfill) {
 
 > If you prefer to use the deprecating Bing Speech, import from `'web-speech-cognitive-services/lib/BingSpeech'` instead.
 
+## Using authorization token
+
+Instead of exposing subscription key on the browser, we strongly recommend using authorization token.
+
+```jsx
+import createPonyfill from 'web-speech-cognitive-services/lib/SpeechServices';
+
+const ponyfill = await createPonyfill({
+  authorizationToken: 'YOUR_AUTHORIZATION_TOKEN',
+  region: 'westus',
+});
+```
+
+You can also provide an async function that will fetch the authorization token on-demand. You should cache the authorization token for subsequent request.
+
+```jsx
+import createPonyfill from 'web-speech-cognitive-services/lib/SpeechServices';
+
+const ponyfill = await createPonyfill({
+  authorizationToken: fetch('https://example.com/your-token').then(res => res.text()),
+  region: 'westus',
+});
+```
+
 ## Speech recognition (speech-to-text)
 
 You can choose to only create ponyfill for speech recognition.

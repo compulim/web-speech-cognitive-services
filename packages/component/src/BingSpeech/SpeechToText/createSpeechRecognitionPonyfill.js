@@ -96,7 +96,7 @@ export default ({
         let fetchToken;
 
         if (authorizationToken) {
-          fetchToken = bingSpeechPromisify(async () => await authorizationToken);
+          fetchToken = bingSpeechPromisify(async () => typeof authorizationToken === 'function' ? await authorizationToken() : authorizationToken);
         } else if (subscriptionKey) {
           fetchToken = bingSpeechPromisify(async () => fetchAuthorizationToken(subscriptionKey));
         }
