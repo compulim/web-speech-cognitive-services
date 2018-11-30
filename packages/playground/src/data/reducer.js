@@ -1,6 +1,7 @@
 import { combineReducers } from 'redux';
 
-import authorizationToken from './reducers/authorizationToken';
+import bingSpeechAuthorizationToken from './reducers/bingSpeechAuthorizationToken';
+import bingSpeechSubscriptionKey from './reducers/bingSpeechSubscriptionKey';
 import browserSupportedSpeechRecognition from './reducers/browserSupportedSpeechRecognition';
 import navPane from './reducers/navPane';
 import ponyfill from './reducers/ponyfill';
@@ -9,16 +10,19 @@ import region from './reducers/region';
 import speechRecognitionContinuous from './reducers/speechRecognitionContinuous';
 import speechRecognitionEvents from './reducers/speechRecognitionEvents';
 import speechRecognitionInterimResults from './reducers/speechRecognitionInterimResults';
+import speechRecognitionLanguage from './reducers/speechRecognitionLanguage';
 import speechRecognitionMaxAlternatives from './reducers/speechRecognitionMaxAlternatives';
 import speechRecognitionStarted from './reducers/speechRecognitionStarted';
+import speechServicesAuthorizationToken from './reducers/speechServicesAuthorizationToken';
+import speechServicesSubscriptionKey from './reducers/speechServicesSubscriptionKey';
 import speechSynthesisNativeVoices from './reducers/speechSynthesisNativeVoices';
 import speechSynthesisText from './reducers/speechSynthesisText';
 import speechSynthesisUtterances from './reducers/speechSynthesisUtterances';
 import speechSynthesisVoiceURI from './reducers/speechSynthesisVoiceURI';
-import subscriptionKey from './reducers/subscriptionKey';
 
 export default combineReducers({
-  authorizationToken,
+  bingSpeechAuthorizationToken,
+  bingSpeechSubscriptionKey,
   browserSupportedSpeechRecognition,
   navPane,
   ponyfill,
@@ -27,11 +31,13 @@ export default combineReducers({
   speechRecognitionContinuous,
   speechRecognitionEvents,
   speechRecognitionInterimResults,
+  speechRecognitionLanguage,
   speechRecognitionMaxAlternatives,
   speechRecognitionStarted,
+  speechServicesAuthorizationToken,
+  speechServicesSubscriptionKey,
+  speechSynthesisNativeVoices,
   speechSynthesisText,
   speechSynthesisUtterances,
-  speechSynthesisNativeVoices,
-  speechSynthesisVoiceURI,
-  subscriptionKey
+  speechSynthesisVoiceURI
 })

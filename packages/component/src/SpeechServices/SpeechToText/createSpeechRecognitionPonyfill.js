@@ -1,8 +1,8 @@
 import memoize from 'memoize-one';
 
 import cognitiveServiceEventResultToWebSpeechRecognitionResultList from './cognitiveServiceEventResultToWebSpeechRecognitionResultList';
-import createPromiseQueue from '../../Utils/createPromiseQueue';
-import DOMEventEmitter from '../../Utils/DOMEventEmitter';
+import createPromiseQueue from '../../Util/createPromiseQueue';
+import DOMEventEmitter from '../../Util/DOMEventEmitter';
 import SpeechGrammarList from './SpeechGrammarList';
 import SpeechSDK from '../SpeechSDK';
 
@@ -141,7 +141,7 @@ export default async ({
     set interimResults(value) { this._interimResults = value; }
 
     get maxAlternatives() { return 1; }
-    set maxAlternatives(_) { throw new Error('not implemented'); }
+    set maxAlternatives(value) { console.warn(`Speech Services: Cannot set maxAlternatives to ${ value }, this feature is not supported.`); }
 
     get lang() { return this._lang; }
     set lang(value) { this._lang = value; }

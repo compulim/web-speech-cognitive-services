@@ -1,6 +1,5 @@
+import DOMEventEmitter from '../Util/DOMEventEmitter';
 import EventAsPromise from 'event-as-promise';
-
-import DOMEventEmitter from '../../Util/DOMEventEmitter';
 import fetchSpeechData from './fetchSpeechData';
 import subscribeEvent from './subscribeEvent';
 
@@ -79,12 +78,11 @@ export default class extends DOMEventEmitter {
 
   async preload() {
     this.arrayBufferPromise = fetchSpeechData({
-      authorizationToken: this.authorizationToken,
+      accessToken: this.accessToken,
       lang: this.lang || window.navigator.language,
       outputFormat: this.outputFormat,
       pitch: this.pitch,
       rate: this.rate,
-      region: this.region,
       text: this.text,
       voice: this.voice && this.voice.voiceURI,
       volume: this.volume

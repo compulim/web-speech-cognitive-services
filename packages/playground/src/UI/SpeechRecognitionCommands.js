@@ -2,6 +2,7 @@ import { connect } from 'react-redux';
 import React from 'react';
 
 import Select, { Option } from '../Bootstrap/Select';
+import SpeechRecognitionLanguage from './SpeechRecognitionLanguage';
 
 import abortSpeechRecognition from '../data/actions/abortSpeechRecognition';
 import startSpeechRecognition from '../data/actions/startSpeechRecognition';
@@ -95,6 +96,10 @@ const SpeechRecognitionCommands = ({
         <Option text="5 alternatives" value="5" />
         <Option text="10 alternatives" value="10" />
       </Select>
+    </div>
+    &nbsp;
+    <div className="form-group-inline">
+      <SpeechRecognitionLanguage />
     </div>
     &nbsp;
     <div className="btn-group">

@@ -52,12 +52,14 @@ function* startSpeechRecognition({ getCancelReason }) {
       ponyfillType,
       speechRecognitionContinuous: continuous,
       speechRecognitionInterimResults: interimResults,
+      speechRecognitionLanguage: language,
       speechRecognitionMaxAlternatives: maxAlternatives
     } = yield select();
 
     speechRecognition = new SpeechRecognition();
     speechRecognition.continuous = continuous;
     speechRecognition.interimResults = interimResults;
+    speechRecognition.lang = language;
 
     // TODO: Cognitive Services currently does not return multiple alternatives
     if (ponyfillType === 'browser') {

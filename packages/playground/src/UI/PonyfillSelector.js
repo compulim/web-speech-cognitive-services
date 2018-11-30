@@ -10,17 +10,21 @@ const PonyfillSelector = ({
   setPonyfillType
 }) =>
   <Select
-    disabledValues={ browserSupportedSpeechRecognition ? [] : ['browser'] }
     onChange={ setPonyfillType }
     value={ ponyfillType }
   >
     <Option
+      disabled={ !browserSupportedSpeechRecognition }
       text="Browser"
       value="browser"
     />
     <Option
-      text="Cognitive Services"
-      value="cognitiveservices"
+      text="Bing Speech"
+      value="bingspeech"
+    />
+    <Option
+      text="Speech Services"
+      value="speechservices"
     />
   </Select>
 
