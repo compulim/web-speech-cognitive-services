@@ -11,6 +11,7 @@ import createPromiseQueue from '../utils/createPromiseQueue';
 
 export default function* () {
   yield takeEvery(SET_PONYFILL, function* ({ payload: { ponyfill: { speechSynthesis } = {} } }) {
+    console.warn(speechSynthesis);
     if (!speechSynthesis) { return; }
 
     const events = createPromiseQueue();

@@ -1,7 +1,7 @@
 import memoize from 'memoize-one';
 
 import AudioContextQueue from './AudioContextQueue';
-import DOMEventEmitter from '../../Util/DOMEventEmitter';
+import DOMEventEmitter from '../Util/DOMEventEmitter';
 import fetchAuthorizationToken from '../fetchAuthorizationToken';
 import fetchVoices from './fetchVoices';
 import SpeechSynthesisUtterance from './SpeechSynthesisUtterance';
@@ -12,16 +12,15 @@ const DEFAULT_OUTPUT_FORMAT = 'audio-16khz-128kbitrate-mono-mp3';
 const TOKEN_EXPIRATION = 600000;
 const TOKEN_EARLY_RENEWAL = 60000;
 
-export default async ({
+export default ({
   authorizationToken,
   ponyfill = {
     AudioContext: window.AudioContext || window.webkitAudioContext
   },
-  region = 'westus',
   subscriptionKey
 }) => {
   if (!authorizationToken && !subscriptionKey) {
-    console.warn('Either authorization token or subscription key must be specified');
+    console.warn('Either authorizationToken or subscriptionKey must be specified');
 
     return {};
   } else if (!ponyfill.AudioContext) {
@@ -31,10 +30,9 @@ export default async ({
   }
 
   const fetchMemoizedAuthorizationToken = memoize(
-    ({ region, subscriptionKey }) => fetchAuthorizationToken({ region, subscriptionKey }),
+    ({ subscriptionKey }) => fetchAuthorizationToken(subscriptionKey),
     (arg, prevArg) => (
-      arg.region === prevArg.region
-      && arg.subscriptionKey === prevArg.subscriptionKey
+      arg.subscriptionKey === prevArg.subscriptionKey
       && arg.now - prevArg.now < TOKEN_EXPIRATION - TOKEN_EARLY_RENEWAL
     )
   );
@@ -63,7 +61,7 @@ export default async ({
       this.queue.resume();
     }
 
-    speak(utterance) {
+    async speak(utterance) {
       if (!(utterance instanceof SpeechSynthesisUtterance)) {
         throw new Error('invalid utterance');
       }
@@ -73,10 +71,8 @@ export default async ({
         utterance.addEventListener('error', reject);
         utterance.authorizationToken = authorizationToken || await fetchMemoizedAuthorizationToken({
           now: Date.now,
-          region,
           subscriptionKey
         });
-        utterance.region = region;
         utterance.outputFormat = this.outputFormat;
         utterance.preload();
 

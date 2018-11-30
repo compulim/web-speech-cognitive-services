@@ -64,7 +64,7 @@ export default async ({
   subscriptionKey
 } = {}) => {
   if (!authorizationToken && !subscriptionKey) {
-    console.warn('Either authorization token or subscription key must be specified');
+    console.warn('Either authorizationToken or subscriptionKey must be specified');
 
     return {};
   } else if (!window.navigator.mediaDevices || !window.navigator.mediaDevices.getUserMedia) {

@@ -32,6 +32,16 @@ export default ({
   authorizationToken,
   subscriptionKey
 }) => {
+  if (!authorizationToken && !subscriptionKey) {
+    console.warn('Either authorization token or subscription key must be specified');
+
+    return {};
+  } else if (!window.navigator.mediaDevices || !window.navigator.mediaDevices.getUserMedia) {
+    console.warn('This browser does not support WebRTC and it will not work with Cognitive Services Speech Services.');
+
+    return {};
+  }
+
   class SpeechRecognition extends DOMEventEmitter {
     constructor() {
       super([

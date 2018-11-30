@@ -5,7 +5,7 @@ const DEFAULT_VOICE = 'Microsoft Server Speech Text to Speech Voice (en-US, Jess
 const SYNTHESIS_URL = 'https://speech.platform.bing.com/synthesize';
 
 export default async function fetchSpeechData({
-  accessToken,
+  authorizationToken,
   lang = DEFAULT_LANGUAGE,
   outputFormat,
   pitch,
@@ -18,7 +18,7 @@ export default async function fetchSpeechData({
 
   const res = await fetch(SYNTHESIS_URL, {
     headers: {
-      Authorization: accessToken,
+      Authorization: `Bearer ${ authorizationToken }`,
       'Content-Type': 'application/ssml+xml',
       'X-Microsoft-OutputFormat': outputFormat
     },

@@ -1,4 +1,4 @@
-import fetchAuthorizationToken from './fetchAuthorizationToken';
+import fetchAuthorizationToken from '../fetchAuthorizationToken';
 
 // Token expiration is hardcoded at 10 minutes
 // https://docs.microsoft.com/en-us/azure/cognitive-services/Speech/how-to/how-to-authentication?tabs=Powershell#use-an-authorization-token

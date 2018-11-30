@@ -54,7 +54,7 @@ function* setPonyfillSaga() {
       bingSpeechAuthorizationToken ?
         { authorizationToken: bingSpeechAuthorizationToken }
       :
-        { bingSpeechSubscriptionKey }
+        { subscriptionKey: bingSpeechSubscriptionKey }
     );
 
     yield put(setPonyfill(ponyfill));
@@ -64,7 +64,7 @@ function* setPonyfillSaga() {
       speechServicesAuthorizationToken ?
         { authorizationToken: speechServicesAuthorizationToken, region }
       :
-        { region, speechServicesSubscriptionKey }
+        { region, subscriptionKey: speechServicesSubscriptionKey }
     );
 
     yield put(setPonyfill(ponyfill));
