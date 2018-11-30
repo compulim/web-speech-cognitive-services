@@ -1,10 +1,12 @@
 import { connect } from 'react-redux';
+import classNames from 'classnames';
 import React from 'react';
 
 import convertBingSpeechSubscriptionKeyToAuthorizationToken from '../data/actions/convertBingSpeechSubscriptionKeyToAuthorizationToken';
 import convertSpeechServicesSubscriptionKeyToAuthorizationToken from '../data/actions/convertSpeechServicesSubscriptionKeyToAuthorizationToken';
 import setBingSpeechAuthorizationToken from '../data/actions/setBingSpeechAuthorizationToken';
 import setBingSpeechSubscriptionKey from '../data/actions/setBingSpeechSubscriptionKey';
+import setOnDemandAuthorizationToken from '../data/actions/setOnDemandAuthorizationToken';
 import setSpeechServicesAuthorizationToken from '../data/actions/setSpeechServicesAuthorizationToken';
 import setSpeechServicesSubscriptionKey from '../data/actions/setSpeechServicesSubscriptionKey';
 
@@ -13,6 +15,8 @@ const SubscriptionKeyInput = ({
   clearAuthorizationToken,
   convertSubscriptionKeyToAuthorizationToken,
   disabled,
+  onDemandAuthorizationToken,
+  setOnDemandAuthorizationToken,
   setSubscriptionKey,
   subscriptionKey
 }) =>
@@ -46,6 +50,12 @@ const SubscriptionKeyInput = ({
           />
           <div className="input-group-append">
             <button
+              className={ classNames('btn btn-outline-secondary', { active: onDemandAuthorizationToken }) }
+              disabled={ disabled }
+              onClick={ setOnDemandAuthorizationToken }
+              type="button"
+            >On-demand</button>
+            <button
               className="btn btn-outline-secondary"
               disabled={ disabled }
               onClick={ convertSubscriptionKeyToAuthorizationToken }
@@ -60,12 +70,14 @@ export default connect(
   ({
     bingSpeechAuthorizationToken,
     bingSpeechSubscriptionKey,
+    onDemandAuthorizationToken,
     ponyfillType,
     speechServicesAuthorizationToken,
     speechServicesSubscriptionKey
   }) => ({
     authorizationToken: ponyfillType === 'bingspeech' ? bingSpeechAuthorizationToken : speechServicesAuthorizationToken,
     disabled: ponyfillType === 'browser',
+    onDemandAuthorizationToken,
     ponyfillType,
     subscriptionKey: ponyfillType === 'bingspeech' ? bingSpeechSubscriptionKey : speechServicesSubscriptionKey
   }),
@@ -75,6 +87,7 @@ export default connect(
     convertBingSpeechSubscriptionKeyToAuthorizationToken,
     convertSpeechServicesSubscriptionKeyToAuthorizationToken,
     setBingSpeechSubscriptionKey: ({ target: { value } }) => setBingSpeechSubscriptionKey(value),
+    setOnDemandAuthorizationToken: () => setOnDemandAuthorizationToken(),
     setSpeechServicesSubscriptionKey: ({ target: { value } }) => setSpeechServicesSubscriptionKey(value)
   },
   (stateProps, dispatchProps, ownProps) => ({

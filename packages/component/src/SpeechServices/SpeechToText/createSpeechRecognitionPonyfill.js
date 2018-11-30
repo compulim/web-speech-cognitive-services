@@ -119,7 +119,7 @@ export default async ({
     }
 
     get continuous() { return this._continuous; }
-    set continuous(value) { this._continuous = value; }
+    set continuous(value) { value && console.warn(`Speech Services: Cannot set continuous to ${ value }, this feature is not supported.`); }
 
     get interimResults() { return this._interimResults; }
     set interimResults(value) { this._interimResults = value; }
@@ -132,23 +132,9 @@ export default async ({
 
     abort() {}
 
-    start() {
-      const recognizer = this._recognizer = this.createRecognizer();
-      const onStart = event => {
-        console.warn(event);
-        this.emitCognitiveServices('start');
-      };
-
-      const onError = error => {
-        console.warn(error);
-        this.emitCognitiveServices('error', { error, subType: 'error on start' });
-      };
-
+    async start() {
       if (this.continuous) {
-        console.log('startContinuousRecognitionAsync');
-
-        // TODO: [P2] When to call resolve/reject event?
-        recognizer.startContinuousRecognitionAsync(onStart, onError);
+        throw new Error('Continuous mode is not supported.');
       } else {
         this._startOnce().catch(err => {
           console.error(err);
@@ -158,7 +144,7 @@ export default async ({
     }
 
     async _startOnce() {
-      const recognizer = this._recognizer = this.createRecognizer();
+      const recognizer = this._recognizer = await this.createRecognizer();
       const queue = createPromiseQueue();
       let lastRecognizingResults;
       let speechStarted;

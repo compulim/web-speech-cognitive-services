@@ -4,6 +4,7 @@ import bingSpeechAuthorizationToken from './reducers/bingSpeechAuthorizationToke
 import bingSpeechSubscriptionKey from './reducers/bingSpeechSubscriptionKey';
 import browserSupportedSpeechRecognition from './reducers/browserSupportedSpeechRecognition';
 import navPane from './reducers/navPane';
+import onDemandAuthorizationToken from './reducers/onDemandAuthorizationToken';
 import ponyfill from './reducers/ponyfill';
 import ponyfillType from './reducers/ponyfillType';
 import region from './reducers/region';
@@ -25,6 +26,7 @@ export default combineReducers({
   bingSpeechSubscriptionKey,
   browserSupportedSpeechRecognition,
   navPane,
+  onDemandAuthorizationToken,
   ponyfill,
   ponyfillType,
   region,
