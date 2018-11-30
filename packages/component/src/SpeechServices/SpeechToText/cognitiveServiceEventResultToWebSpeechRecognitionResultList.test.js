@@ -10,15 +10,15 @@ test('Multiple results with RecognitionStatus === "Success"', () => {
       NBest: [{
         Confidence: .25,
         Display: 'No.',
-        ITN: 'no',
-        Lexical: 'no',
-        MaskedITN: 'no'
+        ITN: 'no (ITN)',
+        Lexical: 'no (Lexical)',
+        MaskedITN: 'no (MaskedITN)'
       }, {
         Confidence: .1,
         Display: 'Yes.',
-        ITN: 'yes',
-        Lexical: 'yes',
-        MaskedITN: 'yes'
+        ITN: 'yes (ITN)',
+        Lexical: 'yes (Lexical)',
+        MaskedITN: 'yes (MaskedITN)'
       }],
       RecognitionStatus: 'Success'
     },
@@ -46,9 +46,9 @@ test('Single final results', () => {
       NBest: [{
         Confidence: .25,
         Display: 'No.',
-        ITN: 'no',
-        Lexical: 'no',
-        MaskedITN: 'no'
+        ITN: 'no (ITN)',
+        Lexical: 'no (Lexical)',
+        MaskedITN: 'no (MaskedITN)'
       }]
     },
     reason: 3

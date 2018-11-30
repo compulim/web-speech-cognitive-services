@@ -97,7 +97,7 @@ test('Happy path without interims', async () => {
       Duration: 48100000,
       NBest: [{
         Confidence: 0.2331869,
-        Lexcial: 'no',
+        Lexical: 'no',
         ITN: 'no',
         MaskedITN: 'no',
         Display: 'No.'

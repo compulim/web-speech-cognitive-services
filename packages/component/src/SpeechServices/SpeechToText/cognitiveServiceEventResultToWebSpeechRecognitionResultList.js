@@ -31,10 +31,16 @@ export default function (result) {
         (result.json.NBest || []).map(
           ({
             Confidence: confidence,
-            Display: transcript
+            Display: transcript,
+            ITN: transcriptITN,
+            Lexical: transcriptLexical,
+            MaskedITN: transcriptMaskedITN
           }) => ({
             confidence,
-            transcript
+            transcript,
+            transcriptITN,
+            transcriptLexical,
+            transcriptMaskedITN
           })
         ),
         { isFinal: true }
