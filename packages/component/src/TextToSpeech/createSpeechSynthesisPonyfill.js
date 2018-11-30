@@ -19,7 +19,6 @@ export default async ({
   region = 'westus',
   subscriptionKey
 }) => {
-  // TODO: Provide either subscription key or authorization token
   if (!authorizationToken && !subscriptionKey) {
     console.warn('Either authorization token or subscription key must be specified');
 

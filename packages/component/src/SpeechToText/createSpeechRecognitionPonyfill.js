@@ -63,9 +63,13 @@ export default async ({
   region = 'westus',
   subscriptionKey
 } = {}) => {
-  if (!subscriptionKey) {
+  if (!authorizationToken && !subscriptionKey) {
+    console.warn('Either authorization token or subscription key must be specified');
+
     return {};
   } else if (!window.navigator.mediaDevices || !window.navigator.mediaDevices.getUserMedia) {
+    console.warn('This browser does not support WebRTC and it will not work with Cognitive Services Speech Services.');
+
     return {};
   }
 
@@ -95,7 +99,7 @@ export default async ({
       this.createRecognizer = memoize(({
         language
       } = {}) => {
-        const speechConfig = authorizationToken ? SpeechConfig.fromAuthorizationToken(authorizationToken, region ) : SpeechConfig.fromSubscription(subscriptionKey, region);
+        const speechConfig = authorizationToken ? SpeechConfig.fromAuthorizationToken(authorizationToken, region) : SpeechConfig.fromSubscription(subscriptionKey, region);
 
         speechConfig.outputFormat = OutputFormat.Detailed;
         speechConfig.speechRecognitionLanguage = language || 'en-US';
