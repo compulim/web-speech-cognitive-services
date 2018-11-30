@@ -104,24 +104,7 @@ export default async ({
         speechConfig.outputFormat = OutputFormat.Detailed;
         speechConfig.speechRecognitionLanguage = language || 'en-US';
 
-        const recognizer = new SpeechRecognizer(speechConfig, audioConfig);
-
-        // recognizer.canceled = (_, { errorDetails, offset, reason, sessionId }) => {
-        //   console.warn('CANCELED');
-        //   this.emitCognitiveServices('canceled', { errorDetails, offset, reason, sessionId });
-        // };
-
-        // recognizer.recognized = (_, { offset, result, sessionId }) => {
-        //   console.warn('RECOGNIZED');
-        //   this.emitCognitiveServices('recognized', { offset, result: serializeRecognitionResult(result), sessionId });
-        // };
-
-        // recognizer.recognizing = (_, { offset, result, sessionId }) => {
-        //   console.warn('RECOGNIZING');
-        //   this.emitCognitiveServices('recognizing', { offset, result: serializeRecognitionResult(result), sessionId });
-        // };
-
-        return recognizer;
+        return new SpeechRecognizer(speechConfig, audioConfig);
       }, null, recognizer => {
         recognizer.dispose();
       });

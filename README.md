@@ -41,7 +41,7 @@ In this package, we prefer ponyfill because it do not pollute the hosting enviro
 If the library you are using do not support ponyfill, you can polyfill `window` object with our ponyfill.
 
 ```jsx
-import createPonyfill from 'web-speech-cognitive-services';
+import createPonyfill from 'web-speech-cognitive-services/lib/SpeechServices';
 
 const ponyfill = await createPonyfill({
   region: 'westus',
@@ -57,12 +57,14 @@ for (let key in ponyfill) {
 
 > List of supported regions can be found in [this article](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/rest-apis#regions-and-endpoints).
 
+> If you prefer to use the deprecating Bing Speech, import from `'web-speech-cognitive-services/lib/BingSpeech'` instead.
+
 ## Speech recognition (speech-to-text)
 
 You can choose to only create ponyfill for speech recognition.
 
 ```jsx
-import { createSpeechRecognitionPonyfill } from 'web-speech-cognitive-services/lib/SpeechToText';
+import { createSpeechRecognitionPonyfill } from 'web-speech-cognitive-services/lib/SpeechServices/SpeechToText';
 
 const {
   SpeechRecognition
@@ -90,7 +92,7 @@ recognition.start();
 You can use [`react-dictate-button`](https://github.com/compulim/react-dictate-button/) to integrate speech recognition functionality to your React app.
 
 ```jsx
-import createPonyfill from 'web-speech-cognitive-services';
+import createPonyfill from 'web-speech-cognitive-services/lib/SpeechServices';
 import DictateButton from 'react-dictate-button';
 
 const {
@@ -120,7 +122,7 @@ You can prime the speech recognition by giving a list of words.
 Since Cognitive Services does not works with weighted grammars, we built another `SpeechGrammarList` to better fit the scenario.
 
 ```jsx
-import createPonyfill from 'web-speech-cognitive-services';
+import createPonyfill from 'web-speech-cognitive-services/lib/SpeechServices';
 
 const {
   SpeechGrammarList,
@@ -147,7 +149,7 @@ recognition.start();
 ## Speech synthesis (text-to-speech)
 
 ```jsx
-import { createSpeechSynthesisPonyfill } from 'web-speech-cognitive-services/lib/TextToSpeech';
+import { createSpeechSynthesisPonyfill } from 'web-speech-cognitive-services/lib/SpeechServices/TextToSpeech';
 
 const {
   speechSynthesis,
@@ -173,7 +175,7 @@ await speechSynthesis.speak(utterance);
 You can use [`react-say`](https://github.com/compulim/react-say/) to integrate speech synthesis functionality to your React app.
 
 ```jsx
-import createPonyfill from 'web-speech-cognitive-services';
+import createPonyfill from 'web-speech-cognitive-services/lib/SpeechServices';
 import React from 'react';
 import Say from 'react-say';
 
