@@ -42,7 +42,7 @@ export default function () {
     const {
       authorizationToken,
       ponyfill,
-      speechRecognizedStarted,
+      speechRecognitionStarted,
       speechSynthesisNativeVoices,
       ...serializableState
     } = state;
