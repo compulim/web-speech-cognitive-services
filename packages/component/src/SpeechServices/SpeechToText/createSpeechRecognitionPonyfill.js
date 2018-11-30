@@ -132,7 +132,7 @@ export default async ({
 
     abort() {}
 
-    async start() {
+    start() {
       if (this.continuous) {
         throw new Error('Continuous mode is not supported.');
       } else {

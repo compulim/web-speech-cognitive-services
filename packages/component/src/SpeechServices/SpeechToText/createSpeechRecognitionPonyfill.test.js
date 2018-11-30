@@ -126,9 +126,10 @@ test('Happy path without interims', async () => {
   const speechRecognition = new SpeechRecognition();
   const getEvents = captureSpeechEvents(speechRecognition);
 
-  await new Promise(resolve => {
+  await new Promise(async resolve => {
     speechRecognition.addEventListener('end', resolve);
     speechRecognition.start();
+    await 0;
     jest.runAllImmediates();
   });
 
@@ -218,10 +219,11 @@ test('Happy path with 2 interims', async () => {
   const speechRecognition = new SpeechRecognition();
   const getEvents = captureSpeechEvents(speechRecognition);
 
-  await new Promise(resolve => {
+  await new Promise(async resolve => {
     speechRecognition.addEventListener('end', resolve);
     speechRecognition.interimResults = true;
     speechRecognition.start();
+    await 0;
     jest.runAllImmediates();
   });
 
@@ -273,9 +275,10 @@ test('Muted microphone', async () => {
   const speechRecognition = new SpeechRecognition();
   const getEvents = captureSpeechEvents(speechRecognition);
 
-  await new Promise(resolve => {
+  await new Promise(async resolve => {
     speechRecognition.addEventListener('error', resolve);
     speechRecognition.start();
+    await 0;
     jest.runAllImmediates();
   });
 
@@ -312,9 +315,10 @@ test('Network error before start', async () => {
   const speechRecognition = new SpeechRecognition();
   const getEvents = captureSpeechEvents(speechRecognition);
 
-  await new Promise(resolve => {
+  await new Promise(async resolve => {
     speechRecognition.addEventListener('end', resolve);
     speechRecognition.start();
+    await 0;
     jest.runAllImmediates();
   });
 
@@ -340,9 +344,10 @@ test('Microphone blocked', async () => {
   const speechRecognition = new SpeechRecognition();
   const getEvents = captureSpeechEvents(speechRecognition);
 
-  await new Promise(resolve => {
+  await new Promise(async resolve => {
     speechRecognition.addEventListener('end', resolve);
     speechRecognition.start();
+    await 0;
     jest.runAllImmediates();
   });
 
@@ -450,11 +455,12 @@ test('Push-to-talk with partial recognized text', async () => {
   const speechRecognition = new SpeechRecognition();
   const getEvents = captureSpeechEvents(speechRecognition, true);
 
-  await new Promise(resolve => {
+  await new Promise(async resolve => {
     speechRecognition.addEventListener('end', resolve);
     speechRecognition.interimResults = true;
     speechRecognition.start();
-    jest.advanceTimersByTime(0);
+    await 0;
+    jest.advanceTimersByTime(1);
     speechRecognition.stop();
     jest.advanceTimersByTime(1000);
   });
@@ -533,10 +539,11 @@ test('Push-to-talk stop before first recognized text', async () => {
   const speechRecognition = new SpeechRecognition();
   const getEvents = captureSpeechEvents(speechRecognition, true);
 
-  await new Promise(resolve => {
+  await new Promise(async resolve => {
     speechRecognition.addEventListener('end', resolve);
     speechRecognition.interimResults = true;
     speechRecognition.start();
+    await 0;
     jest.advanceTimersByTime(0);
     speechRecognition.stop();
     jest.advanceTimersByTime(1000);
@@ -644,10 +651,11 @@ test('Abort with partial recognized text', async () => {
   const speechRecognition = new SpeechRecognition();
   const getEvents = captureSpeechEvents(speechRecognition, true);
 
-  await new Promise(resolve => {
+  await new Promise(async resolve => {
     speechRecognition.addEventListener('end', resolve);
     speechRecognition.interimResults = true;
     speechRecognition.start();
+    await 0;
     jest.advanceTimersByTime(0);
     speechRecognition.abort();
     jest.advanceTimersByTime(1000);
@@ -727,10 +735,11 @@ test('Abort before first recognized text', async () => {
   const speechRecognition = new SpeechRecognition();
   const getEvents = captureSpeechEvents(speechRecognition, true);
 
-  await new Promise(resolve => {
+  await new Promise(async resolve => {
     speechRecognition.addEventListener('end', resolve);
     speechRecognition.interimResults = true;
     speechRecognition.start();
+    await 0;
     jest.advanceTimersByTime(0);
     speechRecognition.abort();
     jest.advanceTimersByTime(1000);
