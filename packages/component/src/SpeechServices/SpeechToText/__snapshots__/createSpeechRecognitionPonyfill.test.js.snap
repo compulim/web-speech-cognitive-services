@@ -167,9 +167,6 @@ Array [
         "0": Object {
           "confidence": 0.9,
           "transcript": "Hello, John.",
-          "transcriptITN": "hello John",
-          "transcriptLexical": "hello john",
-          "transcriptMaskedITN": "hello John",
         },
         "isFinal": true,
         "length": 1,
@@ -212,9 +209,6 @@ Array [
         "0": Object {
           "confidence": 0.2331869,
           "transcript": "No.",
-          "transcriptITN": "no",
-          "transcriptLexical": "no",
-          "transcriptMaskedITN": "no",
         },
         "isFinal": true,
         "length": 1,

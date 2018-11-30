@@ -14,6 +14,7 @@ import speechRecognitionInterimResults from './reducers/speechRecognitionInterim
 import speechRecognitionLanguage from './reducers/speechRecognitionLanguage';
 import speechRecognitionMaxAlternatives from './reducers/speechRecognitionMaxAlternatives';
 import speechRecognitionStarted from './reducers/speechRecognitionStarted';
+import speechRecognitionTextNormalization from './reducers/speechRecognitionTextNormalization';
 import speechServicesAuthorizationToken from './reducers/speechServicesAuthorizationToken';
 import speechServicesSubscriptionKey from './reducers/speechServicesSubscriptionKey';
 import speechSynthesisNativeVoices from './reducers/speechSynthesisNativeVoices';
@@ -36,6 +37,7 @@ export default combineReducers({
   speechRecognitionLanguage,
   speechRecognitionMaxAlternatives,
   speechRecognitionStarted,
+  speechRecognitionTextNormalization,
   speechServicesAuthorizationToken,
   speechServicesSubscriptionKey,
   speechSynthesisNativeVoices,

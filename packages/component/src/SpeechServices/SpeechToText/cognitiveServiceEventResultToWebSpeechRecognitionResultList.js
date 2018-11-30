@@ -19,7 +19,7 @@ function arrayToMap(array, extras) {
   };
 }
 
-export default function (result) {
+export default function (result, textNormalization) {
   if (result.reason === RecognizingSpeech) {
     return [[{
       confidence: .5,
@@ -31,16 +31,21 @@ export default function (result) {
         (result.json.NBest || []).map(
           ({
             Confidence: confidence,
-            Display: transcript,
-            ITN: transcriptITN,
-            Lexical: transcriptLexical,
-            MaskedITN: transcriptMaskedITN
+            Display: display,
+            ITN: itn,
+            Lexical: lexical,
+            MaskedITN: maskedITN
           }) => ({
             confidence,
-            transcript,
-            transcriptITN,
-            transcriptLexical,
-            transcriptMaskedITN
+            transcript:
+              textNormalization === 'itn' ?
+                itn
+              : textNormalization === 'lexical' ?
+                lexical
+              : textNormalization === 'maskeditn' ?
+                maskedITN
+              :
+                display
           })
         ),
         { isFinal: true }

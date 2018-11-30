@@ -10,6 +10,7 @@ import { SET_BING_SPEECH_SUBSCRIPTION_KEY } from '../actions/setBingSpeechSubscr
 import { SET_ON_DEMAND_AUTHORIZATION_TOKEN } from '../actions/setOnDemandAuthorizationToken';
 import { SET_PONYFILL_TYPE } from '../actions/setPonyfillType';
 import { SET_REGION } from '../actions/setRegion';
+import { SET_SPEECH_RECOGNITION_TEXT_NORMALIZATION } from '../actions/setSpeechRecognitionTextNormalization';
 import { SET_SPEECH_SERVICES_AUTHORIZATION_TOKEN } from '../actions/setSpeechServicesAuthorizationToken';
 import { SET_SPEECH_SERVICES_SUBSCRIPTION_KEY } from '../actions/setSpeechServicesSubscriptionKey';
 import setPonyfill from '../actions/setPonyfill';
@@ -26,6 +27,7 @@ export default function* () {
       || type === SET_BING_SPEECH_SUBSCRIPTION_KEY
       || type === SET_PONYFILL_TYPE
       || type === SET_REGION
+      || type === SET_SPEECH_RECOGNITION_TEXT_NORMALIZATION
       || type === SET_SPEECH_SERVICES_AUTHORIZATION_TOKEN
       || type === SET_SPEECH_SERVICES_SUBSCRIPTION_KEY
       || type === SET_ON_DEMAND_AUTHORIZATION_TOKEN,
@@ -40,6 +42,7 @@ function* setPonyfillSaga() {
     onDemandAuthorizationToken,
     ponyfillType,
     region,
+    speechRecognitionTextNormalization: textNormalization,
     speechServicesAuthorizationToken,
     speechServicesSubscriptionKey
   } = yield select();
@@ -69,13 +72,18 @@ function* setPonyfillSaga() {
 
     yield put(setPonyfill(ponyfill));
   } else {
+    const options = {
+      region,
+      textNormalization,
+    };
+
     const ponyfill = yield call(
       createSpeechServicesPonyfill,
       speechServicesAuthorizationToken ?
-        { authorizationToken: speechServicesAuthorizationToken, region }
+        { ...options, authorizationToken: speechServicesAuthorizationToken }
       :
         {
-          region,
+          ...options,
           authorizationToken: onDemandAuthorizationToken ? () => {
             console.log('On-demand fetching Speech Services authorization token');
 

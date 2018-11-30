@@ -61,7 +61,8 @@ function serializeRecognitionResult({
 export default async ({
   authorizationToken,
   region = 'westus',
-  subscriptionKey
+  subscriptionKey,
+  textNormalization = 'display'
 } = {}) => {
   if (!authorizationToken && !subscriptionKey) {
     console.warn('Either authorizationToken or subscriptionKey must be specified');
@@ -278,13 +279,13 @@ export default async ({
 
             if (recognized) {
               finalEvent = {
-                results: cognitiveServiceEventResultToWebSpeechRecognitionResultList(recognized.result),
+                results: cognitiveServiceEventResultToWebSpeechRecognitionResultList(recognized.result, textNormalization),
                 type: 'result'
               };
 
               break;
             } else if (recognizing) {
-              lastRecognizingResults = cognitiveServiceEventResultToWebSpeechRecognitionResultList(recognizing.result);
+              lastRecognizingResults = cognitiveServiceEventResultToWebSpeechRecognitionResultList(recognizing.result, textNormalization);
 
               this.interimResults && this.emit('result', {
                 results: lastRecognizingResults
