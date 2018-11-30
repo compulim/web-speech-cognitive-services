@@ -1,5 +1,5 @@
 import AudioContextQueue from './AudioContextQueue';
-import DOMEventEmitter from '../DOMEventEmitter';
+import DOMEventEmitter from '../../Utils/DOMEventEmitter';
 import fetchAuthorizationToken from '../fetchAuthorizationToken';
 import fetchVoices from './fetchVoices';
 import memoize from 'memoize-one';

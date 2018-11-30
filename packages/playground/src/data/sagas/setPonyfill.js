@@ -11,7 +11,7 @@ import { SET_REGION } from '../actions/setRegion';
 import { SET_SUBSCRIPTION_KEY } from '../actions/setSubscriptionKey';
 import setPonyfill from '../actions/setPonyfill';
 
-import createPonyfill from 'web-speech-cognitive-services';
+import createPonyfill from 'web-speech-cognitive-services/lib/SpeechServices';
 
 export default function* () {
   yield* setPonyfillSaga();

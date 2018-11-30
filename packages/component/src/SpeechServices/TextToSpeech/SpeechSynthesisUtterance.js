@@ -1,6 +1,6 @@
 import EventAsPromise from 'event-as-promise';
 
-import DOMEventEmitter from '../DOMEventEmitter';
+import DOMEventEmitter from '../../Utils/DOMEventEmitter';
 import fetchSpeechData from './fetchSpeechData';
 import subscribeEvent from './subscribeEvent';
 

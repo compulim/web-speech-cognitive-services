@@ -1,8 +1,8 @@
 import memoize from 'memoize-one';
 
 import cognitiveServiceEventResultToWebSpeechRecognitionResultList from './cognitiveServiceEventResultToWebSpeechRecognitionResultList';
-import createPromiseQueue from '../createPromiseQueue';
-import DOMEventEmitter from '../DOMEventEmitter';
+import createPromiseQueue from '../../Utils/createPromiseQueue';
+import DOMEventEmitter from '../../Utils/DOMEventEmitter';
 import SpeechGrammarList from './SpeechGrammarList';
 import SpeechSDK from '../SpeechSDK';
 
