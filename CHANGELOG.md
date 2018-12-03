@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - New playground for better debuggability
 - Support of Speech Services SDK, with automated unit tests for speech recognition
-   - See [`SPEECH-RECOGNITION.md`](SPEECH-RECOGNITION.md) and [`SPEECH-SYNTHESIS.md`](SPEECH-SYNTHESIS.md) for quirks
+   - See [`SPEC-RECOGNITION.md`](SPEC-RECOGNITION.md) and [`SPEC-SYNTHESIS.md`](SPEC-SYNTHESIS.md) for quirks
 - Speech recognition: Support `stop` on Speech Services
 - Speech synthesis: Support `pause` and `resume` (with `pause` and `resume` event)
 
