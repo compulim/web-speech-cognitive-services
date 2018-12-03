@@ -11,6 +11,6 @@
     "watch": "lerna run --stream watch"
   },
   "devDependencies": {
-    "lerna": "^3.1.4"
+    "lerna": "^3.4.1"
   }
 }
