@@ -108,8 +108,6 @@ export default class extends DOMEventEmitter {
       this.emit('end');
     } catch (error) {
       this.emit('error', { error, type: 'error' });
-
-      throw error;
     }
   }
 
