@@ -5,6 +5,15 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- New playground for better debuggability
+- Support of Speech Services SDK, with automated unit tests for speech recognition
+- Speech recognition: Support `stop` on Speech Services
+- Speech synthesis: Support `pause` and `resume`
+
+### Changed
+- Ponyfill are now constructed based on options (authorization token, region, and subscription key)
+   - A new set of ponyfill will be created every time an option has changed
 
 ## [3.0.0] - 2018-10-31
 ### Added
