@@ -1,107 +1,125 @@
-import { css } from 'glamor';
+import { connect } from 'react-redux';
+import classNames from 'classnames';
 import React from 'react';
 
-import {
-  createFetchTokenUsingSubscriptionKey,
-  SpeechGrammarList,
-  SpeechRecognition,
-  speechSynthesis,
-  SpeechSynthesisUtterance
-} from 'web-speech-cognitive-services';
+import GitHubForkMe from './GitHubForkMe';
 
-import DictationPane from './DictationPane';
+import PonyfillSelector from './UI/PonyfillSelector';
+import RegionSelector from './UI/RegionSelector';
+import SubscriptionKeyInput from './UI/SubscriptionKeyInput';
+import SpeechRecognitionProvingGround from './SpeechRecognitionProvingGround2';
+import SpeechSynthesisProvingGround from './SpeechSynthesisProvingGround';
 
-const ROOT_CSS = css({
-  display: 'flex'
-});
+import setNavPane from './data/actions/setNavPane';
 
-const DICTATION_PANE_CSS = css({
-  flex: 1
-});
+import { css } from 'glamor';
 
-const FORK_ME_CSS = css({
-  border: 0,
-  position: 'absolute',
-  right: 0,
-  top: 0
-});
+// Patching Bootstrap
+css.global('button.nav-link', { backgroundColor: 'Transparent' });
 
-function getCognitiveServicesVoice() {
-  return speechSynthesis.getVoices().find(v => v.lang === 'en-US');
-}
-
-export default class extends React.Component {
-  constructor(props) {
-    super(props);
-
-    speechSynthesis.onvoicechanged = this.handleVoiceChanged;
-
-    const keyFromSearch = typeof window.URLSearchParams !== 'undefined' && new URLSearchParams(window.location.search).get('s');
-    const keyFromStorage = typeof window.localStorage !== 'undefined' && window.localStorage.getItem('SPEECH_KEY');
-    const fetchToken = createFetchTokenUsingSubscriptionKey(keyFromSearch || keyFromStorage);
-
-    speechSynthesis.fetchToken = fetchToken;
-
-    const cognitiveServicesGrammars = new SpeechGrammarList();
-
-    cognitiveServicesGrammars.words = ['Tuen Mun', 'Yuen Long'];
-
-    const webSpeechGrammarListClass = window.SpeechGrammarList || window.webkitSpeechGrammarList;
-    const webSpeechGrammars = webSpeechGrammarListClass && new webSpeechGrammarListClass();
-
-    webSpeechGrammars && webSpeechGrammars.addFromString('#JSGF V1.0; grammar districts; public <district> = tuen mun | yuen long;', 1);
-
-    this.state = {
-      cognitiveServicesGrammars,
-      cognitiveServicesVoice: getCognitiveServicesVoice(),
-      fetchToken,
-      webSpeechGrammars
-    };
-  }
-
-  async componentDidMount() {
-    // await this.state.fetchToken();
-
-    this.setState(() => ({ ready: true }));
-  }
-
-  handleVoiceChanged() {
-    this.setState(() => ({
-      cognitiveServicesVoice: getCognitiveServicesVoice()
-    }));
-  }
-
-  render() {
-    const { state } = this;
-
-    return (
-      <div className={ ROOT_CSS }>
-        <a href="https://github.com/compulim/web-speech-cognitive-services">
-          <img
-            alt="Fork me on GitHub"
-            className={ FORK_ME_CSS }
-            src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png"
-            target="_blank"
-          />
-        </a>
-        <DictationPane
-          className={ DICTATION_PANE_CSS + '' }
-          disabled={ !state.ready }
-          fetchToken={ state.fetchToken }
-          name="Cognitive Services"
-          grammars={ state.cognitiveServicesGrammars }
-          speechGrammarList={ SpeechGrammarList }
-          speechRecognition={ SpeechRecognition }
-          speechSynthesis={ speechSynthesis }
-          speechSynthesisUtterance={ SpeechSynthesisUtterance }
-          voice={ state.cognitiveServicesVoice }
-        />
-        <DictationPane
-          className={ DICTATION_PANE_CSS + '' }
-          name="Web Speech API"
-          grammars={ state.webSpeechGrammars }
-        />
+const App = ({
+  authorizationToken,
+  ponyfill,
+  ponyfillType,
+  navPane,
+  setNavPaneToSpeechRecognition,
+  setNavPaneToSpeechSynthesis
+}) =>
+  <div>
+    <div className="jumbotron">
+      <h1 className="display-4">web-speech-cognitive-services</h1>
+      <p className="lead">Ponyfills for Web Speech API using Cognitive Services Speech Services</p>
+    </div>
+    <div className="container-fluid">
+      <div className="row">
+        <div className="col">
+          <form>
+            <div className="row">
+              <div className="form-group col-sm-3">
+                <label>API provider</label>
+                <PonyfillSelector />
+              </div>
+              <div className="form-group col-sm-2">
+                <label>Region</label>
+                <RegionSelector />
+              </div>
+              <div className="form-group col">
+                <label>{ authorizationToken ? 'Authorization token' : 'Subscription key' }</label>
+                <SubscriptionKeyInput />
+              </div>
+            </div>
+          </form>
+        </div>
       </div>
-    );
+      <div className="row">
+        <div className="col">
+          <ul className="nav nav-tabs">
+            <li className="nav-item">
+              <button
+                className={ classNames('nav-link', { active: navPane === 'speech recognition' }) }
+                onClick={ setNavPaneToSpeechRecognition }
+                type="button"
+              >Speech recognition</button>
+            </li>
+            <li className="nav-item">
+              <button
+                className={ classNames('nav-link', { active: navPane === 'speech synthesis' }) }
+                onClick={ setNavPaneToSpeechSynthesis }
+                type="button"
+              >Speech synthesis</button>
+            </li>
+          </ul>
+          <br />
+        </div>
+      </div>
+      <div className="row">
+        <div className="col">
+          {
+            !!ponyfill && (
+              navPane === 'speech synthesis' ?
+                <SpeechSynthesisProvingGround
+                  key={ ponyfillType }
+                  ponyfill={ ponyfill }
+                />
+              :
+                <SpeechRecognitionProvingGround
+                  key={ ponyfillType }
+                  ponyfill={ ponyfill }
+                />
+            )
+          }
+        </div>
+      </div>
+      <GitHubForkMe owner="compulim" repo="web-speech-cognitive-services" />
+    </div>
+  </div>
+
+export default connect(
+  ({
+    authorizationToken,
+    navPane,
+    ponyfill,
+    ponyfillType,
+    region,
+    subscriptionKey
+  }) => ({
+    authorizationToken,
+    navPane,
+    ponyfill,
+    ponyfillType,
+    region,
+    subscriptionKey
+  }),
+  {
+    setNavPaneToSpeechRecognition: event => {
+      event.preventDefault();
+
+      return setNavPane('speech recognition');
+    },
+    setNavPaneToSpeechSynthesis: event => {
+      event.preventDefault();
+
+      return setNavPane('speech synthesis');
+    }
   }
-}
+)(App)

@@ -1,0 +1,568 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Abort before first recognized text 1`] = `
+Array [
+  Object {
+    "subType": "abort",
+    "type": "cognitiveservices",
+  },
+  Object {
+    "type": "start",
+  },
+  Object {
+    "type": "audiostart",
+  },
+  Object {
+    "subType": "recognizing",
+    "type": "cognitiveservices",
+  },
+  Object {
+    "subType": "recognized",
+    "type": "cognitiveservices",
+  },
+  Object {
+    "subType": "success",
+    "type": "cognitiveservices",
+  },
+  Object {
+    "type": "audioend",
+  },
+  Object {
+    "error": "aborted",
+    "type": "error",
+  },
+  Object {
+    "type": "end",
+  },
+]
+`;
+
+exports[`Abort with partial recognized text 1`] = `
+Array [
+  Object {
+    "subType": "recognizing",
+    "type": "cognitiveservices",
+  },
+  Object {
+    "type": "start",
+  },
+  Object {
+    "type": "audiostart",
+  },
+  Object {
+    "type": "soundstart",
+  },
+  Object {
+    "type": "speechstart",
+  },
+  Object {
+    "results": Array [
+      Array [
+        Object {
+          "confidence": 0.5,
+          "transcript": "one",
+        },
+      ],
+    ],
+    "type": "result",
+  },
+  Object {
+    "subType": "recognizing",
+    "type": "cognitiveservices",
+  },
+  Object {
+    "results": Array [
+      Array [
+        Object {
+          "confidence": 0.5,
+          "transcript": "one two",
+        },
+      ],
+    ],
+    "type": "result",
+  },
+  Object {
+    "subType": "abort",
+    "type": "cognitiveservices",
+  },
+  Object {
+    "type": "speechend",
+  },
+  Object {
+    "type": "soundend",
+  },
+  Object {
+    "subType": "recognizing",
+    "type": "cognitiveservices",
+  },
+  Object {
+    "subType": "recognized",
+    "type": "cognitiveservices",
+  },
+  Object {
+    "subType": "success",
+    "type": "cognitiveservices",
+  },
+  Object {
+    "type": "audioend",
+  },
+  Object {
+    "error": "aborted",
+    "type": "error",
+  },
+  Object {
+    "type": "end",
+  },
+]
+`;
+
+exports[`Happy path with 2 interims 1`] = `
+Array [
+  Object {
+    "type": "start",
+  },
+  Object {
+    "type": "audiostart",
+  },
+  Object {
+    "type": "soundstart",
+  },
+  Object {
+    "type": "speechstart",
+  },
+  Object {
+    "results": Array [
+      Array [
+        Object {
+          "confidence": 0.5,
+          "transcript": "hello",
+        },
+      ],
+    ],
+    "type": "result",
+  },
+  Object {
+    "results": Array [
+      Array [
+        Object {
+          "confidence": 0.5,
+          "transcript": "john",
+        },
+      ],
+    ],
+    "type": "result",
+  },
+  Object {
+    "type": "speechend",
+  },
+  Object {
+    "type": "soundend",
+  },
+  Object {
+    "type": "audioend",
+  },
+  Object {
+    "results": Array [
+      Object {
+        "0": Object {
+          "confidence": 0.9,
+          "transcript": "Hello, John.",
+        },
+        "isFinal": true,
+        "length": 1,
+      },
+    ],
+    "type": "result",
+  },
+  Object {
+    "type": "end",
+  },
+]
+`;
+
+exports[`Happy path with ITN result 1`] = `
+Array [
+  Object {
+    "type": "start",
+  },
+  Object {
+    "type": "audiostart",
+  },
+  Object {
+    "type": "soundstart",
+  },
+  Object {
+    "type": "speechstart",
+  },
+  Object {
+    "type": "speechend",
+  },
+  Object {
+    "type": "soundend",
+  },
+  Object {
+    "type": "audioend",
+  },
+  Object {
+    "results": Array [
+      Object {
+        "0": Object {
+          "confidence": 0.2331869,
+          "transcript": "no (ITN)",
+        },
+        "isFinal": true,
+        "length": 1,
+      },
+    ],
+    "type": "result",
+  },
+  Object {
+    "type": "end",
+  },
+]
+`;
+
+exports[`Happy path with lexical result 1`] = `
+Array [
+  Object {
+    "type": "start",
+  },
+  Object {
+    "type": "audiostart",
+  },
+  Object {
+    "type": "soundstart",
+  },
+  Object {
+    "type": "speechstart",
+  },
+  Object {
+    "type": "speechend",
+  },
+  Object {
+    "type": "soundend",
+  },
+  Object {
+    "type": "audioend",
+  },
+  Object {
+    "results": Array [
+      Object {
+        "0": Object {
+          "confidence": 0.2331869,
+          "transcript": "no (Lexical)",
+        },
+        "isFinal": true,
+        "length": 1,
+      },
+    ],
+    "type": "result",
+  },
+  Object {
+    "type": "end",
+  },
+]
+`;
+
+exports[`Happy path with masked ITN result 1`] = `
+Array [
+  Object {
+    "type": "start",
+  },
+  Object {
+    "type": "audiostart",
+  },
+  Object {
+    "type": "soundstart",
+  },
+  Object {
+    "type": "speechstart",
+  },
+  Object {
+    "type": "speechend",
+  },
+  Object {
+    "type": "soundend",
+  },
+  Object {
+    "type": "audioend",
+  },
+  Object {
+    "results": Array [
+      Object {
+        "0": Object {
+          "confidence": 0.2331869,
+          "transcript": "no (MaskedITN)",
+        },
+        "isFinal": true,
+        "length": 1,
+      },
+    ],
+    "type": "result",
+  },
+  Object {
+    "type": "end",
+  },
+]
+`;
+
+exports[`Happy path with maximum 2 alternatives 1`] = `
+Array [
+  Object {
+    "type": "start",
+  },
+  Object {
+    "type": "audiostart",
+  },
+  Object {
+    "type": "soundstart",
+  },
+  Object {
+    "type": "speechstart",
+  },
+  Object {
+    "type": "speechend",
+  },
+  Object {
+    "type": "soundend",
+  },
+  Object {
+    "type": "audioend",
+  },
+  Object {
+    "results": Array [
+      Object {
+        "0": Object {
+          "confidence": 0.9,
+          "transcript": "One.",
+        },
+        "1": Object {
+          "confidence": 0.8,
+          "transcript": "Two.",
+        },
+        "isFinal": true,
+        "length": 2,
+      },
+    ],
+    "type": "result",
+  },
+  Object {
+    "type": "end",
+  },
+]
+`;
+
+exports[`Happy path without interims 1`] = `
+Array [
+  Object {
+    "type": "start",
+  },
+  Object {
+    "type": "audiostart",
+  },
+  Object {
+    "type": "soundstart",
+  },
+  Object {
+    "type": "speechstart",
+  },
+  Object {
+    "type": "speechend",
+  },
+  Object {
+    "type": "soundend",
+  },
+  Object {
+    "type": "audioend",
+  },
+  Object {
+    "results": Array [
+      Object {
+        "0": Object {
+          "confidence": 0.2331869,
+          "transcript": "No.",
+        },
+        "isFinal": true,
+        "length": 1,
+      },
+    ],
+    "type": "result",
+  },
+  Object {
+    "type": "end",
+  },
+]
+`;
+
+exports[`Microphone blocked 1`] = `
+Array [
+  Object {
+    "error": "not-allowed",
+    "type": "error",
+  },
+  Object {
+    "type": "end",
+  },
+]
+`;
+
+exports[`Muted microphone 1`] = `
+Array [
+  Object {
+    "type": "start",
+  },
+  Object {
+    "type": "audiostart",
+  },
+  Object {
+    "type": "audioend",
+  },
+  Object {
+    "error": "no-speech",
+    "type": "error",
+  },
+  Object {
+    "type": "end",
+  },
+]
+`;
+
+exports[`Network error before start 1`] = `
+Array [
+  Object {
+    "type": "start",
+  },
+  Object {
+    "type": "audiostart",
+  },
+  Object {
+    "type": "audioend",
+  },
+  Object {
+    "error": "network",
+    "type": "error",
+  },
+  Object {
+    "type": "end",
+  },
+]
+`;
+
+exports[`Push-to-talk stop before first recognized text 1`] = `
+Array [
+  Object {
+    "subType": "stop",
+    "type": "cognitiveservices",
+  },
+  Object {
+    "type": "start",
+  },
+  Object {
+    "type": "audiostart",
+  },
+  Object {
+    "subType": "recognizing",
+    "type": "cognitiveservices",
+  },
+  Object {
+    "subType": "recognized",
+    "type": "cognitiveservices",
+  },
+  Object {
+    "subType": "success",
+    "type": "cognitiveservices",
+  },
+  Object {
+    "type": "audioend",
+  },
+  Object {
+    "type": "end",
+  },
+]
+`;
+
+exports[`Push-to-talk with partial recognized text 1`] = `
+Array [
+  Object {
+    "subType": "recognizing",
+    "type": "cognitiveservices",
+  },
+  Object {
+    "type": "start",
+  },
+  Object {
+    "type": "audiostart",
+  },
+  Object {
+    "type": "soundstart",
+  },
+  Object {
+    "type": "speechstart",
+  },
+  Object {
+    "results": Array [
+      Array [
+        Object {
+          "confidence": 0.5,
+          "transcript": "one",
+        },
+      ],
+    ],
+    "type": "result",
+  },
+  Object {
+    "subType": "recognizing",
+    "type": "cognitiveservices",
+  },
+  Object {
+    "results": Array [
+      Array [
+        Object {
+          "confidence": 0.5,
+          "transcript": "one two",
+        },
+      ],
+    ],
+    "type": "result",
+  },
+  Object {
+    "subType": "stop",
+    "type": "cognitiveservices",
+  },
+  Object {
+    "type": "speechend",
+  },
+  Object {
+    "type": "soundend",
+  },
+  Object {
+    "subType": "recognizing",
+    "type": "cognitiveservices",
+  },
+  Object {
+    "subType": "recognized",
+    "type": "cognitiveservices",
+  },
+  Object {
+    "subType": "success",
+    "type": "cognitiveservices",
+  },
+  Object {
+    "type": "audioend",
+  },
+  Object {
+    "results": Array [
+      Array [
+        Object {
+          "confidence": 0.5,
+          "transcript": "one two",
+        },
+      ],
+    ],
+    "type": "result",
+  },
+  Object {
+    "type": "end",
+  },
+]
+`;

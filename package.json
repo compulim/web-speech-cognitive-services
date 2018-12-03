@@ -1,15 +1,16 @@
 {
   "name": "root",
-  "version": "3.0.1-0",
+  "version": "4.0.0-0",
   "description": "",
   "private": true,
   "scripts": {
     "bootstrap": "lerna bootstrap",
     "build": "lerna run --stream build",
+    "clean": "lerna run --parallel --stream clean",
     "test": "lerna run --stream test",
     "watch": "lerna run --stream watch"
   },
   "devDependencies": {
-    "lerna": "^3.1.4"
+    "lerna": "^3.4.1"
   }
 }

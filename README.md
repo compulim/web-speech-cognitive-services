@@ -1,10 +1,10 @@
 # web-speech-cognitive-services
 
+Web Speech API adapter to use Cognitive Services Speech Services for both speech-to-text and text-to-speech service.
+
+> This scaffold is provided by [`react-component-template`](https://github.com/compulim/react-component-template/).
+
 [![npm version](https://badge.fury.io/js/web-speech-cognitive-services.svg)](https://badge.fury.io/js/web-speech-cognitive-services) [![Build Status](https://travis-ci.org/compulim/web-speech-cognitive-services.svg?branch=master)](https://travis-ci.org/compulim/web-speech-cognitive-services)
-
-Polyfill Web Speech API with Cognitive Services Bing Speech for both speech-to-text and text-to-speech service.
-
-This scaffold is provided by [`react-component-template`](https://github.com/compulim/react-component-template/).
 
 # Demo
 
@@ -16,25 +16,93 @@ We use [`react-dictate-button`](https://github.com/compulim/react-dictate-button
 
 Web Speech API is not widely adopted on popular browsers and platforms. Polyfilling the API using cloud services is a great way to enable wider adoption. Nonetheless, Web Speech API in Google Chrome is also backed by cloud services.
 
-Microsoft Azure [Cognitive Services Bing Speech](https://azure.microsoft.com/en-us/services/cognitive-services/speech/) service provide speech recognition with great accuracy. But unfortunately, the APIs are not based on Web Speech API.
+Microsoft Azure [Cognitive Services Speech Services](https://azure.microsoft.com/en-us/services/cognitive-services/speech-services/) service provide speech recognition with great accuracy. But unfortunately, the APIs are not based on Web Speech API.
 
-This package will polyfill Web Speech API by turning Cognitive Services Bing Speech API into Web Speech API. We test this package with popular combination of platforms and browsers.
+This package will polyfill Web Speech API by turning Cognitive Services Speech Services API into Web Speech API. We test this package with popular combination of platforms and browsers.
 
 # How to use
 
-First, run `npm install web-speech-cognitive-services` for latest production build. Or `npm install web-speech-cognitive-services@master` for latest development build.
+For production build, run `npm install web-speech-cognitive-services`.
 
-Then, install peer dependency by running `npm install microsoft-speech-browser-sdk`.
+For development build, run `npm install web-speech-cognitive-services@master`.
+
+> Since [Speech Services SDK](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/quickstart-js-browser) is not on NPM yet, we will bundle the SDK inside this package for now. When Speech Services SDK release on NPM, we will define it as a peer dependency.
+
+## Polyfilling vs. ponyfilling
+
+In JavaScript, polyfill is a technique to bring newer features to older environment. Ponyfill is very similar, but instead polluting the environment by default, we prefer to let the developer to choose what they want. This [article](https://ponyfoo.com/articles/polyfills-or-ponyfills) talks about polyfill vs. ponyfill.
+
+In this package, we prefer ponyfill because it do not pollute the hosting environment. You are also free to mix-and-match multiple speech recognition engines under a single environment.
+
+# Code snippets
+
+> For readability, we omitted the async function in all code snippets. To run the code, you will need to wrap the code using an async function.
+
+## Polyfilling the environment
+
+If the library you are using do not support ponyfill, you can polyfill `window` object with our ponyfill.
+
+```jsx
+import createPonyfill from 'web-speech-cognitive-services/lib/SpeechServices';
+
+const ponyfill = await createPonyfill({
+  region: 'westus',
+  subscriptionKey: 'YOUR_SUBSCRIPTION_KEY'
+});
+
+for (let key in ponyfill) {
+  window[key] = ponyfill[key];
+}
+```
+
+> Note: if you do not specify `region`, we will default to `"westus"`.
+
+> List of supported regions can be found in [this article](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/rest-apis#regions-and-endpoints).
+
+> If you prefer to use the deprecating Bing Speech, import from `'web-speech-cognitive-services/lib/BingSpeech'` instead.
+
+## Using authorization token
+
+Instead of exposing subscription key on the browser, we strongly recommend using authorization token.
+
+```jsx
+import createPonyfill from 'web-speech-cognitive-services/lib/SpeechServices';
+
+const ponyfill = await createPonyfill({
+  authorizationToken: 'YOUR_AUTHORIZATION_TOKEN',
+  region: 'westus',
+});
+```
+
+You can also provide an async function that will fetch the authorization token on-demand. You should cache the authorization token for subsequent request.
+
+```jsx
+import createPonyfill from 'web-speech-cognitive-services/lib/SpeechServices';
+
+const ponyfill = await createPonyfill({
+  authorizationToken: fetch('https://example.com/your-token').then(res => res.text()),
+  region: 'westus',
+});
+```
 
 ## Speech recognition (speech-to-text)
 
+You can choose to only create ponyfill for speech recognition.
+
 ```jsx
-import { createFetchTokenUsingSubscriptionKey, SpeechRecognition } from 'web-speech-cognitive-services';
+import { createSpeechRecognitionPonyfill } from 'web-speech-cognitive-services/lib/SpeechServices/SpeechToText';
+
+const {
+  SpeechRecognition
+} = await createSpeechRecognitionPonyfill({
+  region: 'westus',
+  subscriptionKey: 'YOUR_SUBSCRIPTION_KEY'
+});
 
 const recognition = new SpeechRecognition();
 
+recognition.interimResults = true;
 recognition.lang = 'en-US';
-recognition.fetchToken = createFetchTokenUsingSubscriptionKey('your subscription key');
 
 recognition.onresult = ({ results }) => {
   console.log(results);
@@ -50,14 +118,19 @@ recognition.start();
 You can use [`react-dictate-button`](https://github.com/compulim/react-dictate-button/) to integrate speech recognition functionality to your React app.
 
 ```jsx
-import { createFetchTokenUsingSubscriptionKey, SpeechGrammarList, SpeechRecognition } from 'web-speech-cognitive-services';
+import createPonyfill from 'web-speech-cognitive-services/lib/SpeechServices';
 import DictateButton from 'react-dictate-button';
 
-const extra = { fetchToken: createFetchTokenUsingSubscriptionKey('your subscription key') };
+const {
+  SpeechGrammarList,
+  SpeechRecognition
+} = await createPonyfill({
+  region: 'westus',
+  subscriptionKey: 'YOUR_SUBSCRIPTION_KEY'
+});
 
 export default props =>
   <DictateButton
-    extra={ extra }
     onDictate={ ({ result }) => alert(result.transcript) }
     speechGrammarList={ SpeechGrammarList }
     speechRecognition={ SpeechRecognition }
@@ -66,22 +139,29 @@ export default props =>
   </DictateButton>
 ```
 
-You can also look at our [playground page](packages/playground/src/DictationPane.js) to see how it works.
-
 ### Speech priming (a.k.a. grammars)
+
+> This section is currently not implemented with new Speech SDK. We are leaving the section here for future reference.
 
 You can prime the speech recognition by giving a list of words.
 
 Since Cognitive Services does not works with weighted grammars, we built another `SpeechGrammarList` to better fit the scenario.
 
 ```jsx
-import { createFetchTokenUsingSubscriptionKey, SpeechGrammarList, SpeechRecognition } from 'web-speech-cognitive-services';
+import createPonyfill from 'web-speech-cognitive-services/lib/SpeechServices';
+
+const {
+  SpeechGrammarList,
+  SpeechRecognition
+} = await createPonyfill({
+  region: 'westus',
+  subscriptionKey: 'YOUR_SUBSCRIPTION_KEY'
+});
 
 const recognition = new SpeechRecognition();
 
 recognition.grammars = new SpeechGrammarList();
 recognition.grammars.words = ['Tuen Mun', 'Yuen Long'];
-recognition.fetchToken = createFetchTokenUsingSubscriptionKey('your subscription key');
 
 recognition.onresult = ({ results }) => {
   console.log(results);
@@ -95,19 +175,24 @@ recognition.start();
 ## Speech synthesis (text-to-speech)
 
 ```jsx
-import { createFetchTokenUsingSubscriptionKey, speechSynthesis, SpeechSynthesisUtterance } from 'web-speech-cognitive-services';
+import { createSpeechSynthesisPonyfill } from 'web-speech-cognitive-services/lib/SpeechServices/TextToSpeech';
 
-const fetchToken = createFetchTokenUsingSubscriptionKey('your subscription key');
+const {
+  speechSynthesis,
+  SpeechSynthesisUtterance
+} = await createSpeechSynthesisPonyfill({
+  region: 'westus',
+  subscriptionKey: 'YOUR_SUBSCRIPTION_KEY'
+});
+
 const utterance = new SpeechSynthesisUtterance('Hello, World!');
 
-speechSynthesis.fetchToken = fetchToken;
-
-// Need to wait until token exchange is complete before speak
-await fetchToken();
 await speechSynthesis.speak(utterance);
 ```
 
 > Note: `speechSynthesis` is camel-casing because it is an instance.
+
+> List of supported regions can be found in [this article](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/rest-apis#text-to-speech-api).
 
 `pitch`, `rate`, `voice`, and `volume` are supported. Only `onstart`, `onerror`, and `onend` events are supported.
 
@@ -116,7 +201,7 @@ await speechSynthesis.speak(utterance);
 You can use [`react-say`](https://github.com/compulim/react-say/) to integrate speech synthesis functionality to your React app.
 
 ```jsx
-import { createFetchTokenUsingSubscriptionKey, speechSynthesis, SpeechSynthesisUtterance } from 'web-speech-cognitive-services';
+import createPonyfill from 'web-speech-cognitive-services/lib/SpeechServices';
 import React from 'react';
 import Say from 'react-say';
 
@@ -124,32 +209,38 @@ export default class extends React.Component {
   constructor(props) {
     super(props);
 
-    speechSynthesis.fetchToken = createFetchTokenUsingSubscriptionKey('your subscription key');
-
-    // We call it here to preload the token, the token is cached
-    speechSynthesis.fetchToken();
-
-    this.state = { ready: false };
+    this.state = {};
   }
 
   async componentDidMount() {
-    await speechSynthesis.fetchToken();
+    const ponyfill = await createPonyfill({
+      region: 'westus',
+      subscriptionKey: 'YOUR_SUBSCRIPTION_KEY'
+    });
 
-    this.setState(() => ({ ready: true }));
+    this.setState(() => ({ ponyfill }));
   }
 
   render() {
+    const {
+      state: { ponyfill }
+    } = this;
+
     return (
-      this.state.ready &&
+      ponyfill &&
         <Say
-          speechSynthesis={ speechSynthesis }
-          speechSynthesisUtterance={ SpeechSynthesisUtterance }
+          speechSynthesis={ ponyfill.speechSynthesis }
+          speechSynthesisUtterance={ ponyfill.SpeechSynthesisUtterance }
           text="Hello, World!"
         />
     );
   }
 }
 ```
+
+## Lexical and ITN support
+
+[Lexical and ITN support](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/rest-apis#response-parameters) is unique in Cognitive Services Speech Services. Our adapter added additional properties `transcriptITN`, `transcriptLexical`, and `transcriptMaskedITN` to surface the result, in addition to `transcript` and `confidence`.
 
 # Test matrix
 
@@ -168,30 +259,19 @@ For detailed test matrix, please refer to [`SPEC-RECOGNITION.md`](SPEC-RECOGNITI
 
 # Roadmap
 
-## To-do
-
-* Add `babel-runtime`, `microsoft-speech-browser-sdk`, and `simple-update-in`
-
-## Plan
-
-* General
-   * [x] Unified [token exchange mechanism](packages/component/src/util/SubscriptionKey.js)
 * Speech recognition
-   * [x] Add grammar list
-   * [ ] Add tests for lifecycle events
-   * [ ] Support `stop()` function
-      * Currently, only `abort()` is supported
+   * [x] Add tests for lifecycle events
+   * [x] Support `stop()` and `abort()` function
+   * [ ] Add grammar list
    * [ ] Investigate continuous mode
-   * [ ] Enable Opus (OGG) encoding
+   * [ ] Investigate support of Opus (OGG) encoding
       * Currently, there is a problem with `microsoft-speech-browser-sdk@0.0.12`, tracking on [this issue](https://github.com/Azure-Samples/SpeechToText-WebSockets-Javascript/issues/88)
    * [ ] Support custom speech
-   * [ ] Support new [Speech-to-Text](https://azure.microsoft.com/en-us/services/cognitive-services/speech-to-text/) service
-      * Point to [new URIs](https://docs.microsoft.com/en-us/azure/cognitive-services/Speech-Service/rest-apis)
+   * [ ] Support ITN, masked ITN, and lexical output
 * Speech synthesis
    * [ ] Event: add `pause`/`resume` support
    * [ ] Properties: add `paused`/`pending`/`speaking` support
-   * [ ] Support new [Text-to-Speech](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/how-to-text-to-speech) service
-      * Custom voice fonts
+   * [ ] Support [custom voice fonts](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/rest-apis#text-to-speech-api)
 
 # Contributions
 

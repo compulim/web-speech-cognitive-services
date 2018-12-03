@@ -1,6 +1,6 @@
 {
   "name": "web-speech-cognitive-services",
-  "version": "3.0.0-0",
+  "version": "4.0.0-0",
   "description": "Polyfill Web Speech API with Cognitive Services Speech-to-Text service",
   "keywords": [
     "cognitive services",
@@ -16,6 +16,7 @@
     "stt",
     "text to speech",
     "tts",
+    "unified speech",
     "utterance",
     "voice recognition",
     "web speech",
@@ -29,7 +30,7 @@
   "scripts": {
     "build": "babel --out-dir lib --ignore **/*.spec.js,**/*.test.js --source-maps true src/",
     "clean": "rimraf lib",
-    "test": "echo No tests defined",
+    "test": "jest",
     "watch": "npm run build -- --watch"
   },
   "author": "William Wong <compulim@hotmail.com> (http://compulim.info/)",
@@ -42,6 +43,9 @@
     "url": "https://github.com/compulim/web-speech-cognitive-services/issues"
   },
   "homepage": "https://github.com/compulim/web-speech-cognitive-services#readme",
+  "jest": {
+    "testEnvironment": "node"
+  },
   "peerDependencies": {
     "microsoft-speech-browser-sdk": "^0.0.12",
     "react": "^16.4.2"
