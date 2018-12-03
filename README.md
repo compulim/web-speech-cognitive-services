@@ -18,13 +18,15 @@ Web Speech API is not widely adopted on popular browsers and platforms. Polyfill
 
 Microsoft Azure [Cognitive Services Speech Services](https://azure.microsoft.com/en-us/services/cognitive-services/speech-services/) service provide speech recognition with great accuracy. But unfortunately, the APIs are not based on Web Speech API.
 
-This package will polyfill Web Speech API by turning Cognitive Services Bing Speech API into Web Speech API. We test this package with popular combination of platforms and browsers.
+This package will polyfill Web Speech API by turning Cognitive Services Speech Services API into Web Speech API. We test this package with popular combination of platforms and browsers.
 
 # How to use
 
 For production build, run `npm install web-speech-cognitive-services`.
 
 For development build, run `npm install web-speech-cognitive-services@master`.
+
+> Since [Speech Services SDK](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/quickstart-js-browser) is not on NPM yet, we will bundle the SDK inside this package for now. When Speech Services SDK release on NPM, we will define it as a peer dependency.
 
 ## Polyfilling vs. ponyfilling
 
