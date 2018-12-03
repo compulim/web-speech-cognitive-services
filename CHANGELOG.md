@@ -8,8 +8,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - New playground for better debuggability
 - Support of Speech Services SDK, with automated unit tests for speech recognition
+   - See [`SPEECH-RECOGNITION.md`](SPEECH-RECOGNITION.md) and [`SPEECH-SYNTHESIS.md`](SPEECH-SYNTHESIS.md) for quirks
 - Speech recognition: Support `stop` on Speech Services
-- Speech synthesis: Support `pause` and `resume`
+- Speech synthesis: Support `pause` and `resume` (with `pause` and `resume` event)
 
 ### Changed
 - Ponyfill are now constructed based on options (authorization token, region, and subscription key)
