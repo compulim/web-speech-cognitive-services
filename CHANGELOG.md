@@ -16,6 +16,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Ponyfill are now constructed based on options (authorization token, region, and subscription key)
    - A new set of ponyfill will be created every time an option has changed
 
+### Fixed
+- Fix [#13](https://github.com/compulim/web-speech-cognitive-services/issues/13) Speech recognition: `SpeechRecognitionResult` should be iterable
+
 ## [3.0.0] - 2018-10-31
 ### Added
 - Speech Synthesis: Will async fetch speech token instead of throwing exception

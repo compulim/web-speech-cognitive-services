@@ -117,3 +117,24 @@ test('Single final results with masked ITN', () => {
   expect(resultList[0][0]).toEqual({ confidence: .25, transcript: 'no (MaskedITN)' });
   expect(resultList[0]).toHaveProperty('isFinal', true);
 });
+
+test('Result is iterable', () => {
+  const resultList = cognitiveServiceEventResultToWebSpeechRecognitionResultList({
+    json: {
+      NBest: [{
+        Confidence: .25,
+        Display: 'No.',
+        ITN: 'no (ITN)',
+        Lexical: 'no (Lexical)',
+        MaskedITN: 'no (MaskedITN)'
+      }]
+    },
+    reason: 3
+  }, {});
+
+  const [firstAlternative] = resultList[0];
+  const { isFinal } = resultList[0];
+
+  expect(firstAlternative).toEqual({ confidence: .25, transcript: 'No.' });
+  expect(isFinal).toBe(true);
+});
