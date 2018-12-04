@@ -1,3 +1,4 @@
+import arrayToMap from '../../Util/arrayToMap';
 import SpeechSDK from '../SpeechSDK';
 
 const {
@@ -6,18 +7,6 @@ const {
     RecognizedSpeech
   }
 } = SpeechSDK;
-
-function arrayToMap(array, extras) {
-  return {
-    ...array.reduce((map, value, index) => {
-      map[index] = value;
-
-      return map;
-    }, {}),
-    ...extras,
-    length: array.length
-  };
-}
 
 export default function (result, { maxAlternatives = Infinity, textNormalization = 'display' } = {}) {
   if (result.reason === RecognizingSpeech) {
