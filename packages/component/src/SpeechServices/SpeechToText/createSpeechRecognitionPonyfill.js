@@ -97,20 +97,18 @@ export default async ({
       this._interimResults = false;
       this._lang = typeof window !== 'undefined' ? (window.document.documentElement.getAttribute('lang') || window.navigator.language) : 'en-US';
       this._maxAlternatives = 1;
+    }
 
-      this.createRecognizer = memoize(async ({ language } = {}) => {
-        const speechConfig = authorizationToken ?
-          SpeechConfig.fromAuthorizationToken(typeof authorizationToken === 'function' ? await authorizationToken() : authorizationToken, region)
-        :
-          SpeechConfig.fromSubscription(subscriptionKey, region);
+    async createRecognizer() {
+      const speechConfig = authorizationToken ?
+        SpeechConfig.fromAuthorizationToken(typeof authorizationToken === 'function' ? await authorizationToken() : await authorizationToken, region)
+      :
+        SpeechConfig.fromSubscription(subscriptionKey, region);
 
-        speechConfig.outputFormat = OutputFormat.Detailed;
-        speechConfig.speechRecognitionLanguage = language || 'en-US';
+      speechConfig.outputFormat = OutputFormat.Detailed;
+      speechConfig.speechRecognitionLanguage = this.lang || 'en-US';
 
-        return new SpeechRecognizer(speechConfig, audioConfig);
-      }, null, recognizer => {
-        recognizer.dispose();
-      });
+      return new SpeechRecognizer(speechConfig, audioConfig);
     }
 
     emitCognitiveServices(type, event) {
@@ -146,7 +144,8 @@ export default async ({
     }
 
     async _startOnce() {
-      const recognizer = this._recognizer = await this.createRecognizer();
+      // TODO: [P2] Should check if recognition is active, we should not start recognition twice
+      const recognizer = await this.createRecognizer();
       const queue = createPromiseQueue();
       let lastRecognizingResults;
       let speechStarted;
@@ -331,30 +330,11 @@ export default async ({
       // Even though there is no "start" event emitted, we will still emit "end" event
       // This is mainly for "microphone blocked" story.
       this.emit('end');
+
+      recognizer.dispose();
     }
 
     stop() {}
-
-    // stop() {
-    //   if (!this._recognizer) {
-    //     // TODO: [P3] Should we throw an error or leave it as-is?
-    //     throw new Error('not started');
-    //   }
-
-    //   if (this.continuous) {
-    //     const onStop = event => {
-    //       console.warn(event);
-    //       this.emit('cognitiveservices', { subType: 'stop' });
-    //     };
-
-    //     const onError = error => {
-    //       console.warn(error);
-    //       this.emit('cognitiveservices', { error, subType: 'error on stop' });
-    //     };
-
-    //     this._recognizer.stopContinuousRecognitionAsync(onStop, onError);
-    //   }
-    // }
   }
 
   return {

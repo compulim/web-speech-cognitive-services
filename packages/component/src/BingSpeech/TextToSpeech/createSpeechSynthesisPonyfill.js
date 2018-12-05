@@ -74,7 +74,7 @@ export default ({
           typeof authorizationToken === 'function' ?
             await authorizationToken()
           : authorizationToken ?
-            authorizationToken
+            await authorizationToken
           : await fetchMemoizedAuthorizationToken({
             now: Date.now,
             subscriptionKey
