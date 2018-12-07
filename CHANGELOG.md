@@ -28,7 +28,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Use `@babel/runtime` and `@babel/plugin-tranform-runtime`, in favor of `babel-polyfill`
 - Better error handling on `null` token
 - Updated voice list from [https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/supported-languages](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/supported-languages)
-- Reliability around cancelling a playing uttegrance
+- Reliability around cancelling a playing utterance
    - Instead of shutting down the `AudioContext`, we will stop the `AudioBufferSourceNode` for a graceful stop
 - Simplify speech token authorization
    - `recognition.fetchToken = async () => return await 'your subscription key';`
