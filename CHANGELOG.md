@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
    - See [`SPEC-RECOGNITION.md`](SPEC-RECOGNITION.md) and [`SPEC-SYNTHESIS.md`](SPEC-SYNTHESIS.md) for quirks
 - Speech recognition: Support `stop` on Speech Services
 - Speech synthesis: Support `pause` and `resume` (with `pause` and `resume` event)
+- Speech synthesis: Support `speaking` property
 
 ### Changed
 - Ponyfill are now constructed based on options (authorization token, region, and subscription key)

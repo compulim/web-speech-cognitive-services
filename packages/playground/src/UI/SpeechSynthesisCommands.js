@@ -7,6 +7,8 @@ import pauseSpeechSynthesisUtterance from '../data/actions/pauseSpeechSynthesis'
 import resumeSpeechSynthesisUtterance from '../data/actions/resumeSpeechSynthesis';
 import speechSynthesisSpeakUtterance from '../data/actions/speechSynthesisSpeakUtterance';
 
+import SpeechSynthesisSpeakingProperty from './SpeechSynthesisSpeakingProperty';
+
 const SpeechSynthesisCommands = ({
   cancelSpeechSynthesis,
   clearSpeechSynthesisUtterance,
@@ -56,6 +58,8 @@ const SpeechSynthesisCommands = ({
       onClick={ clearSpeechSynthesisUtterance }
       type="button"
     >Clear utterances</button>
+    &nbsp;
+    <SpeechSynthesisSpeakingProperty />
   </div>
 
 export default connect(

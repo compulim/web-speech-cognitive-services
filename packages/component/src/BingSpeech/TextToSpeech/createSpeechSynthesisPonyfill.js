@@ -85,6 +85,10 @@ export default ({
         this.queue.push(utterance);
       });
     }
+
+    get speaking() {
+      return this.queue.speaking;
+    }
   }
 
   return {
