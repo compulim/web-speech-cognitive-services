@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
    - See [`SPEC-RECOGNITION.md`](SPEC-RECOGNITION.md) and [`SPEC-SYNTHESIS.md`](SPEC-SYNTHESIS.md) for quirks
 - Speech recognition: Support `stop` on Speech Services
 - Speech synthesis: Support `pause` and `resume` (with `pause` and `resume` event)
+- Speech synthesis: Support `speaking` property
 
 ### Changed
 - Ponyfill are now constructed based on options (authorization token, region, and subscription key)
@@ -27,7 +28,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Use `@babel/runtime` and `@babel/plugin-tranform-runtime`, in favor of `babel-polyfill`
 - Better error handling on `null` token
 - Updated voice list from [https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/supported-languages](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/supported-languages)
-- Reliability around cancelling a playing utterance
+- Reliability around cancelling a playing uttegrance
    - Instead of shutting down the `AudioContext`, we will stop the `AudioBufferSourceNode` for a graceful stop
 - Simplify speech token authorization
    - `recognition.fetchToken = async () => return await 'your subscription key';`

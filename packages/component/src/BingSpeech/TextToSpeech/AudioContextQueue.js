@@ -8,14 +8,6 @@ export default class {
     this.queue = [];
   }
 
-  async startConsumer() {
-    while (!this.paused && this.queue.length && !this.consumer) {
-      this.consumer = new AudioContextConsumer();
-      await this.consumer.start(this.queue, this.ponyfill);
-      this.consumer = null;
-    }
-  }
-
   pause() {
     this.paused = true;
     this.consumer && this.consumer.pause();
@@ -33,6 +25,18 @@ export default class {
       this.consumer.resume();
     } else {
       this.startConsumer();
+    }
+  }
+
+  get speaking() {
+    return !!this.consumer;
+  }
+
+  async startConsumer() {
+    while (!this.paused && this.queue.length && !this.consumer) {
+      this.consumer = new AudioContextConsumer();
+      await this.consumer.start(this.queue, this.ponyfill);
+      this.consumer = null;
     }
   }
 
