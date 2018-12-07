@@ -40,11 +40,13 @@ We tested the following behaviors:
 
 - Speak 2 utterances
 - Expect: receive `start` event from the first utterance
+- Expect: `speaking` property is set to `true`
 - Wait until the first utterance has finished
 - Expect: receive `end` event from the first utterance
 - Expect: receive `start` event from the second utterance
 - Wait until the second utterance has finished
 - Expect: receive `end` event from the second utterance
+- Expect: `speaking` property is set to `false`
 
 > Quirks: `boundary` events are not fired because Speech Services does not provide the information.
 > Quirks: Chrome using Google Cloud Speech will not fire `boundary` event.
@@ -53,12 +55,15 @@ We tested the following behaviors:
 
 - Speak an utterance
 - Expect: receive `start` event from the utterance
+- Expect: `speaking` property is set to `true`
 - Call `speechSynthesis.pause()`
 - Expect: receive `pause` event from the utterance
+- Expect: `speaking` property is continue to be `true`
 - Call `speechSynthesis.resume()`
 - Expect: receive `resume` event from the utterance
 - Wait until the utterance has finished
 - Expect: receive `end` event from the utterance
+- Expect: `speaking` property is set to `false`
 
 > Quirks: Speech Services pause as soon as `pause()` is called. For OS-provided browser speech, `pause()` will pause at word boundary.
 > Quirks: Chrome using Google Cloud Speech will pause immediately and does not pause at word boundary.
@@ -71,5 +76,7 @@ We tested the following behaviors:
 - Call `speechSynthesis.cancel()`
 - Expect: receive `end` event from the first utterance
 - Expect: no events from the second utterance, no `start` or `end` events
+- Expect: `speaking` property is set to `false`
 - Call `speechSynthesis.resume()`
 - Expect: no additional events from both of the utterances
+- Expect: `speaking` property is continue to be `false`
