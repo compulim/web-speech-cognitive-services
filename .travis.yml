@@ -21,6 +21,12 @@ deploy:
   on:
     branch: master
 
+- provider: script
+  script: bash scripts/lerna_publish
+  skip_cleanup: true
+  on:
+    tags: true
+
 - provider: pages
   skip-cleanup: true
   github-token:
