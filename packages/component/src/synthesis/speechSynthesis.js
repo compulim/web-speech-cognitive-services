@@ -31,12 +31,10 @@ class SpeechSynthesis {
       throw new Error("SpeechSynthesis: fetchToken must be set");
     } else if (typeof this.fetchToken !== "function") {
       throw new Error(
-        "SpeechSynthesis: fetchToken must be a function that returns a Promise and it will resolve to a string-based token"
+        "SpeechSynthesis: fetchToken must be a function that returns a Promise and resolves to a string-based token"
       );
     }
 
-    utterance.addEventListener("end", resolve);
-    utterance.addEventListener("error", reject);
     utterance.accessToken = this.fetchToken();
     utterance.region = this.region;
     utterance.outputFormat = this.outputFormat;
