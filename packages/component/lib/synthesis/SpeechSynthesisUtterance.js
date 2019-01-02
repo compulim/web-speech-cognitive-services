@@ -33,7 +33,7 @@ function asyncDecodeAudioData(audioContext, arrayBuffer) {
   return new Promise(function (resolve, reject) {
     var promise = audioContext.decodeAudioData(arrayBuffer, resolve, reject); // Newer implementation of "decodeAudioData" will return a Promise
 
-    promise && typeof promise.then === 'function' && resolve(promise);
+    promise && typeof promise.then === "function" && resolve(promise);
   });
 }
 
@@ -51,9 +51,9 @@ function playDecoded(audioContext, audioBuffer, source) {
             case 0:
               audioContextClosed = new _eventAsPromise.default();
               sourceEnded = new _eventAsPromise.default();
-              unsubscribe = (0, _subscribeEvent.default)(audioContext, 'statechange', function (_ref2) {
+              unsubscribe = (0, _subscribeEvent.default)(audioContext, "statechange", function (_ref2) {
                 var state = _ref2.target.state;
-                return state === 'closed' && audioContextClosed.eventListener();
+                return state === "closed" && audioContextClosed.eventListener();
               });
               _context.prev = 3;
               source.buffer = audioBuffer; // "ended" may not fire if the underlying AudioContext is closed prematurely
@@ -102,7 +102,7 @@ function (_DOMEventEmitter) {
     var _this;
 
     (0, _classCallCheck2.default)(this, _default);
-    _this = (0, _possibleConstructorReturn2.default)(this, (0, _getPrototypeOf2.default)(_default).call(this, ['boundary', 'end', 'error', 'mark', 'pause', 'resume', 'start']));
+    _this = (0, _possibleConstructorReturn2.default)(this, (0, _getPrototypeOf2.default)(_default).call(this, ["boundary", "end", "error", "mark", "pause", "resume", "start"]));
     _this._lang = null;
     _this._pitch = 1;
     _this._rate = 1;
@@ -122,100 +122,79 @@ function (_DOMEventEmitter) {
 
   (0, _createClass2.default)(_default, [{
     key: "preload",
-    value: function () {
-      var _preload = (0, _asyncToGenerator2.default)(
-      /*#__PURE__*/
-      _regenerator.default.mark(function _callee2() {
-        return _regenerator.default.wrap(function _callee2$(_context2) {
-          while (1) {
-            switch (_context2.prev = _context2.next) {
-              case 0:
-                this.arrayBufferPromise = (0, _fetchSpeechData.default)({
-                  accessToken: this.accessToken,
-                  lang: this.lang || window.navigator.language,
-                  outputFormat: this.outputFormat,
-                  pitch: this.pitch,
-                  rate: this.rate,
-                  text: this.text,
-                  voice: this.voice && this.voice.voiceURI || undefined,
-                  volume: this.volume,
-                  region: this.region
-                });
-                _context2.next = 3;
-                return this.arrayBufferPromise;
-
-              case 3:
-              case "end":
-                return _context2.stop();
-            }
-          }
-        }, _callee2, this);
-      }));
-
-      return function preload() {
-        return _preload.apply(this, arguments);
-      };
-    }()
+    value: function preload() {
+      this.arrayBufferPromise = (0, _fetchSpeechData.default)({
+        accessToken: this.accessToken,
+        lang: this.lang || window.navigator.language,
+        outputFormat: this.outputFormat,
+        pitch: this.pitch,
+        rate: this.rate,
+        text: this.text,
+        voice: this.voice && this.voice.voiceURI || undefined,
+        volume: this.volume,
+        region: this.region
+      });
+    }
   }, {
     key: "play",
     value: function () {
       var _play = (0, _asyncToGenerator2.default)(
       /*#__PURE__*/
-      _regenerator.default.mark(function _callee3(audioContext) {
+      _regenerator.default.mark(function _callee2(audioContext) {
         var source, audioBuffer;
-        return _regenerator.default.wrap(function _callee3$(_context3) {
+        return _regenerator.default.wrap(function _callee2$(_context2) {
           while (1) {
-            switch (_context3.prev = _context3.next) {
+            switch (_context2.prev = _context2.next) {
               case 0:
-                _context3.prev = 0;
+                _context2.prev = 0;
                 this._isAboutToPlay = true; // HACK: iOS requires bufferSourceNode to be constructed before decoding data
 
                 source = audioContext.createBufferSource();
-                _context3.t0 = asyncDecodeAudioData;
-                _context3.t1 = audioContext;
-                _context3.next = 7;
+                _context2.t0 = asyncDecodeAudioData;
+                _context2.t1 = audioContext;
+                _context2.next = 7;
                 return this.arrayBufferPromise;
 
               case 7:
-                _context3.t2 = _context3.sent;
-                _context3.next = 10;
-                return (0, _context3.t0)(_context3.t1, _context3.t2);
+                _context2.t2 = _context2.sent;
+                _context2.next = 10;
+                return (0, _context2.t0)(_context2.t1, _context2.t2);
 
               case 10:
-                audioBuffer = _context3.sent;
-                this.emit('start');
+                audioBuffer = _context2.sent;
+                this.emit("start");
                 this._playingSource = source;
 
                 if (!this._isAboutToPlay) {
-                  _context3.next = 17;
+                  _context2.next = 17;
                   break;
                 }
 
                 this._isAboutToPlay = false;
-                _context3.next = 17;
+                _context2.next = 17;
                 return playDecoded(audioContext, audioBuffer, source);
 
               case 17:
                 this._playingSource = null;
-                this.emit('end');
-                _context3.next = 25;
+                this.emit("end");
+                _context2.next = 25;
                 break;
 
               case 21:
-                _context3.prev = 21;
-                _context3.t3 = _context3["catch"](0);
-                this.emit('error', {
-                  error: _context3.t3,
-                  type: 'error'
+                _context2.prev = 21;
+                _context2.t3 = _context2["catch"](0);
+                this.emit("error", {
+                  error: _context2.t3,
+                  type: "error"
                 });
-                throw _context3.t3;
+                throw _context2.t3;
 
               case 25:
               case "end":
-                return _context3.stop();
+                return _context2.stop();
             }
           }
-        }, _callee3, this, [[0, 21]]);
+        }, _callee2, this, [[0, 21]]);
       }));
 
       return function play(_x3) {

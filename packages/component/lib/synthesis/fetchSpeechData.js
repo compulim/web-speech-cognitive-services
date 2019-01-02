@@ -13,10 +13,10 @@ var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/
 
 var _buildSSML = _interopRequireDefault(require("./buildSSML"));
 
-var DEFAULT_LANGUAGE = 'en-US';
-var DEFAULT_VOICE = 'Microsoft Server Speech Text to Speech Voice (en-US, JessaRUS)';
-var SYNTHESIS_URL = 'tts.speech.microsoft.com/cognitiveservices/v1';
-var DEFAULT_REGION = 'westus';
+var DEFAULT_LANGUAGE = "en-US";
+var DEFAULT_VOICE = "Microsoft Server Speech Text to Speech Voice (en-US, JessaRUS)";
+var SYNTHESIS_URL = "tts.speech.microsoft.com/cognitiveservices/v1";
+var DEFAULT_REGION = "westus";
 
 function fetchSpeechData(_x) {
   return _fetchSpeechData.apply(this, arguments);
@@ -42,31 +42,43 @@ function _fetchSpeechData() {
               voice: voice,
               volume: volume
             });
-            _context.next = 4;
-            return fetch("https://".concat(region, ".").concat(SYNTHESIS_URL), {
-              headers: {
-                Authorization: 'Bearer ' + accessToken,
-                'Content-Type': 'application/ssml+xml',
-                'X-Microsoft-OutputFormat': outputFormat
-              },
-              method: 'POST',
-              body: ssml
-            });
+            _context.t0 = fetch;
+            _context.t1 = "https://".concat(region, ".").concat(SYNTHESIS_URL);
+            _context.next = 6;
+            return accessToken;
 
-          case 4:
+          case 6:
+            _context.t2 = _context.sent;
+            _context.t3 = "Bearer " + _context.t2;
+            _context.t4 = outputFormat;
+            _context.t5 = {
+              Authorization: _context.t3,
+              "Content-Type": "application/ssml+xml",
+              "X-Microsoft-OutputFormat": _context.t4
+            };
+            _context.t6 = ssml;
+            _context.t7 = {
+              headers: _context.t5,
+              method: "POST",
+              body: _context.t6
+            };
+            _context.next = 14;
+            return (0, _context.t0)(_context.t1, _context.t7);
+
+          case 14:
             res = _context.sent;
 
             if (!(res.status !== 200)) {
-              _context.next = 7;
+              _context.next = 17;
               break;
             }
 
             throw new Error("Failed to synthesize speech, server returned ".concat(res.status));
 
-          case 7:
+          case 17:
             return _context.abrupt("return", res.arrayBuffer());
 
-          case 8:
+          case 18:
           case "end":
             return _context.stop();
         }

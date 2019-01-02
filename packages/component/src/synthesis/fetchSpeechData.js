@@ -1,9 +1,10 @@
-import buildSSML from './buildSSML';
+import buildSSML from "./buildSSML";
 
-const DEFAULT_LANGUAGE = 'en-US';
-const DEFAULT_VOICE = 'Microsoft Server Speech Text to Speech Voice (en-US, JessaRUS)'
-const SYNTHESIS_URL = 'tts.speech.microsoft.com/cognitiveservices/v1';
-const DEFAULT_REGION = 'westus';
+const DEFAULT_LANGUAGE = "en-US";
+const DEFAULT_VOICE =
+  "Microsoft Server Speech Text to Speech Voice (en-US, JessaRUS)";
+const SYNTHESIS_URL = "tts.speech.microsoft.com/cognitiveservices/v1";
+const DEFAULT_REGION = "westus";
 
 export default async function fetchSpeechData({
   accessToken,
@@ -19,18 +20,20 @@ export default async function fetchSpeechData({
 }) {
   const ssml = buildSSML({ gender, lang, pitch, rate, text, voice, volume });
 
-  const res = await fetch(`https://${ region }.${ SYNTHESIS_URL }`, {
+  const res = await fetch(`https://${region}.${SYNTHESIS_URL}`, {
     headers: {
-      Authorization: 'Bearer ' + accessToken,
-      'Content-Type': 'application/ssml+xml',
-      'X-Microsoft-OutputFormat': outputFormat
+      Authorization: "Bearer " + (await accessToken),
+      "Content-Type": "application/ssml+xml",
+      "X-Microsoft-OutputFormat": outputFormat
     },
-    method: 'POST',
+    method: "POST",
     body: ssml
   });
 
   if (res.status !== 200) {
-    throw new Error(`Failed to synthesize speech, server returned ${ res.status }`);
+    throw new Error(
+      `Failed to synthesize speech, server returned ${res.status}`
+    );
   }
 
   return res.arrayBuffer();
