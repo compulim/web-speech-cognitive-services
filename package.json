@@ -1,6 +1,6 @@
 {
   "name": "web-speech-cognitive-services",
-  "version": "3.0.2-0",
+  "version": "3.0.3-0",
   "description": "",
   "private": true,
   "main": "packages/component/lib/index.js",
