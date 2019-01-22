@@ -1,12 +1,10 @@
 import arrayToMap from '../../Util/arrayToMap';
-import SpeechSDK from '../SpeechSDK';
+import { ResultReason } from 'microsoft-cognitiveservices-speech-sdk';
 
 const {
-  ResultReason: {
-    RecognizingSpeech,
-    RecognizedSpeech
-  }
-} = SpeechSDK;
+  RecognizingSpeech,
+  RecognizedSpeech
+} = ResultReason;
 
 export default function (result, { maxAlternatives = Infinity, textNormalization = 'display' } = {}) {
   if (result.reason === RecognizingSpeech) {

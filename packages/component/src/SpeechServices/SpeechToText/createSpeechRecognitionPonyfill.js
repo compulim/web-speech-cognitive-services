@@ -2,7 +2,13 @@ import cognitiveServiceEventResultToWebSpeechRecognitionResultList from './cogni
 import createPromiseQueue from '../../Util/createPromiseQueue';
 import DOMEventEmitter from '../../Util/DOMEventEmitter';
 import SpeechGrammarList from './SpeechGrammarList';
-import SpeechSDK from '../SpeechSDK';
+import {
+  AudioConfig,
+  OutputFormat,
+  ResultReason,
+  SpeechConfig,
+  SpeechRecognizer
+} from 'microsoft-cognitiveservices-speech-sdk';
 
 // https://docs.microsoft.com/en-us/javascript/api/microsoft-cognitiveservices-speech-sdk/speechconfig?view=azure-node-latest#outputformat
 // {
@@ -25,14 +31,6 @@ import SpeechSDK from '../SpeechSDK';
 //   "Offset": 50000000,
 //   "Duration": 0
 // }
-
-const {
-  AudioConfig,
-  OutputFormat,
-  ResultReason,
-  SpeechConfig,
-  SpeechRecognizer
-} = SpeechSDK;
 
 function serializeRecognitionResult({
   duration,
@@ -329,7 +327,7 @@ export default async ({
       // This is mainly for "microphone blocked" story.
       this.emit('end');
 
-      recognizer.dispose();
+      recognizer.close();
     }
 
     stop() {}

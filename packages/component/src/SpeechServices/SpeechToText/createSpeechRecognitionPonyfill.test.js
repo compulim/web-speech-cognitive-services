@@ -25,6 +25,8 @@ const MOCK_SPEECH_SDK = {
     constructor() {
       this.canceled = this.recognized = this.recognizing = () => {};
     }
+
+    close() {}
   }
 };
 
@@ -107,7 +109,7 @@ test('Happy path without interims', async () => {
     reason: 3
   };
 
-  jest.setMock('../SpeechSDK', ({
+  jest.setMock('microsoft-cognitiveservices-speech-sdk', ({
     ...MOCK_SPEECH_SDK,
     SpeechRecognizer: class extends MOCK_SPEECH_SDK.SpeechRecognizer {
       recognizeOnceAsync(success) {
@@ -137,7 +139,7 @@ test('Happy path without interims', async () => {
 });
 
 test('Happy path with 2 interims', async () => {
-  jest.setMock('../SpeechSDK', ({
+  jest.setMock('microsoft-cognitiveservices-speech-sdk', ({
     ...MOCK_SPEECH_SDK,
     SpeechRecognizer: class extends MOCK_SPEECH_SDK.SpeechRecognizer {
       recognizeOnceAsync(success) {
@@ -231,7 +233,7 @@ test('Happy path with 2 interims', async () => {
 });
 
 test('Muted microphone', async () => {
-  jest.setMock('../SpeechSDK', ({
+  jest.setMock('microsoft-cognitiveservices-speech-sdk', ({
     ...MOCK_SPEECH_SDK,
     SpeechRecognizer: class extends MOCK_SPEECH_SDK.SpeechRecognizer {
       recognizeOnceAsync(success) {
@@ -289,7 +291,7 @@ test('Network error before start', async () => {
   // This flow is same as "invalid subscription key".
   // This is because Speech SDK do not distinguish between them and both return with status code 1006.
 
-  jest.setMock('../SpeechSDK', ({
+  jest.setMock('microsoft-cognitiveservices-speech-sdk', ({
     ...MOCK_SPEECH_SDK,
     SpeechRecognizer: class extends MOCK_SPEECH_SDK.SpeechRecognizer {
       recognizeOnceAsync(_, error) {
@@ -326,7 +328,7 @@ test('Network error before start', async () => {
 });
 
 test('Microphone blocked', async () => {
-  jest.setMock('../SpeechSDK', ({
+  jest.setMock('microsoft-cognitiveservices-speech-sdk', ({
     ...MOCK_SPEECH_SDK,
     SpeechRecognizer: class extends MOCK_SPEECH_SDK.SpeechRecognizer {
       recognizeOnceAsync(_, error) {
@@ -355,7 +357,7 @@ test('Microphone blocked', async () => {
 });
 
 test('Push-to-talk with partial recognized text', async () => {
-  jest.setMock('../SpeechSDK', ({
+  jest.setMock('microsoft-cognitiveservices-speech-sdk', ({
     ...MOCK_SPEECH_SDK,
     SpeechRecognizer: class extends MOCK_SPEECH_SDK.SpeechRecognizer {
       recognizeOnceAsync(success) {
@@ -469,7 +471,7 @@ test('Push-to-talk with partial recognized text', async () => {
 });
 
 test('Push-to-talk stop before first recognized text', async () => {
-  jest.setMock('../SpeechSDK', ({
+  jest.setMock('microsoft-cognitiveservices-speech-sdk', ({
     ...MOCK_SPEECH_SDK,
     SpeechRecognizer: class extends MOCK_SPEECH_SDK.SpeechRecognizer {
       recognizeOnceAsync(success) {
@@ -553,7 +555,7 @@ test('Push-to-talk stop before first recognized text', async () => {
 });
 
 test('Abort with partial recognized text', async () => {
-  jest.setMock('../SpeechSDK', ({
+  jest.setMock('microsoft-cognitiveservices-speech-sdk', ({
     ...MOCK_SPEECH_SDK,
     SpeechRecognizer: class extends MOCK_SPEECH_SDK.SpeechRecognizer {
       recognizeOnceAsync(success) {
@@ -665,7 +667,7 @@ test('Abort with partial recognized text', async () => {
 });
 
 test('Abort before first recognized text', async () => {
-  jest.setMock('../SpeechSDK', ({
+  jest.setMock('microsoft-cognitiveservices-speech-sdk', ({
     ...MOCK_SPEECH_SDK,
     SpeechRecognizer: class extends MOCK_SPEECH_SDK.SpeechRecognizer {
       recognizeOnceAsync(success) {
@@ -767,7 +769,7 @@ test('Happy path with ITN result', async () => {
     reason: 3
   };
 
-  jest.setMock('../SpeechSDK', ({
+  jest.setMock('microsoft-cognitiveservices-speech-sdk', ({
     ...MOCK_SPEECH_SDK,
     SpeechRecognizer: class extends MOCK_SPEECH_SDK.SpeechRecognizer {
       recognizeOnceAsync(success) {
@@ -816,7 +818,7 @@ test('Happy path with lexical result', async () => {
     reason: 3
   };
 
-  jest.setMock('../SpeechSDK', ({
+  jest.setMock('microsoft-cognitiveservices-speech-sdk', ({
     ...MOCK_SPEECH_SDK,
     SpeechRecognizer: class extends MOCK_SPEECH_SDK.SpeechRecognizer {
       recognizeOnceAsync(success) {
@@ -865,7 +867,7 @@ test('Happy path with masked ITN result', async () => {
     reason: 3
   };
 
-  jest.setMock('../SpeechSDK', ({
+  jest.setMock('microsoft-cognitiveservices-speech-sdk', ({
     ...MOCK_SPEECH_SDK,
     SpeechRecognizer: class extends MOCK_SPEECH_SDK.SpeechRecognizer {
       recognizeOnceAsync(success) {
@@ -926,7 +928,7 @@ test('Happy path with maximum 2 alternatives', async () => {
     reason: 3
   };
 
-  jest.setMock('../SpeechSDK', ({
+  jest.setMock('microsoft-cognitiveservices-speech-sdk', ({
     ...MOCK_SPEECH_SDK,
     SpeechRecognizer: class extends MOCK_SPEECH_SDK.SpeechRecognizer {
       recognizeOnceAsync(success) {
