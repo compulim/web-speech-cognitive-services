@@ -1,6 +1,6 @@
 {
   "name": "web-speech-cognitive-services",
-  "version": "4.0.1-0",
+  "version": "0.0.0-0",
   "description": "Polyfill Web Speech API with Cognitive Services Speech-to-Text service",
   "keywords": [
     "cognitive services",
@@ -70,6 +70,7 @@
     "event-as-promise": "^1.0.5",
     "events": "^3.0.0",
     "memoize-one": "^4.0.0",
+    "microsoft-cognitiveservices-speech-sdk": "^1.2.1",
     "simple-update-in": "^1.2.0"
   }
 }

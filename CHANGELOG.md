@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Changed
+- Fix [#17](https://github.com/compulim/web-speech-cognitive-services/issues/17), bump to [microsoft-cognitiveservices-speech-sdk@1.2.1](https://npmjs.com/package/microsoft-cognitiveservices-speech-sdk), by [@compulim](https://github.com/compulim), in PR [#XXX](https://github.com/compulim/web-speech-cognitive-services/pull/XXX)
 
 ## [4.0.0] - 2018-12-10
 ### Added
