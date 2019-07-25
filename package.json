@@ -7,10 +7,10 @@
     "bootstrap": "lerna bootstrap",
     "build": "lerna run --stream build",
     "clean": "lerna run --parallel --stream clean",
-    "test": "lerna run --stream test",
-    "watch": "lerna run --stream watch"
+    "start": "lerna run --stream start --scope=web-speech-cognitive-services",
+    "test": "lerna run --stream test"
   },
   "devDependencies": {
-    "lerna": "^3.4.1"
+    "lerna": "^3.16.4"
   }
 }
