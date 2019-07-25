@@ -30,8 +30,8 @@
   "scripts": {
     "build": "babel --out-dir lib --ignore **/*.spec.js,**/*.test.js --source-maps true src/",
     "clean": "rimraf lib",
-    "test": "jest",
-    "watch": "npm run build -- --watch"
+    "start": "npm run build -- --watch",
+    "test": "jest"
   },
   "author": "William Wong <compulim@hotmail.com> (http://compulim.info/)",
   "license": "MIT",
@@ -51,25 +51,25 @@
     "react": "^16.4.2"
   },
   "devDependencies": {
-    "@babel/cli": "^7.1.2",
-    "@babel/core": "^7.1.2",
-    "@babel/plugin-proposal-object-rest-spread": "^7.0.0",
-    "@babel/plugin-transform-runtime": "^7.1.0",
-    "@babel/preset-env": "^7.1.0",
+    "@babel/cli": "^7.5.5",
+    "@babel/core": "^7.5.5",
+    "@babel/plugin-proposal-object-rest-spread": "^7.5.5",
+    "@babel/plugin-transform-runtime": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
     "@babel/preset-react": "^7.0.0",
     "babel-core": "7.0.0-bridge.0",
-    "babel-jest": "^23.6.0",
-    "babel-plugin-version-transform": "^1.0.0",
-    "jest": "^23.6.0",
+    "babel-jest": "^24.8.0",
+    "babel-plugin-transform-inline-environment-variables": "^0.4.3",
+    "jest": "^24.8.0",
     "microsoft-speech-browser-sdk": "^0.0.12",
     "react": "^16.4.2",
-    "rimraf": "^2.6.2"
+    "rimraf": "^2.6.3"
   },
   "dependencies": {
-    "@babel/runtime": "^7.1.2",
+    "@babel/runtime": "^7.5.5",
     "event-as-promise": "^1.0.5",
     "events": "^3.0.0",
-    "memoize-one": "^4.0.0",
-    "simple-update-in": "^1.2.0"
+    "memoize-one": "^5.0.5",
+    "simple-update-in": "^2.1.0"
   }
 }

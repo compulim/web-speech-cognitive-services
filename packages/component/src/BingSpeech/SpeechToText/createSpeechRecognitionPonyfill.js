@@ -6,6 +6,8 @@ import DOMEventEmitter from '../Util/DOMEventEmitter';
 import fetchAuthorizationToken from '../fetchAuthorizationToken';
 import SpeechGrammarList from './SpeechGrammarList';
 
+const { NPM_PACKAGE_VERSION: VERSION } = process.env;
+
 function buildSpeechResult(transcript, confidence, isFinal) {
   const result = [{ confidence, transcript }];
 

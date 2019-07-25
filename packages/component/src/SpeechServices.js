@@ -14,3 +14,10 @@ export {
   createSpeechSynthesisPonyfill,
   fetchAuthorizationToken
 }
+
+const meta = document.createElement('meta');
+
+meta.setAttribute('name', 'web-speech-cognitive-services');
+meta.setAttribute('content', `version=${ process.env.NPM_PACKAGE_VERSION }`);
+
+document.head.appendChild(meta);
