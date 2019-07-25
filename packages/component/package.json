@@ -31,7 +31,7 @@
   "scripts": {
     "build": "babel --out-dir lib --ignore **/*.spec.js,**/*.test.js --source-maps true src/",
     "clean": "rimraf lib",
-    "start": "npm run build -- --watch",
+    "start": "npm run build -- --verbose --watch",
     "test": "jest"
   },
   "author": "William Wong <compulim@hotmail.com> (http://compulim.info/)",
@@ -71,6 +71,7 @@
     "event-as-promise": "^1.0.5",
     "events": "^3.0.0",
     "memoize-one": "^5.0.5",
+    "microsoft-cognitiveservices-speech-sdk": "1.6.0",
     "simple-update-in": "^2.1.0"
   }
 }

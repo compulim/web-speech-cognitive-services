@@ -1,5 +1,3 @@
-// TODO: [P1] This need to be fixed with a peer depending package, instead of a burnt in bundle.
+import * as CognitiveServicesSpeechSDK from 'microsoft-cognitiveservices-speech-sdk/distrib/es2015/microsoft.cognitiveservices.speech.sdk';
 
-import './external/microsoft.cognitiveservices.speech.sdk.bundle';
-
-export default window.SpeechSDK
+export default CognitiveServicesSpeechSDK
