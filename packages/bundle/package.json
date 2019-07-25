@@ -1,0 +1,35 @@
+{
+  "name": "bundle",
+  "version": "0.0.0-0",
+  "main": "lib/index.js",
+  "private": true,
+  "scripts": {
+    "build": "npm run build:babel && npm run build:webpack",
+    "build:babel": "babel --out-dir lib --source-maps inline --verbose src/",
+    "build:webpack": "npm run build:webpack:development && npm run build:webpack:production",
+    "build:webpack:development": "webpack --config webpack-instrumented.config.js",
+    "build:webpack:production": "webpack",
+    "clean": "rimraf dist",
+    "prepublishOnly": "npm run build",
+    "start": "npm run build && concurrently --kill-others --names \"babel,webpack\" \"npm run start:babel\" \"npm run start:webpack\"",
+    "start:babel": "npm run build:babel -- --watch",
+    "start:webpack": "webpack --config webpack-watch.config.js --watch"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.5.5",
+    "web-speech-cognitive-services": "^4.0.1-0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.5.5",
+    "@babel/core": "^7.5.5",
+    "@babel/plugin-proposal-object-rest-spread": "^7.5.5",
+    "@babel/plugin-transform-runtime": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "@babel/preset-react": "^7.0.0",
+    "concurrently": "^4.1.1",
+    "rimraf": "^2.6.3",
+    "webpack": "^4.36.1",
+    "webpack-cli": "^3.3.6",
+    "webpack-visualizer-plugin": "^0.1.11"
+  }
+}
