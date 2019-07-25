@@ -6,6 +6,9 @@ cp CHANGELOG.md packages/component
 cp README.md packages/component
 cp LICENSE packages/component
 
+mkdir packages/component/umd
+cp packages/bundle/dist/* packages/component/umd
+
 # If TRAVIS_TAG is present, it means this is going PRODUCTION
 if [ -n "$TRAVIS_TAG" ]
 then
