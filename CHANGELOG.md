@@ -20,8 +20,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
    - [memoize-one@^5.0.5](https://www.npmjs.com/package/memoize-one)
    - [rimraf@^2.6.3](https://www.npmjs.com/package/rimraf)
    - [simple-update-in@^2.1.0](https://www.npmjs.com/package/simple-update-in)
-- Add version number as `<meta>` tag, in PR [#20](https://github.com/compulim/web-speech-cognitive-services/pull/20)
-- Add bundle distribution thru https://unpkg.com/web-speech-cognitive-services@latest/umd/, in PR [#21](https://github.com/compulim/web-speech-cognitive-services/pull/21)
+- Added version number as `<meta>` tag, in PR [#20](https://github.com/compulim/web-speech-cognitive-services/pull/20)
+- Added bundle distribution thru https://unpkg.com/web-speech-cognitive-services@latest/umd/, in PR [#21](https://github.com/compulim/web-speech-cognitive-services/pull/21)
+- Bumped to [microsoft-cognitiveservices-speech-sdk@1.6.0](https://www.npmjs.com/package/microsoft-cognitiveservices-speech-sdk), in PR [#22](https://github.com/compulim/web-speech-cognitive-services/pull/22)
 
 ## [4.0.0] - 2018-12-10
 ### Added
