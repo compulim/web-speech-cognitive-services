@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 
 ### Changed
-- Bumped dependencies, in PR [#XXX](https://github.com/compulim/web-speech-cognitive-services/pull/XXX)
+- Bumped dependencies, in PR [#20](https://github.com/compulim/web-speech-cognitive-services/pull/20)
    - [@babel/cli@^7.5.5](https://www.npmjs.com/package/@babel/cli)
    - [@babel/core@^7.5.5](https://www.npmjs.com/package/@babel/core)
    - [@babel/plugin-proposal-object-rest-spread@^7.5.5](https://www.npmjs.com/package/@babel/plugin-proposal-object-rest-spread)
@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
    - [memoize-one@^5.0.5](https://www.npmjs.com/package/memoize-one)
    - [rimraf@^2.6.3](https://www.npmjs.com/package/rimraf)
    - [simple-update-in@^2.1.0](https://www.npmjs.com/package/simple-update-in)
+- Add version number as `<meta>` tag, in PR [#20](https://github.com/compulim/web-speech-cognitive-services/pull/20)
 
 ## [4.0.0] - 2018-12-10
 ### Added
