@@ -12,6 +12,7 @@ before_install:
 
 install:
 - npm run bootstrap
+- export NPM_PACKAGE_VERSION=`cat package.json | jq -r .version`
 - npm run build
 
 deploy:
