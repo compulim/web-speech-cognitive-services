@@ -25,6 +25,7 @@
   ],
   "main": "lib/index.js",
   "files": [
+    "dist/**/*",
     "lib/**/*"
   ],
   "scripts": {
