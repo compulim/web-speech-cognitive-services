@@ -1,5 +1,3 @@
-import memoize from 'memoize-one';
-
 import cognitiveServiceEventResultToWebSpeechRecognitionResultList from './cognitiveServiceEventResultToWebSpeechRecognitionResultList';
 import createPromiseQueue from '../../Util/createPromiseQueue';
 import DOMEventEmitter from '../../Util/DOMEventEmitter';
@@ -55,6 +53,12 @@ function serializeRecognitionResult({
     reason,
     resultId,
     text
+  };
+}
+
+function improviseAsync(fn, improviser) {
+  return (...args) => {
+    return fn(...args).onSuccessContinueWith(result => improviser(result));
   };
 }
 
@@ -148,8 +152,42 @@ export default async ({
       const recognizer = await this.createRecognizer();
       const queue = createPromiseQueue();
       let lastRecognizingResults;
+      let soundStarted;
       let speechStarted;
       let stopping;
+
+      // We modify "attach" function and detect when the first chunk is read.
+      recognizer.audioConfig.attach = improviseAsync(
+        recognizer.audioConfig.attach.bind(recognizer.audioConfig),
+        reader => {
+          let chunkRead;
+
+          return {
+            ...reader,
+            read: improviseAsync(
+              reader.read.bind(reader),
+              chunk => {
+                if (!chunkRead) {
+                  queue.push({ firstAudioChunk: {} });
+                  chunkRead = true;
+                }
+
+                return chunk;
+              }
+            )
+          };
+        }
+      );
+
+      const { detach: detachAudioConfigEvent } = recognizer.audioConfig.events.attach(event => {
+        const { name } = event;
+
+        if (name === 'AudioSourceReadyEvent') {
+          queue.push({ audioSourceReady: {} });
+        } else if (name === 'AudioSourceOffEvent') {
+          queue.push({ audioSourceOff: {} });
+        }
+      });
 
       recognizer.canceled = (_, { errorDetails, offset, reason, sessionId }) => {
         queue.push({
@@ -197,8 +235,11 @@ export default async ({
         const event = await queue.shift();
         const {
           abort,
+          audioSourceOff,
+          audioSourceReady,
           canceled,
           error,
+          firstAudioChunk,
           recognized,
           recognizing,
           stop,
@@ -221,9 +262,6 @@ export default async ({
 
         if (!loop) {
           this.emit('start');
-          this.emit('audiostart');
-
-          audioStarted = true;
         }
 
         if (errorMessage) {
@@ -241,6 +279,7 @@ export default async ({
 
           break;
         } else if (abort || stop) {
+          // This is for faking stop
           stopping = true;
 
           if (abort) {
@@ -257,21 +296,48 @@ export default async ({
             };
           }
 
+          // We want to emit "speechend" and "soundend" as soon as "abort" or "stop" is called.
           if (speechStarted) {
             this.emit('speechend');
-            this.emit('soundend');
 
             speechStarted = false;
           }
+
+          if (soundStarted) {
+            this.emit('soundend');
+
+            soundStarted = false;
+          }
         } else if (!stopping) {
-          if (recognized && recognized.result && recognized.result.reason === ResultReason.NoMatch) {
+          // If we did not faking stop
+          if (audioSourceReady) {
+            this.emit('audiostart');
+
+            audioStarted = true;
+          } else if (firstAudioChunk) {
+            this.emit('soundstart');
+
+            soundStarted = true;
+          } else if (recognized && recognized.result && recognized.result.reason === ResultReason.NoMatch) {
             finalEvent = {
               error: 'no-speech',
               type: 'error'
             };
           } else {
-            if (!loop) {
+            if (!audioStarted) {
+              // Unconfirmed prevention of quirks
+              this.emit('audiostart');
+
+              audioStarted = true;
+            }
+
+            if (!soundStarted) {
               this.emit('soundstart');
+
+              soundStarted = true;
+            }
+
+            if (!speechStarted) {
               this.emit('speechstart');
 
               speechStarted = true;
@@ -304,6 +370,8 @@ export default async ({
               });
             }
           }
+        } else if (audioSourceOff) {
+          break;
         }
 
         if (error || success) {
@@ -316,6 +384,9 @@ export default async ({
 
       if (speechStarted) {
         this.emit('speechend');
+      }
+
+      if (soundStarted) {
         this.emit('soundend');
       }
 
@@ -331,6 +402,7 @@ export default async ({
       // This is mainly for "microphone blocked" story.
       this.emit('end');
 
+      detachAudioConfigEvent();
       recognizer.dispose();
     }
 
