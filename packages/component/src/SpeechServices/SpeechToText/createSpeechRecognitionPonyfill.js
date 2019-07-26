@@ -57,9 +57,7 @@ function serializeRecognitionResult({
 }
 
 function improviseAsync(fn, improviser) {
-  return (...args) => {
-    return fn(...args).onSuccessContinueWith(result => improviser(result));
-  };
+  return (...args) => fn(...args).onSuccessContinueWith(result => improviser(result));
 }
 
 export default async ({
