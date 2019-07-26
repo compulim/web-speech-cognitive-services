@@ -316,6 +316,8 @@ export default async ({
             this.emit('soundstart');
 
             soundStarted = true;
+          } else if (audioSourceOff) {
+            break;
           } else if (recognized && recognized.result && recognized.result.reason === ResultReason.NoMatch) {
             finalEvent = {
               error: 'no-speech',
@@ -353,7 +355,8 @@ export default async ({
                 type: 'result'
               };
 
-              break;
+              // We should not need this break because we should receive `audioSourceOff` shortly.
+              // break;
             } else if (recognizing) {
               lastRecognizingResults = cognitiveServiceEventResultToWebSpeechRecognitionResultList(
                 recognizing.result,
@@ -368,8 +371,6 @@ export default async ({
               });
             }
           }
-        } else if (audioSourceOff) {
-          break;
         }
 
         if (error || success) {

@@ -1,8 +1,37 @@
 jest.useFakeTimers();
 
+import { PromiseHelper } from 'microsoft-cognitiveservices-speech-sdk/distrib/lib/src/common/Promise';
+
 const MOCK_SPEECH_SDK = {
   AudioConfig: {
-    fromDefaultMicrophoneInput: () => ({})
+    fromDefaultMicrophoneInput: () => {
+      const eventHandlers = [];
+      const readResolves = [];
+
+      return ({
+        attach: () => PromiseHelper.fromResult({
+          read: () => ({
+            onSuccessContinueWith: resolve => readResolves.push(resolve)
+          })
+        }),
+        emitEvent: name => {
+          eventHandlers.forEach(handler => handler({ name }));
+        },
+        emitRead: chunk => {
+          readResolves.forEach(resolve => resolve(chunk));
+          readResolves.splice(0);
+        },
+        events: {
+          attach: handler => {
+            eventHandlers.push(handler);
+
+            return {
+              detach: () => eventHandlers.splice(eventHandlers.indexOf(handler), 1)
+            };
+          }
+        }
+      });
+    }
   },
   OutputFormat: {
     Detailed: 'DETAILED'
@@ -22,9 +51,14 @@ const MOCK_SPEECH_SDK = {
     }
   },
   SpeechRecognizer: class {
-    constructor() {
+    constructor(speechConfig, audioConfig) {
+      this.audioConfig = audioConfig;
+      this.speechConfig = speechConfig;
+
       this.canceled = this.recognized = this.recognizing = () => {};
     }
+
+    dispose() {}
   }
 };
 
@@ -129,6 +163,7 @@ test('Happy path without interims', async () => {
   await new Promise(async resolve => {
     speechRecognition.addEventListener('end', resolve);
     speechRecognition.start();
+    speechRecognition.emitEvent('AudioSourceReadyEvent');
     await 0;
     jest.runAllImmediates();
   });
@@ -141,6 +176,11 @@ test('Happy path with 2 interims', async () => {
     ...MOCK_SPEECH_SDK,
     SpeechRecognizer: class extends MOCK_SPEECH_SDK.SpeechRecognizer {
       recognizeOnceAsync(success) {
+        this.audioConfig.attach().onSuccessContinueWith(reader => reader.read());
+
+        setImmediate(() => this.audioConfig.emitEvent('AudioSourceReadyEvent'));
+        setImmediate(() => this.audioConfig.emitRead());
+
         setImmediate(() => this.recognizing(this, {
           result: {
             duration: 1,
@@ -189,6 +229,8 @@ test('Happy path with 2 interims', async () => {
           }
         }));
 
+        setImmediate(() => this.audioConfig.emitEvent('AudioSourceOffEvent'));
+
         setImmediate(() => success({
           duration: 2,
           json: JSON.stringify({
@@ -217,7 +259,7 @@ test('Happy path with 2 interims', async () => {
   });
 
   const speechRecognition = new SpeechRecognition();
-  const getEvents = captureSpeechEvents(speechRecognition);
+  const getEvents = captureSpeechEvents(speechRecognition, true);
 
   await new Promise(async resolve => {
     speechRecognition.addEventListener('end', resolve);
@@ -235,6 +277,9 @@ test('Muted microphone', async () => {
     ...MOCK_SPEECH_SDK,
     SpeechRecognizer: class extends MOCK_SPEECH_SDK.SpeechRecognizer {
       recognizeOnceAsync(success) {
+        setImmediate(() => this.audioConfig.emitEvent('AudioSourceReadyEvent'));
+        setImmediate(() => this.audioConfig.emitRead());
+
         setImmediate(() => this.recognized(
           this,
           {
@@ -262,6 +307,8 @@ test('Muted microphone', async () => {
           offset: 50000000,
           reason: 0
         }));
+
+        setImmediate(() => this.audioConfig.emitEvent('AudioSourceOffEvent'));
       }
     }
   }));
@@ -359,6 +406,9 @@ test('Push-to-talk with partial recognized text', async () => {
     ...MOCK_SPEECH_SDK,
     SpeechRecognizer: class extends MOCK_SPEECH_SDK.SpeechRecognizer {
       recognizeOnceAsync(success) {
+        setImmediate(() => this.audioConfig.emitEvent('AudioSourceReadyEvent'));
+        setImmediate(() => this.audioConfig.emitRead());
+
         setTimeout(() => this.recognizing(this, {
           result: {
             duration: 1,
@@ -442,6 +492,8 @@ test('Push-to-talk with partial recognized text', async () => {
           reason: 3,
           text: '123.'
         }), 1000);
+
+        setTimeout(() => this.audioConfig.emitEvent('AudioSourceOffEvent'), 1000);
       }
     }
   }));
@@ -473,6 +525,9 @@ test('Push-to-talk stop before first recognized text', async () => {
     ...MOCK_SPEECH_SDK,
     SpeechRecognizer: class extends MOCK_SPEECH_SDK.SpeechRecognizer {
       recognizeOnceAsync(success) {
+        setTimeout(() => this.audioConfig.emitEvent('AudioSourceReadyEvent'), 0);
+        setTimeout(() => this.audioConfig.emitRead(), 0);
+
         setTimeout(() => this.recognizing(this, {
           result: {
             duration: 1,
@@ -526,6 +581,8 @@ test('Push-to-talk stop before first recognized text', async () => {
           reason: 3,
           text: '1.'
         }), 1000);
+
+        setTimeout(() => this.audioConfig.emitEvent('AudioSourceOffEvent'), 1000);
       }
     }
   }));
@@ -557,6 +614,11 @@ test('Abort with partial recognized text', async () => {
     ...MOCK_SPEECH_SDK,
     SpeechRecognizer: class extends MOCK_SPEECH_SDK.SpeechRecognizer {
       recognizeOnceAsync(success) {
+        this.audioConfig.attach().onSuccessContinueWith(reader => reader.read());
+
+        setTimeout(() => this.audioConfig.emitEvent('AudioSourceReadyEvent'), 0);
+        setTimeout(() => this.audioConfig.emitRead(), 0);
+
         setTimeout(() => this.recognizing(this, {
           result: {
             duration: 1,
@@ -620,6 +682,8 @@ test('Abort with partial recognized text', async () => {
           }
         }), 1000);
 
+        setTimeout(() => this.audioConfig.emitEvent('AudioSourceOffEvent'), 1000);
+
         setTimeout(() => success({
           duration: 3,
           json: JSON.stringify({
@@ -669,6 +733,11 @@ test('Abort before first recognized text', async () => {
     ...MOCK_SPEECH_SDK,
     SpeechRecognizer: class extends MOCK_SPEECH_SDK.SpeechRecognizer {
       recognizeOnceAsync(success) {
+        this.audioConfig.attach().onSuccessContinueWith(reader => reader.read());
+
+        setTimeout(() => this.audioConfig.emitEvent('AudioSourceReadyEvent'), 0);
+        setTimeout(() => this.audioConfig.emitRead(), 0);
+
         setTimeout(() => this.recognizing(this, {
           result: {
             duration: 1,
@@ -703,6 +772,8 @@ test('Abort before first recognized text', async () => {
             text: '1.'
           }
         }), 1000);
+
+        setTimeout(() => this.audioConfig.emitEvent('AudioSourceOffEvent'), 1000);
 
         setTimeout(() => success({
           duration: 3,
@@ -771,8 +842,11 @@ test('Happy path with ITN result', async () => {
     ...MOCK_SPEECH_SDK,
     SpeechRecognizer: class extends MOCK_SPEECH_SDK.SpeechRecognizer {
       recognizeOnceAsync(success) {
+        setImmediate(() => this.audioConfig.emitEvent('AudioSourceReadyEvent'));
+        setImmediate(() => this.audioConfig.emitRead());
         setImmediate(() => this.recognized(this, { result: recognizedResult }));
         setImmediate(() => success(recognizedResult));
+        setImmediate(() => this.audioConfig.emitEvent('AudioSourceOffEvent'));
       }
     }
   }));
@@ -820,8 +894,11 @@ test('Happy path with lexical result', async () => {
     ...MOCK_SPEECH_SDK,
     SpeechRecognizer: class extends MOCK_SPEECH_SDK.SpeechRecognizer {
       recognizeOnceAsync(success) {
+        setImmediate(() => this.audioConfig.emitEvent('AudioSourceReadyEvent'));
+        setImmediate(() => this.audioConfig.emitRead());
         setImmediate(() => this.recognized(this, { result: recognizedResult }));
         setImmediate(() => success(recognizedResult));
+        setImmediate(() => this.audioConfig.emitEvent('AudioSourceOffEvent'));
       }
     }
   }));
@@ -869,8 +946,11 @@ test('Happy path with masked ITN result', async () => {
     ...MOCK_SPEECH_SDK,
     SpeechRecognizer: class extends MOCK_SPEECH_SDK.SpeechRecognizer {
       recognizeOnceAsync(success) {
+        setImmediate(() => this.audioConfig.emitEvent('AudioSourceReadyEvent'));
+        setImmediate(() => this.audioConfig.emitRead());
         setImmediate(() => this.recognized(this, { result: recognizedResult }));
         setImmediate(() => success(recognizedResult));
+        setImmediate(() => this.audioConfig.emitEvent('AudioSourceOffEvent'));
       }
     }
   }));
@@ -930,8 +1010,11 @@ test('Happy path with maximum 2 alternatives', async () => {
     ...MOCK_SPEECH_SDK,
     SpeechRecognizer: class extends MOCK_SPEECH_SDK.SpeechRecognizer {
       recognizeOnceAsync(success) {
+        setImmediate(() => this.audioConfig.emitEvent('AudioSourceReadyEvent'));
+        setImmediate(() => this.audioConfig.emitRead());
         setImmediate(() => this.recognized(this, { result: recognizedResult }));
         setImmediate(() => success(recognizedResult));
+        setImmediate(() => this.audioConfig.emitEvent('AudioSourceOffEvent'));
       }
     }
   }));

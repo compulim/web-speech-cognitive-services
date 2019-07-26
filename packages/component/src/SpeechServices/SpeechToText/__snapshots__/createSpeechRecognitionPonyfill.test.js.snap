@@ -3,7 +3,7 @@
 exports[`Abort before first recognized text 1`] = `
 Array [
   Object {
-    "subType": "abort",
+    "subType": "audioSourceReady",
     "type": "cognitiveservices",
   },
   Object {
@@ -13,11 +13,29 @@ Array [
     "type": "audiostart",
   },
   Object {
+    "subType": "firstAudioChunk",
+    "type": "cognitiveservices",
+  },
+  Object {
+    "type": "soundstart",
+  },
+  Object {
+    "subType": "abort",
+    "type": "cognitiveservices",
+  },
+  Object {
+    "type": "soundend",
+  },
+  Object {
     "subType": "recognizing",
     "type": "cognitiveservices",
   },
   Object {
     "subType": "recognized",
+    "type": "cognitiveservices",
+  },
+  Object {
+    "subType": "audioSourceOff",
     "type": "cognitiveservices",
   },
   Object {
@@ -40,7 +58,7 @@ Array [
 exports[`Abort with partial recognized text 1`] = `
 Array [
   Object {
-    "subType": "recognizing",
+    "subType": "audioSourceReady",
     "type": "cognitiveservices",
   },
   Object {
@@ -50,7 +68,15 @@ Array [
     "type": "audiostart",
   },
   Object {
+    "subType": "firstAudioChunk",
+    "type": "cognitiveservices",
+  },
+  Object {
     "type": "soundstart",
+  },
+  Object {
+    "subType": "recognizing",
+    "type": "cognitiveservices",
   },
   Object {
     "type": "speechstart",
@@ -100,6 +126,10 @@ Array [
     "type": "cognitiveservices",
   },
   Object {
+    "subType": "audioSourceOff",
+    "type": "cognitiveservices",
+  },
+  Object {
     "subType": "success",
     "type": "cognitiveservices",
   },
@@ -119,13 +149,25 @@ Array [
 exports[`Happy path with 2 interims 1`] = `
 Array [
   Object {
+    "subType": "audioSourceReady",
+    "type": "cognitiveservices",
+  },
+  Object {
     "type": "start",
   },
   Object {
     "type": "audiostart",
   },
   Object {
+    "subType": "firstAudioChunk",
+    "type": "cognitiveservices",
+  },
+  Object {
     "type": "soundstart",
+  },
+  Object {
+    "subType": "recognizing",
+    "type": "cognitiveservices",
   },
   Object {
     "type": "speechstart",
@@ -142,6 +184,10 @@ Array [
     "type": "result",
   },
   Object {
+    "subType": "recognizing",
+    "type": "cognitiveservices",
+  },
+  Object {
     "results": Array [
       Array [
         Object {
@@ -151,6 +197,14 @@ Array [
       ],
     ],
     "type": "result",
+  },
+  Object {
+    "subType": "recognized",
+    "type": "cognitiveservices",
+  },
+  Object {
+    "subType": "audioSourceOff",
+    "type": "cognitiveservices",
   },
   Object {
     "type": "speechend",
