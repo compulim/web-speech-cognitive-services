@@ -511,7 +511,7 @@ Array [
 exports[`Push-to-talk stop before first recognized text 1`] = `
 Array [
   Object {
-    "subType": "stop",
+    "subType": "audioSourceReady",
     "type": "cognitiveservices",
   },
   Object {
@@ -521,11 +521,29 @@ Array [
     "type": "audiostart",
   },
   Object {
+    "subType": "firstAudioChunk",
+    "type": "cognitiveservices",
+  },
+  Object {
+    "type": "soundstart",
+  },
+  Object {
+    "subType": "stop",
+    "type": "cognitiveservices",
+  },
+  Object {
+    "type": "soundend",
+  },
+  Object {
     "subType": "recognizing",
     "type": "cognitiveservices",
   },
   Object {
     "subType": "recognized",
+    "type": "cognitiveservices",
+  },
+  Object {
+    "subType": "audioSourceOff",
     "type": "cognitiveservices",
   },
   Object {
@@ -544,7 +562,7 @@ Array [
 exports[`Push-to-talk with partial recognized text 1`] = `
 Array [
   Object {
-    "subType": "recognizing",
+    "subType": "audioSourceReady",
     "type": "cognitiveservices",
   },
   Object {
@@ -554,7 +572,15 @@ Array [
     "type": "audiostart",
   },
   Object {
+    "subType": "firstAudioChunk",
+    "type": "cognitiveservices",
+  },
+  Object {
     "type": "soundstart",
+  },
+  Object {
+    "subType": "recognizing",
+    "type": "cognitiveservices",
   },
   Object {
     "type": "speechstart",
@@ -601,6 +627,10 @@ Array [
   },
   Object {
     "subType": "recognized",
+    "type": "cognitiveservices",
+  },
+  Object {
+    "subType": "audioSourceOff",
     "type": "cognitiveservices",
   },
   Object {

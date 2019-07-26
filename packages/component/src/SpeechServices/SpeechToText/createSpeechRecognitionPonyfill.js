@@ -264,6 +264,11 @@ export default async ({
 
         if (errorMessage) {
           if (/1006/.test(errorMessage)) {
+            if (!audioStarted) {
+              this.emit('audiostart');
+              this.emit('audioend');
+            }
+
             finalEvent = {
               error: 'network',
               type: 'error'
