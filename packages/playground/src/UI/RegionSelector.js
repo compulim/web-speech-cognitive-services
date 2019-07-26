@@ -29,7 +29,7 @@ export default connect(
     ponyfillType,
     region
   }) => ({
-    disabled: ponyfillType !== 'cognitiveservices',
+    disabled: ponyfillType !== 'speechservices',
     region
   }),
   { setRegion }
