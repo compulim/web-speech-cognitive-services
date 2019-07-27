@@ -281,16 +281,19 @@ export default async ({
           }
 
           break;
-        } else if (abort || stop) {
+        } else if (abort) {
+          finalEvent = {
+            error: 'aborted',
+            type: 'error'
+          };
+
+          stopping = true;
+          recognizer.stopContinuousRecognitionAsync();
+        } else if (stop) {
           // This is for faking stop
           stopping = true;
 
-          if (abort) {
-            finalEvent = {
-              error: 'aborted',
-              type: 'error'
-            };
-          } else if (lastRecognizingResults) {
+          if (lastRecognizingResults) {
             lastRecognizingResults.isFinal = true;
 
             finalEvent = {
@@ -322,7 +325,12 @@ export default async ({
 
             soundStarted = true;
           } else if (audioSourceOff) {
-            break;
+            stopping = true;
+            speechStarted && this.emit('speechend');
+            soundStarted && this.emit('soundend');
+            audioStarted && this.emit('audioend');
+
+            audioStarted = soundStarted = speechStarted = false;
           } else if (recognized && recognized.result && recognized.result.reason === ResultReason.NoMatch) {
             finalEvent = {
               error: 'no-speech',

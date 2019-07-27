@@ -1,0 +1,101 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Mock SpeechRecognizer with abort with partial recognized text 1`] = `
+Array [
+  "cognitiveservices:audioSourceReady",
+  "webspeech:start",
+  "webspeech:audiostart",
+  "cognitiveservices:firstAudioChunk",
+  "webspeech:soundstart",
+  "cognitiveservices:recognizing",
+  "webspeech:speechstart",
+  "cognitiveservices:abort",
+  "cognitiveservices:audioSourceOff",
+  "cognitiveservices:error",
+  "webspeech:speechend",
+  "webspeech:soundend",
+  "webspeech:audioend",
+  "webspeech:error { error: 'aborted' }",
+  "webspeech:end",
+]
+`;
+
+exports[`Mock SpeechRecognizer with happy path with 2 interims 1`] = `
+Array [
+  "cognitiveservices:audioSourceReady",
+  "webspeech:start",
+  "webspeech:audiostart",
+  "cognitiveservices:firstAudioChunk",
+  "webspeech:soundstart",
+  "cognitiveservices:recognizing",
+  "webspeech:speechstart",
+  "webspeech:result { isFinal: false, length: 1 }",
+  "cognitiveservices:recognizing",
+  "webspeech:result { isFinal: false, length: 1 }",
+  "cognitiveservices:recognized",
+  "cognitiveservices:audioSourceOff",
+  "webspeech:speechend",
+  "webspeech:soundend",
+  "webspeech:audioend",
+  "cognitiveservices:success",
+  "webspeech:result { isFinal: true, length: 1 }",
+  "webspeech:end",
+]
+`;
+
+exports[`Mock SpeechRecognizer with happy path without interims 1`] = `
+Array [
+  "cognitiveservices:audioSourceReady",
+  "webspeech:start",
+  "webspeech:audiostart",
+  "cognitiveservices:firstAudioChunk",
+  "webspeech:soundstart",
+  "cognitiveservices:recognizing",
+  "webspeech:speechstart",
+  "cognitiveservices:recognized",
+  "cognitiveservices:audioSourceOff",
+  "webspeech:speechend",
+  "webspeech:soundend",
+  "webspeech:audioend",
+  "cognitiveservices:success",
+  "webspeech:result { isFinal: true, length: 1 }",
+  "webspeech:end",
+]
+`;
+
+exports[`Mock SpeechRecognizer with microphone blocked 1`] = `
+Array [
+  "cognitiveservices:canceled",
+  "webspeech:error { error: 'not-allowed' }",
+  "webspeech:end",
+]
+`;
+
+exports[`Mock SpeechRecognizer with muted microphone 1`] = `
+Array [
+  "cognitiveservices:audioSourceReady",
+  "webspeech:start",
+  "webspeech:audiostart",
+  "cognitiveservices:firstAudioChunk",
+  "webspeech:soundstart",
+  "cognitiveservices:recognized",
+  "cognitiveservices:audioSourceOff",
+  "webspeech:soundend",
+  "webspeech:audioend",
+  "cognitiveservices:success",
+  "webspeech:error { error: 'no-speech' }",
+  "webspeech:end",
+]
+`;
+
+exports[`Mock SpeechRecognizer with network error 1`] = `
+Array [
+  "cognitiveservices:audioSourceReady",
+  "webspeech:start",
+  "webspeech:audiostart",
+  "cognitiveservices:canceled",
+  "webspeech:audioend",
+  "webspeech:error { error: 'network' }",
+  "webspeech:end",
+]
+`;
