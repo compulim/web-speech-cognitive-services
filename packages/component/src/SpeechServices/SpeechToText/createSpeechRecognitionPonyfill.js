@@ -153,6 +153,7 @@ export default async ({
       let soundStarted;
       let speechStarted;
       let stopping;
+      let aborting;
 
       // We modify "attach" function and detect when the first chunk is read.
       recognizer.audioConfig.attach = improviseAsync(
@@ -287,7 +288,8 @@ export default async ({
             type: 'error'
           };
 
-          stopping = true;
+          aborting = true;
+
           recognizer.stopContinuousRecognitionAsync();
         } else if (stop) {
           // This is for faking stop
@@ -331,6 +333,10 @@ export default async ({
             audioStarted && this.emit('audioend');
 
             audioStarted = soundStarted = speechStarted = false;
+
+            if (aborting) {
+              break;
+            }
           } else if (recognized && recognized.result && recognized.result.reason === ResultReason.NoMatch) {
             finalEvent = {
               error: 'no-speech',

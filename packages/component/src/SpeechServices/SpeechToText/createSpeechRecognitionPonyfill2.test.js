@@ -469,6 +469,7 @@ describe('Mock SpeechRecognizer with', () => {
 
     // cognitiveservices:abort
 
+    await recognizer.waitForStopContinuousRecognitionAsync();
     recognizer.audioConfig.emitEvent('AudioSourceOffEvent');
 
     // cognitiveservices:audioSourceOff

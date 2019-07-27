@@ -11,7 +11,6 @@ Array [
   "webspeech:speechstart",
   "cognitiveservices:abort",
   "cognitiveservices:audioSourceOff",
-  "cognitiveservices:error",
   "webspeech:speechend",
   "webspeech:soundend",
   "webspeech:audioend",
