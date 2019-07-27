@@ -60,6 +60,18 @@ function improviseAsync(fn, improviser) {
   return (...args) => fn(...args).onSuccessContinueWith(result => improviser(result));
 }
 
+function maxAmplitude(chunk) {
+  return chunk.reduce((maxAmplitude, value, index) => {
+    if (index % 2) {
+      return maxAmplitude;
+    }
+
+    const amplitude = value + chunk[index + 1] << 8;
+
+    return Math.max(maxAmplitude, amplitude);
+  }, 0);
+}
+
 export default async ({
   authorizationToken,
   region = 'westus',
@@ -166,8 +178,8 @@ export default async ({
             read: improviseAsync(
               reader.read.bind(reader),
               chunk => {
-                if (!chunkRead) {
-                  queue.push({ firstAudioChunk: {} });
+                if (!chunkRead && maxAmplitude(chunk) > 256) {
+                  queue.push({ firstAudibleChunk: {} });
                   chunkRead = true;
                 }
 
@@ -224,6 +236,19 @@ export default async ({
         err => queue.push({ error: err })
       );
 
+      // console.log('recognizeOnceAsync call');
+
+      // recognizer.recognizeOnceAsync(
+      //   result => {
+      //     console.log('recognizeOnceAsync.success');
+      //     queue.push({ success: serializeRecognitionResult(result) });
+      //   },
+      //   err => {
+      //     console.log('recognizeOnceAsync.error');
+      //     queue.push({ error: err })
+      //   }
+      // );
+
       this.abort = () => queue.push({ abort: {} });
       this.stop = () => queue.push({ stop: {} });
 
@@ -238,7 +263,7 @@ export default async ({
           audioSourceReady,
           canceled,
           error,
-          firstAudioChunk,
+          firstAudibleChunk,
           recognized,
           recognizing,
           stop,
@@ -323,7 +348,7 @@ export default async ({
             this.emit('audiostart');
 
             audioStarted = true;
-          } else if (firstAudioChunk) {
+          } else if (firstAudibleChunk) {
             this.emit('soundstart');
 
             soundStarted = true;
