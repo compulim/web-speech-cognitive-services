@@ -18,7 +18,8 @@ const MOCK_SPEECH_SDK = {
         emitEvent: name => {
           eventHandlers.forEach(handler => handler({ name }));
         },
-        emitRead: chunk => {
+        emitRead: (chunk = [0xFF, 0xFF]) => {
+          // TODO: Rename "emitRead" to more meaningful name
           readResolves.forEach(resolve => resolve(chunk));
           readResolves.splice(0);
         },
@@ -71,8 +72,8 @@ const MOCK_SPEECH_SDK = {
       this.callStopContinuousRecognitionAsyncDeferred.resolve(args);
     }
 
-    async setFirstAudioChunk(chunk = []) {
-      this.audioConfig.attach().onSuccessContinueWith(reader => reader.read(chunk));
+    async readAudioChunk() {
+      this.audioConfig.attach().onSuccessContinueWith(reader => reader.read());
     }
 
     async waitForRecognizeOnceAsync() {
@@ -254,7 +255,7 @@ describe('Mock SpeechRecognizer with', () => {
       await recognizer.waitForRecognizeOnceAsync();
 
       // This will fire "firstAudioChunk" on "emitRead"
-      recognizer.setFirstAudioChunk();
+      recognizer.readAudioChunk();
 
       recognizer.audioConfig.emitEvent('AudioSourceReadyEvent');
 
@@ -300,7 +301,7 @@ describe('Mock SpeechRecognizer with', () => {
       await recognizer.waitForRecognizeOnceAsync();
 
       // This will fire "firstAudioChunk" on "emitRead"
-      recognizer.setFirstAudioChunk();
+      recognizer.readAudioChunk();
 
       recognizer.audioConfig.emitEvent('AudioSourceReadyEvent');
 
@@ -351,10 +352,10 @@ describe('Mock SpeechRecognizer with', () => {
     await recognizer.waitForRecognizeOnceAsync();
 
     // This will fire "firstAudioChunk" on "emitRead"
-    recognizer.setFirstAudioChunk();
+    recognizer.readAudioChunk();
 
     recognizer.audioConfig.emitEvent('AudioSourceReadyEvent');
-    recognizer.audioConfig.emitRead();
+    recognizer.audioConfig.emitRead([0x00, 0x00]);
 
     // cognitiveservices:audioSourceReady
     // webspeech:start
@@ -458,7 +459,7 @@ describe('Mock SpeechRecognizer with', () => {
       await recognizer.waitForRecognizeOnceAsync();
 
       // This will fire "firstAudioChunk" on "emitRead"
-      recognizer.setFirstAudioChunk();
+      recognizer.readAudioChunk();
       recognizer.audioConfig.emitEvent('AudioSourceReadyEvent');
 
       // cognitiveservices:audioSourceReady
@@ -499,7 +500,7 @@ describe('Mock SpeechRecognizer with', () => {
       await recognizer.waitForRecognizeOnceAsync();
 
       // This will fire "firstAudioChunk" on "emitRead"
-      recognizer.setFirstAudioChunk();
+      recognizer.readAudioChunk();
       recognizer.audioConfig.emitEvent('AudioSourceReadyEvent');
 
       // cognitiveservices:audioSourceReady
@@ -595,7 +596,7 @@ describe('SpeechRecognizer with text normalization', () => {
     await recognizer.waitForRecognizeOnceAsync();
 
     // This will fire "firstAudioChunk" on "emitRead"
-    recognizer.setFirstAudioChunk();
+    recognizer.readAudioChunk();
 
     recognizer.audioConfig.emitEvent('AudioSourceReadyEvent');
 
@@ -649,7 +650,7 @@ describe('SpeechRecognizer with text normalization', () => {
     await recognizer.waitForRecognizeOnceAsync();
 
     // This will fire "firstAudioChunk" on "emitRead"
-    recognizer.setFirstAudioChunk();
+    recognizer.readAudioChunk();
 
     recognizer.audioConfig.emitEvent('AudioSourceReadyEvent');
 
@@ -703,7 +704,7 @@ describe('SpeechRecognizer with text normalization', () => {
     await recognizer.waitForRecognizeOnceAsync();
 
     // This will fire "firstAudioChunk" on "emitRead"
-    recognizer.setFirstAudioChunk();
+    recognizer.readAudioChunk();
 
     recognizer.audioConfig.emitEvent('AudioSourceReadyEvent');
 
