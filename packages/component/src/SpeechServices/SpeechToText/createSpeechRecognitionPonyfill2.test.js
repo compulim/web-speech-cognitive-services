@@ -148,6 +148,7 @@ const MOCK_SUCCESS_RESULT = {
 const SPEECH_EVENTS = [
   'audioend',
   'audiostart',
+  'cognitiveservices',
   'end',
   'error',
   'result',
@@ -160,74 +161,81 @@ const SPEECH_EVENTS = [
 
 function captureSpeechEvents(speech) {
   const queue = [];
+  const push = queue.push.bind(queue);
 
   for (let eventName of SPEECH_EVENTS) {
-    switch (eventName) {
-      case 'error':
-        speech.addEventListener(eventName, ({ error }) => queue.push(`webspeech:error { error: '${ error }' }`));
-
-        break;
-
-      case 'result':
-        speech.addEventListener(eventName, ({ results, type }) => {
-          const { length } = results;
-          const [{ isFinal } = {}] = results;
-
-          queue.push(`webspeech:${ type } { isFinal: ${ !!isFinal }, length: ${ length } }`);
-        });
-
-        break;
-
-      default:
-        speech.addEventListener(eventName, ({ type }) => queue.push(`webspeech:${ type }`));
-
-        break;
-    }
+    speech.addEventListener(eventName, push);
   }
-
-  speech.addEventListener('cognitiveservices', ({ subType, type }) => queue.push(`${ type }:${ subType }`));
 
   return queue;
 }
+
+function toSnapshot(events) {
+  return events.map(event => {
+    const { type } = event;
+
+    if (type === 'cognitiveservices') {
+      const { subType } = event;
+
+      return `${ type }:${ subType }`;
+    } else {
+      switch (type) {
+        case 'error':
+          return `webspeech:error { error: '${ event.error }' }`;
+
+        case 'result':
+          const results = event.results.map(results => [].map.call(results, ({ transcript }) => transcript));
+
+          return `webspeech:${ type } { isFinal: ${ !!event.results[0].isFinal }, ${ JSON.stringify(results) }`;
+
+        default:
+          return `webspeech:${ type }`;
+      }
+    }
+  });
+}
+
+let recognizer;
+
+beforeEach(() => {
+  jest.resetModules();
+  jest.setMock('../SpeechSDK', ({
+    ...MOCK_SPEECH_SDK,
+    SpeechRecognizer: class extends MOCK_SPEECH_SDK.SpeechRecognizer {
+      constructor(...args) {
+        super(...args);
+        recognizer = this;
+      }
+    }
+  }));
+
+  global.window = {
+    document: {
+      documentElement: {
+        getAttribute: attributeName => {
+          if (attributeName === 'lang') {
+            return 'en-US';
+          } else {
+            throw new Error('not implemented');
+          }
+        }
+      }
+    },
+    navigator: {
+      mediaDevices: {
+        getUserMedia: () => {}
+      }
+    }
+  };
+});
 
 describe('Mock SpeechRecognizer with', () => {
   let endEventEmitted;
   let errorEventEmitted;
   let events;
-  let recognizer;
   let speechRecognition;
 
   beforeEach(async () => {
-    jest.resetModules();
-    jest.setMock('../SpeechSDK', ({
-      ...MOCK_SPEECH_SDK,
-      SpeechRecognizer: class extends MOCK_SPEECH_SDK.SpeechRecognizer {
-        constructor(...args) {
-          super(...args);
-          recognizer = this;
-        }
-      }
-    }));
-
-    global.window = {
-      document: {
-        documentElement: {
-          getAttribute: attributeName => {
-            if (attributeName === 'lang') {
-              return 'en-US';
-            } else {
-              throw new Error('not implemented');
-            }
-          }
-        }
-      },
-      navigator: {
-        mediaDevices: {
-          getUserMedia: () => {}
-        }
-      }
-    };
-
     const { default: createSpeechRecognitionPonyfill } = require('./createSpeechRecognitionPonyfill');
     const { SpeechRecognition } = await createSpeechRecognitionPonyfill({
       region: 'westus',
@@ -240,100 +248,102 @@ describe('Mock SpeechRecognizer with', () => {
     errorEventEmitted = new Promise(resolve => speechRecognition.addEventListener('error', resolve));
   });
 
-  test('happy path without interims', async () => {
-    speechRecognition.start();
-    await recognizer.waitForRecognizeOnceAsync();
+  describe('happy path', () => {
+    test('without interims', async () => {
+      speechRecognition.start();
+      await recognizer.waitForRecognizeOnceAsync();
 
-    // This will fire "firstAudioChunk" on "emitRead"
-    recognizer.setFirstAudioChunk();
+      // This will fire "firstAudioChunk" on "emitRead"
+      recognizer.setFirstAudioChunk();
 
-    recognizer.audioConfig.emitEvent('AudioSourceReadyEvent');
+      recognizer.audioConfig.emitEvent('AudioSourceReadyEvent');
 
-    // cognitiveservices:audioSourceReady
-    // webspeech:start
-    // webspeech:audiostart
+      // cognitiveservices:audioSourceReady
+      // webspeech:start
+      // webspeech:audiostart
 
-    recognizer.audioConfig.emitRead();
+      recognizer.audioConfig.emitRead();
 
-    // cognitiveservices:firstAudioChunk
-    // webspeech:soundstart
+      // cognitiveservices:firstAudioChunk
+      // webspeech:soundstart
 
-    recognizer.recognizing(this, MOCK_RECOGNIZING_EVENT);
+      recognizer.recognizing(this, MOCK_RECOGNIZING_EVENT);
 
-    // cognitiveservices:recognizing
-    // webspeech:speechstart
+      // cognitiveservices:recognizing
+      // webspeech:speechstart
 
-    recognizer.recognized(this, MOCK_RECOGNIZED_EVENT);
+      recognizer.recognized(this, MOCK_RECOGNIZED_EVENT);
 
-    // cognitiveservices:recognized
+      // cognitiveservices:recognized
 
-    recognizer.audioConfig.emitEvent('AudioSourceOffEvent');
+      recognizer.audioConfig.emitEvent('AudioSourceOffEvent');
 
-    // cognitiveservices:audioSourceOff
-    // webspeech:speechend
-    // webspeech:soundend
-    // webspeech:audioend
+      // cognitiveservices:audioSourceOff
+      // webspeech:speechend
+      // webspeech:soundend
+      // webspeech:audioend
 
-    recognizer.resolveRecognizeOnceAsync(MOCK_SUCCESS_RESULT);
+      recognizer.resolveRecognizeOnceAsync(MOCK_SUCCESS_RESULT);
 
-    // cognitiveservices:success
-    // webspeech:result.isFinal=true
-    // webspeech:end
+      // cognitiveservices:success
+      // webspeech:result.isFinal=true
+      // webspeech:end
 
-    await endEventEmitted;
+      await endEventEmitted;
 
-    expect(events).toMatchSnapshot();
-  });
+      expect(toSnapshot(events)).toMatchSnapshot();
+    });
 
-  test('happy path with 2 interims', async () => {
-    speechRecognition.start();
-    speechRecognition.interimResults = true;
-    await recognizer.waitForRecognizeOnceAsync();
+    test('with 2 interims', async () => {
+      speechRecognition.start();
+      speechRecognition.interimResults = true;
+      await recognizer.waitForRecognizeOnceAsync();
 
-    // This will fire "firstAudioChunk" on "emitRead"
-    recognizer.setFirstAudioChunk();
+      // This will fire "firstAudioChunk" on "emitRead"
+      recognizer.setFirstAudioChunk();
 
-    recognizer.audioConfig.emitEvent('AudioSourceReadyEvent');
+      recognizer.audioConfig.emitEvent('AudioSourceReadyEvent');
 
-    // cognitiveservices:audioSourceReady
-    // webspeech:start
-    // webspeech:audiostart
+      // cognitiveservices:audioSourceReady
+      // webspeech:start
+      // webspeech:audiostart
 
-    recognizer.audioConfig.emitRead();
+      recognizer.audioConfig.emitRead();
 
-    // cognitiveservices:firstAudioChunk
-    // webspeech:soundstart
+      // cognitiveservices:firstAudioChunk
+      // webspeech:soundstart
 
-    recognizer.recognizing(this, MOCK_RECOGNIZING_EVENT);
+      recognizer.recognizing(this, MOCK_RECOGNIZING_EVENT);
 
-    // cognitiveservices:recognizing
-    // webspeech:speechstart
+      // cognitiveservices:recognizing
+      // webspeech:speechstart
 
-    recognizer.recognizing(this, MOCK_RECOGNIZING_EVENT);
+      recognizer.recognizing(this, MOCK_RECOGNIZING_EVENT);
 
-    // cognitiveservices:recognizing
-    // webspeech:result.isFinal=false
+      // cognitiveservices:recognizing
+      // webspeech:result.isFinal=false
 
-    recognizer.recognized(this, MOCK_RECOGNIZED_EVENT);
+      recognizer.recognized(this, MOCK_RECOGNIZED_EVENT);
 
-    // cognitiveservices:recognized
+      // cognitiveservices:recognized
 
-    recognizer.audioConfig.emitEvent('AudioSourceOffEvent');
+      recognizer.audioConfig.emitEvent('AudioSourceOffEvent');
 
-    // cognitiveservices:audioSourceOff
-    // webspeech:speechend
-    // webspeech:soundend
-    // webspeech:audioend
+      // cognitiveservices:audioSourceOff
+      // webspeech:speechend
+      // webspeech:soundend
+      // webspeech:audioend
 
-    recognizer.resolveRecognizeOnceAsync(MOCK_SUCCESS_RESULT);
+      recognizer.resolveRecognizeOnceAsync(MOCK_SUCCESS_RESULT);
 
-    // cognitiveservices:success
-    // webspeech:result.isFinal=true
-    // webspeech:end
+      // cognitiveservices:success
+      // webspeech:result.isFinal=true
+      // webspeech:end
 
-    await endEventEmitted;
+      await endEventEmitted;
 
-    expect(events).toMatchSnapshot();
+      expect(toSnapshot(events)).toMatchSnapshot();
+    });
   });
 
   test('muted microphone', async () => {
@@ -388,7 +398,7 @@ describe('Mock SpeechRecognizer with', () => {
 
     await errorEventEmitted;
 
-    expect(events).toMatchSnapshot();
+    expect(toSnapshot(events)).toMatchSnapshot();
   });
 
   test('network error', async () => {
@@ -419,7 +429,7 @@ describe('Mock SpeechRecognizer with', () => {
 
     await errorEventEmitted;
 
-    expect(events).toMatchSnapshot();
+    expect(toSnapshot(events)).toMatchSnapshot();
   });
 
   test('microphone blocked', async () => {
@@ -439,11 +449,149 @@ describe('Mock SpeechRecognizer with', () => {
 
     await errorEventEmitted;
 
-    expect(events).toMatchSnapshot();
+    expect(toSnapshot(events)).toMatchSnapshot();
   });
 
-  test('abort with partial recognized text', async () => {
+  describe('abort after', () => {
+    test('recognizing', async () => {
+      speechRecognition.start();
+      await recognizer.waitForRecognizeOnceAsync();
+
+      // This will fire "firstAudioChunk" on "emitRead"
+      recognizer.setFirstAudioChunk();
+      recognizer.audioConfig.emitEvent('AudioSourceReadyEvent');
+
+      // cognitiveservices:audioSourceReady
+      // webspeech:start
+      // webspeech:audiostart
+
+      recognizer.audioConfig.emitRead();
+
+      // cognitiveservices:firstAudioChunk
+      // webspeech:soundstart
+
+      recognizer.recognizing(this, MOCK_RECOGNIZING_EVENT);
+
+      // cognitiveservices:recognizing
+      // webspeech:speechstart
+
+      speechRecognition.abort();
+
+      // cognitiveservices:abort
+
+      await recognizer.waitForStopContinuousRecognitionAsync();
+      recognizer.audioConfig.emitEvent('AudioSourceOffEvent');
+
+      // cognitiveservices:audioSourceOff
+      // webspeech:speechend
+      // webspeech:soundend
+      // webspeech:audioend
+      // webspeech:error
+      // webspeech:end
+
+      await errorEventEmitted;
+
+      expect(toSnapshot(events)).toMatchSnapshot();
+    });
+
+    test('soundstart', async () => {
+      speechRecognition.start();
+      await recognizer.waitForRecognizeOnceAsync();
+
+      // This will fire "firstAudioChunk" on "emitRead"
+      recognizer.setFirstAudioChunk();
+      recognizer.audioConfig.emitEvent('AudioSourceReadyEvent');
+
+      // cognitiveservices:audioSourceReady
+      // webspeech:start
+      // webspeech:audiostart
+
+      recognizer.audioConfig.emitRead();
+
+      // cognitiveservices:firstAudioChunk
+      // webspeech:soundstart
+
+      speechRecognition.abort();
+
+      // cognitiveservices:abort
+
+      await recognizer.waitForStopContinuousRecognitionAsync();
+      recognizer.audioConfig.emitEvent('AudioSourceOffEvent');
+
+      // cognitiveservices:audioSourceOff
+      // webspeech:soundend
+      // webspeech:audioend
+      // webspeech:error
+      // webspeech:end
+
+      await errorEventEmitted;
+
+      expect(toSnapshot(events)).toMatchSnapshot();
+    });
+
+    test('audiostart', async () => {
+      speechRecognition.start();
+      await recognizer.waitForRecognizeOnceAsync();
+
+      // This will fire "firstAudioChunk" on "emitRead"
+      recognizer.audioConfig.emitEvent('AudioSourceReadyEvent');
+
+      // cognitiveservices:audioSourceReady
+      // webspeech:start
+      // webspeech:audiostart
+
+      speechRecognition.abort();
+
+      // cognitiveservices:abort
+
+      await recognizer.waitForStopContinuousRecognitionAsync();
+      recognizer.audioConfig.emitEvent('AudioSourceOffEvent');
+
+      // cognitiveservices:audioSourceOff
+      // webspeech:audioend
+      // webspeech:error
+      // webspeech:end
+
+      await errorEventEmitted;
+
+      expect(toSnapshot(events)).toMatchSnapshot();
+    });
+  });
+});
+
+describe('SpeechRecognizer with text normalization', () => {
+  const RECOGNITION_RESULT = {
+    duration: 48100000,
+    json: JSON.stringify({
+      RecognitionStatus: 'Success',
+      Offset: 1800000,
+      Duration: 48100000,
+      NBest: [{
+        Confidence: 0.2331869,
+        Lexical: 'no (Lexical)',
+        ITN: 'no (ITN)',
+        MaskedITN: 'no (MaskedITN)',
+        Display: 'No.'
+      }]
+    }),
+    offset: 1800000,
+    reason: 3
+  };
+
+  test('of ITN should result in ITN', async () => {
+    const { default: createSpeechRecognitionPonyfill } = require('./createSpeechRecognitionPonyfill');
+    const { SpeechRecognition } = await createSpeechRecognitionPonyfill({
+      region: 'westus',
+      subscriptionKey: 'SUBSCRIPTION_KEY',
+      textNormalization: 'itn'
+    });
+
+    let speechRecognition = new SpeechRecognition();
+    let events = captureSpeechEvents(speechRecognition);
+    let endEventEmitted = new Promise(resolve => speechRecognition.addEventListener('end', resolve));
+
     speechRecognition.start();
+    speechRecognition.interimResults = true;
     await recognizer.waitForRecognizeOnceAsync();
 
     // This will fire "firstAudioChunk" on "emitRead"
@@ -460,16 +608,11 @@ describe('Mock SpeechRecognizer with', () => {
     // cognitiveservices:firstAudioChunk
     // webspeech:soundstart
 
-    recognizer.recognizing(this, MOCK_RECOGNIZING_EVENT);
+    recognizer.recognized(this, { result: RECOGNITION_RESULT });
 
-    // cognitiveservices:recognizing
+    // cognitiveservices:recognized
     // webspeech:speechstart
 
-    speechRecognition.abort();
-
-    // cognitiveservices:abort
-
-    await recognizer.waitForStopContinuousRecognitionAsync();
     recognizer.audioConfig.emitEvent('AudioSourceOffEvent');
 
     // cognitiveservices:audioSourceOff
@@ -477,13 +620,123 @@ describe('Mock SpeechRecognizer with', () => {
     // webspeech:soundend
     // webspeech:audioend
 
-    recognizer.rejectRecognizeOnceAsync('aborted');
+    recognizer.resolveRecognizeOnceAsync(RECOGNITION_RESULT);
 
-    // webspeech:error
+    // cognitiveservices:success
+    // webspeech:result.isFinal=true
     // webspeech:end
 
-    await errorEventEmitted;
+    await endEventEmitted;
 
-    expect(events).toMatchSnapshot();
+    expect(toSnapshot(events)).toMatchSnapshot();
+    expect(events[events.length - 2].results[0][0]).toHaveProperty('transcript', 'no (ITN)');
+  });
+
+  test('of lexical should result in lexical', async () => {
+    const { default: createSpeechRecognitionPonyfill } = require('./createSpeechRecognitionPonyfill');
+    const { SpeechRecognition } = await createSpeechRecognitionPonyfill({
+      region: 'westus',
+      subscriptionKey: 'SUBSCRIPTION_KEY',
+      textNormalization: 'lexical'
+    });
+
+    let speechRecognition = new SpeechRecognition();
+    let events = captureSpeechEvents(speechRecognition);
+    let endEventEmitted = new Promise(resolve => speechRecognition.addEventListener('end', resolve));
+
+    speechRecognition.start();
+    speechRecognition.interimResults = true;
+    await recognizer.waitForRecognizeOnceAsync();
+
+    // This will fire "firstAudioChunk" on "emitRead"
+    recognizer.setFirstAudioChunk();
+
+    recognizer.audioConfig.emitEvent('AudioSourceReadyEvent');
+
+    // cognitiveservices:audioSourceReady
+    // webspeech:start
+    // webspeech:audiostart
+
+    recognizer.audioConfig.emitRead();
+
+    // cognitiveservices:firstAudioChunk
+    // webspeech:soundstart
+
+    recognizer.recognized(this, { result: RECOGNITION_RESULT });
+
+    // cognitiveservices:recognized
+    // webspeech:speechstart
+
+    recognizer.audioConfig.emitEvent('AudioSourceOffEvent');
+
+    // cognitiveservices:audioSourceOff
+    // webspeech:speechend
+    // webspeech:soundend
+    // webspeech:audioend
+
+    recognizer.resolveRecognizeOnceAsync(RECOGNITION_RESULT);
+
+    // cognitiveservices:success
+    // webspeech:result.isFinal=true
+    // webspeech:end
+
+    await endEventEmitted;
+
+    expect(toSnapshot(events)).toMatchSnapshot();
+    expect(events[events.length - 2].results[0][0]).toHaveProperty('transcript', 'no (Lexical)');
+  });
+
+  test('of masked ITN should result in masked ITN', async () => {
+    const { default: createSpeechRecognitionPonyfill } = require('./createSpeechRecognitionPonyfill');
+    const { SpeechRecognition } = await createSpeechRecognitionPonyfill({
+      region: 'westus',
+      subscriptionKey: 'SUBSCRIPTION_KEY',
+      textNormalization: 'maskeditn'
+    });
+
+    let speechRecognition = new SpeechRecognition();
+    let events = captureSpeechEvents(speechRecognition);
+    let endEventEmitted = new Promise(resolve => speechRecognition.addEventListener('end', resolve));
+
+    speechRecognition.start();
+    speechRecognition.interimResults = true;
+    await recognizer.waitForRecognizeOnceAsync();
+
+    // This will fire "firstAudioChunk" on "emitRead"
+    recognizer.setFirstAudioChunk();
+
+    recognizer.audioConfig.emitEvent('AudioSourceReadyEvent');
+
+    // cognitiveservices:audioSourceReady
+    // webspeech:start
+    // webspeech:audiostart
+
+    recognizer.audioConfig.emitRead();
+
+    // cognitiveservices:firstAudioChunk
+    // webspeech:soundstart
+
+    recognizer.recognized(this, { result: RECOGNITION_RESULT });
+
+    // cognitiveservices:recognized
+    // webspeech:speechstart
+
+    recognizer.audioConfig.emitEvent('AudioSourceOffEvent');
+
+    // cognitiveservices:audioSourceOff
+    // webspeech:speechend
+    // webspeech:soundend
+    // webspeech:audioend
+
+    recognizer.resolveRecognizeOnceAsync(RECOGNITION_RESULT);
+
+    // cognitiveservices:success
+    // webspeech:result.isFinal=true
+    // webspeech:end
+
+    await endEventEmitted;
+
+    expect(toSnapshot(events)).toMatchSnapshot();
+    expect(events[events.length - 2].results[0][0]).toHaveProperty('transcript', 'no (MaskedITN)');
   });
 });

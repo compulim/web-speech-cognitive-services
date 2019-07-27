@@ -1,6 +1,19 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Mock SpeechRecognizer with abort with partial recognized text 1`] = `
+exports[`Mock SpeechRecognizer with abort after audiostart 1`] = `
+Array [
+  "cognitiveservices:audioSourceReady",
+  "webspeech:start",
+  "webspeech:audiostart",
+  "cognitiveservices:abort",
+  "cognitiveservices:audioSourceOff",
+  "webspeech:audioend",
+  "webspeech:error { error: 'aborted' }",
+  "webspeech:end",
+]
+`;
+
+exports[`Mock SpeechRecognizer with abort after recognizing 1`] = `
 Array [
   "cognitiveservices:audioSourceReady",
   "webspeech:start",
@@ -19,6 +32,22 @@ Array [
 ]
 `;
 
+exports[`Mock SpeechRecognizer with abort after soundstart 1`] = `
+Array [
+  "cognitiveservices:audioSourceReady",
+  "webspeech:start",
+  "webspeech:audiostart",
+  "cognitiveservices:firstAudioChunk",
+  "webspeech:soundstart",
+  "cognitiveservices:abort",
+  "cognitiveservices:audioSourceOff",
+  "webspeech:soundend",
+  "webspeech:audioend",
+  "webspeech:error { error: 'aborted' }",
+  "webspeech:end",
+]
+`;
+
 exports[`Mock SpeechRecognizer with happy path with 2 interims 1`] = `
 Array [
   "cognitiveservices:audioSourceReady",
@@ -28,16 +57,16 @@ Array [
   "webspeech:soundstart",
   "cognitiveservices:recognizing",
   "webspeech:speechstart",
-  "webspeech:result { isFinal: false, length: 1 }",
+  "webspeech:result { isFinal: false, [[\\"hello\\"]]",
   "cognitiveservices:recognizing",
-  "webspeech:result { isFinal: false, length: 1 }",
+  "webspeech:result { isFinal: false, [[\\"hello\\"]]",
   "cognitiveservices:recognized",
   "cognitiveservices:audioSourceOff",
   "webspeech:speechend",
   "webspeech:soundend",
   "webspeech:audioend",
   "cognitiveservices:success",
-  "webspeech:result { isFinal: true, length: 1 }",
+  "webspeech:result { isFinal: true, [[\\"Hello, John.\\"]]",
   "webspeech:end",
 ]
 `;
@@ -57,7 +86,7 @@ Array [
   "webspeech:soundend",
   "webspeech:audioend",
   "cognitiveservices:success",
-  "webspeech:result { isFinal: true, length: 1 }",
+  "webspeech:result { isFinal: true, [[\\"Hello, John.\\"]]",
   "webspeech:end",
 ]
 `;
@@ -95,6 +124,63 @@ Array [
   "cognitiveservices:canceled",
   "webspeech:audioend",
   "webspeech:error { error: 'network' }",
+  "webspeech:end",
+]
+`;
+
+exports[`SpeechRecognizer with text normalization of ITN should result in ITN 1`] = `
+Array [
+  "cognitiveservices:audioSourceReady",
+  "webspeech:start",
+  "webspeech:audiostart",
+  "cognitiveservices:firstAudioChunk",
+  "webspeech:soundstart",
+  "cognitiveservices:recognized",
+  "webspeech:speechstart",
+  "cognitiveservices:audioSourceOff",
+  "webspeech:speechend",
+  "webspeech:soundend",
+  "webspeech:audioend",
+  "cognitiveservices:success",
+  "webspeech:result { isFinal: true, [[\\"no (ITN)\\"]]",
+  "webspeech:end",
+]
+`;
+
+exports[`SpeechRecognizer with text normalization of lexical should result in lexical 1`] = `
+Array [
+  "cognitiveservices:audioSourceReady",
+  "webspeech:start",
+  "webspeech:audiostart",
+  "cognitiveservices:firstAudioChunk",
+  "webspeech:soundstart",
+  "cognitiveservices:recognized",
+  "webspeech:speechstart",
+  "cognitiveservices:audioSourceOff",
+  "webspeech:speechend",
+  "webspeech:soundend",
+  "webspeech:audioend",
+  "cognitiveservices:success",
+  "webspeech:result { isFinal: true, [[\\"no (Lexical)\\"]]",
+  "webspeech:end",
+]
+`;
+
+exports[`SpeechRecognizer with text normalization of masked ITN should result in masked ITN 1`] = `
+Array [
+  "cognitiveservices:audioSourceReady",
+  "webspeech:start",
+  "webspeech:audiostart",
+  "cognitiveservices:firstAudioChunk",
+  "webspeech:soundstart",
+  "cognitiveservices:recognized",
+  "webspeech:speechstart",
+  "cognitiveservices:audioSourceOff",
+  "webspeech:speechend",
+  "webspeech:soundend",
+  "webspeech:audioend",
+  "cognitiveservices:success",
+  "webspeech:result { isFinal: true, [[\\"no (MaskedITN)\\"]]",
   "webspeech:end",
 ]
 `;

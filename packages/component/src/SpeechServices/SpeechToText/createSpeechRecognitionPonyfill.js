@@ -290,6 +290,7 @@ export default async ({
 
           aborting = true;
 
+          // Quirks: after we call stopContinuousRecognitionAsync, the recognizeOnceAsync will stale and would not resolve or reject.
           recognizer.stopContinuousRecognitionAsync();
         } else if (stop) {
           // This is for faking stop
