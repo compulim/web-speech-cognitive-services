@@ -236,19 +236,6 @@ export default async ({
         err => queue.push({ error: err })
       );
 
-      // console.log('recognizeOnceAsync call');
-
-      // recognizer.recognizeOnceAsync(
-      //   result => {
-      //     console.log('recognizeOnceAsync.success');
-      //     queue.push({ success: serializeRecognitionResult(result) });
-      //   },
-      //   err => {
-      //     console.log('recognizeOnceAsync.error');
-      //     queue.push({ error: err })
-      //   }
-      // );
-
       this.abort = () => queue.push({ abort: {} });
       this.stop = () => queue.push({ stop: {} });
 
