@@ -30,11 +30,11 @@ export default function () {
     initialState,
     applyMiddleware(
       sagaMiddleware,
-      () => next => action => {
-        console.log(action);
+      // () => next => action => {
+      //   console.log(action);
 
-        return next(action);
-      }
+      //   return next(action);
+      // }
     )
   );
 
