@@ -25,9 +25,9 @@ test('Multiple results with RecognitionStatus === "Success"', () => {
     reason: 3
   });
 
-  expect(resultList[0][0]).toEqual({ confidence: .25, transcript: 'No.' });
-  expect(resultList[0][1]).toEqual({ confidence: .1, transcript: 'Yes.' });
-  expect(resultList[0]).toHaveProperty('isFinal', true);
+  expect(resultList[0]).toEqual({ confidence: .25, transcript: 'No.' });
+  expect(resultList[1]).toEqual({ confidence: .1, transcript: 'Yes.' });
+  expect(resultList).toHaveProperty('isFinal', true);
 });
 
 test('Single interim results', () => {
@@ -36,8 +36,8 @@ test('Single interim results', () => {
     text: 'No.'
   });
 
-  expect(resultList[0][0]).toEqual({ confidence: .5, transcript: 'No.' });
-  expect(resultList[0]).not.toHaveProperty('isFinal');
+  expect(resultList[0]).toEqual({ confidence: .5, transcript: 'No.' });
+  expect(resultList).not.toHaveProperty('isFinal');
 });
 
 test('Single final results', () => {
@@ -54,8 +54,8 @@ test('Single final results', () => {
     reason: 3
   });
 
-  expect(resultList[0][0]).toEqual({ confidence: .25, transcript: 'No.' });
-  expect(resultList[0]).toHaveProperty('isFinal', true);
+  expect(resultList[0]).toEqual({ confidence: .25, transcript: 'No.' });
+  expect(resultList).toHaveProperty('isFinal', true);
 });
 
 test('Single final results with ITN', () => {
@@ -74,8 +74,8 @@ test('Single final results with ITN', () => {
     textNormalization: 'itn'
   });
 
-  expect(resultList[0][0]).toEqual({ confidence: .25, transcript: 'no (ITN)' });
-  expect(resultList[0]).toHaveProperty('isFinal', true);
+  expect(resultList[0]).toEqual({ confidence: .25, transcript: 'no (ITN)' });
+  expect(resultList).toHaveProperty('isFinal', true);
 });
 
 test('Single final results with lexical', () => {
@@ -94,8 +94,8 @@ test('Single final results with lexical', () => {
     textNormalization: 'lexical'
   });
 
-  expect(resultList[0][0]).toEqual({ confidence: .25, transcript: 'no (Lexical)' });
-  expect(resultList[0]).toHaveProperty('isFinal', true);
+  expect(resultList[0]).toEqual({ confidence: .25, transcript: 'no (Lexical)' });
+  expect(resultList).toHaveProperty('isFinal', true);
 });
 
 test('Single final results with masked ITN', () => {
@@ -114,8 +114,8 @@ test('Single final results with masked ITN', () => {
     textNormalization: 'maskeditn'
   });
 
-  expect(resultList[0][0]).toEqual({ confidence: .25, transcript: 'no (MaskedITN)' });
-  expect(resultList[0]).toHaveProperty('isFinal', true);
+  expect(resultList[0]).toEqual({ confidence: .25, transcript: 'no (MaskedITN)' });
+  expect(resultList).toHaveProperty('isFinal', true);
 });
 
 test('Result is iterable', () => {
@@ -132,8 +132,8 @@ test('Result is iterable', () => {
     reason: 3
   }, {});
 
-  const [firstAlternative] = resultList[0];
-  const { isFinal } = resultList[0];
+  const [firstAlternative] = resultList;
+  const { isFinal } = resultList;
 
   expect(firstAlternative).toEqual({ confidence: .25, transcript: 'No.' });
   expect(isFinal).toBe(true);
