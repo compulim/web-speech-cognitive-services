@@ -9,7 +9,7 @@ Array [
   "webspeech:soundstart",
   "cognitiveservices:recognized",
   "webspeech:speechstart",
-  "webspeech:result ['Hello.' (isFinal)]",
+  "webspeech:result ['Hello, World!' (isFinal)]",
   "cognitiveservices:abort",
   "cognitiveservices:audioSourceOff",
   "webspeech:speechend",
@@ -20,7 +20,27 @@ Array [
 ]
 `;
 
-exports[`SpeechSynthesis in continuous mode with interims and 2 parts 1`] = `
+exports[`SpeechSynthesis in continuous mode abort after recognizing 1`] = `
+Array [
+  "cognitiveservices:audioSourceReady",
+  "webspeech:start",
+  "webspeech:audiostart",
+  "cognitiveservices:firstAudibleChunk",
+  "webspeech:soundstart",
+  "cognitiveservices:recognizing",
+  "webspeech:speechstart",
+  "webspeech:result ['hello world']",
+  "cognitiveservices:abort",
+  "cognitiveservices:audioSourceOff",
+  "webspeech:speechend",
+  "webspeech:soundend",
+  "webspeech:audioend",
+  "webspeech:error { error: 'aborted' }",
+  "webspeech:end",
+]
+`;
+
+exports[`SpeechSynthesis in continuous mode stop after recognized 2 speeches 1`] = `
 Array [
   "cognitiveservices:audioSourceReady",
   "webspeech:start",
@@ -40,6 +60,25 @@ Array [
   "webspeech:soundend",
   "webspeech:audioend",
   "webspeech:result ['Hello.' (isFinal), 'World.' (isFinal)]",
+  "webspeech:end",
+]
+`;
+
+exports[`SpeechSynthesis in continuous mode stop after recognizing 1`] = `
+Array [
+  "cognitiveservices:audioSourceReady",
+  "webspeech:start",
+  "webspeech:audiostart",
+  "cognitiveservices:firstAudibleChunk",
+  "webspeech:soundstart",
+  "cognitiveservices:recognizing",
+  "webspeech:speechstart",
+  "webspeech:result ['hello']",
+  "cognitiveservices:stop",
+  "cognitiveservices:audioSourceOff",
+  "webspeech:speechend",
+  "webspeech:soundend",
+  "webspeech:audioend",
   "webspeech:end",
 ]
 `;

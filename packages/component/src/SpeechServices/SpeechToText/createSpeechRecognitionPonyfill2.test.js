@@ -497,7 +497,7 @@ describe('SpeechSynthesis', () => {
   });
 
   describe('in continuous mode', () => {
-    test('with interims and 2 parts', async () => {
+    test('stop after recognized 2 speeches', async () => {
       speechRecognition.start();
       speechRecognition.continuous = true;
       speechRecognition.interimResults = true;
@@ -551,6 +551,137 @@ describe('SpeechSynthesis', () => {
       expect(toSnapshot(events)).toMatchSnapshot();
     });
 
+    test('stop after recognizing', async () => {
+      speechRecognition.start();
+      speechRecognition.continuous = true;
+      speechRecognition.interimResults = true;
+      await recognizer.waitForStartContinuousRecognitionAsync();
+
+      // This will fire "firstAudibleChunk" on "emitRead"
+      recognizer.readAudioChunk();
+
+      recognizer.audioConfig.emitEvent('AudioSourceReadyEvent');
+
+      // cognitiveservices:audioSourceReady
+      // webspeech:start
+      // webspeech:audiostart
+
+      recognizer.audioConfig.emitRead();
+
+      // cognitiveservices:firstAudibleChunk
+      // webspeech:soundstart
+
+      recognizer.recognizing(this, createRecognizingEvent('hello'));
+
+      // cognitiveservices:recognizing
+      // webspeech:speechstart
+      // webspeech:result ['hello']
+
+      speechRecognition.stop();
+
+      // cognitiveservices:stop
+
+      recognizer.audioConfig.emitEvent('AudioSourceOffEvent');
+
+      // cognitiveservices:audioSourceOff
+      // webspeech:speechend
+      // webspeech:soundend
+      // webspeech:audioend
+      // webspeech:end
+
+      await endEventEmitted;
+
+      expect(toSnapshot(events)).toMatchSnapshot();
+    });
+
+    test('abort after recognized', async () => {
+      speechRecognition.start();
+      speechRecognition.continuous = true;
+      speechRecognition.interimResults = true;
+      await recognizer.waitForStartContinuousRecognitionAsync();
+
+      // This will fire "firstAudibleChunk" on "emitRead"
+      recognizer.readAudioChunk();
+
+      recognizer.audioConfig.emitEvent('AudioSourceReadyEvent');
+
+      // cognitiveservices:audioSourceReady
+      // webspeech:start
+      // webspeech:audiostart
+
+      recognizer.audioConfig.emitRead();
+
+      // cognitiveservices:firstAudibleChunk
+      // webspeech:soundstart
+
+      recognizer.recognized(this, createRecognizedEvent('Hello, World!'));
+
+      // cognitiveservices:recognized
+      // webspeech:speechstart
+      // webspeech:result ['Hello, World!' (isFinal)]
+
+      speechRecognition.abort();
+
+      // cognitiveservices:abort
+
+      recognizer.audioConfig.emitEvent('AudioSourceOffEvent');
+
+      // cognitiveservices:audioSourceOff
+      // webspeech:speechend
+      // webspeech:soundend
+      // webspeech:audioend
+      // webspeech:error { error: 'aborted' }
+      // webspeech:end
+
+      await endEventEmitted;
+
+      expect(toSnapshot(events)).toMatchSnapshot();
+    });
+
+    test('abort after recognizing', async () => {
+      speechRecognition.start();
+      speechRecognition.continuous = true;
+      speechRecognition.interimResults = true;
+      await recognizer.waitForStartContinuousRecognitionAsync();
+
+      // This will fire "firstAudibleChunk" on "emitRead"
+      recognizer.readAudioChunk();
+
+      recognizer.audioConfig.emitEvent('AudioSourceReadyEvent');
+
+      // cognitiveservices:audioSourceReady
+      // webspeech:start
+      // webspeech:audiostart
+
+      recognizer.audioConfig.emitRead();
+
+      // cognitiveservices:firstAudibleChunk
+      // webspeech:soundstart
+
+      recognizer.recognizing(this, createRecognizingEvent('hello world'));
+
+      // cognitiveservices:recognizing
+      // webspeech:speechstart
+      // webspeech:result ['hello world']
+
+      speechRecognition.abort();
+
+      // cognitiveservices:abort
+
+      recognizer.audioConfig.emitEvent('AudioSourceOffEvent');
+
+      // cognitiveservices:audioSourceOff
+      // webspeech:speechend
+      // webspeech:soundend
+      // webspeech:audioend
+      // webspeech:error { error: 'aborted' }
+      // webspeech:end
+
+      await endEventEmitted;
+
+      expect(toSnapshot(events)).toMatchSnapshot();
+    });
+
     test('with unrecognizable sound should throw error', async () => {
       speechRecognition.start();
       speechRecognition.continuous = true;
@@ -589,48 +720,6 @@ describe('SpeechSynthesis', () => {
       // webspeech:end
 
       await endEventEmitted;
-
-      expect(toSnapshot(events)).toMatchSnapshot();
-    });
-
-    test('abort after recognized', async () => {
-      speechRecognition.continuous = true;
-      speechRecognition.start();
-      await recognizer.waitForStartContinuousRecognitionAsync();
-
-      // This will fire "firstAudibleChunk" on "emitRead"
-      recognizer.readAudioChunk();
-      recognizer.audioConfig.emitEvent('AudioSourceReadyEvent');
-
-      // cognitiveservices:audioSourceReady
-      // webspeech:start
-      // webspeech:audiostart
-
-      recognizer.audioConfig.emitRead();
-
-      // cognitiveservices:firstAudibleChunk
-      // webspeech:soundstart
-
-      recognizer.recognized(this, createRecognizedEvent('Hello.'));
-
-      // cognitiveservices:recognized
-      // webspeech:speechstart
-
-      speechRecognition.abort();
-
-      // cognitiveservices:abort
-
-      await recognizer.waitForStopContinuousRecognitionAsync();
-      recognizer.audioConfig.emitEvent('AudioSourceOffEvent');
-
-      // cognitiveservices:audioSourceOff
-      // webspeech:speechend
-      // webspeech:soundend
-      // webspeech:audioend
-      // webspeech:error
-      // webspeech:end
-
-      await errorEventEmitted;
 
       expect(toSnapshot(events)).toMatchSnapshot();
     });
