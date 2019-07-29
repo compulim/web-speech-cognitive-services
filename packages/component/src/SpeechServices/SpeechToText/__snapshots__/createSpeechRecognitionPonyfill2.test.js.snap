@@ -101,6 +101,19 @@ Array [
 ]
 `;
 
+exports[`SpeechSynthesis in interactive mode abort after audiostart 1`] = `
+Array [
+  "cognitiveservices:audioSourceReady",
+  "webspeech:start",
+  "webspeech:audiostart",
+  "cognitiveservices:abort",
+  "cognitiveservices:audioSourceOff",
+  "webspeech:audioend",
+  "webspeech:error { error: 'aborted' }",
+  "webspeech:end",
+]
+`;
+
 exports[`SpeechSynthesis in interactive mode abort after recognizing 1`] = `
 Array [
   "cognitiveservices:audioSourceReady",
@@ -120,7 +133,44 @@ Array [
 ]
 `;
 
-exports[`SpeechSynthesis in interactive mode stop before recognized 1`] = `
+exports[`SpeechSynthesis in interactive mode abort after soundstart 1`] = `
+Array [
+  "cognitiveservices:audioSourceReady",
+  "webspeech:start",
+  "webspeech:audiostart",
+  "cognitiveservices:firstAudibleChunk",
+  "webspeech:soundstart",
+  "cognitiveservices:abort",
+  "cognitiveservices:audioSourceOff",
+  "webspeech:soundend",
+  "webspeech:audioend",
+  "webspeech:error { error: 'aborted' }",
+  "webspeech:end",
+]
+`;
+
+exports[`SpeechSynthesis in interactive mode abort after start 1`] = `
+Array [
+  "cognitiveservices:abort",
+  "webspeech:start",
+  "webspeech:error { error: 'aborted' }",
+  "webspeech:end",
+]
+`;
+
+exports[`SpeechSynthesis in interactive mode stop after audiostart 1`] = `
+Array [
+  "cognitiveservices:audioSourceReady",
+  "webspeech:start",
+  "webspeech:audiostart",
+  "cognitiveservices:stop",
+  "cognitiveservices:audioSourceOff",
+  "webspeech:audioend",
+  "webspeech:end",
+]
+`;
+
+exports[`SpeechSynthesis in interactive mode stop after recognizing 1`] = `
 Array [
   "cognitiveservices:audioSourceReady",
   "webspeech:start",
@@ -135,6 +185,29 @@ Array [
   "webspeech:speechend",
   "webspeech:soundend",
   "webspeech:audioend",
+  "webspeech:end",
+]
+`;
+
+exports[`SpeechSynthesis in interactive mode stop after soundstart 1`] = `
+Array [
+  "cognitiveservices:audioSourceReady",
+  "webspeech:start",
+  "webspeech:audiostart",
+  "cognitiveservices:firstAudibleChunk",
+  "webspeech:soundstart",
+  "cognitiveservices:stop",
+  "cognitiveservices:audioSourceOff",
+  "webspeech:soundend",
+  "webspeech:audioend",
+  "webspeech:end",
+]
+`;
+
+exports[`SpeechSynthesis in interactive mode stop after start 1`] = `
+Array [
+  "cognitiveservices:stop",
+  "webspeech:start",
   "webspeech:end",
 ]
 `;
@@ -208,35 +281,6 @@ Array [
   "webspeech:soundend",
   "webspeech:audioend",
   "webspeech:result ['Hello, World!' (isFinal)]",
-  "webspeech:end",
-]
-`;
-
-exports[`SpeechSynthesis to abort after audiostart 1`] = `
-Array [
-  "cognitiveservices:audioSourceReady",
-  "webspeech:start",
-  "webspeech:audiostart",
-  "cognitiveservices:abort",
-  "cognitiveservices:audioSourceOff",
-  "webspeech:audioend",
-  "webspeech:error { error: 'aborted' }",
-  "webspeech:end",
-]
-`;
-
-exports[`SpeechSynthesis to abort after soundstart 1`] = `
-Array [
-  "cognitiveservices:audioSourceReady",
-  "webspeech:start",
-  "webspeech:audiostart",
-  "cognitiveservices:firstAudibleChunk",
-  "webspeech:soundstart",
-  "cognitiveservices:abort",
-  "cognitiveservices:audioSourceOff",
-  "webspeech:soundend",
-  "webspeech:audioend",
-  "webspeech:error { error: 'aborted' }",
   "webspeech:end",
 ]
 `;
