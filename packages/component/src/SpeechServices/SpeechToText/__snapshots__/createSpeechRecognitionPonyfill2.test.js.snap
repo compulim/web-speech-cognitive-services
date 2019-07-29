@@ -1,19 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`SpeechSynthesis to abort after audiostart 1`] = `
-Array [
-  "cognitiveservices:audioSourceReady",
-  "webspeech:start",
-  "webspeech:audiostart",
-  "cognitiveservices:abort",
-  "cognitiveservices:audioSourceOff",
-  "webspeech:audioend",
-  "webspeech:error { error: 'aborted' }",
-  "webspeech:end",
-]
-`;
-
-exports[`SpeechSynthesis to abort after recognized in continuous mode 1`] = `
+exports[`SpeechSynthesis in continuous mode abort after recognized 1`] = `
 Array [
   "cognitiveservices:audioSourceReady",
   "webspeech:start",
@@ -33,7 +20,49 @@ Array [
 ]
 `;
 
-exports[`SpeechSynthesis to abort after recognizing 1`] = `
+exports[`SpeechSynthesis in continuous mode with interims and 2 parts 1`] = `
+Array [
+  "cognitiveservices:audioSourceReady",
+  "webspeech:start",
+  "webspeech:audiostart",
+  "cognitiveservices:firstAudibleChunk",
+  "webspeech:soundstart",
+  "cognitiveservices:recognizing",
+  "webspeech:speechstart",
+  "webspeech:result ['hello']",
+  "cognitiveservices:recognized",
+  "webspeech:result ['Hello.' (isFinal)]",
+  "cognitiveservices:recognized",
+  "webspeech:result ['Hello.' (isFinal), 'World.' (isFinal)]",
+  "cognitiveservices:stop",
+  "cognitiveservices:audioSourceOff",
+  "webspeech:speechend",
+  "webspeech:soundend",
+  "webspeech:audioend",
+  "webspeech:result ['Hello.' (isFinal), 'World.' (isFinal)]",
+  "webspeech:end",
+]
+`;
+
+exports[`SpeechSynthesis in continuous mode with unrecognizable sound should throw error 1`] = `
+Array [
+  "cognitiveservices:audioSourceReady",
+  "webspeech:start",
+  "webspeech:audiostart",
+  "cognitiveservices:firstAudibleChunk",
+  "webspeech:soundstart",
+  "cognitiveservices:recognized",
+  "webspeech:speechstart",
+  "cognitiveservices:stop",
+  "cognitiveservices:audioSourceOff",
+  "webspeech:speechend",
+  "webspeech:soundend",
+  "webspeech:audioend",
+  "webspeech:end",
+]
+`;
+
+exports[`SpeechSynthesis in interactive mode abort after recognizing 1`] = `
 Array [
   "cognitiveservices:audioSourceReady",
   "webspeech:start",
@@ -46,6 +75,111 @@ Array [
   "cognitiveservices:audioSourceOff",
   "webspeech:speechend",
   "webspeech:soundend",
+  "webspeech:audioend",
+  "webspeech:error { error: 'aborted' }",
+  "webspeech:end",
+]
+`;
+
+exports[`SpeechSynthesis in interactive mode stop before recognized 1`] = `
+Array [
+  "cognitiveservices:audioSourceReady",
+  "webspeech:start",
+  "webspeech:audiostart",
+  "cognitiveservices:firstAudibleChunk",
+  "webspeech:soundstart",
+  "cognitiveservices:recognizing",
+  "webspeech:speechstart",
+  "webspeech:result ['hello']",
+  "cognitiveservices:stop",
+  "cognitiveservices:audioSourceOff",
+  "webspeech:speechend",
+  "webspeech:soundend",
+  "webspeech:audioend",
+  "webspeech:end",
+]
+`;
+
+exports[`SpeechSynthesis in interactive mode with interims 1`] = `
+Array [
+  "cognitiveservices:audioSourceReady",
+  "webspeech:start",
+  "webspeech:audiostart",
+  "cognitiveservices:firstAudibleChunk",
+  "webspeech:soundstart",
+  "cognitiveservices:recognizing",
+  "webspeech:speechstart",
+  "webspeech:result ['hello']",
+  "cognitiveservices:recognizing",
+  "webspeech:result ['hello world']",
+  "cognitiveservices:recognized",
+  "cognitiveservices:audioSourceOff",
+  "webspeech:speechend",
+  "webspeech:soundend",
+  "webspeech:audioend",
+  "webspeech:result ['Hello, World!' (isFinal)]",
+  "webspeech:end",
+]
+`;
+
+exports[`SpeechSynthesis in interactive mode with muted microphone 1`] = `
+Array [
+  "cognitiveservices:audioSourceReady",
+  "webspeech:start",
+  "webspeech:audiostart",
+  "cognitiveservices:recognized",
+  "cognitiveservices:audioSourceOff",
+  "webspeech:audioend",
+  "webspeech:error { error: 'no-speech' }",
+  "webspeech:end",
+]
+`;
+
+exports[`SpeechSynthesis in interactive mode with unrecognizable sound should throw error 1`] = `
+Array [
+  "cognitiveservices:audioSourceReady",
+  "webspeech:start",
+  "webspeech:audiostart",
+  "cognitiveservices:firstAudibleChunk",
+  "webspeech:soundstart",
+  "cognitiveservices:recognized",
+  "webspeech:speechstart",
+  "cognitiveservices:stop",
+  "cognitiveservices:audioSourceOff",
+  "webspeech:speechend",
+  "webspeech:soundend",
+  "webspeech:audioend",
+  "webspeech:error { error: 'no-speech' }",
+  "webspeech:end",
+]
+`;
+
+exports[`SpeechSynthesis in interactive mode without interims 1`] = `
+Array [
+  "cognitiveservices:audioSourceReady",
+  "webspeech:start",
+  "webspeech:audiostart",
+  "cognitiveservices:firstAudibleChunk",
+  "webspeech:soundstart",
+  "cognitiveservices:recognizing",
+  "webspeech:speechstart",
+  "cognitiveservices:recognized",
+  "cognitiveservices:audioSourceOff",
+  "webspeech:speechend",
+  "webspeech:soundend",
+  "webspeech:audioend",
+  "webspeech:result ['Hello, World!' (isFinal)]",
+  "webspeech:end",
+]
+`;
+
+exports[`SpeechSynthesis to abort after audiostart 1`] = `
+Array [
+  "cognitiveservices:audioSourceReady",
+  "webspeech:start",
+  "webspeech:audiostart",
+  "cognitiveservices:abort",
+  "cognitiveservices:audioSourceOff",
   "webspeech:audioend",
   "webspeech:error { error: 'aborted' }",
   "webspeech:end",
@@ -68,144 +202,10 @@ Array [
 ]
 `;
 
-exports[`SpeechSynthesis on happy path in dictation mode with interims and 2 parts 1`] = `
-Array [
-  "cognitiveservices:audioSourceReady",
-  "webspeech:start",
-  "webspeech:audiostart",
-  "cognitiveservices:firstAudibleChunk",
-  "webspeech:soundstart",
-  "cognitiveservices:recognizing",
-  "webspeech:speechstart",
-  "webspeech:result ['hello']",
-  "cognitiveservices:recognized",
-  "webspeech:result ['Hello.' (isFinal)]",
-  "cognitiveservices:recognized",
-  "webspeech:result ['Hello.' (isFinal), 'World.' (isFinal)]",
-  "cognitiveservices:stop",
-  "cognitiveservices:audioSourceOff",
-  "webspeech:speechend",
-  "webspeech:soundend",
-  "webspeech:audioend",
-  "webspeech:result ['Hello.' (isFinal), 'World.' (isFinal)]",
-  "webspeech:end",
-]
-`;
-
-exports[`SpeechSynthesis on happy path in dictation mode with unrecognizable sound should throw error 1`] = `
-Array [
-  "cognitiveservices:audioSourceReady",
-  "webspeech:start",
-  "webspeech:audiostart",
-  "cognitiveservices:firstAudibleChunk",
-  "webspeech:soundstart",
-  "cognitiveservices:recognized",
-  "webspeech:speechstart",
-  "cognitiveservices:stop",
-  "cognitiveservices:audioSourceOff",
-  "webspeech:speechend",
-  "webspeech:soundend",
-  "webspeech:audioend",
-  "webspeech:end",
-]
-`;
-
-exports[`SpeechSynthesis on happy path in interactive mode stop before recognized 1`] = `
-Array [
-  "cognitiveservices:audioSourceReady",
-  "webspeech:start",
-  "webspeech:audiostart",
-  "cognitiveservices:firstAudibleChunk",
-  "webspeech:soundstart",
-  "cognitiveservices:recognizing",
-  "webspeech:speechstart",
-  "webspeech:result ['hello']",
-  "cognitiveservices:stop",
-  "cognitiveservices:audioSourceOff",
-  "webspeech:speechend",
-  "webspeech:soundend",
-  "webspeech:audioend",
-  "webspeech:end",
-]
-`;
-
-exports[`SpeechSynthesis on happy path in interactive mode with interims 1`] = `
-Array [
-  "cognitiveservices:audioSourceReady",
-  "webspeech:start",
-  "webspeech:audiostart",
-  "cognitiveservices:firstAudibleChunk",
-  "webspeech:soundstart",
-  "cognitiveservices:recognizing",
-  "webspeech:speechstart",
-  "webspeech:result ['hello']",
-  "cognitiveservices:recognizing",
-  "webspeech:result ['hello world']",
-  "cognitiveservices:recognized",
-  "cognitiveservices:audioSourceOff",
-  "webspeech:speechend",
-  "webspeech:soundend",
-  "webspeech:audioend",
-  "webspeech:result ['Hello, World!' (isFinal)]",
-  "webspeech:end",
-]
-`;
-
-exports[`SpeechSynthesis on happy path in interactive mode with unrecognizable sound should throw error 1`] = `
-Array [
-  "cognitiveservices:audioSourceReady",
-  "webspeech:start",
-  "webspeech:audiostart",
-  "cognitiveservices:firstAudibleChunk",
-  "webspeech:soundstart",
-  "cognitiveservices:recognized",
-  "webspeech:speechstart",
-  "cognitiveservices:stop",
-  "cognitiveservices:audioSourceOff",
-  "webspeech:speechend",
-  "webspeech:soundend",
-  "webspeech:audioend",
-  "webspeech:error { error: 'no-speech' }",
-  "webspeech:end",
-]
-`;
-
-exports[`SpeechSynthesis on happy path in interactive mode without interims 1`] = `
-Array [
-  "cognitiveservices:audioSourceReady",
-  "webspeech:start",
-  "webspeech:audiostart",
-  "cognitiveservices:firstAudibleChunk",
-  "webspeech:soundstart",
-  "cognitiveservices:recognizing",
-  "webspeech:speechstart",
-  "cognitiveservices:recognized",
-  "cognitiveservices:audioSourceOff",
-  "webspeech:speechend",
-  "webspeech:soundend",
-  "webspeech:audioend",
-  "webspeech:result ['Hello, World!' (isFinal)]",
-  "webspeech:end",
-]
-`;
-
 exports[`SpeechSynthesis with microphone blocked 1`] = `
 Array [
   "cognitiveservices:canceled",
   "webspeech:error { error: 'not-allowed' }",
-  "webspeech:end",
-]
-`;
-
-exports[`SpeechSynthesis with muted microphone in interactive mode 1`] = `
-Array [
-  "cognitiveservices:audioSourceReady",
-  "webspeech:start",
-  "webspeech:audiostart",
-  "cognitiveservices:recognized",
-  "cognitiveservices:audioSourceOff",
-  "webspeech:audioend",
-  "webspeech:error { error: 'no-speech' }",
   "webspeech:end",
 ]
 `;
