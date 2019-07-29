@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Mock SpeechRecognizer with abort after audiostart 1`] = `
+exports[`SpeechSynthesis to abort after audiostart 1`] = `
 Array [
   "cognitiveservices:audioSourceReady",
   "webspeech:start",
@@ -13,7 +13,27 @@ Array [
 ]
 `;
 
-exports[`Mock SpeechRecognizer with abort after recognizing 1`] = `
+exports[`SpeechSynthesis to abort after recognized in continuous mode 1`] = `
+Array [
+  "cognitiveservices:audioSourceReady",
+  "webspeech:start",
+  "webspeech:audiostart",
+  "cognitiveservices:firstAudibleChunk",
+  "webspeech:soundstart",
+  "cognitiveservices:recognized",
+  "webspeech:speechstart",
+  "webspeech:result ['Hello.' (isFinal)]",
+  "cognitiveservices:abort",
+  "cognitiveservices:audioSourceOff",
+  "webspeech:speechend",
+  "webspeech:soundend",
+  "webspeech:audioend",
+  "webspeech:error { error: 'aborted' }",
+  "webspeech:end",
+]
+`;
+
+exports[`SpeechSynthesis to abort after recognizing 1`] = `
 Array [
   "cognitiveservices:audioSourceReady",
   "webspeech:start",
@@ -32,7 +52,7 @@ Array [
 ]
 `;
 
-exports[`Mock SpeechRecognizer with abort after soundstart 1`] = `
+exports[`SpeechSynthesis to abort after soundstart 1`] = `
 Array [
   "cognitiveservices:audioSourceReady",
   "webspeech:start",
@@ -48,7 +68,7 @@ Array [
 ]
 `;
 
-exports[`Mock SpeechRecognizer with happy path with 2 interims 1`] = `
+exports[`SpeechSynthesis on happy path in dictation mode with interims and 2 parts 1`] = `
 Array [
   "cognitiveservices:audioSourceReady",
   "webspeech:start",
@@ -57,21 +77,100 @@ Array [
   "webspeech:soundstart",
   "cognitiveservices:recognizing",
   "webspeech:speechstart",
-  "webspeech:result { isFinal: false, [[\\"hello\\"]]",
+  "webspeech:result ['hello']",
+  "cognitiveservices:recognized",
+  "webspeech:result ['Hello.' (isFinal)]",
+  "cognitiveservices:recognized",
+  "webspeech:result ['Hello.' (isFinal), 'World.' (isFinal)]",
+  "cognitiveservices:stop",
+  "cognitiveservices:audioSourceOff",
+  "webspeech:speechend",
+  "webspeech:soundend",
+  "webspeech:audioend",
+  "webspeech:result ['Hello.' (isFinal), 'World.' (isFinal)]",
+  "webspeech:end",
+]
+`;
+
+exports[`SpeechSynthesis on happy path in dictation mode with unrecognizable sound should throw error 1`] = `
+Array [
+  "cognitiveservices:audioSourceReady",
+  "webspeech:start",
+  "webspeech:audiostart",
+  "cognitiveservices:firstAudibleChunk",
+  "webspeech:soundstart",
+  "cognitiveservices:recognized",
+  "webspeech:speechstart",
+  "cognitiveservices:stop",
+  "cognitiveservices:audioSourceOff",
+  "webspeech:speechend",
+  "webspeech:soundend",
+  "webspeech:audioend",
+  "webspeech:end",
+]
+`;
+
+exports[`SpeechSynthesis on happy path in interactive mode stop before recognized 1`] = `
+Array [
+  "cognitiveservices:audioSourceReady",
+  "webspeech:start",
+  "webspeech:audiostart",
+  "cognitiveservices:firstAudibleChunk",
+  "webspeech:soundstart",
   "cognitiveservices:recognizing",
-  "webspeech:result { isFinal: false, [[\\"hello\\"]]",
+  "webspeech:speechstart",
+  "webspeech:result ['hello']",
+  "cognitiveservices:stop",
+  "cognitiveservices:audioSourceOff",
+  "webspeech:speechend",
+  "webspeech:soundend",
+  "webspeech:audioend",
+  "webspeech:end",
+]
+`;
+
+exports[`SpeechSynthesis on happy path in interactive mode with interims 1`] = `
+Array [
+  "cognitiveservices:audioSourceReady",
+  "webspeech:start",
+  "webspeech:audiostart",
+  "cognitiveservices:firstAudibleChunk",
+  "webspeech:soundstart",
+  "cognitiveservices:recognizing",
+  "webspeech:speechstart",
+  "webspeech:result ['hello']",
+  "cognitiveservices:recognizing",
+  "webspeech:result ['hello world']",
   "cognitiveservices:recognized",
   "cognitiveservices:audioSourceOff",
   "webspeech:speechend",
   "webspeech:soundend",
   "webspeech:audioend",
-  "cognitiveservices:success",
-  "webspeech:result { isFinal: true, [[\\"Hello, John.\\"]]",
+  "webspeech:result ['Hello, World!' (isFinal)]",
   "webspeech:end",
 ]
 `;
 
-exports[`Mock SpeechRecognizer with happy path without interims 1`] = `
+exports[`SpeechSynthesis on happy path in interactive mode with unrecognizable sound should throw error 1`] = `
+Array [
+  "cognitiveservices:audioSourceReady",
+  "webspeech:start",
+  "webspeech:audiostart",
+  "cognitiveservices:firstAudibleChunk",
+  "webspeech:soundstart",
+  "cognitiveservices:recognized",
+  "webspeech:speechstart",
+  "cognitiveservices:stop",
+  "cognitiveservices:audioSourceOff",
+  "webspeech:speechend",
+  "webspeech:soundend",
+  "webspeech:audioend",
+  "webspeech:error { error: 'no-speech' }",
+  "webspeech:end",
+]
+`;
+
+exports[`SpeechSynthesis on happy path in interactive mode without interims 1`] = `
 Array [
   "cognitiveservices:audioSourceReady",
   "webspeech:start",
@@ -85,13 +184,12 @@ Array [
   "webspeech:speechend",
   "webspeech:soundend",
   "webspeech:audioend",
-  "cognitiveservices:success",
-  "webspeech:result { isFinal: true, [[\\"Hello, John.\\"]]",
+  "webspeech:result ['Hello, World!' (isFinal)]",
   "webspeech:end",
 ]
 `;
 
-exports[`Mock SpeechRecognizer with microphone blocked 1`] = `
+exports[`SpeechSynthesis with microphone blocked 1`] = `
 Array [
   "cognitiveservices:canceled",
   "webspeech:error { error: 'not-allowed' }",
@@ -99,7 +197,7 @@ Array [
 ]
 `;
 
-exports[`Mock SpeechRecognizer with muted microphone 1`] = `
+exports[`SpeechSynthesis with muted microphone in interactive mode 1`] = `
 Array [
   "cognitiveservices:audioSourceReady",
   "webspeech:start",
@@ -107,13 +205,12 @@ Array [
   "cognitiveservices:recognized",
   "cognitiveservices:audioSourceOff",
   "webspeech:audioend",
-  "cognitiveservices:success",
   "webspeech:error { error: 'no-speech' }",
   "webspeech:end",
 ]
 `;
 
-exports[`Mock SpeechRecognizer with network error 1`] = `
+exports[`SpeechSynthesis with network error 1`] = `
 Array [
   "cognitiveservices:audioSourceReady",
   "webspeech:start",
@@ -125,7 +222,7 @@ Array [
 ]
 `;
 
-exports[`SpeechRecognizer with text normalization of ITN should result in ITN 1`] = `
+exports[`SpeechSynthesis with text normalization of ITN should result in ITN 1`] = `
 Array [
   "cognitiveservices:audioSourceReady",
   "webspeech:start",
@@ -138,13 +235,12 @@ Array [
   "webspeech:speechend",
   "webspeech:soundend",
   "webspeech:audioend",
-  "cognitiveservices:success",
-  "webspeech:result { isFinal: true, [[\\"no (ITN)\\"]]",
+  "webspeech:result ['no (ITN)' (isFinal)]",
   "webspeech:end",
 ]
 `;
 
-exports[`SpeechRecognizer with text normalization of lexical should result in lexical 1`] = `
+exports[`SpeechSynthesis with text normalization of lexical should result in lexical 1`] = `
 Array [
   "cognitiveservices:audioSourceReady",
   "webspeech:start",
@@ -157,13 +253,12 @@ Array [
   "webspeech:speechend",
   "webspeech:soundend",
   "webspeech:audioend",
-  "cognitiveservices:success",
-  "webspeech:result { isFinal: true, [[\\"no (Lexical)\\"]]",
+  "webspeech:result ['no (Lexical)' (isFinal)]",
   "webspeech:end",
 ]
 `;
 
-exports[`SpeechRecognizer with text normalization of masked ITN should result in masked ITN 1`] = `
+exports[`SpeechSynthesis with text normalization of masked ITN should result in masked ITN 1`] = `
 Array [
   "cognitiveservices:audioSourceReady",
   "webspeech:start",
@@ -176,8 +271,7 @@ Array [
   "webspeech:speechend",
   "webspeech:soundend",
   "webspeech:audioend",
-  "cognitiveservices:success",
-  "webspeech:result { isFinal: true, [[\\"no (MaskedITN)\\"]]",
+  "webspeech:result ['no (MaskedITN)' (isFinal)]",
   "webspeech:end",
 ]
 `;

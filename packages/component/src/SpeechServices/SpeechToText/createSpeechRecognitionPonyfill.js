@@ -60,16 +60,18 @@ function improviseAsync(fn, improviser) {
   return (...args) => fn(...args).onSuccessContinueWith(result => improviser(result));
 }
 
-function maxAmplitude(chunk) {
-  return chunk.reduce((maxAmplitude, value, index) => {
-    if (index % 2) {
-      return maxAmplitude;
-    }
+function maxAmplitude(arrayBuffer) {
+  const array = new Int16Array(arrayBuffer);
 
-    const amplitude = value + chunk[index + 1] << 8;
-
+  return [].reduce.call(array, (maxAmplitude, amplitude) => {
     return Math.max(maxAmplitude, amplitude);
   }, 0);
+}
+
+function cognitiveServicesAsyncToPromise(fn) {
+  return (...args) => {
+    return new Promise((resolve, reject) => fn(...args, resolve, reject));
+  };
 }
 
 export default async ({
@@ -133,7 +135,8 @@ export default async ({
     }
 
     get continuous() { return this._continuous; }
-    set continuous(value) { value && console.warn(`Speech Services: Cannot set continuous to ${ value }, this feature is not supported.`); }
+    // set continuous(value) { value && console.warn(`Speech Services: Cannot set continuous to ${ value }, this feature is not supported.`); }
+    set continuous(value) { this._continuous = value; }
 
     get interimResults() { return this._interimResults; }
     set interimResults(value) { this._interimResults = value; }
@@ -147,14 +150,14 @@ export default async ({
     abort() {}
 
     start() {
-      if (this.continuous) {
-        throw new Error('Continuous mode is not supported.');
-      } else {
+      // if (this.continuous) {
+      //   throw new Error('Continuous mode is not supported.');
+      // } else {
         this._startOnce().catch(err => {
           console.error(err);
           this.emit('error', { error: err, message: err && err.message });
         });
-      }
+      // }
     }
 
     async _startOnce() {
@@ -171,16 +174,16 @@ export default async ({
       recognizer.audioConfig.attach = improviseAsync(
         recognizer.audioConfig.attach.bind(recognizer.audioConfig),
         reader => {
-          let chunkRead;
+          let firstAudibleChunkEmitted;
 
           return {
             ...reader,
             read: improviseAsync(
               reader.read.bind(reader),
               chunk => {
-                if (!chunkRead && maxAmplitude(chunk) > 256) {
+                if (!firstAudibleChunkEmitted && maxAmplitude(chunk.buffer) > 256) {
                   queue.push({ firstAudibleChunk: {} });
-                  chunkRead = true;
+                  firstAudibleChunkEmitted = true;
                 }
 
                 return chunk;
@@ -231,38 +234,78 @@ export default async ({
         });
       };
 
-      recognizer.recognizeOnceAsync(
-        result => queue.push({ success: serializeRecognitionResult(result) }),
-        err => queue.push({ error: err })
-      );
+      recognizer.sessionStarted = (_, { sessionId }) => {
+        queue.push({ sessionStarted: { sessionId } });
+      };
+
+      recognizer.sessionStopped = (...args) => {
+        console.log('sessionStopped', ...args);
+
+        queue.push({
+          sessionStopped: {}
+        });
+      };
+
+      recognizer.speechStartDetected = (_, { offset, sessionId }) => {
+        console.log('speechStartDetected', { offset, sessionId });
+
+        queue.push({
+          speechStartDetected: {}
+        });
+      };
+
+      recognizer.speechEndDetected = (...args) => {
+        console.log('speechEndDetected', ...args);
+
+        queue.push({
+          speechEndDetected: {}
+        });
+      };
+
+      // if (this.continuous) {
+        await cognitiveServicesAsyncToPromise(recognizer.startContinuousRecognitionAsync.bind(recognizer))();
+      // } else {
+      //   recognizer.recognizeOnceAsync(
+      //     result => queue.push({ success: serializeRecognitionResult(result) }),
+      //     err => queue.push({ error: err })
+      //   );
+      // }
 
       this.abort = () => queue.push({ abort: {} });
       this.stop = () => queue.push({ stop: {} });
 
       let audioStarted;
       let finalEvent;
+      let finalizedResults = [];
 
-      for (let loop = 0;; loop++) {
+      for (let loop = 0; !stopping || audioStarted; loop++) {
         const event = await queue.shift();
         const {
           abort,
           audioSourceOff,
           audioSourceReady,
           canceled,
-          error,
+          // error,
           firstAudibleChunk,
           recognized,
           recognizing,
           stop,
-          success
+          // success
         } = event;
 
-        // We are emitting event "cognitiveservices" for debugging purpose
+        // TODO: Fix this
+        const error = null;
+
+        // console.log(event);
+
+        // We are emitting event "cognitiveservices" for debugging purpose.
         Object.keys(event).forEach(name => this.emitCognitiveServices(name, event[name]));
 
         let errorMessage = error ? error : canceled && canceled.errorDetails;
 
-        if (errorMessage && /Permission\sdenied/.test(errorMessage)) {
+        if (/Permission\sdenied/.test(errorMessage || '')) {
+          // If microphone is not allowed, we should not emit "start" event.
+
           finalEvent = {
             error: 'not-allowed',
             type: 'error'
@@ -294,120 +337,114 @@ export default async ({
           }
 
           break;
-        } else if (abort) {
-          finalEvent = {
-            error: 'aborted',
-            type: 'error'
-          };
+        } else if (abort || stop) {
+          if (abort) {
+            finalEvent = {
+              error: 'aborted',
+              type: 'error'
+            };
 
-          aborting = true;
+            aborting = true;
+          } else {
+            if (finalizedResults.length) {
+              finalEvent = {
+                results: finalizedResults,
+                type: 'result'
+              };
+            }
+          }
 
-          // Quirks: after we call stopContinuousRecognitionAsync, the recognizeOnceAsync will stale and would not resolve or reject.
-          recognizer.stopContinuousRecognitionAsync();
-        } else if (stop) {
-          // This is for faking stop
           stopping = true;
 
-          if (lastRecognizingResults) {
-            lastRecognizingResults.isFinal = true;
+          await cognitiveServicesAsyncToPromise(recognizer.stopContinuousRecognitionAsync.bind(recognizer))();
+        } else if (audioSourceReady) {
+          this.emit('audiostart');
 
-            finalEvent = {
-              results: lastRecognizingResults,
-              type: 'result'
-            };
-          }
+          audioStarted = true;
+        } else if (firstAudibleChunk) {
+          this.emit('soundstart');
 
-          // We want to emit "speechend" and "soundend" as soon as "abort" or "stop" is called.
-          if (speechStarted) {
-            this.emit('speechend');
+          soundStarted = true;
+        } else if (audioSourceOff) {
+          stopping = true;
+          speechStarted && this.emit('speechend');
+          soundStarted && this.emit('soundend');
+          audioStarted && this.emit('audioend');
 
-            speechStarted = false;
-          }
+          audioStarted = soundStarted = speechStarted = false;
 
-          if (soundStarted) {
-            this.emit('soundend');
-
-            soundStarted = false;
-          }
-        } else if (!stopping) {
-          // If we did not faking stop
-          if (audioSourceReady) {
+          break;
+        } else if (recognized && recognized.result && recognized.result.reason === ResultReason.NoMatch) {
+          finalEvent = {
+            error: 'no-speech',
+            type: 'error'
+          };
+        } else if (recognized || recognizing) {
+          if (!audioStarted) {
+            // Unconfirmed prevention of quirks
             this.emit('audiostart');
 
             audioStarted = true;
-          } else if (firstAudibleChunk) {
+          }
+
+          if (!soundStarted) {
             this.emit('soundstart');
 
             soundStarted = true;
-          } else if (audioSourceOff) {
-            stopping = true;
-            speechStarted && this.emit('speechend');
-            soundStarted && this.emit('soundend');
-            audioStarted && this.emit('audioend');
+          }
 
-            audioStarted = soundStarted = speechStarted = false;
+          if (!speechStarted) {
+            this.emit('speechstart');
 
-            if (aborting) {
-              break;
-            }
-          } else if (recognized && recognized.result && recognized.result.reason === ResultReason.NoMatch) {
-            finalEvent = {
-              error: 'no-speech',
-              type: 'error'
-            };
-          } else {
-            if (!audioStarted) {
-              // Unconfirmed prevention of quirks
-              this.emit('audiostart');
+            speechStarted = true;
+          }
 
-              audioStarted = true;
-            }
+          if (recognized) {
+            const result = cognitiveServiceEventResultToWebSpeechRecognitionResultList(
+              recognized.result,
+              {
+                maxAlternatives: this.maxAlternatives,
+                textNormalization
+              }
+            );
 
-            if (!soundStarted) {
-              this.emit('soundstart');
+            const recognizable = !!result[0].transcript;
 
-              soundStarted = true;
+            if (recognizable) {
+              finalizedResults = [...finalizedResults, result];
+
+              this.continuous && this.emit('result', {
+                results: finalizedResults
+              });
             }
 
-            if (!speechStarted) {
-              this.emit('speechstart');
-
-              speechStarted = true;
-            }
-
-            if (recognized) {
+            if (!this.continuous) {
               finalEvent = {
-                results: cognitiveServiceEventResultToWebSpeechRecognitionResultList(
-                  recognized.result,
+                results: finalizedResults,
+                type: 'result'
+              };
+
+              recognizer.stopContinuousRecognitionAsync();
+            }
+          } else if (recognizing) {
+            this.interimResults && this.emit('result', {
+              results: [
+                ...finalizedResults,
+                cognitiveServiceEventResultToWebSpeechRecognitionResultList(
+                  recognizing.result,
                   {
                     maxAlternatives: this.maxAlternatives,
                     textNormalization
                   }
-                ),
-                type: 'result'
-              };
-
-              // We should not need this break because we should receive `audioSourceOff` shortly.
-              // break;
-            } else if (recognizing) {
-              lastRecognizingResults = cognitiveServiceEventResultToWebSpeechRecognitionResultList(
-                recognizing.result,
-                {
-                  maxAlternatives: this.maxAlternatives,
-                  textNormalization
-                }
-              );
-
-              this.interimResults && this.emit('result', {
-                results: lastRecognizingResults
-              });
-            }
+                )
+              ]
+            });
           }
         }
 
-        if (error || success) {
-          break;
-        }
+        // if (error || success) {
+        //   break;
+        // }
       }
 
       // TODO: We should emit "audioend", "result", or "error" here
@@ -426,6 +463,13 @@ export default async ({
       }
 
       if (finalEvent) {
+        if (finalEvent.type === 'result' && !finalEvent.results.length) {
+          finalEvent = {
+            error: 'no-speech',
+            type: 'error'
+          };
+        }
+
         this.emit(finalEvent.type, finalEvent);
       }
 
