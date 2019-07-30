@@ -164,11 +164,9 @@ export default async ({
       // TODO: [P2] Should check if recognition is active, we should not start recognition twice
       const recognizer = await this.createRecognizer();
       const queue = createPromiseQueue();
-      let lastRecognizingResults;
       let soundStarted;
       let speechStarted;
       let stopping;
-      let aborting;
 
       // We modify "attach" function and detect when the first chunk is read.
       recognizer.audioConfig.attach = improviseAsync(
@@ -285,23 +283,18 @@ export default async ({
           audioSourceOff,
           audioSourceReady,
           canceled,
-          // error,
           firstAudibleChunk,
           recognized,
           recognizing,
-          stop,
-          // success
+          stop
         } = event;
-
-        // TODO: Fix this
-        const error = null;
 
         // console.log(event);
 
         // We are emitting event "cognitiveservices" for debugging purpose.
         Object.keys(event).forEach(name => this.emitCognitiveServices(name, event[name]));
 
-        let errorMessage = error ? error : canceled && canceled.errorDetails;
+        let errorMessage = canceled && canceled.errorDetails;
 
         if (/Permission\sdenied/.test(errorMessage || '')) {
           // If microphone is not allowed, we should not emit "start" event.
@@ -441,10 +434,6 @@ export default async ({
             });
           }
         }
-
-        // if (error || success) {
-        //   break;
-        // }
       }
 
       // TODO: We should emit "audioend", "result", or "error" here
