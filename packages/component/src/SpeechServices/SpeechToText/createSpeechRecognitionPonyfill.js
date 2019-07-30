@@ -135,7 +135,6 @@ export default async ({
     }
 
     get continuous() { return this._continuous; }
-    // set continuous(value) { value && console.warn(`Speech Services: Cannot set continuous to ${ value }, this feature is not supported.`); }
     set continuous(value) { this._continuous = value; }
 
     get interimResults() { return this._interimResults; }
@@ -150,14 +149,10 @@ export default async ({
     abort() {}
 
     start() {
-      // if (this.continuous) {
-      //   throw new Error('Continuous mode is not supported.');
-      // } else {
-        this._startOnce().catch(err => {
-          console.error(err);
-          this.emit('error', { error: err, message: err && err.message });
-        });
-      // }
+      this._startOnce().catch(err => {
+        console.error(err);
+        this.emit('error', { error: err, message: err && err.message });
+      });
     }
 
     async _startOnce() {
@@ -260,14 +255,7 @@ export default async ({
         });
       };
 
-      // if (this.continuous) {
-        await cognitiveServicesAsyncToPromise(recognizer.startContinuousRecognitionAsync.bind(recognizer))();
-      // } else {
-      //   recognizer.recognizeOnceAsync(
-      //     result => queue.push({ success: serializeRecognitionResult(result) }),
-      //     err => queue.push({ error: err })
-      //   );
-      // }
+      await cognitiveServicesAsyncToPromise(recognizer.startContinuousRecognitionAsync.bind(recognizer))();
 
       this.abort = () => queue.push({ abort: {} });
       this.stop = () => queue.push({ stop: {} });
@@ -288,8 +276,6 @@ export default async ({
           recognizing,
           stop
         } = event;
-
-        // console.log(event);
 
         // We are emitting event "cognitiveservices" for debugging purpose.
         Object.keys(event).forEach(name => this.emitCognitiveServices(name, event[name]));
@@ -336,15 +322,11 @@ export default async ({
               error: 'aborted',
               type: 'error'
             };
-
-            aborting = true;
-          } else {
-            if (finalizedResults.length) {
-              finalEvent = {
-                results: finalizedResults,
-                type: 'result'
-              };
-            }
+          } else if (finalizedResults.length) {
+            finalEvent = {
+              results: finalizedResults,
+              type: 'result'
+            };
           }
 
           stopping = true;
@@ -435,9 +417,6 @@ export default async ({
           }
         }
       }
-
-      // TODO: We should emit "audioend", "result", or "error" here
-      //       This is for mimicking stop() behavior, "audioend" should not fire too early until we received the last "recognized" event
 
       if (speechStarted) {
         this.emit('speechend');
