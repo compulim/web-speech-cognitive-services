@@ -4,10 +4,11 @@ import { PromiseHelper } from 'microsoft-cognitiveservices-speech-sdk/distrib/li
 import createDeferred from '../../Util/createDeferred';
 
 function createLoudArrayBuffer() {
-  const arrayBuffer = new ArrayBuffer(4);
+  // Single channel, 16-bit.
+  const arrayBuffer = new ArrayBuffer(2);
   const typedArray = new Int16Array(arrayBuffer);
 
-  typedArray.set([32767, 32767], 0);
+  typedArray.set([32767], 0);
 
   return arrayBuffer;
 }
