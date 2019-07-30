@@ -73,6 +73,7 @@ function cognitiveServicesAsyncToPromise(fn) {
 }
 
 export default async ({
+  audioConfig = AudioConfig.fromDefaultMicrophoneInput(),
   authorizationToken,
   region = 'westus',
   subscriptionKey,
@@ -87,8 +88,6 @@ export default async ({
 
     return {};
   }
-
-  const audioConfig = AudioConfig.fromDefaultMicrophoneInput();
 
   class SpeechRecognition extends DOMEventEmitter {
     constructor() {
@@ -148,7 +147,6 @@ export default async ({
 
     start() {
       this._startOnce().catch(err => {
-        console.error(err);
         this.emit('error', { error: err, message: err && err.message });
       });
     }
@@ -177,6 +175,7 @@ export default async ({
                 // 2. Observe the amplitude (100-110) for the first few chunks
                 //    (This is short static caught when turning on the microphone)
                 // 3. Set the number a bit higher than the observation
+
                 if (!firstAudibleChunkEmitted && averageAmplitude(chunk.buffer) > 150) {
                   queue.push({ firstAudibleChunk: {} });
                   firstAudibleChunkEmitted = true;
@@ -234,28 +233,18 @@ export default async ({
         queue.push({ sessionStarted: { sessionId } });
       };
 
-      recognizer.sessionStopped = (...args) => {
-        console.log('sessionStopped', ...args);
-
-        queue.push({
-          sessionStopped: {}
-        });
+      recognizer.sessionStopped = (_, { sessionId }) => {
+        // "sessionStopped" is never fired, probably because we are using startContinuousRecognitionAsync instead of recognizeOnceAsync.
+        queue.push({ sessionStopped: { sessionId } });
       };
 
       recognizer.speechStartDetected = (_, { offset, sessionId }) => {
-        console.log('speechStartDetected', { offset, sessionId });
-
-        queue.push({
-          speechStartDetected: {}
-        });
+        queue.push({ speechStartDetected: { offset, sessionId } });
       };
 
-      recognizer.speechEndDetected = (...args) => {
-        console.log('speechEndDetected', ...args);
-
-        queue.push({
-          speechEndDetected: {}
-        });
+      recognizer.speechEndDetected = (_, { sessionId }) => {
+        // "speechEndDetected" is never fired, probably because we are using startContinuousRecognitionAsync instead of recognizeOnceAsync.
+        queue.push({ speechEndDetected: { sessionId } });
       };
 
       await cognitiveServicesAsyncToPromise(recognizer.startContinuousRecognitionAsync.bind(recognizer))();
