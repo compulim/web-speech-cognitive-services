@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added
+- Fix [#23](https://github.com/compulim/web-speech-cognitive-services/issues/23) and [#24](https://github.com/compulim/web-speech-cognitive-services/issues/24), support `audiostart`/`audioend`/`soundstart`/`soundend` event, in PR [#XXX](https://github.com/compulim/web-speech-cognitive-services/pull/XXX)
+- Fix [#25](https://github.com/compulim/web-speech-cognitive-services/issues/25) and [#26](https://github.com/compulim/web-speech-cognitive-services/issues/26), support true `abort` and `stop` function, in PR [#XXX](https://github.com/compulim/web-speech-cognitive-services/pull/XXX)
+- Fix [#29](https://github.com/compulim/web-speech-cognitive-services/issues/29), support continuous mode, in PR [#XXX](https://github.com/compulim/web-speech-cognitive-services/pull/XXX)
+   - Quirks: in continuous mode, calling `stop` in-between `recognizing` and `recognized` will not emit final `result` event
+
 ### Changed
 - Bumped dependencies, in PR [#20](https://github.com/compulim/web-speech-cognitive-services/pull/20)
    - [@babel/cli@^7.5.5](https://www.npmjs.com/package/@babel/cli)
