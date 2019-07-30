@@ -257,6 +257,13 @@ For detailed test matrix, please refer to [`SPEC-RECOGNITION.md`](SPEC-RECOGNITI
 * Speech synthesis
    * `onboundary`, `onmark`, `onpause`, and `onresume` are not supported/fired
 
+## Quirks
+
+* Speech recognition
+   * Dictation mode
+      * If `stop()` is called before first `recognized` event, there will be no final result
+      * Cognitive Services stop recognition immediately after `stop()` is called
+
 # Roadmap
 
 * Speech recognition
