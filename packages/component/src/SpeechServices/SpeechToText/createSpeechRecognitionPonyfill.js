@@ -60,12 +60,10 @@ function improviseAsync(fn, improviser) {
   return (...args) => fn(...args).onSuccessContinueWith(result => improviser(result));
 }
 
-function maxAmplitude(arrayBuffer) {
+function averageAmplitude(arrayBuffer) {
   const array = new Int16Array(arrayBuffer);
 
-  return [].reduce.call(array, (maxAmplitude, amplitude) => {
-    return Math.max(maxAmplitude, amplitude);
-  }, 0);
+  return [].reduce.call(array, (averageAmplitude, amplitude) => averageAmplitude + Math.abs(amplitude), 0) / array.length;
 }
 
 function cognitiveServicesAsyncToPromise(fn) {
@@ -174,7 +172,12 @@ export default async ({
             read: improviseAsync(
               reader.read.bind(reader),
               chunk => {
-                if (!firstAudibleChunkEmitted && maxAmplitude(chunk.buffer) > 256) {
+                // The magic number 150 is measured by:
+                // 1. Set microphone volume to 0
+                // 2. Observe the amplitude (100-110) for the first few chunks
+                //    (This is short static caught when turning on the microphone)
+                // 3. Set the number a bit higher than the observation
+                if (!firstAudibleChunkEmitted && averageAmplitude(chunk.buffer) > 150) {
                   queue.push({ firstAudibleChunk: {} });
                   firstAudibleChunkEmitted = true;
                 }
