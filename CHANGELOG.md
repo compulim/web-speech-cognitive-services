@@ -20,7 +20,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Speech synthesis: Fix [#32](https://github.com/compulim/web-speech-cognitive-services/issues/32), fetch voices from services, in PR [#35](https://github.com/compulim/web-speech-cognitive-services/pull/35)
 - Speech synthesis: Fix [#34](https://github.com/compulim/web-speech-cognitive-services/issues/34), in PR [#36](https://github.com/compulim/web-speech-cognitive-services/pull/36)
    - Support user-controlled `AudioContext` object to be passed as an option named `audioContext`
-   - If no `audioContext` option is passed, will create a new `AudioContext` object and permanently allocated
+   - If no `audioContext` option is passed, will create a new `AudioContext` object
 - Speech synthesis: If an empty utterance is being synthesized, will play an empty local audio clip instead, in PR [#36](https://github.com/compulim/web-speech-cognitive-services/pull/36)
 
 ### Changed
