@@ -1,10 +1,10 @@
 import AudioContextConsumer from './AudioContextConsumer';
 
 export default class {
-  constructor(ponyfill) {
+  constructor({ audioContext, ponyfill }) {
+    this.audioContext = audioContext || new ponyfill.AudioContext();
     this.consumer = null;
     this.paused = false;
-    this.ponyfill = ponyfill;
     this.queue = [];
   }
 
@@ -33,9 +33,13 @@ export default class {
   }
 
   async startConsumer() {
+    const { audioContext } = this;
+
     while (!this.paused && this.queue.length && !this.consumer) {
-      this.consumer = new AudioContextConsumer();
-      await this.consumer.start(this.queue, this.ponyfill);
+      this.consumer = new AudioContextConsumer(audioContext);
+
+      await this.consumer.start(this.queue);
+
       this.consumer = null;
     }
   }

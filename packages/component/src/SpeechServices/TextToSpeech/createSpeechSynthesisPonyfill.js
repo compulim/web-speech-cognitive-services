@@ -13,6 +13,7 @@ const TOKEN_EXPIRATION = 600000;
 const TOKEN_EARLY_RENEWAL = 60000;
 
 export default async ({
+  audioContext,
   authorizationToken,
   ponyfill = {
     AudioContext: window.AudioContext || window.webkitAudioContext
@@ -56,7 +57,7 @@ export default async ({
       super(['voiceschanged']);
 
       this.outputFormat = DEFAULT_OUTPUT_FORMAT;
-      this.queue = new AudioContextQueue(ponyfill);
+      this.queue = new AudioContextQueue({ audioContext, ponyfill });
       this.voices = [];
 
       this.updateVoices();
