@@ -18,10 +18,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
    - Quirks: in continuous mode, calling `stop` in-between `recognizing` and `recognized` will not emit final `result` event
 - Speech recognition: New `audioConfig` option to override the default `AudioConfig.fromDefaultMicrophoneInput`, in PR [#33](https://github.com/compulim/web-speech-cognitive-services/pull/33)
 - Speech synthesis: Fix [#32](https://github.com/compulim/web-speech-cognitive-services/issues/32), fetch voices from services, in PR [#35](https://github.com/compulim/web-speech-cognitive-services/pull/35)
-- Speech synthesis: Fix [#34](https://github.com/compulim/web-speech-cognitive-services/issues/34), in PR [#XXX](https://github.com/compulim/web-speech-cognitive-services/pull/XXX)
+- Speech synthesis: Fix [#34](https://github.com/compulim/web-speech-cognitive-services/issues/34), in PR [#36](https://github.com/compulim/web-speech-cognitive-services/pull/36)
    - Support user-controlled `AudioContext` object to be passed as an option named `audioContext`
    - If no `audioContext` option is passed, will create a new `AudioContext` object and permanently allocated
-- Speech synthesis: If an empty utterance is being synthesized, will play an empty local audio clip instead, in PR [#XXX](https://github.com/compulim/web-speech-cognitive-services/pull/XXX)
+- Speech synthesis: If an empty utterance is being synthesized, will play an empty local audio clip instead, in PR [#36](https://github.com/compulim/web-speech-cognitive-services/pull/36)
 
 ### Changed
 
