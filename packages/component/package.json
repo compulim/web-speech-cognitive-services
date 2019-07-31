@@ -68,6 +68,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.5.5",
+    "base64-arraybuffer": "^0.2.0",
     "event-as-promise": "^1.0.5",
     "events": "^3.0.0",
     "memoize-one": "^5.0.5",
