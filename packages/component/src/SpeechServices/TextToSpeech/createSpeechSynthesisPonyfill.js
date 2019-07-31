@@ -39,12 +39,27 @@ export default async ({
     )
   );
 
+  const getAuthorizationTokenPromise =
+    typeof authorizationToken === 'function' ?
+      await authorizationToken()
+    : authorizationToken ?
+      await authorizationToken
+    :
+      await fetchMemoizedAuthorizationToken({
+        now: Date.now,
+        region,
+        subscriptionKey
+      });
+
   class SpeechSynthesis extends DOMEventEmitter {
     constructor() {
       super(['voiceschanged']);
 
       this.outputFormat = DEFAULT_OUTPUT_FORMAT;
       this.queue = new AudioContextQueue(ponyfill);
+      this.voices = [];
+
+      this.updateVoices();
     }
 
     cancel() {
@@ -52,7 +67,7 @@ export default async ({
     }
 
     getVoices() {
-      return fetchVoices();
+      return this.voices;
     }
 
     pause() {
@@ -72,16 +87,7 @@ export default async ({
         utterance.addEventListener('end', resolve);
         utterance.addEventListener('error', reject);
 
-        utterance.authorizationToken =
-          typeof authorizationToken === 'function' ?
-            await authorizationToken()
-          : authorizationToken ?
-            await authorizationToken
-          : await fetchMemoizedAuthorizationToken({
-            now: Date.now,
-            region,
-            subscriptionKey
-          });
+        utterance.authorizationToken = await getAuthorizationTokenPromise;
         utterance.region = region;
         utterance.outputFormat = this.outputFormat;
         utterance.preload();
@@ -92,6 +98,12 @@ export default async ({
 
     get speaking() {
       return this.queue.speaking;
+    }
+
+    async updateVoices() {
+      this.voices = await fetchVoices({ authorizationToken: await getAuthorizationTokenPromise, region });
+
+      this.emit('voiceschanged');
     }
   }
 
