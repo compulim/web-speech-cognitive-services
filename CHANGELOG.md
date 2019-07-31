@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Breaking changes
 
-- Instead of stopping `AudioContext` after all utterances are finished, the `AudioContext` is now permanently allocated. If this is not desirable in your application, please create your own `AudioContext` instance and pass it as an option named `audioContext` when creating the ponyfill
+- Instead of stopping `AudioContext` after all pending utterances are finished, the `AudioContext` is now persisted. If this is not desirable in your application and would like to control the lifetime of `AudioContext` object, please create your own instance and pass it as an option named `audioContext` when creating the ponyfill
 
 ### Added
 
