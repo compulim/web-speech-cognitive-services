@@ -946,6 +946,58 @@ describe('SpeechRecognition', () => {
 
     expect(toSnapshot(events)).toMatchSnapshot();
   });
+
+  test('with dynamic grammars', async () => {
+    const { default: createSpeechRecognitionPonyfill } = require('./createSpeechRecognitionPonyfill');
+    const { SpeechRecognition } = await createSpeechRecognitionPonyfill({
+      region: 'westus',
+      subscriptionKey: 'SUBSCRIPTION_KEY',
+      textNormalization: 'maskeditn'
+    });
+
+    let speechRecognition = new SpeechRecognition();
+
+    speechRecognition.grammars.phrases = ['Bellevue'];
+
+    speechRecognition.start();
+    await recognizer.waitForStartContinuousRecognitionAsync();
+
+    expect(recognizer.privReco.dynamicGrammar.addPhrase).toHaveBeenCalledTimes(1);
+    expect(recognizer.privReco.dynamicGrammar.addPhrase).toHaveBeenCalledWith(['Bellevue']);
+  });
+
+  test('with reference grammars', async () => {
+    const { default: createSpeechRecognitionPonyfill } = require('./createSpeechRecognitionPonyfill');
+    const { SpeechRecognition } = await createSpeechRecognitionPonyfill({
+      referenceGrammars: ['12345678-1234-5678-abcd-12345678abcd'],
+      region: 'westus',
+      subscriptionKey: 'SUBSCRIPTION_KEY',
+      textNormalization: 'maskeditn'
+    });
+
+    let speechRecognition = new SpeechRecognition();
+
+    speechRecognition.start();
+    await recognizer.waitForStartContinuousRecognitionAsync();
+
+    expect(recognizer.privReco.dynamicGrammar.addReferenceGrammar).toHaveBeenCalledTimes(1);
+    expect(recognizer.privReco.dynamicGrammar.addReferenceGrammar).toHaveBeenCalledWith(['12345678-1234-5678-abcd-12345678abcd']);
+  });
+
+  test('with new SpeechGrammarList', async () => {
+    const { default: createSpeechRecognitionPonyfill } = require('./createSpeechRecognitionPonyfill');
+    const { SpeechGrammarList, SpeechRecognition } = await createSpeechRecognitionPonyfill({
+      region: 'westus',
+      subscriptionKey: 'SUBSCRIPTION_KEY',
+      textNormalization: 'maskeditn'
+    });
+
+    let speechRecognition = new SpeechRecognition();
+
+    speechRecognition.grammars = new SpeechGrammarList();
+    speechRecognition.start();
+    await recognizer.waitForStartContinuousRecognitionAsync();
+  });
 });
 
 describe('SpeechRecognition with text normalization', () => {
@@ -1115,42 +1167,5 @@ describe('SpeechRecognition with text normalization', () => {
 
     expect(toSnapshot(events)).toMatchSnapshot();
     expect(events[events.length - 2].results[0][0]).toHaveProperty('transcript', 'no (MaskedITN)');
-  });
-
-  test('with dynamic grammars', async () => {
-    const { default: createSpeechRecognitionPonyfill } = require('./createSpeechRecognitionPonyfill');
-    const { SpeechRecognition } = await createSpeechRecognitionPonyfill({
-      region: 'westus',
-      subscriptionKey: 'SUBSCRIPTION_KEY',
-      textNormalization: 'maskeditn'
-    });
-
-    let speechRecognition = new SpeechRecognition();
-
-    speechRecognition.grammars.phrases = ['Bellevue'];
-
-    speechRecognition.start();
-    await recognizer.waitForStartContinuousRecognitionAsync();
-
-    expect(recognizer.privReco.dynamicGrammar.addPhrase).toHaveBeenCalledTimes(1);
-    expect(recognizer.privReco.dynamicGrammar.addPhrase).toHaveBeenCalledWith(['Bellevue']);
-  });
-
-  test('with reference grammars', async () => {
-    const { default: createSpeechRecognitionPonyfill } = require('./createSpeechRecognitionPonyfill');
-    const { SpeechRecognition } = await createSpeechRecognitionPonyfill({
-      referenceGrammars: ['12345678-1234-5678-abcd-12345678abcd'],
-      region: 'westus',
-      subscriptionKey: 'SUBSCRIPTION_KEY',
-      textNormalization: 'maskeditn'
-    });
-
-    let speechRecognition = new SpeechRecognition();
-
-    speechRecognition.start();
-    await recognizer.waitForStartContinuousRecognitionAsync();
-
-    expect(recognizer.privReco.dynamicGrammar.addReferenceGrammar).toHaveBeenCalledTimes(1);
-    expect(recognizer.privReco.dynamicGrammar.addReferenceGrammar).toHaveBeenCalledWith(['12345678-1234-5678-abcd-12345678abcd']);
   });
 });

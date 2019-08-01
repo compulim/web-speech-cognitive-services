@@ -140,9 +140,9 @@ export default ({
     set grammars(value) {
       if (value instanceof SpeechGrammarList) {
         this._grammars = value;
+      } else {
+        throw new Error(`The provided value is not of type 'SpeechGrammarList'`);
       }
-
-      throw new Error(`The provided value is not of type 'SpeechGrammarList'`);
     }
 
     get interimResults() { return this._interimResults; }
