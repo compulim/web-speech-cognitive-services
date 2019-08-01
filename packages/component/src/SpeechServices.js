@@ -2,10 +2,10 @@ import createSpeechRecognitionPonyfill from './SpeechServices/SpeechToText';
 import createSpeechSynthesisPonyfill from './SpeechServices/TextToSpeech';
 import fetchAuthorizationToken from './SpeechServices/fetchAuthorizationToken';
 
-export default async function (...args) {
+export default function createSpeechServicesPonyfill(...args) {
   return {
-    ...(await createSpeechRecognitionPonyfill(...args)),
-    ...(await createSpeechSynthesisPonyfill(...args))
+    ...createSpeechRecognitionPonyfill(...args),
+    ...createSpeechSynthesisPonyfill(...args)
   };
 };
 

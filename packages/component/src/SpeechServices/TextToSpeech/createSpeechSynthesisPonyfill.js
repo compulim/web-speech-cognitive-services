@@ -12,7 +12,7 @@ const DEFAULT_OUTPUT_FORMAT = 'audio-16khz-128kbitrate-mono-mp3';
 const TOKEN_EXPIRATION = 600000;
 const TOKEN_EARLY_RENEWAL = 60000;
 
-export default async ({
+export default ({
   audioContext,
   authorizationToken,
   ponyfill = {
@@ -42,11 +42,11 @@ export default async ({
 
   const getAuthorizationTokenPromise =
     typeof authorizationToken === 'function' ?
-      await authorizationToken()
+      authorizationToken()
     : authorizationToken ?
-      await authorizationToken
+      authorizationToken
     :
-      await fetchMemoizedAuthorizationToken({
+      fetchMemoizedAuthorizationToken({
         now: Date.now,
         region,
         subscriptionKey

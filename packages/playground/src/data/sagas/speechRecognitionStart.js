@@ -53,11 +53,13 @@ function* startSpeechRecognition({ getCancelReason }) {
       speechRecognitionContinuous: continuous,
       speechRecognitionInterimResults: interimResults,
       speechRecognitionLanguage: language,
-      speechRecognitionMaxAlternatives: maxAlternatives
+      speechRecognitionMaxAlternatives: maxAlternatives,
+      speechRecognitionPhrases: phrases
     } = yield select();
 
     speechRecognition = new SpeechRecognition();
     speechRecognition.continuous = continuous;
+    speechRecognition.grammars.phrases = phrases;
     speechRecognition.interimResults = interimResults;
     speechRecognition.lang = language;
 
