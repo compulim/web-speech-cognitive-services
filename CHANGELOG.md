@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Breaking changes
 
 - Instead of stopping `AudioContext` after all pending utterances are finished, the `AudioContext` is now persisted. If this is not desirable in your application and would like to control the lifetime of `AudioContext` object, please create your own instance and pass it as an option named `audioContext` when creating the ponyfill
+- `createSpeechServicesPonyfill` function is no longer asynchronous
+   - Immediate after the ponyfill is created, we will fetch voice list from the services and emit `voiceschanged` event on completion
 
 ### Added
 
@@ -22,6 +24,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
    - Support user-controlled `AudioContext` object to be passed as an option named `audioContext`
    - If no `audioContext` option is passed, will create a new `AudioContext` object
 - Speech synthesis: If an empty utterance is being synthesized, will play an local empty audio clip, in PR [#36](https://github.com/compulim/web-speech-cognitive-services/pull/36)
+- Speech recognition: Fix [#30](https://github.com/compulim/web-speech-cognitive-services/issues/30), support dynamic phrases, in PR [#37](https://github.com/compulim/web-speech-cognitive-services/pull/37)
+   - Pass it as an array to `SpeechRecognition.grammars.phrases`
+- Speech recognition: Fix [#31](https://github.com/compulim/web-speech-cognitive-services/issues/31), support reference grammars, in PR [#37](https://github.com/compulim/web-speech-cognitive-services/pull/37)
+   - When creating the ponyfill, pass it as an array to `referenceGrammars` options
 
 ### Changed
 

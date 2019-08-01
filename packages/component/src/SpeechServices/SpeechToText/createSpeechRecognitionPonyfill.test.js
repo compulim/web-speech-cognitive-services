@@ -72,6 +72,13 @@ const MOCK_SPEECH_SDK = {
 
       this.callStartContinuousRecognitionAsyncDeferred = createDeferred();
       this.callStopContinuousRecognitionAsyncDeferred = createDeferred();
+
+      this.privReco = {
+        dynamicGrammar: {
+          addPhrase: jest.fn(),
+          addReferenceGrammar: jest.fn()
+        }
+      };
     }
 
     dispose() {}
@@ -220,7 +227,7 @@ beforeEach(() => {
   };
 });
 
-describe('SpeechSynthesis', () => {
+describe('SpeechRecognition', () => {
   let endEventEmitted;
   let errorEventEmitted;
   let events;
@@ -941,7 +948,7 @@ describe('SpeechSynthesis', () => {
   });
 });
 
-describe('SpeechSynthesis with text normalization', () => {
+describe('SpeechRecognition with text normalization', () => {
   const RECOGNITION_RESULT = {
     duration: 48100000,
     json: JSON.stringify({
@@ -1108,5 +1115,42 @@ describe('SpeechSynthesis with text normalization', () => {
 
     expect(toSnapshot(events)).toMatchSnapshot();
     expect(events[events.length - 2].results[0][0]).toHaveProperty('transcript', 'no (MaskedITN)');
+  });
+
+  test('with dynamic grammars', async () => {
+    const { default: createSpeechRecognitionPonyfill } = require('./createSpeechRecognitionPonyfill');
+    const { SpeechRecognition } = await createSpeechRecognitionPonyfill({
+      region: 'westus',
+      subscriptionKey: 'SUBSCRIPTION_KEY',
+      textNormalization: 'maskeditn'
+    });
+
+    let speechRecognition = new SpeechRecognition();
+
+    speechRecognition.grammars.phrases = ['Bellevue'];
+
+    speechRecognition.start();
+    await recognizer.waitForStartContinuousRecognitionAsync();
+
+    expect(recognizer.privReco.dynamicGrammar.addPhrase).toHaveBeenCalledTimes(1);
+    expect(recognizer.privReco.dynamicGrammar.addPhrase).toHaveBeenCalledWith(['Bellevue']);
+  });
+
+  test('with reference grammars', async () => {
+    const { default: createSpeechRecognitionPonyfill } = require('./createSpeechRecognitionPonyfill');
+    const { SpeechRecognition } = await createSpeechRecognitionPonyfill({
+      referenceGrammars: ['12345678-1234-5678-abcd-12345678abcd'],
+      region: 'westus',
+      subscriptionKey: 'SUBSCRIPTION_KEY',
+      textNormalization: 'maskeditn'
+    });
+
+    let speechRecognition = new SpeechRecognition();
+
+    speechRecognition.start();
+    await recognizer.waitForStartContinuousRecognitionAsync();
+
+    expect(recognizer.privReco.dynamicGrammar.addReferenceGrammar).toHaveBeenCalledTimes(1);
+    expect(recognizer.privReco.dynamicGrammar.addReferenceGrammar).toHaveBeenCalledWith(['12345678-1234-5678-abcd-12345678abcd']);
   });
 });

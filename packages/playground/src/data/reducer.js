@@ -13,6 +13,8 @@ import speechRecognitionEvents from './reducers/speechRecognitionEvents';
 import speechRecognitionInterimResults from './reducers/speechRecognitionInterimResults';
 import speechRecognitionLanguage from './reducers/speechRecognitionLanguage';
 import speechRecognitionMaxAlternatives from './reducers/speechRecognitionMaxAlternatives';
+import speechRecognitionPhrases from './reducers/speechRecognitionPhrases';
+import speechRecognitionReferenceGrammars from './reducers/speechRecognitionReferenceGrammars';
 import speechRecognitionStarted from './reducers/speechRecognitionStarted';
 import speechRecognitionTextNormalization from './reducers/speechRecognitionTextNormalization';
 import speechServicesAuthorizationToken from './reducers/speechServicesAuthorizationToken';
@@ -36,6 +38,8 @@ export default combineReducers({
   speechRecognitionInterimResults,
   speechRecognitionLanguage,
   speechRecognitionMaxAlternatives,
+  speechRecognitionPhrases,
+  speechRecognitionReferenceGrammars,
   speechRecognitionStarted,
   speechRecognitionTextNormalization,
   speechServicesAuthorizationToken,

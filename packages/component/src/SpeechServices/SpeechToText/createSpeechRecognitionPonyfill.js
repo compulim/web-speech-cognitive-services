@@ -72,9 +72,10 @@ function cognitiveServicesAsyncToPromise(fn) {
   };
 }
 
-export default async ({
+export default ({
   audioConfig = AudioConfig.fromDefaultMicrophoneInput(),
   authorizationToken,
+  referenceGrammars,
   region = 'westus',
   subscriptionKey,
   textNormalization = 'display'
@@ -109,6 +110,7 @@ export default async ({
       this._continuous = false;
       this._interimResults = false;
       this._lang = typeof window !== 'undefined' ? (window.document.documentElement.getAttribute('lang') || window.navigator.language) : 'en-US';
+      this._grammars = new SpeechGrammarList();
       this._maxAlternatives = 1;
     }
 
@@ -133,6 +135,15 @@ export default async ({
 
     get continuous() { return this._continuous; }
     set continuous(value) { this._continuous = value; }
+
+    get grammars() { return this._grammars; }
+    set grammars(value) {
+      if (value instanceof SpeechGrammarList) {
+        this._grammars = value;
+      }
+
+      throw new Error(`The provided value is not of type 'SpeechGrammarList'`);
+    }
 
     get interimResults() { return this._interimResults; }
     set interimResults(value) { this._interimResults = value; }
@@ -246,6 +257,14 @@ export default async ({
         // "speechEndDetected" is never fired, probably because we are using startContinuousRecognitionAsync instead of recognizeOnceAsync.
         queue.push({ speechEndDetected: { sessionId } });
       };
+
+      const { phrases } = this.grammars;
+
+      // HACK: We are using the internal of SpeechRecognizer because they did not expose it
+      const { dynamicGrammar } = recognizer.privReco;
+
+      referenceGrammars && referenceGrammars.length && dynamicGrammar.addReferenceGrammar(referenceGrammars);
+      phrases && phrases.length && dynamicGrammar.addPhrase(phrases);
 
       await cognitiveServicesAsyncToPromise(recognizer.startContinuousRecognitionAsync.bind(recognizer))();
 
