@@ -80,6 +80,7 @@ export default class extends DOMEventEmitter {
   async preload() {
     this.arrayBufferPromise = fetchSpeechData({
       authorizationToken: this.authorizationToken,
+      deploymentId: this.deploymentId,
       lang: this.lang || window.navigator.language,
       outputFormat: this.outputFormat,
       pitch: this.pitch,

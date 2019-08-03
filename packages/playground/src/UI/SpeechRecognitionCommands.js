@@ -2,6 +2,7 @@ import { connect } from 'react-redux';
 import React, { useMemo, useState } from 'react';
 
 import Select, { Option } from '../Bootstrap/Select';
+import SpeechRecognitionEndpointIdInput from './SpeechRecognitionEndpointIdInput';
 import SpeechRecognitionLanguageSelector from './SpeechRecognitionLanguageSelector';
 import SpeechRecognitionTextNormalizationSelector from './SpeechRecognitionTextNormalizationSelector';
 
@@ -167,6 +168,10 @@ const SpeechRecognitionCommands = ({
             type="text"
             value={ referenceGrammarsString }
           />
+        </div>
+        <div className="col">
+          <label>Endpoint ID</label>
+          <SpeechRecognitionEndpointIdInput />
         </div>
       </div>
     </React.Fragment>

@@ -19,6 +19,7 @@ export default ({
     AudioContext: window.AudioContext || window.webkitAudioContext
   },
   region = 'westus',
+  speechSynthesisDeploymentId,
   subscriptionKey
 }) => {
   if (!authorizationToken && !subscriptionKey) {
@@ -89,6 +90,7 @@ export default ({
         utterance.addEventListener('error', reject);
 
         utterance.authorizationToken = await getAuthorizationTokenPromise;
+        utterance.deploymentId = speechSynthesisDeploymentId;
         utterance.region = region;
         utterance.outputFormat = this.outputFormat;
         utterance.preload();
@@ -102,9 +104,17 @@ export default ({
     }
 
     async updateVoices() {
-      this.voices = await fetchVoices({ authorizationToken: await getAuthorizationTokenPromise, region });
+      if (!speechSynthesisDeploymentId) {
+        // Fetch voice list is not available for custom voice font
 
-      this.emit('voiceschanged');
+        this.voices = await fetchVoices({
+          authorizationToken: await getAuthorizationTokenPromise,
+          deploymentId: speechSynthesisDeploymentId,
+          region
+        });
+
+        this.emit('voiceschanged');
+      }
     }
   }
 

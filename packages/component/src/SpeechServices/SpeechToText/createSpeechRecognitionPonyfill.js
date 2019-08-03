@@ -77,6 +77,7 @@ export default ({
   authorizationToken,
   referenceGrammars,
   region = 'westus',
+  speechRecognitionEndpointId,
   subscriptionKey,
   textNormalization = 'display'
 } = {}) => {
@@ -119,6 +120,10 @@ export default ({
         SpeechConfig.fromAuthorizationToken(typeof authorizationToken === 'function' ? await authorizationToken() : await authorizationToken, region)
       :
         SpeechConfig.fromSubscription(subscriptionKey, region);
+
+      if (speechRecognitionEndpointId) {
+        speechConfig.endpointId = speechRecognitionEndpointId;
+      }
 
       speechConfig.outputFormat = OutputFormat.Detailed;
       speechConfig.speechRecognitionLanguage = this.lang || 'en-US';

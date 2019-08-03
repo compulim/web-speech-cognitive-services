@@ -65,7 +65,7 @@ const SpeechRecognitionSimpleEvents = ({
               : event.type === 'error' ?
                 <React.Fragment>
                   <span className="badge badge-dark">{ event.type }</span>&nbsp;
-                  { event.error }
+                  <small>{ event.message }</small>
                 </React.Fragment>
               : event.type === 'cognitiveservices' ?
                 <span className="badge badge-light">{ event.type }:{ event.subType }</span>
