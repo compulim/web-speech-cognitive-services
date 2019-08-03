@@ -1171,8 +1171,6 @@ describe('SpeechRecognition with text normalization', () => {
 });
 
 describe('SpeechRecognition with Custom Speech', () => {
-  let speechRecognition;
-
   test('should set up SpeechConfig with endpoint ID', async () => {
     const { default: createSpeechRecognitionPonyfill } = require('./createSpeechRecognitionPonyfill');
     const { SpeechRecognition } = createSpeechRecognitionPonyfill({
@@ -1181,7 +1179,8 @@ describe('SpeechRecognition with Custom Speech', () => {
       subscriptionKey: 'SUBSCRIPTION_KEY'
     });
 
-    speechRecognition = new SpeechRecognition();
+    const speechRecognition = new SpeechRecognition();
+
     speechRecognition.start();
 
     expect(recognizer.speechConfig).toHaveProperty('endpointId', '12345678-1234-5678-abcd-12345678abcd');
