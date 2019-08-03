@@ -3,7 +3,7 @@ import React from 'react';
 
 import setSpeechSynthesisDeploymentId from '../data/actions/setSpeechSynthesisDeploymentId';
 
-const SpeechSynthesisDeploymentId = ({
+const SpeechSynthesisDeploymentIdInput = ({
   disabled,
   deploymentId,
   setSpeechSynthesisDeploymentId
@@ -27,4 +27,4 @@ export default connect(
   {
     setSpeechSynthesisDeploymentId: ({ target: { value } }) => setSpeechSynthesisDeploymentId(value)
   }
-)(SpeechSynthesisDeploymentId)
+)(SpeechSynthesisDeploymentIdInput)
