@@ -1,11 +1,16 @@
+import { connect } from 'react-redux';
 import React from 'react';
 
 import SpeechSynthesisCommands from './UI/SpeechSynthesisCommands';
+import SpeechSynthesisDeploymentIdInput from './UI/SpeechSynthesisDeploymentIdInput';
 import SpeechSynthesisTextBox from './UI/SpeechSynthesisTextBox';
 import SpeechSynthesisUtterances from './UI/SpeechSynthesisUtterances';
 import SpeechSynthesisVoiceSelector from './UI/SpeechSynthesisVoiceSelector';
+import SpeechSynthesisVoiceURIInput from './UI/SpeechSynthesisVoiceURIInput';
 
-export default () =>
+const SpeechSynthesisProvingGround = ({
+  hasVoices
+}) =>
   <div>
     <form>
       <div className="row">
@@ -17,10 +22,27 @@ export default () =>
       <br />
       <div className="row">
         <div className="col">
-          <label>Voice</label>
-          <SpeechSynthesisVoiceSelector />
+          <label>Deployment ID</label>
+          <SpeechSynthesisDeploymentIdInput />
         </div>
       </div>
+      <br />
+      {
+        hasVoices ?
+          <div className="row">
+            <div className="col">
+              <label>Voice</label>
+              <SpeechSynthesisVoiceSelector />
+            </div>
+          </div>
+        :
+          <div className="row">
+            <div className="col">
+              <label>Voice URI</label>
+              <SpeechSynthesisVoiceURIInput />
+            </div>
+          </div>
+      }
     </form>
     <br />
     <div className="row">
@@ -35,3 +57,11 @@ export default () =>
       </div>
     </div>
   </div>
+
+export default connect(
+  ({
+    speechSynthesisNativeVoices
+  }) => ({
+    hasVoices: !!speechSynthesisNativeVoices.length
+  })
+)(SpeechSynthesisProvingGround)

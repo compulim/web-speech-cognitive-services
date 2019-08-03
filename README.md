@@ -20,7 +20,54 @@ Microsoft Azure [Cognitive Services Speech Services](https://azure.microsoft.com
 
 This package will polyfill Web Speech API by turning Cognitive Services Speech Services API into Web Speech API. We test this package with popular combination of platforms and browsers.
 
+## Browser requirements
+
+Speech recognition requires WebRTC API and the page must hosted thru HTTPS or `localhost`. Although iOS 12 support WebRTC, native apps using `WKWebView` do not support WebRTC.
+
+Speech synthesis requires Web Audio API. For Safari, user gesture (click or tap) is required to play audio clips using Web Audio API. To ready the Web Audio API to use without user gesture, you can synthesize an empty string.
+
 # How to use
+
+There are two ways to use this package:
+
+1. [Using `<script>` to load the bundle](#using-script-to-load-the-bundle)
+1. [Install from NPM](#install-from-npm)
+
+## Using `<script>` to load the bundle
+
+To use the ponyfill directly in HTML, you can use our published bundle from unpkg.
+
+In the sample below, we use the bundle to perform text-to-speech with a voice named "JessaRUS".
+
+```html
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <script src="https://unpkg.com/web-speech-cognitive-services/umd/web-speech-cognitive-services.production.min.js"></script>
+  </head>
+  <body>
+    <script>
+      const { speechSynthesis, SpeechSynthesisUtterance } = window.WebSpeechCognitiveServices.create({
+        region: 'westus2',
+        subscriptionKey: 'YOUR_SUBSCRIPTION_KEY'
+      });
+
+      speechSynthesis.addEventListener('voiceschanged', () => {
+        const voices = speechSynthesis.getVoices();
+        const utterance = new SpeechSynthesisUtterance('Hello, World!');
+
+        utterance.voice = voices.find(voice => /JessaRUS/u.test(voice.name));
+
+        speechSynthesis.speak(utterance);
+      });
+    </script>
+  </body>
+</html>
+```
+
+> We do not host the bundle. You should always use [Subresource Integrity](https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity) to protect bundle integrity when loading from a third-party CDN.
+
+## Install from NPM
 
 For production build, run `npm install web-speech-cognitive-services`.
 
@@ -38,56 +85,7 @@ In this package, we prefer ponyfill because it do not pollute the hosting enviro
 
 > For readability, we omitted the async function in all code snippets. To run the code, you will need to wrap the code using an async function.
 
-## Polyfilling the environment
-
-If the library you are using do not support ponyfill, you can polyfill `window` object with our ponyfill.
-
-```jsx
-import createPonyfill from 'web-speech-cognitive-services/lib/SpeechServices';
-
-const ponyfill = await createPonyfill({
-  region: 'westus',
-  subscriptionKey: 'YOUR_SUBSCRIPTION_KEY'
-});
-
-for (let key in ponyfill) {
-  window[key] = ponyfill[key];
-}
-```
-
-> Note: if you do not specify `region`, we will default to `"westus"`.
-
-> List of supported regions can be found in [this article](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/rest-apis#regions-and-endpoints).
-
-> If you prefer to use the deprecating Bing Speech, import from `'web-speech-cognitive-services/lib/BingSpeech'` instead.
-
-## Using authorization token
-
-Instead of exposing subscription key on the browser, we strongly recommend using authorization token.
-
-```jsx
-import createPonyfill from 'web-speech-cognitive-services/lib/SpeechServices';
-
-const ponyfill = await createPonyfill({
-  authorizationToken: 'YOUR_AUTHORIZATION_TOKEN',
-  region: 'westus',
-});
-```
-
-You can also provide an async function that will fetch the authorization token on-demand. You should cache the authorization token for subsequent request.
-
-```jsx
-import createPonyfill from 'web-speech-cognitive-services/lib/SpeechServices';
-
-const ponyfill = await createPonyfill({
-  authorizationToken: fetch('https://example.com/your-token').then(res => res.text()),
-  region: 'westus',
-});
-```
-
 ## Speech recognition (speech-to-text)
-
-You can choose to only create ponyfill for speech recognition.
 
 ```jsx
 import { createSpeechRecognitionPonyfill } from 'web-speech-cognitive-services/lib/SpeechServices/SpeechToText';
@@ -185,9 +183,14 @@ const {
   subscriptionKey: 'YOUR_SUBSCRIPTION_KEY'
 });
 
-const utterance = new SpeechSynthesisUtterance('Hello, World!');
+speechSynthesis.addEventListener('voiceschanged', () => {
+  const voices = speechSynthesis.getVoices();
+  const utterance = new SpeechSynthesisUtterance('Hello, World!');
 
-await speechSynthesis.speak(utterance);
+  utterance.voice = voices.find(voice => /JessaRUS/u.test(voice.name));
+
+  speechSynthesis.speak(utterance);
+});
 ```
 
 > Note: `speechSynthesis` is camel-casing because it is an instance.
@@ -238,9 +241,79 @@ export default class extends React.Component {
 }
 ```
 
+## Using authorization token
+
+Instead of exposing subscription key on the browser, we strongly recommend using authorization token.
+
+```jsx
+import createPonyfill from 'web-speech-cognitive-services/lib/SpeechServices';
+
+const ponyfill = await createPonyfill({
+  authorizationToken: 'YOUR_AUTHORIZATION_TOKEN',
+  region: 'westus',
+});
+```
+
+You can also provide an async function that will fetch the authorization token on-demand. You should cache the authorization token for subsequent request.
+
+```jsx
+import createPonyfill from 'web-speech-cognitive-services/lib/SpeechServices';
+
+const ponyfill = await createPonyfill({
+  authorizationToken: fetch('https://example.com/your-token').then(res => res.text()),
+  region: 'westus',
+});
+```
+
+> Note: if you do not specify `region`, we will default to `"westus"`.
+
+> List of supported regions can be found in [this article](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/rest-apis#regions-and-endpoints).
+
+> If you prefer to use the deprecating Bing Speech, import from `'web-speech-cognitive-services/lib/BingSpeech'` instead.
+
 ## Lexical and ITN support
 
 [Lexical and ITN support](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/rest-apis#response-parameters) is unique in Cognitive Services Speech Services. Our adapter added additional properties `transcriptITN`, `transcriptLexical`, and `transcriptMaskedITN` to surface the result, in addition to `transcript` and `confidence`.
+
+## Custom Speech support
+
+> Please refer to ["What is Custom Speech?"](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/how-to-custom-speech) for tutorial on creating your first Custom Speech model.
+
+To use custom speech for speech recognition, you need to pass the endpoint ID while creating the ponyfill.
+
+```js
+import createPonyfill from 'web-speech-cognitive-services/lib/SpeechServices';
+
+const ponyfill = await createPonyfill({
+  region: 'westus',
+  speechRecognitionEndpointId: '12345678-1234-5678-abcd-12345678abcd',
+  subscriptionKey: 'YOUR_SUBSCRIPTION_KEY'
+});
+```
+
+## Custom Voice support
+
+> Please refer to ["Get started with Custom Voice"](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/how-to-custom-voice) for tutorial on creating your first Custom Voice model.
+
+To use Custom Voice for speech synthesis, you need to pass the deployment ID while creating the ponyfill, and pass the voice model name as voice URI.
+
+```js
+import createPonyfill from 'web-speech-cognitive-services/lib/SpeechServices';
+
+const ponyfill = await createPonyfill({
+  region: 'westus',
+  speechSynthesisDeploymentId: '12345678-1234-5678-abcd-12345678abcd',
+  subscriptionKey: 'YOUR_SUBSCRIPTION_KEY'
+});
+
+const { speechSynthesis, SpeechSynthesisUtterance } = ponyfill;
+
+const utterance = new SpeechSynthesisUtterance('Hello, World!');
+
+utterance.voice = { voiceURI: 'your-model-name' };
+
+await speechSynthesis.speak(utterance);
+```
 
 # Test matrix
 
@@ -256,6 +329,7 @@ For detailed test matrix, please refer to [`SPEC-RECOGNITION.md`](SPEC-RECOGNITI
    * Continuous mode does not work
 * Speech synthesis
    * `onboundary`, `onmark`, `onpause`, and `onresume` are not supported/fired
+   * `pause` will pause immediately and do not pause on word breaks
 
 ## Quirks
 
@@ -274,12 +348,12 @@ For detailed test matrix, please refer to [`SPEC-RECOGNITION.md`](SPEC-RECOGNITI
    * [x] Add continuous mode
    * [ ] Investigate support of Opus (OGG) encoding
       * Currently, there is a problem with `microsoft-speech-browser-sdk@0.0.12`, tracking on [this issue](https://github.com/Azure-Samples/SpeechToText-WebSockets-Javascript/issues/88)
-   * [ ] Support custom speech
+   * [x] Support custom speech
    * [x] Support ITN, masked ITN, and lexical output
 * Speech synthesis
    * [x] Event: add `pause`/`resume` support
    * [x] Properties: add `paused`/`pending`/`speaking` support
-   * [ ] Support [custom voice fonts](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/rest-apis#text-to-speech-api)
+   * [x] Support [custom voice fonts](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/rest-apis#text-to-speech-api)
 
 # Contributions
 

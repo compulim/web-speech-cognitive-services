@@ -10,16 +10,19 @@ const SpeechSynthesisVoiceSelector = ({
   speechSynthesisVoiceURI
 }) =>
   <Select
+    disabled={ !speechSynthesisNativeVoices.length }
     onChange={ setSpeechSynthesisVoiceURI }
     value={ speechSynthesisVoiceURI || '' }
   >
-    { speechSynthesisNativeVoices.map(({ name, voiceURI }) =>
-      <Option
-        key={ voiceURI }
-        text={ name }
-        value={ voiceURI }
-      />
-    ) }
+    {
+      speechSynthesisNativeVoices.map(({ name, voiceURI }) =>
+        <Option
+          key={ voiceURI }
+          text={ name }
+          value={ voiceURI }
+        />
+      )
+    }
   </Select>
 
 export default connect(

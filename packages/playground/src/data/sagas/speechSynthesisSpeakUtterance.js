@@ -30,6 +30,8 @@ export default function* () {
 
     if (nativeVoice) {
       nativeUtterance.voice = nativeVoice;
+    } else {
+      nativeUtterance.voice = { voiceURI };
     }
 
     yield put(addSpeechSynthesisNativeUtterance(nativeUtterance));

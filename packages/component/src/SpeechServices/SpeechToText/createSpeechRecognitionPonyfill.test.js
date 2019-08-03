@@ -235,7 +235,7 @@ describe('SpeechRecognition', () => {
 
   beforeEach(async () => {
     const { default: createSpeechRecognitionPonyfill } = require('./createSpeechRecognitionPonyfill');
-    const { SpeechRecognition } = await createSpeechRecognitionPonyfill({
+    const { SpeechRecognition } = createSpeechRecognitionPonyfill({
       region: 'westus',
       subscriptionKey: 'SUBSCRIPTION_KEY'
     });
@@ -949,7 +949,7 @@ describe('SpeechRecognition', () => {
 
   test('with dynamic grammars', async () => {
     const { default: createSpeechRecognitionPonyfill } = require('./createSpeechRecognitionPonyfill');
-    const { SpeechRecognition } = await createSpeechRecognitionPonyfill({
+    const { SpeechRecognition } = createSpeechRecognitionPonyfill({
       region: 'westus',
       subscriptionKey: 'SUBSCRIPTION_KEY',
       textNormalization: 'maskeditn'
@@ -968,7 +968,7 @@ describe('SpeechRecognition', () => {
 
   test('with reference grammars', async () => {
     const { default: createSpeechRecognitionPonyfill } = require('./createSpeechRecognitionPonyfill');
-    const { SpeechRecognition } = await createSpeechRecognitionPonyfill({
+    const { SpeechRecognition } = createSpeechRecognitionPonyfill({
       referenceGrammars: ['12345678-1234-5678-abcd-12345678abcd'],
       region: 'westus',
       subscriptionKey: 'SUBSCRIPTION_KEY',
@@ -986,7 +986,7 @@ describe('SpeechRecognition', () => {
 
   test('with new SpeechGrammarList', async () => {
     const { default: createSpeechRecognitionPonyfill } = require('./createSpeechRecognitionPonyfill');
-    const { SpeechGrammarList, SpeechRecognition } = await createSpeechRecognitionPonyfill({
+    const { SpeechGrammarList, SpeechRecognition } = createSpeechRecognitionPonyfill({
       region: 'westus',
       subscriptionKey: 'SUBSCRIPTION_KEY',
       textNormalization: 'maskeditn'
@@ -1021,7 +1021,7 @@ describe('SpeechRecognition with text normalization', () => {
 
   test('of ITN should result in ITN', async () => {
     const { default: createSpeechRecognitionPonyfill } = require('./createSpeechRecognitionPonyfill');
-    const { SpeechRecognition } = await createSpeechRecognitionPonyfill({
+    const { SpeechRecognition } = createSpeechRecognitionPonyfill({
       region: 'westus',
       subscriptionKey: 'SUBSCRIPTION_KEY',
       textNormalization: 'itn'
@@ -1071,7 +1071,7 @@ describe('SpeechRecognition with text normalization', () => {
 
   test('of lexical should result in lexical', async () => {
     const { default: createSpeechRecognitionPonyfill } = require('./createSpeechRecognitionPonyfill');
-    const { SpeechRecognition } = await createSpeechRecognitionPonyfill({
+    const { SpeechRecognition } = createSpeechRecognitionPonyfill({
       region: 'westus',
       subscriptionKey: 'SUBSCRIPTION_KEY',
       textNormalization: 'lexical'
@@ -1121,7 +1121,7 @@ describe('SpeechRecognition with text normalization', () => {
 
   test('of masked ITN should result in masked ITN', async () => {
     const { default: createSpeechRecognitionPonyfill } = require('./createSpeechRecognitionPonyfill');
-    const { SpeechRecognition } = await createSpeechRecognitionPonyfill({
+    const { SpeechRecognition } = createSpeechRecognitionPonyfill({
       region: 'westus',
       subscriptionKey: 'SUBSCRIPTION_KEY',
       textNormalization: 'maskeditn'
@@ -1167,5 +1167,22 @@ describe('SpeechRecognition with text normalization', () => {
 
     expect(toSnapshot(events)).toMatchSnapshot();
     expect(events[events.length - 2].results[0][0]).toHaveProperty('transcript', 'no (MaskedITN)');
+  });
+});
+
+describe('SpeechRecognition with Custom Speech', () => {
+  test('should set up SpeechConfig with endpoint ID', async () => {
+    const { default: createSpeechRecognitionPonyfill } = require('./createSpeechRecognitionPonyfill');
+    const { SpeechRecognition } = createSpeechRecognitionPonyfill({
+      region: 'westus',
+      speechRecognitionEndpointId: '12345678-1234-5678-abcd-12345678abcd',
+      subscriptionKey: 'SUBSCRIPTION_KEY'
+    });
+
+    const speechRecognition = new SpeechRecognition();
+
+    speechRecognition.start();
+
+    expect(recognizer.speechConfig).toHaveProperty('endpointId', '12345678-1234-5678-abcd-12345678abcd');
   });
 });

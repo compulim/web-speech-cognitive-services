@@ -28,6 +28,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
    - Pass it as an array to `SpeechRecognition.grammars.phrases`
 - Speech recognition: Fix [#31](https://github.com/compulim/web-speech-cognitive-services/issues/31), support reference grammars, in PR [#37](https://github.com/compulim/web-speech-cognitive-services/pull/37)
    - When creating the ponyfill, pass it as an array to `referenceGrammars` options
+- Speech recognition: Fix [#27](https://github.com/compulim/web-speech-cognitive-services/issues/27), support custom speech, in PR [#41](https://github.com/compulim/web-speech-cognitive-services/pull/41)
+   - Use option `speechRecognitionEndpointId`
+- Speech synthesis: Fix [#28](https://github.com/compulim/web-speech-cognitive-services/issues/28), support custom voice font, in PR [#41](https://github.com/compulim/web-speech-cognitive-services/pull/41)
+   - Use option `speechSynthesisDeploymentId`
 
 ### Changed
 

@@ -9,6 +9,7 @@ import ponyfill from './reducers/ponyfill';
 import ponyfillType from './reducers/ponyfillType';
 import region from './reducers/region';
 import speechRecognitionContinuous from './reducers/speechRecognitionContinuous';
+import speechRecognitionEndpointId from './reducers/speechRecognitionEndpointId';
 import speechRecognitionEvents from './reducers/speechRecognitionEvents';
 import speechRecognitionInterimResults from './reducers/speechRecognitionInterimResults';
 import speechRecognitionLanguage from './reducers/speechRecognitionLanguage';
@@ -19,6 +20,7 @@ import speechRecognitionStarted from './reducers/speechRecognitionStarted';
 import speechRecognitionTextNormalization from './reducers/speechRecognitionTextNormalization';
 import speechServicesAuthorizationToken from './reducers/speechServicesAuthorizationToken';
 import speechServicesSubscriptionKey from './reducers/speechServicesSubscriptionKey';
+import speechSynthesisDeploymentId from './reducers/speechSynthesisDeploymentId';
 import speechSynthesisNativeVoices from './reducers/speechSynthesisNativeVoices';
 import speechSynthesisText from './reducers/speechSynthesisText';
 import speechSynthesisUtterances from './reducers/speechSynthesisUtterances';
@@ -34,6 +36,7 @@ export default combineReducers({
   ponyfillType,
   region,
   speechRecognitionContinuous,
+  speechRecognitionEndpointId,
   speechRecognitionEvents,
   speechRecognitionInterimResults,
   speechRecognitionLanguage,
@@ -44,6 +47,7 @@ export default combineReducers({
   speechRecognitionTextNormalization,
   speechServicesAuthorizationToken,
   speechServicesSubscriptionKey,
+  speechSynthesisDeploymentId,
   speechSynthesisNativeVoices,
   speechSynthesisText,
   speechSynthesisUtterances,
