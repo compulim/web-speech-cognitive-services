@@ -242,6 +242,46 @@ export default class extends React.Component {
 
 [Lexical and ITN support](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/rest-apis#response-parameters) is unique in Cognitive Services Speech Services. Our adapter added additional properties `transcriptITN`, `transcriptLexical`, and `transcriptMaskedITN` to surface the result, in addition to `transcript` and `confidence`.
 
+## Custom Speech support
+
+> Please refer to ["What is Custom Speech?"](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/how-to-custom-speech) for tutorial on creating your first Custom Speech model.
+
+To use custom speech for speech recognition, you need to pass the endpoint ID while creating the ponyfill.
+
+```js
+import createPonyfill from 'web-speech-cognitive-services/lib/SpeechServices';
+
+const ponyfill = await createPonyfill({
+  region: 'westus',
+  speechRecognitionEndpointId: '12345678-1234-5678-abcd-12345678abcd',
+  subscriptionKey: 'YOUR_SUBSCRIPTION_KEY'
+});
+```
+
+## Custom Voice support
+
+> Please refer to ["Get started with Custom Voice"](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/how-to-custom-voice) for tutorial on creating your first Custom Voice model.
+
+To use Custom Voice for speech synthesis, you need to pass the deployment ID while creating the ponyfill, and pass the voice model name as voice URI.
+
+```js
+import createPonyfill from 'web-speech-cognitive-services/lib/SpeechServices';
+
+const ponyfill = await createPonyfill({
+  region: 'westus',
+  speechSynthesisDeploymentId: '12345678-1234-5678-abcd-12345678abcd',
+  subscriptionKey: 'YOUR_SUBSCRIPTION_KEY'
+});
+
+const { speechSynthesis, SpeechSynthesisUtterance } = ponyfill;
+
+const utterance = new SpeechSynthesisUtterance('Hello, World!');
+
+utterance.voice = { voiceURI: 'your-model-name' };
+
+await speechSynthesis.speak(utterance);
+```
+
 # Test matrix
 
 For detailed test matrix, please refer to [`SPEC-RECOGNITION.md`](SPEC-RECOGNITION.md) or [`SPEC-SYNTHESIS.md`](SPEC-SYNTHESIS.md).
@@ -274,12 +314,12 @@ For detailed test matrix, please refer to [`SPEC-RECOGNITION.md`](SPEC-RECOGNITI
    * [x] Add continuous mode
    * [ ] Investigate support of Opus (OGG) encoding
       * Currently, there is a problem with `microsoft-speech-browser-sdk@0.0.12`, tracking on [this issue](https://github.com/Azure-Samples/SpeechToText-WebSockets-Javascript/issues/88)
-   * [ ] Support custom speech
+   * [x] Support custom speech
    * [x] Support ITN, masked ITN, and lexical output
 * Speech synthesis
    * [x] Event: add `pause`/`resume` support
    * [x] Properties: add `paused`/`pending`/`speaking` support
-   * [ ] Support [custom voice fonts](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/rest-apis#text-to-speech-api)
+   * [x] Support [custom voice fonts](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/rest-apis#text-to-speech-api)
 
 # Contributions
 
