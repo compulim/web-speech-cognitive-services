@@ -65,7 +65,7 @@ In the sample below, we use the bundle to perform text-to-speech with a voice na
 </html>
 ```
 
-> Since we do not host the bundle, you should always use [Subresource Integrity](https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity) to protect its integrity when loading from a third-party CDN.
+> We do not host the bundle. You should always use [Subresource Integrity](https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity) to protect bundle integrity when loading from a third-party CDN.
 
 ## Install from NPM
 
