@@ -7,7 +7,7 @@
     "bootstrap": "lerna bootstrap",
     "build": "lerna run --stream build",
     "clean": "lerna run --parallel --stream clean",
-    "start": "lerna run --stream start --scope=bundle --scope=web-speech-cognitive-services",
+    "start": "lerna run --parallel --stream start --scope=bundle --scope=web-speech-cognitive-services",
     "test": "lerna run --stream test"
   },
   "devDependencies": {
