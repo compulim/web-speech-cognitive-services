@@ -89,7 +89,7 @@ export default ({
         utterance.addEventListener('end', resolve);
         utterance.addEventListener('error', reject);
 
-        utterance.authorizationToken = await getAuthorizationTokenPromise;
+        utterance.authorizationTokenPromise = getAuthorizationTokenPromise;
         utterance.deploymentId = speechSynthesisDeploymentId;
         utterance.region = region;
         utterance.outputFormat = this.outputFormat;
@@ -105,15 +105,19 @@ export default ({
 
     async updateVoices() {
       if (!speechSynthesisDeploymentId) {
-        // Fetch voice list is not available for custom voice font
+        // Fetch voice list is not available for custom voice font.
+        // If fetch voice list failed, we will not emit "voiceschanged" event.
+        // In the spec, there is no "error" event.
 
-        this.voices = await fetchVoices({
-          authorizationToken: await getAuthorizationTokenPromise,
-          deploymentId: speechSynthesisDeploymentId,
-          region
-        });
+        try {
+          this.voices = await fetchVoices({
+            authorizationToken: await getAuthorizationTokenPromise,
+            deploymentId: speechSynthesisDeploymentId,
+            region
+          });
 
-        this.emit('voiceschanged');
+          this.emit('voiceschanged');
+        } catch (err) {}
       }
     }
   }

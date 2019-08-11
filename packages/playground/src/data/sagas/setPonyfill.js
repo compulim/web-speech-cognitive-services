@@ -95,8 +95,7 @@ function* setPonyfillSaga() {
       textNormalization
     };
 
-    const ponyfill = yield call(
-      createSpeechServicesPonyfill,
+    const ponyfill = createSpeechServicesPonyfill(
       speechServicesAuthorizationToken ?
         { ...options, authorizationToken: speechServicesAuthorizationToken }
       :

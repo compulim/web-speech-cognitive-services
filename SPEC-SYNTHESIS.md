@@ -80,3 +80,16 @@ We tested the following behaviors:
 - Call `speechSynthesis.resume()`
 - Expect: no additional events from both of the utterances
 - Expect: `speaking` property is continue to be `false`
+
+## Network error
+
+> Testing against server-based voice.
+
+- Speak an utterance
+- Expect: receive `start` event
+- (A few seconds later)
+- Expect: receive `error` event of type `SpeechSynthesisErrorEvent`
+   - `error` field set to `"synthesis-failed"`
+   - `utterance` field set to the `SpeechSynthesisUtterance instance
+   - `elapsedTime` field is set
+- There will be no `end `event

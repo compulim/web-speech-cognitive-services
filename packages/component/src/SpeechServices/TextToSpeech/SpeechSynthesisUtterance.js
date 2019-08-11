@@ -79,7 +79,7 @@ export default class extends DOMEventEmitter {
 
   async preload() {
     this.arrayBufferPromise = fetchSpeechData({
-      authorizationToken: this.authorizationToken,
+      authorizationTokenPromise: this.authorizationTokenPromise,
       deploymentId: this.deploymentId,
       lang: this.lang || window.navigator.language,
       outputFormat: this.outputFormat,
@@ -91,16 +91,22 @@ export default class extends DOMEventEmitter {
       volume: this.volume
     });
 
-    await this.arrayBufferPromise;
+    // We need to call "await" to make sure the Promise is running.
+    // We will ignore the reject result and handled in play() later.
+    try {
+      await this.arrayBufferPromise;
+    } catch (err) {}
   }
 
   async play(audioContext) {
     try {
-      // HACK: iOS requires bufferSourceNode to be constructed before decoding data
+      // We should emit "start" event even if preload() failed.
+      this.emit('start');
+
+      // HACK: iOS requires bufferSourceNode to be constructed before decoding data.
       const source = audioContext.createBufferSource();
       const audioBuffer = await asyncDecodeAudioData(audioContext, await this.arrayBufferPromise);
 
-      this.emit('start');
       this._playingSource = source;
 
       await playDecoded(audioContext, audioBuffer, source);
@@ -108,7 +114,7 @@ export default class extends DOMEventEmitter {
       this._playingSource = null;
       this.emit('end');
     } catch (error) {
-      this.emit('error', { error, type: 'error' });
+      this.emit('error', { error });
     }
   }
 
