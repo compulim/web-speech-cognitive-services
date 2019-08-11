@@ -1,11 +1,14 @@
+import memoize from 'memoize-one';
+
 import AudioContextConsumer from './AudioContextConsumer';
 
 export default class {
   constructor({ audioContext, ponyfill }) {
-    this.audioContext = audioContext || new ponyfill.AudioContext();
     this.consumer = null;
     this.paused = false;
     this.queue = [];
+
+    this.getAudioContext = memoize(() => audioContext || new ponyfill.AudioContext());
   }
 
   pause() {
@@ -33,10 +36,8 @@ export default class {
   }
 
   async startConsumer() {
-    const { audioContext } = this;
-
     while (!this.paused && this.queue.length && !this.consumer) {
-      this.consumer = new AudioContextConsumer(audioContext);
+      this.consumer = new AudioContextConsumer(this.getAudioContext());
 
       await this.consumer.start(this.queue);
 
