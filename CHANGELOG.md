@@ -52,6 +52,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added bundle distribution thru https://unpkg.com/web-speech-cognitive-services@latest/umd/, in PR [#21](https://github.com/compulim/web-speech-cognitive-services/pull/21)
 - Bumped to [microsoft-cognitiveservices-speech-sdk@1.6.0](https://www.npmjs.com/package/microsoft-cognitiveservices-speech-sdk), in PR [#22](https://github.com/compulim/web-speech-cognitive-services/pull/22)
 
+### Fixed
+
+- Fix [#45](https://github.com/compulim/web-speech-cognitive-services/issues/45). Speech synthesize should emit "start" and "error" if the synthesized audio clip cannot be fetch over the network, in PR [#46](https://github.com/compulim/web-speech-cognitive-services/issues/46)
+
 ## [4.0.0] - 2018-12-10
 ### Added
 - New playground for better debuggability
