@@ -48,7 +48,7 @@ In the sample below, we use the bundle to perform text-to-speech with a voice na
   <body>
     <script>
       const { speechSynthesis, SpeechSynthesisUtterance } = window.WebSpeechCognitiveServices.create({
-        region: 'westus2',
+        region: 'westus',
         subscriptionKey: 'YOUR_SUBSCRIPTION_KEY'
       });
 
@@ -80,6 +80,111 @@ For development build, run `npm install web-speech-cognitive-services@master`.
 In JavaScript, polyfill is a technique to bring newer features to older environment. Ponyfill is very similar, but instead polluting the environment by default, we prefer to let the developer to choose what they want. This [article](https://ponyfoo.com/articles/polyfills-or-ponyfills) talks about polyfill vs. ponyfill.
 
 In this package, we prefer ponyfill because it do not pollute the hosting environment. You are also free to mix-and-match multiple speech recognition engines under a single environment.
+
+## Options
+
+The following list all options supported by the adapter.
+
+<table>
+  <thead>
+    <tr>
+      <th>Name and type</th>
+      <th>Default value</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>audioConfig:&nbsp;<a href="https://docs.microsoft.com/en-us/javascript/api/microsoft-cognitiveservices-speech-sdk/audioconfig?view=azure-node-latest">AudioConfig</a></code></td>
+      <td><code><a href="https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/how-to-select-audio-input-devices#audio-device-ids-in-javascript">fromDefaultMicrophoneInput()</a></code></td>
+      <td>
+        <a href="https://docs.microsoft.com/en-us/javascript/api/microsoft-cognitiveservices-speech-sdk/audioconfig?view=azure-node-latest"><code>AudioConfig</code></a> object to use with speech recognition. Please refer to <a href="https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/how-to-select-audio-input-devices#audio-device-ids-in-javascript">this article</a> for details on selecting different audio devices.
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>audioContext:&nbsp;<a href="https://developer.mozilla.org/en-US/docs/Web/API/AudioContext">AudioContext</a></code>
+      </td>
+      <td><code>undefined</code></td>
+      <td>
+        The audio context is synthesizing speech on. If this is <code>undefined</code>, the <code>AudioContext</code> object will be created on first synthesis.
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>authorizationToken:&nbsp;(</code><br />
+        <code>&nbsp;&nbsp;string&nbsp;||</code><br />
+        <code>&nbsp;&nbsp;Promise&lt;string&gt;&nbsp;||</code><br />
+        <code>&nbsp;&nbsp;()&nbsp;=>&nbsp;string&nbsp;||</code><br />
+        <code>&nbsp;&nbsp;()&nbsp;=>&nbsp;Promise&lt;string&gt;</code><br />
+        <code>)</code>
+      </td>
+      <td>(Requires either<br /><code>authorizationToken</code> or<br /><code>subscriptionKey</code>)</td>
+      <td>
+        Authorization token from Cognitive Services. Please refer to <a href="https://docs.microsoft.com/en-us/azure/cognitive-services/authentication">this article</a> to obtain an authorization token.
+      </td>
+    </tr>
+    <tr>
+      <td><code>ponyfill.AudioContext:&nbsp;<a href="https://developer.mozilla.org/en-US/docs/Web/API/AudioContext">AudioContext</a></code></td>
+      <td><code>window.AudioContext&nbsp;||</code><br /><code>window.webkitAudioContext</code></td>
+      <td>
+        Ponyfill for Web Audio API.<br /><br />
+        Currently, only Web Audio API can be ponyfilled. We may expand to WebRTC for audio recording in the future.</td>
+      </td>
+    </tr>
+    <tr>
+      <td><code>referenceGrammars:&nbsp;string[]</code></td>
+      <td><code>undefined</code></td>
+      <td>Reference grammar IDs to send for speech recognition.</td>
+    </tr>
+    <tr>
+      <td><code>region:&nbsp;string</code></td>
+      <td><code>"westus"</code></td>
+      <td>
+        Azure region of Cognitive Services to use.
+      </td>
+    </tr>
+    <tr>
+      <td><code>speechRecognitionEndpointId:&nbsp;string</code></td>
+      <td><code>undefined</code></td>
+      <td>
+        Endpoint ID for <a href="https://azure.microsoft.com/en-us/services/cognitive-services/custom-speech-service/">Custom Speech service</a>.
+      </td>
+    <tr>
+      <td><code>speechSynthesisDeploymentId:&nbsp;string</code></td>
+      <td><code>undefined</code></td>
+      <td>
+        Deployment ID for <a href="https://speech.microsoft.com/customvoice">Custom Voice service</a>.<br /><br />
+        When you are using Custom Voice, you will need to specify your voice model name through <a href="https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesisVoice"><code>SpeechSynthesisVoice.voiceURI</code></a>. Please refer to the <a href="#custom-voice-support">"Custom Voice support"</a> section for details.
+      </td>
+    </tr>
+    <tr>
+      <td><code>speechSynthesisOutputFormat:&nbsp;string</code></td>
+      <td><code>audio-24khz-160kbitrate-mono-mp3</code></td>
+      <td>Audio format for speech synthesis. Please refer to <a href="https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/rest-text-to-speech#audio-outputs">this article</a> for list of supported formats.</td>
+    </tr>
+    <tr>
+      <td><code>subscriptionKey:&nbsp;string</code></td>
+      <td>(Requires either<br /><code>authorizationToken</code> or<br /><code>subscriptionKey</code>)</td>
+      <td>
+        Subscription key to use. This is not recommended for production use as the subscription key will be leaked in the browser.
+      </td>
+    </tr>
+    <tr>
+      <td><code>textNormalization:&nbsp;string</code></td>
+      <td><code>"display"</code></td>
+      <td>
+        Supported text normalization options:<br /><br />
+        <ul>
+          <li><code>"display"</code></li>
+          <li><code>"itn"</code> (inverse text normalization)</li>
+          <li><code>"lexical"</code></li>
+          <li><code>"maskeditn"</code> (masked ITN)</li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
 
 # Code snippets
 
@@ -159,7 +264,7 @@ const {
 const recognition = new SpeechRecognition();
 
 recognition.grammars = new SpeechGrammarList();
-recognition.grammars.words = ['Tuen Mun', 'Yuen Long'];
+recognition.grammars.phrases = ['Tuen Mun', 'Yuen Long'];
 
 recognition.onresult = ({ results }) => {
   console.log(results);
@@ -254,13 +359,13 @@ const ponyfill = await createPonyfill({
 });
 ```
 
-You can also provide an async function that will fetch the authorization token on-demand. You should cache the authorization token for subsequent request.
+You can also provide an async function that will fetch the authorization token on-demand. You should cache the authorization token for subsequent request. For simplicity of this code snippets, we are not caching the result.
 
 ```jsx
 import createPonyfill from 'web-speech-cognitive-services/lib/SpeechServices';
 
 const ponyfill = await createPonyfill({
-  authorizationToken: fetch('https://example.com/your-token').then(res => res.text()),
+  authorizationToken: () => fetch('https://example.com/your-token').then(res => res.text()),
   region: 'westus',
 });
 ```
@@ -326,17 +431,12 @@ For detailed test matrix, please refer to [`SPEC-RECOGNITION.md`](SPEC-RECOGNITI
       * We always return `0.5` for interim results
    * Cognitive Services support grammar list but not in JSGF format, more work to be done in this area
       * Although Google Chrome support grammar list, it seems the grammar list is not used at all
-   * Continuous mode does not work
+   * Continuous mode
+      * `stop()` is same as `abort()`
+      * If `stop()` is called before first `recognized` event, there will be no final result
 * Speech synthesis
    * `onboundary`, `onmark`, `onpause`, and `onresume` are not supported/fired
    * `pause` will pause immediately and do not pause on word breaks
-
-## Quirks
-
-* Speech recognition
-   * Dictation mode
-      * If `stop()` is called before first `recognized` event, there will be no final result
-      * Cognitive Services stop recognition immediately after `stop()` is called
 
 # Roadmap
 

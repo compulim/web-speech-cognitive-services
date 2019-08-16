@@ -3,6 +3,7 @@ import React from 'react';
 
 import SpeechSynthesisCommands from './UI/SpeechSynthesisCommands';
 import SpeechSynthesisDeploymentIdInput from './UI/SpeechSynthesisDeploymentIdInput';
+import SpeechSynthesisOutputFormatSelector from './UI/SpeechSynthesisOutputFormatSelector';
 import SpeechSynthesisTextBox from './UI/SpeechSynthesisTextBox';
 import SpeechSynthesisUtterances from './UI/SpeechSynthesisUtterances';
 import SpeechSynthesisVoiceSelector from './UI/SpeechSynthesisVoiceSelector';
@@ -27,22 +28,26 @@ const SpeechSynthesisProvingGround = ({
         </div>
       </div>
       <br />
-      {
-        hasVoices ?
-          <div className="row">
-            <div className="col">
-              <label>Voice</label>
-              <SpeechSynthesisVoiceSelector />
-            </div>
-          </div>
-        :
-          <div className="row">
-            <div className="col">
-              <label>Voice URI</label>
-              <SpeechSynthesisVoiceURIInput />
-            </div>
-          </div>
-      }
+      <div className="row">
+        <div className="col col-md-9">
+          {
+            hasVoices ?
+              <React.Fragment>
+                <label>Voice</label>
+                <SpeechSynthesisVoiceSelector />
+              </React.Fragment>
+            :
+              <React.Fragment>
+                <label>Voice URI</label>
+                <SpeechSynthesisVoiceURIInput />
+              </React.Fragment>
+          }
+        </div>
+        <div className="col col-md-3">
+          <label>Output format</label>
+          <SpeechSynthesisOutputFormatSelector />
+        </div>
+      </div>
     </form>
     <br />
     <div className="row">

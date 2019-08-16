@@ -22,6 +22,7 @@ import speechServicesAuthorizationToken from './reducers/speechServicesAuthoriza
 import speechServicesSubscriptionKey from './reducers/speechServicesSubscriptionKey';
 import speechSynthesisDeploymentId from './reducers/speechSynthesisDeploymentId';
 import speechSynthesisNativeVoices from './reducers/speechSynthesisNativeVoices';
+import speechSynthesisOutputFormat from './reducers/speechSynthesisOutputFormat';
 import speechSynthesisText from './reducers/speechSynthesisText';
 import speechSynthesisUtterances from './reducers/speechSynthesisUtterances';
 import speechSynthesisVoiceURI from './reducers/speechSynthesisVoiceURI';
@@ -49,6 +50,7 @@ export default combineReducers({
   speechServicesSubscriptionKey,
   speechSynthesisDeploymentId,
   speechSynthesisNativeVoices,
+  speechSynthesisOutputFormat,
   speechSynthesisText,
   speechSynthesisUtterances,
   speechSynthesisVoiceURI
