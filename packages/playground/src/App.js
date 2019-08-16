@@ -1,7 +1,7 @@
 import { css } from 'glamor';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames';
-import React from 'react';
+import React, { useCallback } from 'react';
 
 import GitHubForkMe from './GitHubForkMe';
 
@@ -12,7 +12,6 @@ import SpeechRecognitionProvingGround from './SpeechRecognitionProvingGround2';
 import SpeechSynthesisProvingGround from './SpeechSynthesisProvingGround';
 
 import setNavPane from './data/actions/setNavPane';
-import useDispatchAction from './useDispatchAction';
 
 // Patching Bootstrap
 css.global('button.nav-link', { backgroundColor: 'Transparent' });
@@ -35,17 +34,19 @@ const App = () => {
     ponyfillType
   }));
 
-  const dispatchSetNavPaneToSpeechRecognition = useDispatchAction(event => {
+  const dispatch = useDispatch();
+
+  const dispatchSetNavPaneToSpeechRecognition = useCallback(event => {
     event.preventDefault();
 
-    return setNavPane('speech recognition');
-  });
+    dispatch(setNavPane('speech recognition'));
+  }, [dispatch]);
 
-  const dispatchSetNavPaneToSpeechSynthesis = useDispatchAction(event => {
+  const dispatchSetNavPaneToSpeechSynthesis = useCallback(event => {
     event.preventDefault();
 
-    return setNavPane('speech synthesis');
-  });
+    dispatch(setNavPane('speech synthesis'));
+  }, [dispatch]);
 
   return (
     <div>

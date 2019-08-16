@@ -1,9 +1,8 @@
-import { useSelector } from 'react-redux';
-import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import React, { useCallback } from 'react';
 
 import setSpeechSynthesisVoiceURI from '../data/actions/setSpeechSynthesisVoiceURI';
 import Select, { Option } from '../Bootstrap/Select';
-import useDispatchAction from '../useDispatchAction';
 
 const SpeechSynthesisVoiceSelector = () => {
   const { speechSynthesisNativeVoices, speechSynthesisVoiceURI } = useSelector(({
@@ -12,7 +11,8 @@ const SpeechSynthesisVoiceSelector = () => {
     speechSynthesisNativeVoices, speechSynthesisVoiceURI
   }));
 
-  const dispatchSetSpeechSynthesisVoiceURI = useDispatchAction(setSpeechSynthesisVoiceURI);
+  const dispatch = useDispatch();
+  const dispatchSetSpeechSynthesisVoiceURI = useCallback(() => dispatch(setSpeechSynthesisVoiceURI()), [dispatch]);
 
   return (
     <Select

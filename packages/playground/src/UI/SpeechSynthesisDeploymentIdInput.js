@@ -1,8 +1,7 @@
-import { useSelector } from 'react-redux';
-import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import React, { useCallback } from 'react';
 
 import setSpeechSynthesisDeploymentId from '../data/actions/setSpeechSynthesisDeploymentId';
-import useDispatchAction from '../useDispatchAction';
 
 const SpeechSynthesisDeploymentIdInput = () => {
   const { ponyfillType, speechSynthesisDeploymentId } = useSelector(({
@@ -11,7 +10,8 @@ const SpeechSynthesisDeploymentIdInput = () => {
     ponyfillType, speechSynthesisDeploymentId
   }));
 
-  const dispatchSetSpeechSynthesisDeploymentId = useDispatchAction(({ target: { value } }) => setSpeechSynthesisDeploymentId(value));
+  const dispatch = useDispatch();
+  const dispatchSetSpeechSynthesisDeploymentId = useCallback(({ target: { value } }) => dispatch(setSpeechSynthesisDeploymentId(value)), [dispatch]);
 
   return (
     <input

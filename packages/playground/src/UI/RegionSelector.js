@@ -1,9 +1,8 @@
-import { useSelector } from 'react-redux';
-import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import React, { useCallback } from 'react';
 
 import Select, { Option } from '../Bootstrap/Select';
 import setRegion from '../data/actions/setRegion';
-import useDispatchAction from '../useDispatchAction';
 
 const RegionSelector = () => {
   const { ponyfillType, region } = useSelector(({
@@ -12,7 +11,8 @@ const RegionSelector = () => {
     ponyfillType, region
   }));
 
-  const dispatchSetRegion = useDispatchAction(setRegion);
+  const dispatch = useDispatch();
+  const dispatchSetRegion = useCallback(() => dispatch(setRegion()), [dispatch]);
 
   return (
     <Select

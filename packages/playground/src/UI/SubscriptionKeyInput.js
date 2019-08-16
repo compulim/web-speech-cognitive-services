@@ -1,6 +1,6 @@
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames';
-import React from 'react';
+import React, { useCallback } from 'react';
 
 import convertBingSpeechSubscriptionKeyToAuthorizationToken from '../data/actions/convertBingSpeechSubscriptionKeyToAuthorizationToken';
 import convertSpeechServicesSubscriptionKeyToAuthorizationToken from '../data/actions/convertSpeechServicesSubscriptionKeyToAuthorizationToken';
@@ -9,7 +9,6 @@ import setBingSpeechSubscriptionKey from '../data/actions/setBingSpeechSubscript
 import setOnDemandAuthorizationToken from '../data/actions/setOnDemandAuthorizationToken';
 import setSpeechServicesAuthorizationToken from '../data/actions/setSpeechServicesAuthorizationToken';
 import setSpeechServicesSubscriptionKey from '../data/actions/setSpeechServicesSubscriptionKey';
-import useDispatchAction from '../useDispatchAction';
 
 const SubscriptionKeyInput = () => {
   const {
@@ -33,30 +32,31 @@ const SubscriptionKeyInput = () => {
     subscriptionKey: ponyfillType === 'bingspeech' ? bingSpeechSubscriptionKey : speechServicesSubscriptionKey
   }));
 
-  const dispatchSetOnDemandAuthorizationToken = useDispatchAction(setOnDemandAuthorizationToken);
+  const dispatch = useDispatch();
+  const dispatchSetOnDemandAuthorizationToken = useCallback(() => dispatch(setOnDemandAuthorizationToken()), [dispatch]);
 
-  const dispatchClearAuthorizationToken = useDispatchAction(
+  const dispatchClearAuthorizationToken = useCallback(() =>
     ponyfillType === 'bingspeech' ?
-      () => setBingSpeechAuthorizationToken('')
+      dispatch(setBingSpeechAuthorizationToken(''))
     :
-      () => setSpeechServicesAuthorizationToken(''),
-    [ponyfillType]
+      dispatch(setSpeechServicesAuthorizationToken('')),
+    [dispatch, ponyfillType]
   );
 
-  const dispatchConvertSubscriptionKeyToAuthorizationToken = useDispatchAction(
+  const dispatchConvertSubscriptionKeyToAuthorizationToken = useCallback(() =>
     ponyfillType === 'bingspeech' ?
-      convertBingSpeechSubscriptionKeyToAuthorizationToken
+      dispatch(convertBingSpeechSubscriptionKeyToAuthorizationToken())
     :
-      convertSpeechServicesSubscriptionKeyToAuthorizationToken,
-    [ponyfillType]
+      dispatch(convertSpeechServicesSubscriptionKeyToAuthorizationToken()),
+    [dispatch, ponyfillType]
   );
 
-  const dispatchSetSubscriptionKey = useDispatchAction(
+  const dispatchSetSubscriptionKey = useCallback(({ target: { value } }) =>
     ponyfillType === 'bingspeech' ?
-      ({ target: { value } }) => setBingSpeechSubscriptionKey(value)
+      dispatch(setBingSpeechSubscriptionKey(value))
     :
-      ({ target: { value } }) => setSpeechServicesSubscriptionKey(value),
-    [ponyfillType]
+      dispatch(setSpeechServicesSubscriptionKey(value)),
+    [dispatch, ponyfillType]
   );
 
   return (

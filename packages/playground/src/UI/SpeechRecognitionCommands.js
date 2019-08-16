@@ -1,5 +1,5 @@
-import { useSelector } from 'react-redux';
-import React, { useMemo, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import React, { useCallback, useMemo, useState } from 'react';
 
 import Select, { Option } from '../Bootstrap/Select';
 import SpeechRecognitionEndpointIdInput from './SpeechRecognitionEndpointIdInput';
@@ -16,7 +16,6 @@ import setSpeechRecognitionInterimResults from '../data/actions/setSpeechRecogni
 import setSpeechRecognitionMaxAlternatives from '../data/actions/setSpeechRecognitionMaxAlternatives';
 import setSpeechRecognitionPhrases from '../data/actions/setSpeechRecognitionPhrases';
 import setSpeechRecognitionReferenceGrammars from '../data/actions/setSpeechRecognitionReferenceGrammars';
-import useDispatchAction from '../useDispatchAction';
 
 const SpeechRecognitionCommands = () => {
   const {
@@ -48,17 +47,18 @@ const SpeechRecognitionCommands = () => {
     started: speechRecognitionStarted
   }));
 
-  const dispatchAbortSpeechRecognition = useDispatchAction(abortSpeechRecognition);
-  const dispatchClearSpeechRecognitionEvent = useDispatchAction(clearSpeechRecognitionEvent);
-  const dispatchSetSpeechRecognitionContinuous = useDispatchAction(() => setSpeechRecognitionContinuous(true));
-  const dispatchSetSpeechRecognitionHideInterimResults = useDispatchAction(() => setSpeechRecognitionInterimResults(false));
-  const dispatchSetSpeechRecognitionInteractive = useDispatchAction(() => setSpeechRecognitionContinuous(false));
-  const dispatchSetSpeechRecognitionMaxAlternatives = useDispatchAction(value => setSpeechRecognitionMaxAlternatives(+value));
-  const dispatchSetSpeechRecognitionPhrases = useDispatchAction(setSpeechRecognitionPhrases);
-  const dispatchSetSpeechRecognitionReferenceGrammars = useDispatchAction(setSpeechRecognitionReferenceGrammars);
-  const dispatchSetSpeechRecognitionShowInterimResults = useDispatchAction(() => setSpeechRecognitionInterimResults(true));
-  const dispatchStartSpeechRecognition = useDispatchAction(startSpeechRecognition);
-  const dispatchStopSpeechRecognition = useDispatchAction(stopSpeechRecognition);
+  const dispatch = useDispatch();
+  const dispatchAbortSpeechRecognition = useCallback(() => dispatch(abortSpeechRecognition()), [dispatch]);
+  const dispatchClearSpeechRecognitionEvent = useCallback(() => dispatch(clearSpeechRecognitionEvent()), [dispatch]);
+  const dispatchSetSpeechRecognitionContinuous = useCallback(() => dispatch(setSpeechRecognitionContinuous(true)), [dispatch]);
+  const dispatchSetSpeechRecognitionHideInterimResults = useCallback(() => dispatch(setSpeechRecognitionInterimResults(false)), [dispatch]);
+  const dispatchSetSpeechRecognitionInteractive = useCallback(() => dispatch(setSpeechRecognitionContinuous(false)), [dispatch]);
+  const dispatchSetSpeechRecognitionMaxAlternatives = useCallback(value => dispatch(setSpeechRecognitionMaxAlternatives(+value)), [dispatch]);
+  const dispatchSetSpeechRecognitionPhrases = useCallback(() => dispatch(setSpeechRecognitionPhrases()), [dispatch]);
+  const dispatchSetSpeechRecognitionReferenceGrammars = useCallback(() => dispatch(setSpeechRecognitionReferenceGrammars()), [dispatch]);
+  const dispatchSetSpeechRecognitionShowInterimResults = useCallback(() => dispatch(setSpeechRecognitionInterimResults(true)), [dispatch]);
+  const dispatchStartSpeechRecognition = useCallback(() => dispatch(startSpeechRecognition()), [dispatch]);
+  const dispatchStopSpeechRecognition = useCallback(() => dispatch(stopSpeechRecognition()), [dispatch]);
 
   const [phrasesString, setPhrasesString] = useState();
   const [referenceGrammarsString, setReferenceGrammarsString] = useState();

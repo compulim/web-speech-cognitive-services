@@ -1,9 +1,8 @@
-import { useSelector } from 'react-redux';
-import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import React, { useCallback } from 'react';
 
 import Select, { Option } from '../Bootstrap/Select';
 import setPonyfillType from '../data/actions/setPonyfillType';
-import useDispatchAction from '../useDispatchAction';
 
 const PonyfillSelector = () => {
   const { browserSupportedSpeechRecognition, ponyfillType } = useSelector(({
@@ -12,7 +11,8 @@ const PonyfillSelector = () => {
     browserSupportedSpeechRecognition, ponyfillType
   }));
 
-  const dispatchSetPonyfillType = useDispatchAction(setPonyfillType);
+  const dispatch = useDispatch();
+  const dispatchSetPonyfillType = useCallback(() => dispatch(setPonyfillType), [dispatch]);
 
   return (
     <Select

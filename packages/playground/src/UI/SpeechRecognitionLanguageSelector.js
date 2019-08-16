@@ -1,13 +1,13 @@
-import { useSelector } from 'react-redux';
-import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import React, { useCallback } from 'react';
 
 import Select, { Option } from '../Bootstrap/Select';
 import setSpeechRecognitionLanguage from '../data/actions/setSpeechRecognitionLanguage';
-import useDispatchAction from '../useDispatchAction';
 
 const RegionSelector = () => {
   const speechRecognitionLanguage = useSelector(({ speechRecognitionLanguage }) => speechRecognitionLanguage);
-  const dispatchSetSpeechRecognitionLanguage = useDispatchAction(setSpeechRecognitionLanguage);
+  const dispatch = useDispatch();
+  const dispatchSetSpeechRecognitionLanguage = useCallback(() => dispatch(setSpeechRecognitionLanguage()), [dispatch]);
 
   return (
     <Select

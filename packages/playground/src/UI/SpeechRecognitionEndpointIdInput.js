@@ -1,8 +1,7 @@
-import { useSelector } from 'react-redux';
-import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import React, { useCallback } from 'react';
 
 import setSpeechRecognitionEndpointId from '../data/actions/setSpeechRecognitionEndpointId';
-import useDispatchAction from '../useDispatchAction';
 
 const SpeechRecognitionEndpointIdInput = () => {
   const { ponyfillType, speechRecognitionEndpointId } = useSelector(({
@@ -11,7 +10,8 @@ const SpeechRecognitionEndpointIdInput = () => {
     ponyfillType, speechRecognitionEndpointId
   }));
 
-  const dispatchSetSpeechRecognitionEndpointId = useDispatchAction(({ target: { value } }) => setSpeechRecognitionEndpointId(value));
+  const dispatch = useDispatch();
+  const dispatchSetSpeechRecognitionEndpointId = useCallback(({ target: { value } }) => dispatch(setSpeechRecognitionEndpointId(value)), [dispatch]);
 
   return (
     <input

@@ -1,9 +1,8 @@
-import { useSelector } from 'react-redux';
-import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import React, { useCallback } from 'react';
 
 import Select, { Option } from '../Bootstrap/Select';
 import setSpeechRecognitionTextNormalization from '../data/actions/setSpeechRecognitionTextNormalization';
-import useDispatchAction from '../useDispatchAction';
 
 const RegionSelector = () => {
   const { ponyfillType, speechRecognitionTextNormalization } = useSelector(({
@@ -12,7 +11,8 @@ const RegionSelector = () => {
     ponyfillType, speechRecognitionTextNormalization
   }));
 
-  const handleChange = useDispatchAction(setSpeechRecognitionTextNormalization);
+  const dispatch = useDispatch();
+  const handleChange = useCallback(() => dispatch(setSpeechRecognitionTextNormalization()), [dispatch]);
 
   return (
     <Select

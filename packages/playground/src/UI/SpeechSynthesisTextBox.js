@@ -1,12 +1,12 @@
-import { useSelector } from 'react-redux';
-import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import React, { useCallback } from 'react';
 
 import setSpeechSynthesisText from '../data/actions/setSpeechSynthesisText';
-import useDispatchAction from '../useDispatchAction';
 
 const SpeechSynthesisTextBox = () => {
   const speechSynthesisText = useSelector(({ speechSynthesisText }) => speechSynthesisText);
-  const dispatchSetSpeechSynthesisText = useDispatchAction(setSpeechSynthesisText);
+  const dispatch = useDispatch();
+  const dispatchSetSpeechSynthesisText = useCallback(() => dispatch(setSpeechSynthesisText()), [dispatch]);
 
   return (
     <div className="input-group">

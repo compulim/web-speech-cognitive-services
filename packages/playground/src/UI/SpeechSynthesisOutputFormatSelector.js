@@ -1,9 +1,8 @@
-import { useSelector } from 'react-redux';
-import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import React, { useCallback } from 'react';
 
-import setSpeechSynthesisOutputFormat from '../data/actions/setSpeechSynthesisOutputFormat';
 import Select, { Option } from '../Bootstrap/Select';
-import useDispatchAction from '../useDispatchAction';
+import setSpeechSynthesisOutputFormat from '../data/actions/setSpeechSynthesisOutputFormat';
 
 const SpeechSynthesisOutputFormatSelector = () => {
   const { ponyfillType, speechSynthesisOutputFormat } = useSelector(({
@@ -12,7 +11,8 @@ const SpeechSynthesisOutputFormatSelector = () => {
     ponyfillType, speechSynthesisOutputFormat
   }));
 
-  const dispatchSetSpeechSynthesisOutputFormat = useDispatchAction(setSpeechSynthesisOutputFormat);
+  const dispatch = useDispatch();
+  const dispatchSetSpeechSynthesisOutputFormat = useCallback(() => dispatch(setSpeechSynthesisOutputFormat()), [dispatch]);
 
   return (
     <Select
