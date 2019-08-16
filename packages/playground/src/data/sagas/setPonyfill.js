@@ -16,6 +16,7 @@ import { SET_SPEECH_RECOGNITION_TEXT_NORMALIZATION } from '../actions/setSpeechR
 import { SET_SPEECH_SERVICES_AUTHORIZATION_TOKEN } from '../actions/setSpeechServicesAuthorizationToken';
 import { SET_SPEECH_SERVICES_SUBSCRIPTION_KEY } from '../actions/setSpeechServicesSubscriptionKey';
 import { SET_SPEECH_SYNTHESIS_DEPLOYMENT_ID } from '../actions/setSpeechSynthesisDeploymentId';
+import { SET_SPEECH_SYNTHESIS_OUTPUT_FORMAT } from '../actions/setSpeechSynthesisOutputFormat';
 import setPonyfill from '../actions/setPonyfill';
 
 import createBingSpeechPonyfill, { fetchAuthorizationToken as fetchBingSpeechAuthorizationToken } from 'web-speech-cognitive-services/lib/BingSpeech';
@@ -36,6 +37,7 @@ export default function* () {
       || type === SET_SPEECH_SERVICES_AUTHORIZATION_TOKEN
       || type === SET_SPEECH_SERVICES_SUBSCRIPTION_KEY
       || type === SET_SPEECH_SYNTHESIS_DEPLOYMENT_ID
+      || type === SET_SPEECH_SYNTHESIS_OUTPUT_FORMAT
       || type === SET_ON_DEMAND_AUTHORIZATION_TOKEN,
     setPonyfillSaga
   );
@@ -53,7 +55,8 @@ function* setPonyfillSaga() {
     speechRecognitionTextNormalization: textNormalization,
     speechServicesAuthorizationToken,
     speechServicesSubscriptionKey,
-    speechSynthesisDeploymentId
+    speechSynthesisDeploymentId,
+    speechSynthesisOutputFormat
   } = yield select();
 
   if (ponyfillType === 'browser') {
@@ -92,6 +95,7 @@ function* setPonyfillSaga() {
       region,
       speechRecognitionEndpointId,
       speechSynthesisDeploymentId,
+      speechSynthesisOutputFormat,
       textNormalization
     };
 

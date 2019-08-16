@@ -6,8 +6,8 @@ import fetchAuthorizationToken from '../fetchAuthorizationToken';
 import fetchVoices from './fetchVoices';
 import SpeechSynthesisUtterance from './SpeechSynthesisUtterance';
 
-// Supported output format can be found at https://docs.microsoft.com/en-us/azure/cognitive-services/Speech/API-Reference-REST/BingVoiceOutput#Subscription
-const DEFAULT_OUTPUT_FORMAT = 'audio-16khz-128kbitrate-mono-mp3';
+// Supported output format can be found at https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/rest-text-to-speech#audio-outputs
+const DEFAULT_OUTPUT_FORMAT = 'audio-24khz-160kbitrate-mono-mp3';
 
 const TOKEN_EXPIRATION = 600000;
 const TOKEN_EARLY_RENEWAL = 60000;
@@ -20,6 +20,7 @@ export default ({
   },
   region = 'westus',
   speechSynthesisDeploymentId,
+  speechSynthesisOutputFormat = DEFAULT_OUTPUT_FORMAT,
   subscriptionKey
 }) => {
   if (!authorizationToken && !subscriptionKey) {
@@ -57,7 +58,6 @@ export default ({
     constructor() {
       super(['voiceschanged']);
 
-      this.outputFormat = DEFAULT_OUTPUT_FORMAT;
       this.queue = new AudioContextQueue({ audioContext, ponyfill });
       this.voices = [];
 
@@ -89,11 +89,12 @@ export default ({
         utterance.addEventListener('end', resolve);
         utterance.addEventListener('error', reject);
 
-        utterance.authorizationTokenPromise = getAuthorizationTokenPromise;
-        utterance.deploymentId = speechSynthesisDeploymentId;
-        utterance.region = region;
-        utterance.outputFormat = this.outputFormat;
-        utterance.preload();
+        utterance.preload({
+          authorizationTokenPromise: getAuthorizationTokenPromise,
+          deploymentId: speechSynthesisDeploymentId,
+          outputFormat: speechSynthesisOutputFormat,
+          region: region
+        });
 
         this.queue.push(utterance);
       });

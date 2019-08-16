@@ -77,15 +77,20 @@ export default class extends DOMEventEmitter {
   get volume() { return this._volume; }
   set volume(value) { this._volume = value; }
 
-  async preload() {
+  async preload({
+    authorizationTokenPromise,
+    deploymentId,
+    outputFormat,
+    region
+  }) {
     this.arrayBufferPromise = fetchSpeechData({
-      authorizationTokenPromise: this.authorizationTokenPromise,
-      deploymentId: this.deploymentId,
+      authorizationTokenPromise,
+      deploymentId,
       lang: this.lang || window.navigator.language,
-      outputFormat: this.outputFormat,
+      outputFormat,
       pitch: this.pitch,
       rate: this.rate,
-      region: this.region,
+      region,
       text: this.text,
       voice: this.voice && this.voice.voiceURI,
       volume: this.volume
