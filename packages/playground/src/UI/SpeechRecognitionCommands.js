@@ -54,8 +54,8 @@ const SpeechRecognitionCommands = () => {
   const dispatchSetSpeechRecognitionHideInterimResults = useCallback(() => dispatch(setSpeechRecognitionInterimResults(false)), [dispatch]);
   const dispatchSetSpeechRecognitionInteractive = useCallback(() => dispatch(setSpeechRecognitionContinuous(false)), [dispatch]);
   const dispatchSetSpeechRecognitionMaxAlternatives = useCallback(value => dispatch(setSpeechRecognitionMaxAlternatives(+value)), [dispatch]);
-  const dispatchSetSpeechRecognitionPhrases = useCallback(() => dispatch(setSpeechRecognitionPhrases()), [dispatch]);
-  const dispatchSetSpeechRecognitionReferenceGrammars = useCallback(() => dispatch(setSpeechRecognitionReferenceGrammars()), [dispatch]);
+  const dispatchSetSpeechRecognitionPhrases = useCallback(value => dispatch(setSpeechRecognitionPhrases(value)), [dispatch]);
+  const dispatchSetSpeechRecognitionReferenceGrammars = useCallback(value => dispatch(setSpeechRecognitionReferenceGrammars(value)), [dispatch]);
   const dispatchSetSpeechRecognitionShowInterimResults = useCallback(() => dispatch(setSpeechRecognitionInterimResults(true)), [dispatch]);
   const dispatchStartSpeechRecognition = useCallback(() => dispatch(startSpeechRecognition()), [dispatch]);
   const dispatchStopSpeechRecognition = useCallback(() => dispatch(stopSpeechRecognition()), [dispatch]);

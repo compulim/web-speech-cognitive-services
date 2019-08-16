@@ -12,7 +12,7 @@ const SpeechSynthesisVoiceSelector = () => {
   }));
 
   const dispatch = useDispatch();
-  const dispatchSetSpeechSynthesisVoiceURI = useCallback(() => dispatch(setSpeechSynthesisVoiceURI()), [dispatch]);
+  const dispatchSetSpeechSynthesisVoiceURI = useCallback(value => dispatch(setSpeechSynthesisVoiceURI(value)), [dispatch]);
 
   return (
     <Select

@@ -6,7 +6,7 @@ import setSpeechSynthesisText from '../data/actions/setSpeechSynthesisText';
 const SpeechSynthesisTextBox = () => {
   const speechSynthesisText = useSelector(({ speechSynthesisText }) => speechSynthesisText);
   const dispatch = useDispatch();
-  const dispatchSetSpeechSynthesisText = useCallback(() => dispatch(setSpeechSynthesisText()), [dispatch]);
+  const dispatchSetSpeechSynthesisText = useCallback(value => dispatch(setSpeechSynthesisText(value)), [dispatch]);
 
   return (
     <div className="input-group">

@@ -7,7 +7,7 @@ import setSpeechRecognitionLanguage from '../data/actions/setSpeechRecognitionLa
 const RegionSelector = () => {
   const speechRecognitionLanguage = useSelector(({ speechRecognitionLanguage }) => speechRecognitionLanguage);
   const dispatch = useDispatch();
-  const dispatchSetSpeechRecognitionLanguage = useCallback(() => dispatch(setSpeechRecognitionLanguage()), [dispatch]);
+  const dispatchSetSpeechRecognitionLanguage = useCallback(value => dispatch(setSpeechRecognitionLanguage(value)), [dispatch]);
 
   return (
     <Select

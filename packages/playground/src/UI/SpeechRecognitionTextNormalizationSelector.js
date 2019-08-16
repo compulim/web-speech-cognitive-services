@@ -12,7 +12,7 @@ const RegionSelector = () => {
   }));
 
   const dispatch = useDispatch();
-  const handleChange = useCallback(() => dispatch(setSpeechRecognitionTextNormalization()), [dispatch]);
+  const handleChange = useCallback(value => dispatch(setSpeechRecognitionTextNormalization(value)), [dispatch]);
 
   return (
     <Select

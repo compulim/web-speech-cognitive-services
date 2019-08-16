@@ -12,7 +12,7 @@ const RegionSelector = () => {
   }));
 
   const dispatch = useDispatch();
-  const dispatchSetRegion = useCallback(() => dispatch(setRegion()), [dispatch]);
+  const dispatchSetRegion = useCallback(value => dispatch(setRegion(value)), [dispatch]);
 
   return (
     <Select

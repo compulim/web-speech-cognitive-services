@@ -33,7 +33,7 @@ const SubscriptionKeyInput = () => {
   }));
 
   const dispatch = useDispatch();
-  const dispatchSetOnDemandAuthorizationToken = useCallback(() => dispatch(setOnDemandAuthorizationToken()), [dispatch]);
+  const dispatchSetOnDemandAuthorizationToken = useCallback(value => dispatch(setOnDemandAuthorizationToken(value)), [dispatch]);
 
   const dispatchClearAuthorizationToken = useCallback(() =>
     ponyfillType === 'bingspeech' ?

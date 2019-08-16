@@ -12,7 +12,7 @@ const SpeechSynthesisOutputFormatSelector = () => {
   }));
 
   const dispatch = useDispatch();
-  const dispatchSetSpeechSynthesisOutputFormat = useCallback(() => dispatch(setSpeechSynthesisOutputFormat()), [dispatch]);
+  const dispatchSetSpeechSynthesisOutputFormat = useCallback(value => dispatch(setSpeechSynthesisOutputFormat(value)), [dispatch]);
 
   return (
     <Select

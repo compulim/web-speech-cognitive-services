@@ -12,7 +12,7 @@ const PonyfillSelector = () => {
   }));
 
   const dispatch = useDispatch();
-  const dispatchSetPonyfillType = useCallback(() => dispatch(setPonyfillType), [dispatch]);
+  const dispatchSetPonyfillType = useCallback(value => dispatch(setPonyfillType(value)), [dispatch]);
 
   return (
     <Select
