@@ -1,30 +1,27 @@
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import React from 'react';
 
 import setSpeechRecognitionEndpointId from '../data/actions/setSpeechRecognitionEndpointId';
+import useDispatchAction from '../useDispatchAction';
 
-const SpeechRecognitionEndpointIdInput = ({
-  disabled,
-  endpointId,
-  setSpeechRecognitionEndpointId
-}) =>
-  <input
-    className="form-control"
-    disabled={ disabled }
-    onChange={ setSpeechRecognitionEndpointId }
-    type="text"
-    value={ endpointId }
-  />
-
-export default connect(
-  ({
-    ponyfillType,
-    speechRecognitionEndpointId
+const SpeechRecognitionEndpointIdInput = () => {
+  const { ponyfillType, speechRecognitionEndpointId } = useSelector(({
+    ponyfillType, speechRecognitionEndpointId
   }) => ({
-    disabled: ponyfillType === 'browser' || ponyfillType === 'bingspeech',
-    endpointId: speechRecognitionEndpointId
-  }),
-  {
-    setSpeechRecognitionEndpointId: ({ target: { value } }) => setSpeechRecognitionEndpointId(value)
-  }
-)(SpeechRecognitionEndpointIdInput)
+    ponyfillType, speechRecognitionEndpointId
+  }));
+
+  const dispatchSetSpeechRecognitionEndpointId = useDispatchAction(({ target: { value } }) => setSpeechRecognitionEndpointId(value));
+
+  return (
+    <input
+      className="form-control"
+      disabled={ ponyfillType === 'browser' || ponyfillType === 'bingspeech' }
+      onChange={ dispatchSetSpeechRecognitionEndpointId }
+      type="text"
+      value={ speechRecognitionEndpointId }
+    />
+  );
+}
+
+export default SpeechRecognitionEndpointIdInput

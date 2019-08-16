@@ -1,6 +1,5 @@
 import { css } from 'glamor';
-import memoize from 'memoize-one';
-import React from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 
 const ROOT_CSS = css({
   backgroundColor: 'Transparent',
@@ -8,56 +7,42 @@ const ROOT_CSS = css({
   padding: 0
 });
 
-export default class extends React.Component {
-  constructor() {
-    super();
+const Popover = ({
+  children,
+  content,
+  placement,
+  trigger
+}) => {
+  const createContentElement = useCallback(() => {
+    const element = document.createElement('pre');
 
-    this.createContentElement = memoize(content => {
-      const element = document.createElement('pre');
+    element.innerText = content;
 
-      element.innerText = content;
+    return element;
+  }, [content]);
 
-      return element;
-    });
+  const ref = useRef();
+  const { current } = ref;
 
-    this.ref = React.createRef();
-  }
-
-  componentDidMount() {
-    window.jQuery(this.ref.current).popover({
-      content: this.createContentElement(this.props.content),
+  useEffect(() => {
+    window.jQuery(current).popover({
+      content: createContentElement(content),
       html: true
     });
-  }
 
-  componentWillReceiveProps({ content: nextContent }) {
-    if (this.props.content !== nextContent) {
-      window.jQuery(this.ref.current).popover({ content: this.createContentElement(nextContent) });
-    }
-  }
+    return () => window.jQuery(current).popover('dispose');
+  }, [content, createContentElement, current]);
 
-  componentWillUnmount() {
-    window.jQuery(this.ref.current).popover('dispose');
-  }
+  return (
+    <button
+      className={ ROOT_CSS }
+      data-placement={ placement }
+      data-toggle="popover"
+      data-trigger={ trigger }
+      ref={ ref }
+      type="button"
+    >{ children }</button>
+  );
+};
 
-  render() {
-    const {
-      props: {
-        children,
-        placement,
-        trigger
-      }
-    } = this;
-
-    return (
-      <button
-        className={ ROOT_CSS }
-        data-placement={ placement }
-        data-toggle="popover"
-        data-trigger={ trigger }
-        ref={ this.ref }
-        type="button"
-      >{ children }</button>
-    );
-  }
-}
+export default Popover

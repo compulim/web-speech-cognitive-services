@@ -1,52 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-export default class extends React.Component {
-  constructor() {
-    super();
+import useInterval from '../useInterval';
 
-    this.state = {};
-  }
+const MonitoringComponent = ({ children, getValue, interval }) => {
+  const [result, setResult] = useState();
 
-  componentDidMount() {
-    this.refreshInterval(this.props);
-  }
+  useInterval(() => {
+    const nextResult = getValue();
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.interval !== this.props.interval) {
-      this.refreshInterval(nextProps);
-    }
-  }
+    result !== nextResult && setResult(nextResult);
+  }, interval || 300, [getValue, result]);
 
-  componentWillUnmount() {
-    this.refreshInterval();
-  }
+  return (
+    <React.Fragment key={ result }>
+      { typeof children === 'function' ? children(result) : children }
+    </React.Fragment>
+  );
+};
 
-  handleTick() {
-    const nextResult = this.props.getValue();
-
-    if (this.state.result !== nextResult) {
-      this.setState(() => ({ result: nextResult }));
-    }
-  }
-
-  refreshInterval(props) {
-    this.interval && clearInterval(this.interval);
-
-    if (props) {
-      this.interval = setInterval(this.handleTick.bind(this), props.interval || 300);
-    }
-  }
-
-  render() {
-    const {
-      props: { children },
-      state: { result }
-    } = this;
-
-    return (
-      <React.Fragment key={ result }>
-        { typeof children === 'function' ? children(result) : children }
-      </React.Fragment>
-    );
-  }
-}
+export default MonitoringComponent

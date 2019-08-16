@@ -1,5 +1,6 @@
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import React from 'react';
+import useDispatchAction from '../useDispatchAction';
 
 import cancelSpeechSynthesis from '../data/actions/cancelSpeechSynthesis';
 import clearSpeechSynthesisUtterance from '../data/actions/clearSpeechSynthesisUtterance';
@@ -9,61 +10,8 @@ import speechSynthesisSpeakUtterance from '../data/actions/speechSynthesisSpeakU
 
 import SpeechSynthesisSpeakingProperty from './SpeechSynthesisSpeakingProperty';
 
-const SpeechSynthesisCommands = ({
-  cancelSpeechSynthesis,
-  clearSpeechSynthesisUtterance,
-  hasUtterances,
-  pauseSpeechSynthesisUtterance,
-  resumeSpeechSynthesisUtterance,
-  speechSynthesisSpeakUtterance,
-  text
-}) =>
-  <div>
-    <button
-      className="btn btn-primary"
-      disabled={ !text }
-      onClick={ speechSynthesisSpeakUtterance }
-      type="button"
-    >Speak</button>
-    &nbsp;
-    <div
-      aria-label="Pause or resume"
-      className="btn-group"
-      role="group"
-    >
-      <button
-        className="btn btn-primary"
-        disabled={ !text }
-        onClick={ pauseSpeechSynthesisUtterance }
-        type="button"
-      >Pause</button>
-      <button
-        className="btn btn-primary"
-        disabled={ !text }
-        onClick={ resumeSpeechSynthesisUtterance }
-        type="button"
-      >Resume</button>
-    </div>
-    &nbsp;
-    <button
-      className="btn btn-primary"
-      disabled={ !text }
-      onClick={ cancelSpeechSynthesis }
-      type="button"
-    >Cancel</button>
-    &nbsp;
-    <button
-      className="btn btn-danger"
-      disabled={ !hasUtterances }
-      onClick={ clearSpeechSynthesisUtterance }
-      type="button"
-    >Clear utterances</button>
-    &nbsp;
-    <SpeechSynthesisSpeakingProperty />
-  </div>
-
-export default connect(
-  ({
+const SpeechSynthesisCommands = () => {
+  const { hasUtterances, text, voiceURI } = useSelector(({
     speechSynthesisUtterances,
     speechSynthesisText,
     speechSynthesisVoiceURI
@@ -71,21 +19,61 @@ export default connect(
     hasUtterances: speechSynthesisUtterances.length,
     text: speechSynthesisText,
     voiceURI: speechSynthesisVoiceURI
-  }),
-  {
-    cancelSpeechSynthesis,
-    clearSpeechSynthesisUtterance,
-    pauseSpeechSynthesisUtterance,
-    resumeSpeechSynthesisUtterance,
-    speechSynthesisSpeakUtterance
-  },
-  (stateProps, dispatchProps, ownProps) => ({
-    ...ownProps,
-    ...stateProps,
-    ...dispatchProps,
-    speechSynthesisSpeakUtterance: () => dispatchProps.speechSynthesisSpeakUtterance({
-      text: stateProps.text,
-      voiceURI: stateProps.voiceURI
-    })
-  })
-)(SpeechSynthesisCommands)
+  }));
+
+  const dispatchCancelSpeechSynthesis = useDispatchAction(cancelSpeechSynthesis);
+  const dispatchClearSpeechSynthesisUtterance = useDispatchAction(clearSpeechSynthesisUtterance);
+  const dispatchPauseSpeechSynthesisUtterance = useDispatchAction(pauseSpeechSynthesisUtterance);
+  const dispatchResumeSpeechSynthesisUtterance = useDispatchAction(resumeSpeechSynthesisUtterance);
+  const dispatchSpeechSynthesisSpeakUtterance = useDispatchAction(() => speechSynthesisSpeakUtterance({
+    text, voiceURI
+  }), [text, voiceURI])
+
+  return (
+    <div>
+      <button
+        className="btn btn-primary"
+        disabled={ !text }
+        onClick={ dispatchSpeechSynthesisSpeakUtterance }
+        type="button"
+      >Speak</button>
+      &nbsp;
+      <div
+        aria-label="Pause or resume"
+        className="btn-group"
+        role="group"
+      >
+        <button
+          className="btn btn-primary"
+          disabled={ !text }
+          onClick={ dispatchPauseSpeechSynthesisUtterance }
+          type="button"
+        >Pause</button>
+        <button
+          className="btn btn-primary"
+          disabled={ !text }
+          onClick={ dispatchResumeSpeechSynthesisUtterance }
+          type="button"
+        >Resume</button>
+      </div>
+      &nbsp;
+      <button
+        className="btn btn-primary"
+        disabled={ !text }
+        onClick={ dispatchCancelSpeechSynthesis }
+        type="button"
+      >Cancel</button>
+      &nbsp;
+      <button
+        className="btn btn-danger"
+        disabled={ !hasUtterances }
+        onClick={ dispatchClearSpeechSynthesisUtterance }
+        type="button"
+      >Clear utterances</button>
+      &nbsp;
+      <SpeechSynthesisSpeakingProperty />
+    </div>
+  );
+}
+
+export default SpeechSynthesisCommands

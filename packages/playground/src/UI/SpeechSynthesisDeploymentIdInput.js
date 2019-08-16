@@ -1,30 +1,27 @@
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import React from 'react';
 
 import setSpeechSynthesisDeploymentId from '../data/actions/setSpeechSynthesisDeploymentId';
+import useDispatchAction from '../useDispatchAction';
 
-const SpeechSynthesisDeploymentIdInput = ({
-  disabled,
-  deploymentId,
-  setSpeechSynthesisDeploymentId
-}) =>
-  <input
-    className="form-control"
-    disabled={ disabled }
-    onChange={ setSpeechSynthesisDeploymentId }
-    type="text"
-    value={ deploymentId }
-  />
-
-export default connect(
-  ({
-    ponyfillType,
-    speechSynthesisDeploymentId
+const SpeechSynthesisDeploymentIdInput = () => {
+  const { ponyfillType, speechSynthesisDeploymentId } = useSelector(({
+    ponyfillType, speechSynthesisDeploymentId
   }) => ({
-    disabled: ponyfillType === 'browser' || ponyfillType === 'bingspeech',
-    deploymentId: speechSynthesisDeploymentId
-  }),
-  {
-    setSpeechSynthesisDeploymentId: ({ target: { value } }) => setSpeechSynthesisDeploymentId(value)
-  }
-)(SpeechSynthesisDeploymentIdInput)
+    ponyfillType, speechSynthesisDeploymentId
+  }));
+
+  const dispatchSetSpeechSynthesisDeploymentId = useDispatchAction(({ target: { value } }) => setSpeechSynthesisDeploymentId(value));
+
+  return (
+    <input
+      className="form-control"
+      disabled={ ponyfillType === 'browser' || ponyfillType === 'bingspeech' }
+      onChange={ dispatchSetSpeechSynthesisDeploymentId }
+      type="text"
+      value={ speechSynthesisDeploymentId }
+    />
+  );
+}
+
+export default SpeechSynthesisDeploymentIdInput

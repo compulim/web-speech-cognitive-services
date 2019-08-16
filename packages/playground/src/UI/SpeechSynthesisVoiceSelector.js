@@ -1,39 +1,36 @@
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import React from 'react';
 
 import setSpeechSynthesisVoiceURI from '../data/actions/setSpeechSynthesisVoiceURI';
 import Select, { Option } from '../Bootstrap/Select';
+import useDispatchAction from '../useDispatchAction';
 
-const SpeechSynthesisVoiceSelector = ({
-  setSpeechSynthesisVoiceURI,
-  speechSynthesisNativeVoices,
-  speechSynthesisVoiceURI
-}) =>
-  <Select
-    disabled={ !speechSynthesisNativeVoices.length }
-    onChange={ setSpeechSynthesisVoiceURI }
-    value={ speechSynthesisVoiceURI || '' }
-  >
-    {
-      speechSynthesisNativeVoices.map(({ name, voiceURI }) =>
-        <Option
-          key={ voiceURI }
-          text={ name }
-          value={ voiceURI }
-        />
-      )
-    }
-  </Select>
-
-export default connect(
-  ({
-    ponyfill,
-    speechSynthesisNativeVoices,
-    speechSynthesisVoiceURI
+const SpeechSynthesisVoiceSelector = () => {
+  const { speechSynthesisNativeVoices, speechSynthesisVoiceURI } = useSelector(({
+    speechSynthesisNativeVoices, speechSynthesisVoiceURI
   }) => ({
-    ponyfill,
-    speechSynthesisNativeVoices,
-    speechSynthesisVoiceURI
-  }),
-  { setSpeechSynthesisVoiceURI }
-)(SpeechSynthesisVoiceSelector)
+    speechSynthesisNativeVoices, speechSynthesisVoiceURI
+  }));
+
+  const dispatchSetSpeechSynthesisVoiceURI = useDispatchAction(setSpeechSynthesisVoiceURI);
+
+  return (
+    <Select
+      disabled={ !speechSynthesisNativeVoices.length }
+      onChange={ dispatchSetSpeechSynthesisVoiceURI }
+      value={ speechSynthesisVoiceURI || '' }
+    >
+      {
+        speechSynthesisNativeVoices.map(({ name, voiceURI }) =>
+          <Option
+            key={ voiceURI }
+            text={ name }
+            value={ voiceURI }
+          />
+        )
+      }
+    </Select>
+  );
+}
+
+export default SpeechSynthesisVoiceSelector
