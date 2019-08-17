@@ -125,6 +125,11 @@ The following list all options supported by the adapter.
       </td>
     </tr>
     <tr>
+      <td><code>enableTelemetry</code></td>
+      <td><code>undefined</code></td>
+      <td>Pass-through option to enable or disable telemetry for Speech SDK recognizer as <a href="https://github.com/Microsoft/cognitive-services-speech-sdk-js#data--telemetry">outlined in Speech SDK</a>. This adapter does not collect any telemetry.<br /><br />By default, Speech SDK will collect telemetry unless this is set to <code>false</code>.</td>
+    </tr>
+    <tr>
       <td><code>ponyfill.AudioContext:&nbsp;<a href="https://developer.mozilla.org/en-US/docs/Web/API/AudioContext">AudioContext</a></code></td>
       <td><code>window.AudioContext&nbsp;||</code><br /><code>window.webkitAudioContext</code></td>
       <td>

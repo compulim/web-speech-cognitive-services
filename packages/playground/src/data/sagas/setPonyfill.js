@@ -7,6 +7,7 @@ import {
 
 import { SET_BING_SPEECH_AUTHORIZATION_TOKEN } from '../actions/setBingSpeechAuthorizationToken';
 import { SET_BING_SPEECH_SUBSCRIPTION_KEY } from '../actions/setBingSpeechSubscriptionKey';
+import { SET_ENABLE_TELEMETRY } from '../actions/setEnableTelemetry';
 import { SET_ON_DEMAND_AUTHORIZATION_TOKEN } from '../actions/setOnDemandAuthorizationToken';
 import { SET_PONYFILL_TYPE } from '../actions/setPonyfillType';
 import { SET_REGION } from '../actions/setRegion';
@@ -29,6 +30,7 @@ export default function* () {
     ({ type }) =>
       type === SET_BING_SPEECH_AUTHORIZATION_TOKEN
       || type === SET_BING_SPEECH_SUBSCRIPTION_KEY
+      || type === SET_ENABLE_TELEMETRY
       || type === SET_PONYFILL_TYPE
       || type === SET_REGION
       || type === SET_SPEECH_RECOGNITION_REFERENCE_GRAMMARS
@@ -47,6 +49,7 @@ function* setPonyfillSaga() {
   const {
     bingSpeechAuthorizationToken,
     bingSpeechSubscriptionKey,
+    enableTelemetry,
     onDemandAuthorizationToken,
     ponyfillType,
     region,
@@ -91,6 +94,7 @@ function* setPonyfillSaga() {
     yield put(setPonyfill(ponyfill));
   } else {
     const options = {
+      enableTelemetry,
       referenceGrammars,
       region,
       speechRecognitionEndpointId,

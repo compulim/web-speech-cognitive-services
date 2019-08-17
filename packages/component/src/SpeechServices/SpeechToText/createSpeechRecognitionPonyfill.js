@@ -75,6 +75,7 @@ function cognitiveServicesAsyncToPromise(fn) {
 export default ({
   audioConfig = AudioConfig.fromDefaultMicrophoneInput(),
   authorizationToken,
+  enableTelemetry,
   referenceGrammars,
   region = 'westus',
   speechRecognitionEndpointId,
@@ -90,6 +91,8 @@ export default ({
 
     return {};
   }
+
+  SpeechRecognizer.enableTelemetry(enableTelemetry);
 
   class SpeechRecognition extends DOMEventEmitter {
     constructor() {

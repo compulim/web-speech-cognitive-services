@@ -33,6 +33,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Speech synthesis: Fix [#28](https://github.com/compulim/web-speech-cognitive-services/issues/28), support custom voice font, in PR [#41](https://github.com/compulim/web-speech-cognitive-services/pull/41)
    - Use option `speechSynthesisDeploymentId`
 - Speech synthesis: Fix [#48](https://github.com/compulim/web-speech-cognitive-services/issues/48), support output format through `outputFormat` option, in PR [#49](https://github.com/compulim/web-speech-cognitive-services/pull/49)
+- `*`: Fix [#47](https://github.com/compulim/web-speech-cognitive-services/issues/47), add `enableTelemetry` option for disabling collecting telemetry data in Speech SDK, in PR [#51](https://github.com/compulim/web-speech-cognitive-services/pull/51)
 
 ### Changed
 
