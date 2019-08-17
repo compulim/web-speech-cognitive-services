@@ -3,6 +3,7 @@ import { combineReducers } from 'redux';
 import bingSpeechAuthorizationToken from './reducers/bingSpeechAuthorizationToken';
 import bingSpeechSubscriptionKey from './reducers/bingSpeechSubscriptionKey';
 import browserSupportedSpeechRecognition from './reducers/browserSupportedSpeechRecognition';
+import enableTelemetry from './reducers/enableTelemetry';
 import navPane from './reducers/navPane';
 import onDemandAuthorizationToken from './reducers/onDemandAuthorizationToken';
 import ponyfill from './reducers/ponyfill';
@@ -31,6 +32,7 @@ export default combineReducers({
   bingSpeechAuthorizationToken,
   bingSpeechSubscriptionKey,
   browserSupportedSpeechRecognition,
+  enableTelemetry,
   navPane,
   onDemandAuthorizationToken,
   ponyfill,
