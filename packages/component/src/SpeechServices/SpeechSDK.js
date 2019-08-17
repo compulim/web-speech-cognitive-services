@@ -1,3 +1,17 @@
-import * as CognitiveServicesSpeechSDK from 'microsoft-cognitiveservices-speech-sdk/distrib/lib/microsoft.cognitiveservices.speech.sdk';
+// We are only importing what we need.
 
-export default CognitiveServicesSpeechSDK
+import {
+  AudioConfig,
+  OutputFormat,
+  ResultReason,
+  SpeechConfig,
+  SpeechRecognizer
+} from 'microsoft-cognitiveservices-speech-sdk/distrib/lib/microsoft.cognitiveservices.speech.sdk';
+
+export default {
+  AudioConfig,
+  OutputFormat,
+  ResultReason,
+  SpeechConfig,
+  SpeechRecognizer
+}

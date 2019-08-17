@@ -1,10 +1,11 @@
+import { defineEventAttribute, EventTarget } from 'event-target-shim';
 import memoize from 'memoize-one';
 import onErrorResumeNext from 'on-error-resume-next';
 
 import AudioContextQueue from './AudioContextQueue';
-import DOMEventEmitter from '../../Util/DOMEventEmitter';
 import fetchAuthorizationToken from '../fetchAuthorizationToken';
 import fetchVoices from './fetchVoices';
+import SpeechSynthesisEvent from './SpeechSynthesisEvent';
 import SpeechSynthesisUtterance from './SpeechSynthesisUtterance';
 
 // Supported output format can be found at https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/rest-text-to-speech#audio-outputs
@@ -55,9 +56,9 @@ export default ({
         subscriptionKey
       });
 
-  class SpeechSynthesis extends DOMEventEmitter {
+  class SpeechSynthesis extends EventTarget {
     constructor() {
-      super(['voiceschanged']);
+      super();
 
       this.queue = new AudioContextQueue({ audioContext, ponyfill });
       this.voices = [];
@@ -118,14 +119,17 @@ export default ({
             region
           });
 
-          this.emit('voiceschanged');
+          this.dispatchEvent(new SpeechSynthesisEvent('voiceschanged'));
         });
       }
     }
   }
 
+  defineEventAttribute(SpeechSynthesis.prototype, 'voiceschanged');
+
   return {
     speechSynthesis: new SpeechSynthesis(),
+    SpeechSynthesisEvent,
     SpeechSynthesisUtterance
   };
 }

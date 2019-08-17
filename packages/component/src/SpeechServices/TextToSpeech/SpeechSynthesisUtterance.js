@@ -1,9 +1,10 @@
 /* eslint no-empty: ["error", { "allowEmptyCatch": true }] */
 
+import { defineEventAttribute, EventTarget } from 'event-target-shim';
 import EventAsPromise from 'event-as-promise';
 
-import DOMEventEmitter from '../../Util/DOMEventEmitter';
 import fetchSpeechData from './fetchSpeechData';
+import SpeechSynthesisEvent from './SpeechSynthesisEvent';
 import subscribeEvent from './subscribeEvent';
 
 function asyncDecodeAudioData(audioContext, arrayBuffer) {
@@ -41,9 +42,9 @@ function playDecoded(audioContext, audioBuffer, source) {
   });
 }
 
-export default class extends DOMEventEmitter {
+export default class extends EventTarget {
   constructor(text) {
-    super(['boundary', 'end', 'error', 'mark', 'pause', 'resume', 'start']);
+    super();
 
     this._lang = null;
     this._pitch = 1;
@@ -106,7 +107,7 @@ export default class extends DOMEventEmitter {
   async play(audioContext) {
     try {
       // We should emit "start" event even if preload() failed.
-      this.emit('start');
+      this.dispatchEvent(new SpeechSynthesisEvent('start'));
 
       // HACK: iOS requires bufferSourceNode to be constructed before decoding data.
       const source = audioContext.createBufferSource();
@@ -117,9 +118,9 @@ export default class extends DOMEventEmitter {
       await playDecoded(audioContext, audioBuffer, source);
 
       this._playingSource = null;
-      this.emit('end');
+      this.dispatchEvent(new SpeechSynthesisEvent('end'));
     } catch (error) {
-      this.emit('error', { error });
+      this.dispatchEvent(new ErrorEvent('error', { error }));
     }
   }
 
@@ -127,3 +128,16 @@ export default class extends DOMEventEmitter {
     this._playingSource && this._playingSource.stop();
   }
 }
+
+defineEventAttribute(
+  SpeechSynthesisUtterance.prototype,
+  [
+    'boundary',
+    'end',
+    'error',
+    'mark',
+    'pause',
+    'resume',
+    'start'
+  ]
+);

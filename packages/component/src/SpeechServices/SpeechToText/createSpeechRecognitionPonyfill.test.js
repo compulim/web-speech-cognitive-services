@@ -179,7 +179,7 @@ function toSnapshot(events) {
     const { type } = event;
 
     if (type === 'cognitiveservices') {
-      const { subType } = event;
+      const { data: { type: subType } } = event;
 
       return `${ type }:${ subType }`;
     } else {
