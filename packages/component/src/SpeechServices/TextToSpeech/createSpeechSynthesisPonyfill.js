@@ -1,4 +1,5 @@
 import memoize from 'memoize-one';
+import onErrorResumeNext from 'on-error-resume-next';
 
 import AudioContextQueue from './AudioContextQueue';
 import DOMEventEmitter from '../../Util/DOMEventEmitter';
@@ -85,7 +86,7 @@ export default ({
         throw new Error('invalid utterance');
       }
 
-      return new Promise(async (resolve, reject) => {
+      return new Promise((resolve, reject) => {
         utterance.addEventListener('end', resolve);
         utterance.addEventListener('error', reject);
 
@@ -93,7 +94,7 @@ export default ({
           authorizationTokenPromise: getAuthorizationTokenPromise,
           deploymentId: speechSynthesisDeploymentId,
           outputFormat: speechSynthesisOutputFormat,
-          region: region
+          region
         });
 
         this.queue.push(utterance);
@@ -110,7 +111,7 @@ export default ({
         // If fetch voice list failed, we will not emit "voiceschanged" event.
         // In the spec, there is no "error" event.
 
-        try {
+        await onErrorResumeNext(async () => {
           this.voices = await fetchVoices({
             authorizationToken: await getAuthorizationTokenPromise,
             deploymentId: speechSynthesisDeploymentId,
@@ -118,7 +119,7 @@ export default ({
           });
 
           this.emit('voiceschanged');
-        } catch (err) {}
+        });
       }
     }
   }

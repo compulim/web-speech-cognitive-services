@@ -29,9 +29,9 @@ export default async function ({
 
   // Although calling encodeURI on hostname does not actually works, it fails faster and safer.
   const url = deploymentId ?
-    SYNTHESIS_CUSTOM_VOICE_URL_TEMPLATE.replace(/\{region\}/, encodeURI(region)).replace(/\{deploymentId\}/, encodeURI(deploymentId))
+    SYNTHESIS_CUSTOM_VOICE_URL_TEMPLATE.replace(/\{region\}/u, encodeURI(region)).replace(/\{deploymentId\}/u, encodeURI(deploymentId))
   :
-    SYNTHESIS_URL_TEMPLATE.replace(/\{region\}/, encodeURI(region));
+    SYNTHESIS_URL_TEMPLATE.replace(/\{region\}/u, encodeURI(region));
 
   const res = await fetch(url, {
     headers: {
@@ -43,7 +43,7 @@ export default async function ({
     body: ssml
   });
 
-  if (res.status !== 200) {
+  if (!res.ok) {
     throw new Error(`Failed to syntheis speech, server returned ${ res.status }`);
   }
 

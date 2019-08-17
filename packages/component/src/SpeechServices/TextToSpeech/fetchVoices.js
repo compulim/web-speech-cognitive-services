@@ -1,3 +1,5 @@
+/* eslint no-magic-numbers: ["error", { "ignore": [0, 1, -1] }] */
+
 import SpeechSynthesisVoice from './SpeechSynthesisVoice';
 
 export default async function ({ authorizationToken, deploymentId, region }) {

@@ -1,3 +1,9 @@
+/* eslint class-methods-use-this: "off" */
+/* eslint complexity: ["error", 50] */
+/* eslint no-await-in-loop: "off" */
+/* eslint no-empty-function: "off" */
+/* eslint no-magic-numbers: ["error", { "ignore": [0, 100, 150] }] */
+
 import cognitiveServiceEventResultToWebSpeechRecognitionResultList from './cognitiveServiceEventResultToWebSpeechRecognitionResultList';
 import createPromiseQueue from '../../Util/createPromiseQueue';
 import DOMEventEmitter from '../../Util/DOMEventEmitter';
@@ -67,9 +73,7 @@ function averageAmplitude(arrayBuffer) {
 }
 
 function cognitiveServicesAsyncToPromise(fn) {
-  return (...args) => {
-    return new Promise((resolve, reject) => fn(...args, resolve, reject));
-  };
+  return (...args) => new Promise((resolve, reject) => fn(...args, resolve, reject));
 }
 
 export default ({
@@ -299,9 +303,9 @@ export default ({
         // We are emitting event "cognitiveservices" for debugging purpose.
         Object.keys(event).forEach(name => this.emitCognitiveServices(name, event[name]));
 
-        let errorMessage = canceled && canceled.errorDetails;
+        const errorMessage = canceled && canceled.errorDetails;
 
-        if (/Permission\sdenied/.test(errorMessage || '')) {
+        if (/Permission\sdenied/u.test(errorMessage || '')) {
           // If microphone is not allowed, we should not emit "start" event.
 
           finalEvent = {
@@ -317,7 +321,7 @@ export default ({
         }
 
         if (errorMessage) {
-          if (/1006/.test(errorMessage)) {
+          if (/1006/u.test(errorMessage)) {
             if (!audioStarted) {
               this.emit('audiostart');
               this.emit('audioend');

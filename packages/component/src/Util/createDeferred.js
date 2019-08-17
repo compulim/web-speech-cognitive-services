@@ -33,13 +33,13 @@
 
 'use strict';
 
-module.exports = function () {
+export default function createDeferred() {
   const ret = {};
 
-  ret.promise = new Promise(function (resolve, reject) {
+  ret.promise = new Promise((resolve, reject) => {
     ret.resolve = resolve;
     ret.reject = reject;
   });
 
   return ret;
-};
+}

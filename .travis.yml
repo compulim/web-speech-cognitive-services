@@ -13,7 +13,7 @@ before_install:
 install:
 - npm run bootstrap
 - export NPM_PACKAGE_VERSION=`cat package.json | jq -r .version`
-- npm run build
+- npm run prepublishOnly
 
 deploy:
 - provider: script

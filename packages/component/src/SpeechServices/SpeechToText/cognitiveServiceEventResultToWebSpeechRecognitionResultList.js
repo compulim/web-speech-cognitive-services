@@ -40,7 +40,7 @@ export default function (result, { maxAlternatives = Infinity, textNormalization
     );
 
     return resultList;
-  } else {
-    return [];
   }
+
+  return [];
 }

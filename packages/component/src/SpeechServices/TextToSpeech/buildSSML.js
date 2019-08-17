@@ -1,3 +1,5 @@
+/* eslint no-magic-numbers: ["error", { "ignore": [0, 1, 100] }] */
+
 // Cognitive Services does not support unsigned percentage
 // It must be converted into +/- first.
 function relativePercentage(value) {

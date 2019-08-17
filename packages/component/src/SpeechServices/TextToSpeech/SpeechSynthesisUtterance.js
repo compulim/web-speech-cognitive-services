@@ -1,3 +1,5 @@
+/* eslint no-empty: ["error", { "allowEmptyCatch": true }] */
+
 import EventAsPromise from 'event-as-promise';
 
 import DOMEventEmitter from '../../Util/DOMEventEmitter';
@@ -14,7 +16,7 @@ function asyncDecodeAudioData(audioContext, arrayBuffer) {
 }
 
 function playDecoded(audioContext, audioBuffer, source) {
-  return new Promise(async (resolve, reject) => {
+  return new Promise((resolve, reject) => {
     const audioContextClosed = new EventAsPromise();
     const sourceEnded = new EventAsPromise();
     const unsubscribe = subscribeEvent(audioContext, 'statechange', ({ target: { state } }) => state === 'closed' && audioContextClosed.eventListener());
@@ -27,12 +29,10 @@ function playDecoded(audioContext, audioBuffer, source) {
       source.connect(audioContext.destination);
       source.start(0);
 
-      await Promise.race([
+      Promise.race([
         audioContextClosed.upcoming(),
         sourceEnded.upcoming()
-      ]);
-
-      resolve();
+      ]).then(resolve);
     } catch (err) {
       reject(err);
     } finally {
