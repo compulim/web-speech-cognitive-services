@@ -1,5 +1,5 @@
-import { connect } from 'react-redux';
-import React, { useMemo, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import React, { useCallback, useMemo, useState } from 'react';
 
 import Select, { Option } from '../Bootstrap/Select';
 import SpeechRecognitionEndpointIdInput from './SpeechRecognitionEndpointIdInput';
@@ -17,32 +17,54 @@ import setSpeechRecognitionMaxAlternatives from '../data/actions/setSpeechRecogn
 import setSpeechRecognitionPhrases from '../data/actions/setSpeechRecognitionPhrases';
 import setSpeechRecognitionReferenceGrammars from '../data/actions/setSpeechRecognitionReferenceGrammars';
 
-const SpeechRecognitionCommands = ({
-  abortSpeechRecognition,
-  clearSpeechRecognitionEvent,
-  continuous,
-  empty,
-  interimResults,
-  maxAlternatives,
-  phrases: committedPhrases,
-  ponyfillType,
-  referenceGrammars: committedReferenceGrammars,
-  setSpeechRecognitionContinuous,
-  setSpeechRecognitionHideInterimResults,
-  setSpeechRecognitionInteractive,
-  setSpeechRecognitionMaxAlternatives,
-  setSpeechRecognitionPhrases,
-  setSpeechRecognitionReferenceGrammars,
-  setSpeechRecognitionShowInterimResults,
-  started,
-  startSpeechRecognition,
-  stopSpeechRecognition
-}) => {
+const SpeechRecognitionCommands = () => {
+  const {
+    empty,
+    continuous,
+    interimResults,
+    maxAlternatives,
+    phrases,
+    ponyfillType,
+    referenceGrammars,
+    started
+  } = useSelector(({
+    ponyfillType,
+    speechRecognitionEvents,
+    speechRecognitionContinuous,
+    speechRecognitionInterimResults,
+    speechRecognitionMaxAlternatives,
+    speechRecognitionPhrases,
+    speechRecognitionReferenceGrammars,
+    speechRecognitionStarted
+  }) => ({
+    empty: !speechRecognitionEvents.length,
+    continuous: speechRecognitionContinuous,
+    interimResults: speechRecognitionInterimResults,
+    maxAlternatives: speechRecognitionMaxAlternatives,
+    phrases: speechRecognitionPhrases,
+    ponyfillType,
+    referenceGrammars: speechRecognitionReferenceGrammars,
+    started: speechRecognitionStarted
+  }));
+
+  const dispatch = useDispatch();
+  const dispatchAbortSpeechRecognition = useCallback(() => dispatch(abortSpeechRecognition()), [dispatch]);
+  const dispatchClearSpeechRecognitionEvent = useCallback(() => dispatch(clearSpeechRecognitionEvent()), [dispatch]);
+  const dispatchSetSpeechRecognitionContinuous = useCallback(() => dispatch(setSpeechRecognitionContinuous(true)), [dispatch]);
+  const dispatchSetSpeechRecognitionHideInterimResults = useCallback(() => dispatch(setSpeechRecognitionInterimResults(false)), [dispatch]);
+  const dispatchSetSpeechRecognitionInteractive = useCallback(() => dispatch(setSpeechRecognitionContinuous(false)), [dispatch]);
+  const dispatchSetSpeechRecognitionMaxAlternatives = useCallback(value => dispatch(setSpeechRecognitionMaxAlternatives(+value)), [dispatch]);
+  const dispatchSetSpeechRecognitionPhrases = useCallback(value => dispatch(setSpeechRecognitionPhrases(value)), [dispatch]);
+  const dispatchSetSpeechRecognitionReferenceGrammars = useCallback(value => dispatch(setSpeechRecognitionReferenceGrammars(value)), [dispatch]);
+  const dispatchSetSpeechRecognitionShowInterimResults = useCallback(() => dispatch(setSpeechRecognitionInterimResults(true)), [dispatch]);
+  const dispatchStartSpeechRecognition = useCallback(() => dispatch(startSpeechRecognition()), [dispatch]);
+  const dispatchStopSpeechRecognition = useCallback(() => dispatch(stopSpeechRecognition()), [dispatch]);
+
   const [phrasesString, setPhrasesString] = useState();
   const [referenceGrammarsString, setReferenceGrammarsString] = useState();
 
-  useMemo(() => setPhrasesString(committedPhrases.join(', ')), [committedPhrases]);
-  useMemo(() => setReferenceGrammarsString(committedReferenceGrammars.join(', ')), [committedReferenceGrammars]);
+  useMemo(() => setPhrasesString(phrases.join(', ')), [phrases]);
+  useMemo(() => setReferenceGrammarsString(referenceGrammars.join(', ')), [referenceGrammars]);
 
   return (
     <React.Fragment>
@@ -51,7 +73,7 @@ const SpeechRecognitionCommands = ({
           <button
             className="btn btn-primary"
             disabled={ !!started }
-            onClick={ startSpeechRecognition }
+            onClick={ dispatchStartSpeechRecognition }
             type="button"
           >
             {
@@ -79,23 +101,23 @@ const SpeechRecognitionCommands = ({
           <div className="dropdown-menu">
             <button
               className="dropdown-item"
-              onClick={ setSpeechRecognitionInteractive }
+              onClick={ dispatchSetSpeechRecognitionInteractive }
               type="button"
             >Interactive mode</button>
             <button
               className="dropdown-item"
-              onClick={ setSpeechRecognitionContinuous }
+              onClick={ dispatchSetSpeechRecognitionContinuous }
               type="button"
             >Continuous mode</button>
             <div className="dropdown-divider" />
             <button
               className="dropdown-item"
-              onClick={ setSpeechRecognitionShowInterimResults }
+              onClick={ dispatchSetSpeechRecognitionShowInterimResults }
               type="button"
             >Show interims</button>
             <button
               className="dropdown-item"
-              onClick={ setSpeechRecognitionHideInterimResults }
+              onClick={ dispatchSetSpeechRecognitionHideInterimResults }
               type="button"
             >Hide interims</button>
           </div>
@@ -104,7 +126,7 @@ const SpeechRecognitionCommands = ({
         <div className="form-group-inline">
           <Select
             disabled={ started || (ponyfillType !== 'browser' && ponyfillType !== 'speechservices') }
-            onChange={ setSpeechRecognitionMaxAlternatives }
+            onChange={ dispatchSetSpeechRecognitionMaxAlternatives }
             value={ (ponyfillType === 'browser' || ponyfillType === 'speechservices') ? maxAlternatives : 1 }
           >
             <Option text="One alternative" value="1" />
@@ -126,13 +148,13 @@ const SpeechRecognitionCommands = ({
           <button
             className="btn btn-secondary"
             disabled={ !started }
-            onClick={ stopSpeechRecognition }
+            onClick={ dispatchStopSpeechRecognition }
             type="button"
           >Stop</button>
           <button
             className="btn btn-secondary"
             disabled={ !started }
-            onClick={ abortSpeechRecognition }
+            onClick={ dispatchAbortSpeechRecognition }
             type="button"
           >Abort</button>
         </div>
@@ -140,7 +162,7 @@ const SpeechRecognitionCommands = ({
         <button
           className="btn btn-danger"
           disabled={ empty }
-          onClick={ clearSpeechRecognitionEvent }
+          onClick={ dispatchClearSpeechRecognitionEvent }
           type="button"
         >Clear events</button>
       </div>
@@ -151,7 +173,7 @@ const SpeechRecognitionCommands = ({
             aria-label="Phrases for recognition"
             className="form-control"
             disabled={ started || (ponyfillType !== 'browser' && ponyfillType !== 'speechservices') }
-            onBlur={ () => setSpeechRecognitionPhrases(phrasesString.split(/[,;|]/gu).map(value => value.trim()).filter(value => value)) }
+            onBlur={ () => dispatchSetSpeechRecognitionPhrases(phrasesString.split(/[,;|]/gu).map(value => value.trim()).filter(value => value)) }
             onChange={ ({ target: { value } }) => setPhrasesString(value) }
             type="text"
             value={ phrasesString }
@@ -163,7 +185,7 @@ const SpeechRecognitionCommands = ({
             aria-label="Reference grammars for recognition"
             className="form-control"
             disabled={ started || (ponyfillType !== 'browser' && ponyfillType !== 'speechservices') }
-            onBlur={ () => setSpeechRecognitionReferenceGrammars(referenceGrammarsString.split(/[,;|]/gu).map(value => value.trim()).filter(value => value)) }
+            onBlur={ () => dispatchSetSpeechRecognitionReferenceGrammars(referenceGrammarsString.split(/[,;|]/gu).map(value => value.trim()).filter(value => value)) }
             onChange={ ({ target: { value } }) => setReferenceGrammarsString(value) }
             type="text"
             value={ referenceGrammarsString }
@@ -178,37 +200,4 @@ const SpeechRecognitionCommands = ({
   );
 };
 
-export default connect(
-  ({
-    ponyfillType,
-    speechRecognitionEvents,
-    speechRecognitionContinuous,
-    speechRecognitionInterimResults,
-    speechRecognitionMaxAlternatives,
-    speechRecognitionPhrases,
-    speechRecognitionReferenceGrammars,
-    speechRecognitionStarted
-  }) => ({
-    empty: !speechRecognitionEvents.length,
-    continuous: speechRecognitionContinuous,
-    interimResults: speechRecognitionInterimResults,
-    maxAlternatives: speechRecognitionMaxAlternatives,
-    phrases: speechRecognitionPhrases,
-    ponyfillType,
-    referenceGrammars: speechRecognitionReferenceGrammars,
-    started: speechRecognitionStarted
-  }),
-  {
-    abortSpeechRecognition,
-    clearSpeechRecognitionEvent,
-    setSpeechRecognitionContinuous: () => setSpeechRecognitionContinuous(true),
-    setSpeechRecognitionHideInterimResults: () => setSpeechRecognitionInterimResults(false),
-    setSpeechRecognitionInteractive: () => setSpeechRecognitionContinuous(false),
-    setSpeechRecognitionMaxAlternatives: value => setSpeechRecognitionMaxAlternatives(+value),
-    setSpeechRecognitionPhrases: phrases => setSpeechRecognitionPhrases(phrases),
-    setSpeechRecognitionReferenceGrammars: referenceGrammars => setSpeechRecognitionReferenceGrammars(referenceGrammars),
-    setSpeechRecognitionShowInterimResults: () => setSpeechRecognitionInterimResults(true),
-    startSpeechRecognition,
-    stopSpeechRecognition
-  }
-)(SpeechRecognitionCommands)
+export default SpeechRecognitionCommands

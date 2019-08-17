@@ -1,32 +1,31 @@
-import { connect } from 'react-redux';
-import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import React, { useCallback } from 'react';
 
 import Select, { Option } from '../Bootstrap/Select';
 import setSpeechRecognitionTextNormalization from '../data/actions/setSpeechRecognitionTextNormalization';
 
-const RegionSelector = ({
-  disabled,
-  speechRecognitionTextNormalization,
-  setSpeechRecognitionTextNormalization
-}) =>
-  <Select
-    disabled={ disabled }
-    onChange={ setSpeechRecognitionTextNormalization }
-    value={ speechRecognitionTextNormalization }
-  >
-    <Option text="Display (default)" value="display" />
-    <Option text="ITN" value="itn" />
-    <Option text="Masked ITN" value="maskeditn" />
-    <Option text="Lexical" value="lexical" />
-  </Select>
-
-export default connect(
-  ({
-    ponyfillType,
-    speechRecognitionTextNormalization
+const RegionSelector = () => {
+  const { ponyfillType, speechRecognitionTextNormalization } = useSelector(({
+    ponyfillType, speechRecognitionTextNormalization
   }) => ({
-    disabled: ponyfillType !== 'bingspeech' && ponyfillType !== 'speechservices',
-    speechRecognitionTextNormalization
-  }),
-  { setSpeechRecognitionTextNormalization }
-)(RegionSelector)
+    ponyfillType, speechRecognitionTextNormalization
+  }));
+
+  const dispatch = useDispatch();
+  const handleChange = useCallback(value => dispatch(setSpeechRecognitionTextNormalization(value)), [dispatch]);
+
+  return (
+    <Select
+      disabled={ ponyfillType !== 'bingspeech' && ponyfillType !== 'speechservices' }
+      onChange={ handleChange }
+      value={ speechRecognitionTextNormalization }
+    >
+      <Option text="Display (default)" value="display" />
+      <Option text="ITN" value="itn" />
+      <Option text="Masked ITN" value="maskeditn" />
+      <Option text="Lexical" value="lexical" />
+    </Select>
+  );
+}
+
+export default RegionSelector

@@ -1,6 +1,6 @@
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames';
-import React from 'react';
+import React, { useCallback } from 'react';
 
 import convertBingSpeechSubscriptionKeyToAuthorizationToken from '../data/actions/convertBingSpeechSubscriptionKeyToAuthorizationToken';
 import convertSpeechServicesSubscriptionKeyToAuthorizationToken from '../data/actions/convertSpeechServicesSubscriptionKeyToAuthorizationToken';
@@ -10,64 +10,14 @@ import setOnDemandAuthorizationToken from '../data/actions/setOnDemandAuthorizat
 import setSpeechServicesAuthorizationToken from '../data/actions/setSpeechServicesAuthorizationToken';
 import setSpeechServicesSubscriptionKey from '../data/actions/setSpeechServicesSubscriptionKey';
 
-const SubscriptionKeyInput = ({
-  authorizationToken,
-  clearAuthorizationToken,
-  convertSubscriptionKeyToAuthorizationToken,
-  disabled,
-  onDemandAuthorizationToken,
-  setOnDemandAuthorizationToken,
-  setSubscriptionKey,
-  subscriptionKey
-}) =>
-  <div className="input-group">
-    {
-      authorizationToken ?
-        <React.Fragment>
-          <input
-            className="form-control"
-            disabled={ disabled }
-            readOnly={ true }
-            type="text"
-            value={ authorizationToken }
-          />
-          <div className="input-group-append">
-            <button
-              className="btn btn-outline-secondary"
-              onClick={ clearAuthorizationToken }
-              type="button"
-            >Clear</button>
-          </div>
-        </React.Fragment>
-      :
-        <React.Fragment>
-          <input
-            className="form-control"
-            disabled={ disabled }
-            onChange={ setSubscriptionKey }
-            type="text"
-            value={ subscriptionKey }
-          />
-          <div className="input-group-append">
-            <button
-              className={ classNames('btn btn-outline-secondary', { active: onDemandAuthorizationToken }) }
-              disabled={ disabled }
-              onClick={ setOnDemandAuthorizationToken }
-              type="button"
-            >On-demand</button>
-            <button
-              className="btn btn-outline-secondary"
-              disabled={ disabled }
-              onClick={ convertSubscriptionKeyToAuthorizationToken }
-              type="button"
-            >Convert to authorization token</button>
-          </div>
-        </React.Fragment>
-    }
-  </div>
-
-export default connect(
-  ({
+const SubscriptionKeyInput = () => {
+  const {
+    authorizationToken,
+    disabled,
+    onDemandAuthorizationToken,
+    ponyfillType,
+    subscriptionKey
+  } = useSelector(({
     bingSpeechAuthorizationToken,
     bingSpeechSubscriptionKey,
     onDemandAuthorizationToken,
@@ -80,34 +30,82 @@ export default connect(
     onDemandAuthorizationToken,
     ponyfillType,
     subscriptionKey: ponyfillType === 'bingspeech' ? bingSpeechSubscriptionKey : speechServicesSubscriptionKey
-  }),
-  {
-    clearBingSpeechAuthorizationToken: () => setBingSpeechAuthorizationToken(''),
-    clearSpeechServicesAuthorizationToken: () => setSpeechServicesAuthorizationToken(''),
-    convertBingSpeechSubscriptionKeyToAuthorizationToken,
-    convertSpeechServicesSubscriptionKeyToAuthorizationToken,
-    setBingSpeechSubscriptionKey: ({ target: { value } }) => setBingSpeechSubscriptionKey(value),
-    setOnDemandAuthorizationToken: () => setOnDemandAuthorizationToken(),
-    setSpeechServicesSubscriptionKey: ({ target: { value } }) => setSpeechServicesSubscriptionKey(value)
-  },
-  (stateProps, dispatchProps, ownProps) => ({
-    ...ownProps,
-    ...stateProps,
-    ...dispatchProps,
-    clearAuthorizationToken:
-      stateProps.ponyfillType === 'bingspeech' ?
-        dispatchProps.clearBingSpeechAuthorizationToken
-      :
-        dispatchProps.clearSpeechServicesAuthorizationToken,
-    convertSubscriptionKeyToAuthorizationToken:
-      stateProps.ponyfillType === 'bingspeech' ?
-        dispatchProps.convertBingSpeechSubscriptionKeyToAuthorizationToken
-      :
-        dispatchProps.convertSpeechServicesSubscriptionKeyToAuthorizationToken,
-    setSubscriptionKey:
-      stateProps.ponyfillType === 'bingspeech' ?
-        dispatchProps.setBingSpeechSubscriptionKey
-      :
-        dispatchProps.setSpeechServicesSubscriptionKey
-  })
-)(SubscriptionKeyInput)
+  }));
+
+  const dispatch = useDispatch();
+  const dispatchSetOnDemandAuthorizationToken = useCallback(value => dispatch(setOnDemandAuthorizationToken(value)), [dispatch]);
+
+  const dispatchClearAuthorizationToken = useCallback(() =>
+    ponyfillType === 'bingspeech' ?
+      dispatch(setBingSpeechAuthorizationToken(''))
+    :
+      dispatch(setSpeechServicesAuthorizationToken('')),
+    [dispatch, ponyfillType]
+  );
+
+  const dispatchConvertSubscriptionKeyToAuthorizationToken = useCallback(() =>
+    ponyfillType === 'bingspeech' ?
+      dispatch(convertBingSpeechSubscriptionKeyToAuthorizationToken())
+    :
+      dispatch(convertSpeechServicesSubscriptionKeyToAuthorizationToken()),
+    [dispatch, ponyfillType]
+  );
+
+  const dispatchSetSubscriptionKey = useCallback(({ target: { value } }) =>
+    ponyfillType === 'bingspeech' ?
+      dispatch(setBingSpeechSubscriptionKey(value))
+    :
+      dispatch(setSpeechServicesSubscriptionKey(value)),
+    [dispatch, ponyfillType]
+  );
+
+  return (
+    <div className="input-group">
+      {
+        authorizationToken ?
+          <React.Fragment>
+            <input
+              className="form-control"
+              disabled={ disabled }
+              readOnly={ true }
+              type="text"
+              value={ authorizationToken }
+            />
+            <div className="input-group-append">
+              <button
+                className="btn btn-outline-secondary"
+                onClick={ dispatchClearAuthorizationToken }
+                type="button"
+              >Clear</button>
+            </div>
+          </React.Fragment>
+        :
+          <React.Fragment>
+            <input
+              className="form-control"
+              disabled={ disabled }
+              onChange={ dispatchSetSubscriptionKey }
+              type="text"
+              value={ subscriptionKey }
+            />
+            <div className="input-group-append">
+              <button
+                className={ classNames('btn btn-outline-secondary', { active: onDemandAuthorizationToken }) }
+                disabled={ disabled }
+                onClick={ dispatchSetOnDemandAuthorizationToken }
+                type="button"
+              >On-demand</button>
+              <button
+                className="btn btn-outline-secondary"
+                disabled={ disabled }
+                onClick={ dispatchConvertSubscriptionKeyToAuthorizationToken }
+                type="button"
+              >Convert to authorization token</button>
+            </div>
+          </React.Fragment>
+      }
+    </div>
+  );
+}
+
+export default SubscriptionKeyInput

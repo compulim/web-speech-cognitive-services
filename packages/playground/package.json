@@ -19,8 +19,6 @@
   "dependencies": {
     "classnames": "^2.2.6",
     "glamor": "^2.20.40",
-    "memoize-one": "^5.0.5",
-    "memoize-one-with-dispose": "^1.0.0",
     "microsoft-speech-browser-sdk": "^0.0.12",
     "on-error-resume-next": "^1.1.0",
     "react": "^16.8.6",
