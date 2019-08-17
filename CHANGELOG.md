@@ -54,6 +54,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added version number as `<meta>` tag, in PR [#20](https://github.com/compulim/web-speech-cognitive-services/pull/20)
 - Added bundle distribution thru https://unpkg.com/web-speech-cognitive-services@latest/umd/, in PR [#21](https://github.com/compulim/web-speech-cognitive-services/pull/21)
 - Bumped to [microsoft-cognitiveservices-speech-sdk@1.6.0](https://www.npmjs.com/package/microsoft-cognitiveservices-speech-sdk), in PR [#22](https://github.com/compulim/web-speech-cognitive-services/pull/22)
+- Fix [#55](https://github.com/compulim/web-speech-cognitive-services/issues/55). Moves to [WHATWG `EventTarget` interface](https://dom.spec.whatwg.org/#interface-eventtarget), in PR [#56](https://github.com/compulim/web-speech-cognitive-services/pulls/56)
 
 ### Fixed
 
