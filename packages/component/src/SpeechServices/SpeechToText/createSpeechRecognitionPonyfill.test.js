@@ -107,6 +107,10 @@ const MOCK_SPEECH_SDK = {
   }
 };
 
+beforeEach(() => {
+  MOCK_SPEECH_SDK.SpeechRecognizer.enableTelemetry = jest.fn();
+});
+
 function createRecognizingEvent(text, { duration = 1, offset = 0 } = {}) {
   return {
     result: {
@@ -1184,5 +1188,39 @@ describe('SpeechRecognition with Custom Speech', () => {
     speechRecognition.start();
 
     expect(recognizer.speechConfig).toHaveProperty('endpointId', '12345678-1234-5678-abcd-12345678abcd');
+  });
+});
+
+describe('SpeechRecognition with telemetry', () => {
+  test('disabled', async () => {
+    const { default: createSpeechRecognitionPonyfill } = require('./createSpeechRecognitionPonyfill');
+    const { SpeechRecognition } = createSpeechRecognitionPonyfill({
+      enableTelemetry: false,
+      region: 'westus',
+      subscriptionKey: 'SUBSCRIPTION_KEY'
+    });
+
+    const speechRecognition = new SpeechRecognition();
+
+    speechRecognition.start();
+
+    expect(MOCK_SPEECH_SDK.SpeechRecognizer.enableTelemetry).toHaveBeenCalledTimes(1);
+    expect(MOCK_SPEECH_SDK.SpeechRecognizer.enableTelemetry).toHaveBeenCalledWith(false);
+  });
+
+  test('enabled', async () => {
+    const { default: createSpeechRecognitionPonyfill } = require('./createSpeechRecognitionPonyfill');
+    const { SpeechRecognition } = createSpeechRecognitionPonyfill({
+      enableTelemetry: true,
+      region: 'westus',
+      subscriptionKey: 'SUBSCRIPTION_KEY'
+    });
+
+    const speechRecognition = new SpeechRecognition();
+
+    speechRecognition.start();
+
+    expect(MOCK_SPEECH_SDK.SpeechRecognizer.enableTelemetry).toHaveBeenCalledTimes(1);
+    expect(MOCK_SPEECH_SDK.SpeechRecognizer.enableTelemetry).toHaveBeenCalledWith(true);
   });
 });
