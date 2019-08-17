@@ -69,7 +69,7 @@ const SpeechRecognitionSimpleEvents = () => {
                     <small>{ event.message }</small>
                   </React.Fragment>
                 : event.type === 'cognitiveservices' ?
-                  <span className="badge badge-light">{ event.type }:{ event.subType }</span>
+                  <span className="badge badge-light">{ event.type }:{ event.data.type }</span>
                 :
                   <span className="badge badge-secondary">{ event.type }</span>
               }

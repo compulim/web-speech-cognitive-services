@@ -179,7 +179,7 @@ function toSnapshot(events) {
     const { type } = event;
 
     if (type === 'cognitiveservices') {
-      const { subType } = event;
+      const { data: { type: subType } } = event;
 
       return `${ type }:${ subType }`;
     } else {
@@ -210,6 +210,14 @@ beforeEach(() => {
       }
     }
   }));
+
+  global.ErrorEvent = class {
+    constructor(type, extras = {}) {
+      this.type = type;
+
+      Object.keys(extras).forEach(name => this[name] = extras[name]);
+    }
+  };
 
   global.window = {
     document: {

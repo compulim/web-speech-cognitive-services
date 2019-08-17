@@ -4,9 +4,10 @@
 /* eslint no-empty-function: "off" */
 /* eslint no-magic-numbers: ["error", { "ignore": [0, 100, 150] }] */
 
+import { defineEventAttribute, EventTarget } from 'event-target-shim';
+
 import cognitiveServiceEventResultToWebSpeechRecognitionResultList from './cognitiveServiceEventResultToWebSpeechRecognitionResultList';
 import createPromiseQueue from '../../Util/createPromiseQueue';
-import DOMEventEmitter from '../../Util/DOMEventEmitter';
 import SpeechGrammarList from './SpeechGrammarList';
 import SpeechSDK from '../SpeechSDK';
 
@@ -76,6 +77,17 @@ function cognitiveServicesAsyncToPromise(fn) {
   return (...args) => new Promise((resolve, reject) => fn(...args, resolve, reject));
 }
 
+class SpeechRecognitionEvent {
+  constructor(type, { data, emma, interpretation, resultIndex, results } = {}) {
+    this.data = data;
+    this.emma = emma;
+    this.interpretation = interpretation;
+    this.resultIndex = resultIndex;
+    this.results = results;
+    this.type = type;
+  }
+}
+
 export default ({
   audioConfig = AudioConfig.fromDefaultMicrophoneInput(),
   authorizationToken,
@@ -98,22 +110,9 @@ export default ({
 
   SpeechRecognizer.enableTelemetry(enableTelemetry);
 
-  class SpeechRecognition extends DOMEventEmitter {
+  class SpeechRecognition extends EventTarget {
     constructor() {
-      super([
-        'audiostart',
-        'soundstart',
-        'speechstart',
-        'speechend',
-        'soundend',
-        'audioend',
-        'result',
-        'nomatch',
-        'error',
-        'start',
-        'end',
-        'cognitiveservices'
-      ]);
+      super();
 
       this._continuous = false;
       this._interimResults = false;
@@ -139,10 +138,12 @@ export default ({
     }
 
     emitCognitiveServices(type, event) {
-      this.emit('cognitiveservices', {
-        ...event,
-        subType: type
-      });
+      this.dispatchEvent(new SpeechRecognitionEvent('cognitiveservices', {
+        data: {
+          ...event,
+          type
+        }
+      }));
     }
 
     get continuous() { return this._continuous; }
@@ -170,7 +171,7 @@ export default ({
 
     start() {
       this._startOnce().catch(err => {
-        this.emit('error', { error: err, message: err && err.message });
+        this.dispatchEvent(new ErrorEvent('error', { error: err, message: err && err.message }));
       });
     }
 
@@ -317,14 +318,14 @@ export default ({
         }
 
         if (!loop) {
-          this.emit('start');
+          this.dispatchEvent(new SpeechRecognitionEvent('start'));
         }
 
         if (errorMessage) {
           if (/1006/u.test(errorMessage)) {
             if (!audioStarted) {
-              this.emit('audiostart');
-              this.emit('audioend');
+              this.dispatchEvent(new SpeechRecognitionEvent('audiostart'));
+              this.dispatchEvent(new SpeechRecognitionEvent('audioend'));
             }
 
             finalEvent = {
@@ -356,18 +357,18 @@ export default ({
 
           await cognitiveServicesAsyncToPromise(recognizer.stopContinuousRecognitionAsync.bind(recognizer))();
         } else if (audioSourceReady) {
-          this.emit('audiostart');
+          this.dispatchEvent(new SpeechRecognitionEvent('audiostart'));
 
           audioStarted = true;
         } else if (firstAudibleChunk) {
-          this.emit('soundstart');
+          this.dispatchEvent(new SpeechRecognitionEvent('soundstart'));
 
           soundStarted = true;
         } else if (audioSourceOff) {
           stopping = true;
-          speechStarted && this.emit('speechend');
-          soundStarted && this.emit('soundend');
-          audioStarted && this.emit('audioend');
+          speechStarted && this.dispatchEvent(new SpeechRecognitionEvent('speechend'));
+          soundStarted && this.dispatchEvent(new SpeechRecognitionEvent('soundend'));
+          audioStarted && this.dispatchEvent(new SpeechRecognitionEvent('audioend'));
 
           audioStarted = soundStarted = speechStarted = false;
 
@@ -380,19 +381,19 @@ export default ({
         } else if (recognized || recognizing) {
           if (!audioStarted) {
             // Unconfirmed prevention of quirks
-            this.emit('audiostart');
+            this.dispatchEvent(new SpeechRecognitionEvent('audiostart'));
 
             audioStarted = true;
           }
 
           if (!soundStarted) {
-            this.emit('soundstart');
+            this.dispatchEvent(new SpeechRecognitionEvent('soundstart'));
 
             soundStarted = true;
           }
 
           if (!speechStarted) {
-            this.emit('speechstart');
+            this.dispatchEvent(new SpeechRecognitionEvent('speechstart'));
 
             speechStarted = true;
           }
@@ -411,9 +412,9 @@ export default ({
             if (recognizable) {
               finalizedResults = [...finalizedResults, result];
 
-              this.continuous && this.emit('result', {
+              this.continuous && this.dispatchEvent(new SpeechRecognitionEvent('result', {
                 results: finalizedResults
-              });
+              }));
             }
 
             if (!this.continuous) {
@@ -425,7 +426,7 @@ export default ({
               recognizer.stopContinuousRecognitionAsync();
             }
           } else if (recognizing) {
-            this.interimResults && this.emit('result', {
+            this.interimResults && this.dispatchEvent(new SpeechRecognitionEvent('result', {
               results: [
                 ...finalizedResults,
                 cognitiveServiceEventResultToWebSpeechRecognitionResultList(
@@ -436,21 +437,21 @@ export default ({
                   }
                 )
               ]
-            });
+            }));
           }
         }
       }
 
       if (speechStarted) {
-        this.emit('speechend');
+        this.dispatchEvent(new SpeechRecognitionEvent('speechend'));
       }
 
       if (soundStarted) {
-        this.emit('soundend');
+        this.dispatchEvent(new SpeechRecognitionEvent('soundend'));
       }
 
       if (audioStarted) {
-        this.emit('audioend');
+        this.dispatchEvent(new SpeechRecognitionEvent('audioend'));
       }
 
       if (finalEvent) {
@@ -461,12 +462,16 @@ export default ({
           };
         }
 
-        this.emit(finalEvent.type, finalEvent);
+        if (finalEvent.type === 'error') {
+          this.dispatchEvent(new ErrorEvent('error', finalEvent));
+        } else {
+          this.dispatchEvent(new SpeechRecognitionEvent(finalEvent.type, finalEvent));
+        }
       }
 
       // Even though there is no "start" event emitted, we will still emit "end" event
       // This is mainly for "microphone blocked" story.
-      this.emit('end');
+      this.dispatchEvent(new SpeechRecognitionEvent('end'));
 
       detachAudioConfigEvent();
       recognizer.dispose();
@@ -475,8 +480,27 @@ export default ({
     stop() {}
   }
 
+  defineEventAttribute(
+    SpeechRecognition.prototype,
+    [
+      'audioend',
+      'audiostart',
+      'cognitiveservices',
+      'end',
+      'error',
+      'nomatch',
+      'result',
+      'soundend',
+      'soundstart',
+      'speechend',
+      'speechstart',
+      'start'
+    ]
+  );
+
   return {
     SpeechGrammarList,
-    SpeechRecognition
+    SpeechRecognition,
+    SpeechRecognitionEvent
   };
 }

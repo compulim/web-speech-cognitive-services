@@ -72,7 +72,7 @@ export default function (event) {
       break;
 
     case 'cognitiveservices':
-      serializedEvent = { ...event, target: undefined };
+      serializedEvent = { data: event.data, type: 'cognitiveservices' };
       break;
 
     default:

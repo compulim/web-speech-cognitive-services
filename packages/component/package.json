@@ -73,6 +73,7 @@
     "base64-arraybuffer": "^0.2.0",
     "eslint": "^6.1.0",
     "event-as-promise": "^1.0.5",
+    "event-target-shim": "^5.0.1",
     "events": "^3.0.0",
     "memoize-one": "^5.0.5",
     "microsoft-cognitiveservices-speech-sdk": "1.6.0",
