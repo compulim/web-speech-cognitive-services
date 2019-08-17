@@ -211,6 +211,14 @@ beforeEach(() => {
     }
   }));
 
+  global.ErrorEvent = class {
+    constructor(type, extras = {}) {
+      this.type = type;
+
+      Object.keys(extras).forEach(name => this[name] = extras[name]);
+    }
+  };
+
   global.window = {
     document: {
       documentElement: {

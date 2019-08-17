@@ -463,7 +463,7 @@ export default ({
         }
 
         if (finalEvent.type === 'error') {
-          this.dispatchEvent(new ErrorEvent('error', ...finalEvent));
+          this.dispatchEvent(new ErrorEvent('error', finalEvent));
         } else {
           this.dispatchEvent(new SpeechRecognitionEvent(finalEvent.type, finalEvent));
         }
