@@ -33,7 +33,7 @@
     "clean": "rimraf lib",
     "eslint": "eslint src/**/*.js",
     "prepublishOnly": "npm run eslint && npm run build",
-    "start": "npm run build:babel -- --verbose --watch",
+    "start": "npm run build -- --verbose --watch",
     "test": "jest"
   },
   "author": "William Wong <compulim@hotmail.com> (http://compulim.info/)",
