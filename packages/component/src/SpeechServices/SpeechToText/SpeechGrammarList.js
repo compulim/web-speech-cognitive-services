@@ -1,3 +1,5 @@
+/* eslint class-methods-use-this: "off" */
+
 export default class {
   constructor() {
     this._phrases = [];

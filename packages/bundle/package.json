@@ -10,13 +10,15 @@
     "build:webpack:development": "webpack --config webpack-instrumented.config.js",
     "build:webpack:production": "webpack",
     "clean": "rimraf dist",
-    "prepublishOnly": "npm run build",
+    "eslint": "eslint src/**/*.js",
+    "prepublishOnly": "npm run eslint && npm run build",
     "start": "npm run build && concurrently --kill-others --names \"babel,webpack\" \"npm run start:babel\" \"npm run start:webpack\"",
     "start:babel": "npm run build:babel -- --watch",
     "start:webpack": "webpack --config webpack-watch.config.js --watch"
   },
   "dependencies": {
     "@babel/runtime": "^7.5.5",
+    "eslint": "^6.1.0",
     "web-speech-cognitive-services": "^4.0.1-0"
   },
   "devDependencies": {

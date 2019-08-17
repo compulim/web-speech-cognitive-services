@@ -31,6 +31,8 @@
   "scripts": {
     "build": "babel --out-dir lib --ignore **/*.spec.js,**/*.test.js --source-maps true src/",
     "clean": "rimraf lib",
+    "eslint": "eslint src/**/*.js",
+    "prepublishOnly": "npm run eslint && npm run build",
     "start": "npm run build -- --verbose --watch",
     "test": "jest"
   },
@@ -69,10 +71,12 @@
   "dependencies": {
     "@babel/runtime": "^7.5.5",
     "base64-arraybuffer": "^0.2.0",
+    "eslint": "^6.1.0",
     "event-as-promise": "^1.0.5",
     "events": "^3.0.0",
     "memoize-one": "^5.0.5",
     "microsoft-cognitiveservices-speech-sdk": "1.6.0",
+    "on-error-resume-next": "^1.1.0",
     "simple-update-in": "^2.1.0"
   }
 }

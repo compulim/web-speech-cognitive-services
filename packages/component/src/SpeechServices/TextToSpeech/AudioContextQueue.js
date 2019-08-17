@@ -1,3 +1,5 @@
+/* eslint no-await-in-loop: "off" */
+
 import memoize from 'memoize-one';
 
 import AudioContextConsumer from './AudioContextConsumer';

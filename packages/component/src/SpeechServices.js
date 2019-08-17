@@ -1,3 +1,5 @@
+/* global process */
+
 import createSpeechRecognitionPonyfill from './SpeechServices/SpeechToText';
 import createSpeechSynthesisPonyfill from './SpeechServices/TextToSpeech';
 import fetchAuthorizationToken from './SpeechServices/fetchAuthorizationToken';
@@ -16,7 +18,7 @@ export default function createSpeechServicesPonyfill(...args) {
       resolve(ponyfill);
     }
   };
-};
+}
 
 export {
   createSpeechRecognitionPonyfill,

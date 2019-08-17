@@ -18,9 +18,9 @@ export default function () {
   const shift = () => {
     if (queue.length) {
       return Promise.resolve(queue.shift());
-    } else {
-      return (shiftDeferred || (shiftDeferred = createDeferred())).promise;
     }
+
+    return (shiftDeferred || (shiftDeferred = createDeferred())).promise;
   };
 
   return {
