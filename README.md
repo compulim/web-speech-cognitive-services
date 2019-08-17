@@ -24,7 +24,9 @@ This package will polyfill Web Speech API by turning Cognitive Services Speech S
 
 Speech recognition requires WebRTC API and the page must hosted thru HTTPS or `localhost`. Although iOS 12 support WebRTC, native apps using `WKWebView` do not support WebRTC.
 
-Speech synthesis requires Web Audio API. For Safari, user gesture (click or tap) is required to play audio clips using Web Audio API. To ready the Web Audio API to use without user gesture, you can synthesize an empty string.
+### Special requirement for Safari
+
+Speech synthesis requires Web Audio API. For Safari, user gesture (click or tap) is required to play audio clips using Web Audio API. To ready the Web Audio API to use without user gesture, you can synthesize an empty string, which will not trigger any network calls but playing an empty hardcoded short audio clip. If you already have a "primed" `AudioContext` object, you can also pass it as an option.
 
 # How to use
 
@@ -66,6 +68,8 @@ In the sample below, we use the bundle to perform text-to-speech with a voice na
 ```
 
 > We do not host the bundle. You should always use [Subresource Integrity](https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity) to protect bundle integrity when loading from a third-party CDN.
+
+The `voiceschanged` event come shortly after you created the ponyfill. You will need to wait until the event arrived before able to choose a voice for your utterance.
 
 ## Install from NPM
 
@@ -247,39 +251,6 @@ export default props =>
   </DictateButton>
 ```
 
-### Speech priming (a.k.a. grammars)
-
-> This section is currently not implemented with new Speech SDK. We are leaving the section here for future reference.
-
-You can prime the speech recognition by giving a list of words.
-
-Since Cognitive Services does not works with weighted grammars, we built another `SpeechGrammarList` to better fit the scenario.
-
-```jsx
-import createPonyfill from 'web-speech-cognitive-services/lib/SpeechServices';
-
-const {
-  SpeechGrammarList,
-  SpeechRecognition
-} = await createPonyfill({
-  region: 'westus',
-  subscriptionKey: 'YOUR_SUBSCRIPTION_KEY'
-});
-
-const recognition = new SpeechRecognition();
-
-recognition.grammars = new SpeechGrammarList();
-recognition.grammars.phrases = ['Tuen Mun', 'Yuen Long'];
-
-recognition.onresult = ({ results }) => {
-  console.log(results);
-};
-
-recognition.start();
-```
-
-> Note: you can also pass `grammars` to `react-dictate-button` via `extra` props.
-
 ## Speech synthesis (text-to-speech)
 
 ```jsx
@@ -384,6 +355,35 @@ const ponyfill = await createPonyfill({
 ## Lexical and ITN support
 
 [Lexical and ITN support](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/rest-apis#response-parameters) is unique in Cognitive Services Speech Services. Our adapter added additional properties `transcriptITN`, `transcriptLexical`, and `transcriptMaskedITN` to surface the result, in addition to `transcript` and `confidence`.
+
+## Biasing towards some words for recognition
+
+In some cases, you may want the speech recognition engine to be biased towards "Bellevue" because it is not trivial for the engine to recognize between "Bellevue", "Bellview" and "Bellvue" (without "e"). By giving a list of words, teh speech recognition engine will be more biased to your choice of words.
+
+Since Cognitive Services does not works with weighted grammars, we built another `SpeechGrammarList` to better fit the scenario.
+
+```jsx
+import createPonyfill from 'web-speech-cognitive-services/lib/SpeechServices';
+
+const {
+  SpeechGrammarList,
+  SpeechRecognition
+} = await createPonyfill({
+  region: 'westus',
+  subscriptionKey: 'YOUR_SUBSCRIPTION_KEY'
+});
+
+const recognition = new SpeechRecognition();
+
+recognition.grammars = new SpeechGrammarList();
+recognition.grammars.phrases = ['Tuen Mun', 'Yuen Long'];
+
+recognition.onresult = ({ results }) => {
+  console.log(results);
+};
+
+recognition.start();
+```
 
 ## Custom Speech support
 
