@@ -41,7 +41,7 @@ const SpeechSynthesisTextBox = () => {
 
   const handleEnglishSSMLClick = useCallback(() => {
     dispatchSetSpeechSynthesisText('<speak version="1.0" xml:lang="en-US"><voice xml:lang="en-US" name="Microsoft Server Speech Text to Speech Voice (en-US, Guy24kRUS)"><prosody pitch="+20%" rate="+20%" volume="0%">Pooh is very social. After Christopher Robin, his closest friend is Piglet, and he most often chooses to spend his time with one or both of them.</prosody></voice></speak>')
-  }, [dispatchSetSpeechSynthesisText, dispatchSetSpeechSynthesisVoice]);
+  }, [dispatchSetSpeechSynthesisText]);
 
   const handleTextChange = useCallback(({ target: { value } }) => dispatchSetSpeechSynthesisText(value), [dispatchSetSpeechSynthesisText]);
 
