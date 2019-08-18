@@ -18,7 +18,7 @@ const SpeechSynthesisDeploymentIdInput = () => {
   return (
     <input
       className="form-control"
-      disabled={ ponyfillCapabilities.customVoice }
+      disabled={ !ponyfillCapabilities.customVoice }
       onChange={ dispatchSetSpeechSynthesisDeploymentId }
       type="text"
       value={ speechSynthesisDeploymentId }
