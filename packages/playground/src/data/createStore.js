@@ -10,6 +10,7 @@ function loadState() {
   const urlSearchParams = new URLSearchParams(window.location.search);
   const bingSpeechSubscriptionKeyFromURL = urlSearchParams.get('bs');
   const speechServicesSubscriptionKeyFromURL = urlSearchParams.get('ss');
+  const regionFromURL = urlSearchParams.get('r');
 
   if (bingSpeechSubscriptionKeyFromURL) {
     state.bingSpeechSubscriptionKey = bingSpeechSubscriptionKeyFromURL;
@@ -17,6 +18,10 @@ function loadState() {
 
   if (speechServicesSubscriptionKeyFromURL) {
     state.speechServicesSubscriptionKey = speechServicesSubscriptionKeyFromURL;
+  }
+
+  if (regionFromURL) {
+    state.region = regionFromURL;
   }
 
   return state;
