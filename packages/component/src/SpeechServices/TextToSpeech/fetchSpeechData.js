@@ -1,5 +1,6 @@
 import { decode } from 'base64-arraybuffer';
 import buildSSML from './buildSSML';
+import isSSML from './isSSML';
 
 const DEFAULT_LANGUAGE = 'en-US';
 const DEFAULT_VOICE = 'Microsoft Server Speech Text to Speech Voice (en-US, JessaRUS)'
@@ -25,7 +26,7 @@ export default async function ({
   }
 
   const authorizationToken = await authorizationTokenPromise;
-  const ssml = buildSSML({ lang, pitch, rate, text, voice, volume });
+  const ssml = isSSML(text) ? text : buildSSML({ lang, pitch, rate, text, voice, volume });
 
   // Although calling encodeURI on hostname does not actually works, it fails faster and safer.
   const url = deploymentId ?
