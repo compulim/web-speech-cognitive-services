@@ -40,7 +40,7 @@ Array [
 ]
 `;
 
-exports[`SpeechRecognition in continuous mode stop after recognized 2 speeches 1`] = `
+exports[`SpeechRecognition in continuous mode stop after recognized 1 speech and 1 ongoing 1`] = `
 Array [
   "cognitiveservices:audioSourceReady",
   "webspeech:start",
@@ -52,9 +52,9 @@ Array [
   "webspeech:result ['hello']",
   "cognitiveservices:recognized",
   "webspeech:result ['Hello.' (isFinal)]",
+  "cognitiveservices:stop",
   "cognitiveservices:recognized",
   "webspeech:result ['Hello.' (isFinal), 'World.' (isFinal)]",
-  "cognitiveservices:stop",
   "cognitiveservices:audioSourceOff",
   "webspeech:speechend",
   "webspeech:soundend",
@@ -97,6 +97,7 @@ Array [
   "webspeech:speechend",
   "webspeech:soundend",
   "webspeech:audioend",
+  "webspeech:error { error: 'no-speech' }",
   "webspeech:end",
 ]
 `;
