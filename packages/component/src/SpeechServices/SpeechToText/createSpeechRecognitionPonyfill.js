@@ -108,6 +108,38 @@ export default ({
     return {};
   }
 
+  let onAudibleChunk;
+  let muted;
+
+  // We modify "attach" function and detect when audible chunk is read.
+  // We will only modify "attach" function once.
+  audioConfig.attach = improviseAsync(
+    audioConfig.attach.bind(audioConfig),
+    reader => ({
+      ...reader,
+      read: improviseAsync(
+        reader.read.bind(reader),
+        chunk => {
+          // The magic number 150 is measured by:
+          // 1. Set microphone volume to 0
+          // 2. Observe the amplitude (100-110) for the first few chunks
+          //    (This is short static caught when turning on the microphone)
+          // 3. Set the number a bit higher than the observation
+
+          if (averageAmplitude(chunk.buffer) > 150) {
+            onAudibleChunk && onAudibleChunk();
+          }
+
+          if (muted) {
+            return { buffer: new ArrayBuffer(0), isEnd: true, timeReceived: Date.now() };
+          }
+
+          return chunk;
+        }
+      )
+    })
+  );
+
   SpeechRecognizer.enableTelemetry(enableTelemetry);
 
   class SpeechRecognition extends EventTarget {
@@ -183,34 +215,12 @@ export default ({
       let speechStarted;
       let stopping;
 
-      // We modify "attach" function and detect when the first chunk is read.
-      recognizer.audioConfig.attach = improviseAsync(
-        recognizer.audioConfig.attach.bind(recognizer.audioConfig),
-        reader => {
-          let firstAudibleChunkEmitted;
+      muted = false;
 
-          return {
-            ...reader,
-            read: improviseAsync(
-              reader.read.bind(reader),
-              chunk => {
-                // The magic number 150 is measured by:
-                // 1. Set microphone volume to 0
-                // 2. Observe the amplitude (100-110) for the first few chunks
-                //    (This is short static caught when turning on the microphone)
-                // 3. Set the number a bit higher than the observation
-
-                if (!firstAudibleChunkEmitted && averageAmplitude(chunk.buffer) > 150) {
-                  queue.push({ firstAudibleChunk: {} });
-                  firstAudibleChunkEmitted = true;
-                }
-
-                return chunk;
-              }
-            )
-          };
-        }
-      );
+      onAudibleChunk = () => {
+        queue.push({ firstAudibleChunk: {} });
+        onAudibleChunk = null;
+      };
 
       const { detach: detachAudioConfigEvent } = recognizer.audioConfig.events.attach(event => {
         const { name } = event;
@@ -346,16 +356,16 @@ export default ({
               error: 'aborted',
               type: 'error'
             };
-          } else if (finalizedResults.length) {
-            finalEvent = {
-              results: finalizedResults,
-              type: 'result'
-            };
+          } else {
+            // When we set to mute and { isEnd: true }, Speech Services will send us "recognized" event.
+            muted = true;
           }
 
           stopping = true;
 
-          await cognitiveServicesAsyncToPromise(recognizer.stopContinuousRecognitionAsync.bind(recognizer))();
+          if (abort) {
+            await cognitiveServicesAsyncToPromise(recognizer.stopContinuousRecognitionAsync.bind(recognizer))();
+          }
         } else if (audioSourceReady) {
           this.dispatchEvent(new SpeechRecognitionEvent('audiostart'));
 
@@ -417,12 +427,12 @@ export default ({
               }));
             }
 
-            if (!this.continuous) {
-              finalEvent = {
-                results: finalizedResults,
-                type: 'result'
-              };
+            finalEvent = {
+              results: finalizedResults,
+              type: 'result'
+            };
 
+            if (!this.continuous) {
               recognizer.stopContinuousRecognitionAsync();
             }
           } else if (recognizing) {
@@ -441,6 +451,8 @@ export default ({
           }
         }
       }
+
+      onAudibleChunk = null;
 
       if (speechStarted) {
         this.dispatchEvent(new SpeechRecognitionEvent('speechend'));

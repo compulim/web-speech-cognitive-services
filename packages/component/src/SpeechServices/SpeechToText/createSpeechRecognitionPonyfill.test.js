@@ -715,6 +715,7 @@ describe('SpeechRecognition', () => {
       // webspeech:speechend
       // webspeech:soundend
       // webspeech:audioend
+      // webspeech:error { error: 'no-speech' }
       // webspeech:end
 
       await endEventEmitted;
@@ -765,7 +766,7 @@ describe('SpeechRecognition', () => {
       expect(toSnapshot(events)).toMatchSnapshot();
     });
 
-    test('stop after recognized 2 speeches', async () => {
+    test('stop after recognized 1 speech and 1 ongoing', async () => {
       speechRecognition.start();
       speechRecognition.continuous = true;
       speechRecognition.interimResults = true;
@@ -796,14 +797,14 @@ describe('SpeechRecognition', () => {
       // cognitiveservices:recognized
       // webspeech:result ['Hello.' (isFinal)]
 
+      speechRecognition.stop();
+
+      // cognitiveservices:stop
+
       recognizer.recognized(this, createRecognizedEvent('World.'));
 
       // cognitiveservices:recognized
       // webspeech:result ['Hello.' (isFinal), 'World.' (isFinal)]
-
-      speechRecognition.stop();
-
-      // cognitiveservices:stop
 
       recognizer.audioConfig.emitEvent('AudioSourceOffEvent');
 
