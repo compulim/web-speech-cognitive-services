@@ -2,6 +2,7 @@ import { call, cancel, fork, join, put, race, select, take } from 'redux-saga/ef
 
 import addSpeechRecognitionEvent from '../actions/addSpeechRecognitionEvent';
 import clearSpeechRecognitionEvent from '../actions/clearSpeechRecognitionEvent';
+import getPonyfillCapabilities from '../../getPonyfillCapabilities';
 
 import { ABORT_SPEECH_RECOGNITION } from '../actions/abortSpeechRecognition';
 import { START_SPEECH_RECOGNITION } from '../actions/startSpeechRecognition';
@@ -63,8 +64,10 @@ function* startSpeechRecognition({ getCancelReason }) {
     speechRecognition.interimResults = interimResults;
     speechRecognition.lang = language;
 
+    const ponyfillCapabilities = getPonyfillCapabilities(ponyfillType);
+
     // TODO: Cognitive Services currently does not return multiple alternatives
-    if (ponyfillType === 'browser') {
+    if (ponyfillCapabilities.maxAlternatives) {
       speechRecognition.maxAlternatives = maxAlternatives;
     }
 

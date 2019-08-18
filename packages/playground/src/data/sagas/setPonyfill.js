@@ -103,7 +103,8 @@ function* setPonyfillSaga() {
       textNormalization
     };
 
-    const ponyfill = createSpeechServicesPonyfill(
+    const createPonyfill = ponyfillType === 'speechservices:bundle' ? window.WebSpeechCognitiveServices.create : createSpeechServicesPonyfill;
+    const ponyfill = createPonyfill(
       speechServicesAuthorizationToken ?
         { ...options, authorizationToken: speechServicesAuthorizationToken }
       :

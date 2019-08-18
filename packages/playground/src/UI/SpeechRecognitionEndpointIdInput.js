@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import React, { useCallback } from 'react';
 
+import getPonyfillCapabilities from '../getPonyfillCapabilities';
 import setSpeechRecognitionEndpointId from '../data/actions/setSpeechRecognitionEndpointId';
 
 const SpeechRecognitionEndpointIdInput = () => {
@@ -12,11 +13,12 @@ const SpeechRecognitionEndpointIdInput = () => {
 
   const dispatch = useDispatch();
   const dispatchSetSpeechRecognitionEndpointId = useCallback(({ target: { value } }) => dispatch(setSpeechRecognitionEndpointId(value)), [dispatch]);
+  const ponyfillCapabilities = getPonyfillCapabilities(ponyfillType);
 
   return (
     <input
       className="form-control"
-      disabled={ ponyfillType === 'browser' || ponyfillType === 'bingspeech' }
+      disabled={ !ponyfillCapabilities.customSpeech }
       onChange={ dispatchSetSpeechRecognitionEndpointId }
       type="text"
       value={ speechRecognitionEndpointId }

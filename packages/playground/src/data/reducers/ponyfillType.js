@@ -1,18 +1,22 @@
 import { SET_PONYFILL_TYPE } from '../actions/setPonyfillType';
 
-export default function (state = 'speechservices', { payload, type }) {
+export default function (state = 'speechservices:npm', { payload, type }) {
   if (type === SET_PONYFILL_TYPE) {
     switch (payload.ponyfillType) {
       case 'bingspeech':
         state = 'bingspeech';
         break;
 
-      case 'speechservices':
-        state = 'speechservices';
+      case 'browser':
+        state = 'browser';
+        break;
+
+      case 'speechservices:bundle':
+        state = 'speechservices:bundle';
         break;
 
       default:
-        state = 'browser';
+        state = 'speechservices:npm';
         break;
     }
   }

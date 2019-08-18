@@ -11,6 +11,7 @@ import startSpeechRecognition from '../data/actions/startSpeechRecognition';
 import stopSpeechRecognition from '../data/actions/stopSpeechRecognition';
 
 import clearSpeechRecognitionEvent from '../data/actions/clearSpeechRecognitionEvent';
+import getPonyfillCapabilities from '../getPonyfillCapabilities';
 import setSpeechRecognitionContinuous from '../data/actions/setSpeechRecognitionContinuous';
 import setSpeechRecognitionInterimResults from '../data/actions/setSpeechRecognitionInterimResults';
 import setSpeechRecognitionMaxAlternatives from '../data/actions/setSpeechRecognitionMaxAlternatives';
@@ -65,6 +66,8 @@ const SpeechRecognitionCommands = () => {
 
   useMemo(() => setPhrasesString(phrases.join(', ')), [phrases]);
   useMemo(() => setReferenceGrammarsString(referenceGrammars.join(', ')), [referenceGrammars]);
+
+  const ponyfillCapabilities = getPonyfillCapabilities(ponyfillType);
 
   return (
     <React.Fragment>
@@ -125,9 +128,9 @@ const SpeechRecognitionCommands = () => {
         &nbsp;
         <div className="form-group-inline">
           <Select
-            disabled={ started || (ponyfillType !== 'browser' && ponyfillType !== 'speechservices') }
+            disabled={ started || !ponyfillCapabilities.maxAlternatives }
             onChange={ dispatchSetSpeechRecognitionMaxAlternatives }
-            value={ (ponyfillType === 'browser' || ponyfillType === 'speechservices') ? maxAlternatives : 1 }
+            value={ ponyfillCapabilities.maxAlternatives ? maxAlternatives : 1 }
           >
             <Option text="One alternative" value="1" />
             <Option text="3 alternatives" value="3" />
@@ -172,7 +175,7 @@ const SpeechRecognitionCommands = () => {
           <input
             aria-label="Phrases for recognition"
             className="form-control"
-            disabled={ started || (ponyfillType !== 'browser' && ponyfillType !== 'speechservices') }
+            disabled={ started || !ponyfillCapabilities.dynamicPhrases }
             onBlur={ () => dispatchSetSpeechRecognitionPhrases(phrasesString.split(/[,;|]/gu).map(value => value.trim()).filter(value => value)) }
             onChange={ ({ target: { value } }) => setPhrasesString(value) }
             type="text"
@@ -184,7 +187,7 @@ const SpeechRecognitionCommands = () => {
           <input
             aria-label="Reference grammars for recognition"
             className="form-control"
-            disabled={ started || (ponyfillType !== 'browser' && ponyfillType !== 'speechservices') }
+            disabled={ started || !ponyfillCapabilities.referenceGrammarId }
             onBlur={ () => dispatchSetSpeechRecognitionReferenceGrammars(referenceGrammarsString.split(/[,;|]/gu).map(value => value.trim()).filter(value => value)) }
             onChange={ ({ target: { value } }) => setReferenceGrammarsString(value) }
             type="text"
