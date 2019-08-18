@@ -4,6 +4,7 @@ import React, { useCallback } from 'react';
 
 import convertBingSpeechSubscriptionKeyToAuthorizationToken from '../data/actions/convertBingSpeechSubscriptionKeyToAuthorizationToken';
 import convertSpeechServicesSubscriptionKeyToAuthorizationToken from '../data/actions/convertSpeechServicesSubscriptionKeyToAuthorizationToken';
+import getPonyfillCapabilities from '../getPonyfillCapabilities';
 import setBingSpeechAuthorizationToken from '../data/actions/setBingSpeechAuthorizationToken';
 import setBingSpeechSubscriptionKey from '../data/actions/setBingSpeechSubscriptionKey';
 import setOnDemandAuthorizationToken from '../data/actions/setOnDemandAuthorizationToken';
@@ -26,7 +27,7 @@ const SubscriptionKeyInput = () => {
     speechServicesSubscriptionKey
   }) => ({
     authorizationToken: ponyfillType === 'bingspeech' ? bingSpeechAuthorizationToken : speechServicesAuthorizationToken,
-    disabled: ponyfillType === 'browser',
+    disabled: getPonyfillCapabilities(ponyfillType).browser,
     onDemandAuthorizationToken,
     ponyfillType,
     subscriptionKey: ponyfillType === 'bingspeech' ? bingSpeechSubscriptionKey : speechServicesSubscriptionKey

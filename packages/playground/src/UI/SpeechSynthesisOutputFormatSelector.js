@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import React, { useCallback } from 'react';
 
+import getPonyfillCapabilities from '../getPonyfillCapabilities';
 import Select, { Option } from '../Bootstrap/Select';
 import setSpeechSynthesisOutputFormat from '../data/actions/setSpeechSynthesisOutputFormat';
 
@@ -13,10 +14,11 @@ const SpeechSynthesisOutputFormatSelector = () => {
 
   const dispatch = useDispatch();
   const dispatchSetSpeechSynthesisOutputFormat = useCallback(value => dispatch(setSpeechSynthesisOutputFormat(value)), [dispatch]);
+  const ponyfillCapabilities = getPonyfillCapabilities(ponyfillType);
 
   return (
     <Select
-      disabled={ ponyfillType === 'browser' || ponyfillType === 'bingspeech' }
+      disabled={ !ponyfillCapabilities.speechServices }
       onChange={ dispatchSetSpeechSynthesisOutputFormat }
       value={ speechSynthesisOutputFormat }
     >

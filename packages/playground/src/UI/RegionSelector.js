@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import React, { useCallback } from 'react';
 
+import getPonyfillCapabilities from '../getPonyfillCapabilities';
 import Select, { Option } from '../Bootstrap/Select';
 import setRegion from '../data/actions/setRegion';
 
@@ -13,10 +14,11 @@ const RegionSelector = () => {
 
   const dispatch = useDispatch();
   const dispatchSetRegion = useCallback(value => dispatch(setRegion(value)), [dispatch]);
+  const ponyfillCapabilities = getPonyfillCapabilities(ponyfillType);
 
   return (
     <Select
-      disabled={ ponyfillType !== 'speechservices' }
+      disabled={ !ponyfillCapabilities.speechServices }
       onChange={ dispatchSetRegion }
       value={ region }
     >
