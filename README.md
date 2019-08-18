@@ -6,19 +6,21 @@ Web Speech API adapter to use Cognitive Services Speech Services for both speech
 
 [![npm version](https://badge.fury.io/js/web-speech-cognitive-services.svg)](https://badge.fury.io/js/web-speech-cognitive-services) [![Build Status](https://travis-ci.org/compulim/web-speech-cognitive-services.svg?branch=master)](https://travis-ci.org/compulim/web-speech-cognitive-services)
 
+# Description
+
+Speech technologies enables a lot of interesting scenarios, including Intelligent Personal Assistant and provide alternative inputs for assistive technologies.
+
+Although W3C standardized speech technologies in browser, speech-to-text and text-to-speech support are still scarce. However, cloud-based speech technologies are very mature.
+
+This polyfill provides W3C [Speech Recognition](https://developer.mozilla.org/en-US/docs/Web/API/SpeechRecognition) and [Speech Synthesis](https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesis) API in browser by using [Azure Cognitive Services Speech Services](https://azure.microsoft.com/en-us/services/cognitive-services/speech-services/). This will bring speech technologies to all modern first-party browsers available on both PC and mobile platforms.
+
 # Demo
 
-Try out our demo at https://compulim.github.io/web-speech-cognitive-services?s=your-subscription-key.
+> Before getting started, please obtain a Cognitive Services subscription key from your Azure subscription.
+
+Try out our demo at https://compulim.github.io/web-speech-cognitive-services. If you don't have a subscription key, you can still try out our demo in a speech-supported browser.
 
 We use [`react-dictate-button`](https://github.com/compulim/react-dictate-button/) and [`react-say`](https://github.com/compulim/react-say/) to quickly setup the playground.
-
-# Background
-
-Web Speech API is not widely adopted on popular browsers and platforms. Polyfilling the API using cloud services is a great way to enable wider adoption. Nonetheless, Web Speech API in Google Chrome is also backed by cloud services.
-
-Microsoft Azure [Cognitive Services Speech Services](https://azure.microsoft.com/en-us/services/cognitive-services/speech-services/) service provide speech recognition with great accuracy. But unfortunately, the APIs are not based on Web Speech API.
-
-This package will polyfill Web Speech API by turning Cognitive Services Speech Services API into Web Speech API. We test this package with popular combination of platforms and browsers.
 
 ## Browser requirements
 
@@ -436,12 +438,9 @@ For detailed test matrix, please refer to [`SPEC-RECOGNITION.md`](SPEC-RECOGNITI
       * We always return `0.5` for interim results
    * Cognitive Services support grammar list but not in JSGF format, more work to be done in this area
       * Although Google Chrome support grammar list, it seems the grammar list is not used at all
-   * Continuous mode
-      * `stop()` is same as `abort()`
-      * If `stop()` is called before first `recognized` event, there will be no final result
 * Speech synthesis
    * `onboundary`, `onmark`, `onpause`, and `onresume` are not supported/fired
-   * `pause` will pause immediately and do not pause on word breaks
+   * `pause` will pause immediately and do not pause on word breaks due to lack of boundary
 
 # Roadmap
 
