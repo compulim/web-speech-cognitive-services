@@ -13,6 +13,7 @@
     "build": "react-scripts build",
     "clean": "npx rimraf build",
     "eject": "react-scripts eject",
+    "prepublishOnly": "npm run build",
     "start": "react-scripts start",
     "test": "react-scripts test --env=jsdom"
   },
