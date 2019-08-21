@@ -5,6 +5,7 @@ import EventAsPromise from 'event-as-promise';
 
 import fetchSpeechData from './fetchSpeechData';
 import SpeechSynthesisEvent from './SpeechSynthesisEvent';
+import SpeechSynthesisVoice from './SpeechSynthesisVoice';
 import subscribeEvent from './subscribeEvent';
 
 function asyncDecodeAudioData(audioContext, arrayBuffer) {
@@ -129,15 +130,10 @@ export default class extends EventTarget {
   }
 }
 
-defineEventAttribute(
-  SpeechSynthesisUtterance.prototype,
-  [
-    'boundary',
-    'end',
-    'error',
-    'mark',
-    'pause',
-    'resume',
-    'start'
-  ]
-);
+defineEventAttribute(SpeechSynthesisUtterance.prototype, 'boundary');
+defineEventAttribute(SpeechSynthesisUtterance.prototype, 'end');
+defineEventAttribute(SpeechSynthesisUtterance.prototype, 'error');
+defineEventAttribute(SpeechSynthesisUtterance.prototype, 'mark');
+defineEventAttribute(SpeechSynthesisUtterance.prototype, 'pause');
+defineEventAttribute(SpeechSynthesisUtterance.prototype, 'resume');
+defineEventAttribute(SpeechSynthesisUtterance.prototype, 'start');
