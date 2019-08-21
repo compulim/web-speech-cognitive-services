@@ -492,23 +492,18 @@ export default ({
     stop() {}
   }
 
-  defineEventAttribute(
-    SpeechRecognition.prototype,
-    [
-      'audioend',
-      'audiostart',
-      'cognitiveservices',
-      'end',
-      'error',
-      'nomatch',
-      'result',
-      'soundend',
-      'soundstart',
-      'speechend',
-      'speechstart',
-      'start'
-    ]
-  );
+  defineEventAttribute(SpeechRecognition.prototype, 'audioend');
+  defineEventAttribute(SpeechRecognition.prototype, 'audiostart');
+  defineEventAttribute(SpeechRecognition.prototype, 'cognitiveservices');
+  defineEventAttribute(SpeechRecognition.prototype, 'end');
+  defineEventAttribute(SpeechRecognition.prototype, 'error');
+  defineEventAttribute(SpeechRecognition.prototype, 'nomatch');
+  defineEventAttribute(SpeechRecognition.prototype, 'result');
+  defineEventAttribute(SpeechRecognition.prototype, 'soundend');
+  defineEventAttribute(SpeechRecognition.prototype, 'soundstart');
+  defineEventAttribute(SpeechRecognition.prototype, 'speechend');
+  defineEventAttribute(SpeechRecognition.prototype, 'speechstart');
+  defineEventAttribute(SpeechRecognition.prototype, 'start');
 
   return {
     SpeechGrammarList,
