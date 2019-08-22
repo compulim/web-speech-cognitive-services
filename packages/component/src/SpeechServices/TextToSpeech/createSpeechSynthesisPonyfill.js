@@ -28,11 +28,11 @@ export default ({
   subscriptionKey
 }) => {
   if (!authorizationToken && !subscriptionKey) {
-    console.warn('Either authorization token or subscription key must be specified');
+    console.warn('web-speech-cognitive-services: Either authorization token or subscription key must be specified');
 
     return {};
   } else if (!ponyfill.AudioContext) {
-    console.warn('This browser does not support Web Audio and it will not work with Cognitive Services Speech Services.');
+    console.warn('web-speech-cognitive-services: This browser does not support Web Audio and it will not work with Cognitive Services Speech Services.');
 
     return {};
   }
