@@ -144,7 +144,7 @@ export default ({
     })
   );
 
-  // If enableTelemetry is set to null or non-deterministic, we will default to true.
+  // If enableTelemetry is set to null or non-boolean, we will default to true.
   SpeechRecognizer.enableTelemetry(enableTelemetry !== false);
 
   class SpeechRecognition extends EventTarget {
