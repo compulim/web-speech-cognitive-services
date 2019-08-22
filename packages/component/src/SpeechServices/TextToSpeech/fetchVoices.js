@@ -2,14 +2,11 @@
 
 import SpeechSynthesisVoice from './SpeechSynthesisVoice';
 
-export default async function ({ authorizationToken, deploymentId, region }) {
-  // Although encodeURI on a hostname doesn't work as expected, at least, it will fail peacefully.
+export default async function ({ authorizationToken, region }) {
+  // Although encodeURI on a hostname doesn't work as expected for hostname, at least, it will fail peacefully.
 
   const res = await fetch(
-    deploymentId ?
-      `https://${ encodeURI(region) }.voice.speech.microsoft.com/cognitiveservices/voices/list?deploymentId=${ encodeURIComponent(deploymentId) }`
-    :
-      `https://${ encodeURI(region) }.tts.speech.microsoft.com/cognitiveservices/voices/list`,
+    `https://${ encodeURI(region) }.tts.speech.microsoft.com/cognitiveservices/voices/list`,
     {
       headers: {
         authorization: `Bearer ${ authorizationToken }`,

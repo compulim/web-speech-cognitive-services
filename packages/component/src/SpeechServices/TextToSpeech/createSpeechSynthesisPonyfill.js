@@ -4,12 +4,14 @@ import onErrorResumeNext from 'on-error-resume-next';
 
 import AudioContextQueue from './AudioContextQueue';
 import fetchAuthorizationToken from '../fetchAuthorizationToken';
+import fetchCustomVoices from './fetchCustomVoices';
 import fetchVoices from './fetchVoices';
 import SpeechSynthesisEvent from './SpeechSynthesisEvent';
 import SpeechSynthesisUtterance from './SpeechSynthesisUtterance';
 
 // Supported output format can be found at https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/rest-text-to-speech#audio-outputs
 const DEFAULT_OUTPUT_FORMAT = 'audio-24khz-160kbitrate-mono-mp3';
+const EMPTY_ARRAY = [];
 
 const TOKEN_EXPIRATION = 600000;
 const TOKEN_EARLY_RENEWAL = 60000;
@@ -61,7 +63,6 @@ export default ({
       super();
 
       this.queue = new AudioContextQueue({ audioContext, ponyfill });
-      this.voices = [];
 
       this.updateVoices();
     }
@@ -71,7 +72,7 @@ export default ({
     }
 
     getVoices() {
-      return this.voices;
+      return EMPTY_ARRAY;
     }
 
     pause() {
@@ -107,21 +108,36 @@ export default ({
     }
 
     async updateVoices() {
-      if (!speechSynthesisDeploymentId) {
-        // Fetch voice list is not available for custom voice font.
+      if (speechSynthesisDeploymentId) {
+        if (subscriptionKey) {
+          console.warn('web-speech-cognitive-services: Listing of custom voice models are only available when using subscription key.');
+
+          await onErrorResumeNext(async () => {
+            const voices = await fetchCustomVoices({
+              deploymentId: speechSynthesisDeploymentId,
+              region,
+              subscriptionKey
+            });
+
+            this.getVoices = () => voices;
+          });
+        }
+      } else {
         // If fetch voice list failed, we will not emit "voiceschanged" event.
         // In the spec, there is no "error" event.
 
         await onErrorResumeNext(async () => {
-          this.voices = await fetchVoices({
+          const voices = await fetchVoices({
             authorizationToken: await getAuthorizationTokenPromise,
             deploymentId: speechSynthesisDeploymentId,
             region
           });
 
-          this.dispatchEvent(new SpeechSynthesisEvent('voiceschanged'));
+          this.getVoices = () => voices;
         });
       }
+
+      this.dispatchEvent(new SpeechSynthesisEvent('voiceschanged'));
     }
   }
 

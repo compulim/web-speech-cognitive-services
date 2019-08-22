@@ -30,8 +30,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
    - When creating the ponyfill, pass it as an array to `referenceGrammars` options
 - Speech recognition: Fix [#27](https://github.com/compulim/web-speech-cognitive-services/issues/27), support custom speech, in PR [#41](https://github.com/compulim/web-speech-cognitive-services/pull/41)
    - Use option `speechRecognitionEndpointId`
-- Speech synthesis: Fix [#28](https://github.com/compulim/web-speech-cognitive-services/issues/28), support custom voice font, in PR [#41](https://github.com/compulim/web-speech-cognitive-services/pull/41)
+- Speech synthesis: Fix [#28](https://github.com/compulim/web-speech-cognitive-services/issues/28) and [#62](https://github.com/compulim/web-speech-cognitive-services/issues/62), support custom voice font, in PR [#41](https://github.com/compulim/web-speech-cognitive-services/pull/41) and PR [#67](https://github.com/compulim/web-speech-cognitive-services/pull/67)
    - Use option `speechSynthesisDeploymentId`
+   - Voice list is only fetch when using subscription key
 - Speech synthesis: Fix [#48](https://github.com/compulim/web-speech-cognitive-services/issues/48), support output format through `outputFormat` option, in PR [#49](https://github.com/compulim/web-speech-cognitive-services/pull/49)
 - `*`: Fix [#47](https://github.com/compulim/web-speech-cognitive-services/issues/47), add `enableTelemetry` option for disabling collecting telemetry data in Speech SDK, in PR [#51](https://github.com/compulim/web-speech-cognitive-services/pull/51) and PR [#66](https://github.com/compulim/web-speech/cognitive-services/pull/66)
 - `*`: Fix [#53](https://github.com/compulim/web-speech-cognitive-services/issues/53), added ESLint, in PR [#54](https://github.com/compulim/web-speech-cognitive-services/pull/54)
