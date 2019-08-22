@@ -103,11 +103,11 @@ export default ({
   textNormalization = 'display'
 } = {}) => {
   if (!authorizationToken && !subscriptionKey) {
-    console.warn('Either authorizationToken or subscriptionKey must be specified');
+    console.warn('web-speech-cognitive-services: Either authorizationToken or subscriptionKey must be specified');
 
     return {};
   } else if (!window.navigator.mediaDevices || !window.navigator.mediaDevices.getUserMedia) {
-    console.warn('This browser does not support WebRTC and it will not work with Cognitive Services Speech Services.');
+    console.warn('web-speech-cognitive-services: This browser does not support WebRTC and it will not work with Cognitive Services Speech Services.');
 
     return {};
   }

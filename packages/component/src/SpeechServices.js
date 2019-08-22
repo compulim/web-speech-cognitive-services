@@ -4,10 +4,18 @@ import createSpeechRecognitionPonyfill from './SpeechServices/SpeechToText';
 import createSpeechSynthesisPonyfill from './SpeechServices/TextToSpeech';
 import fetchAuthorizationToken from './SpeechServices/fetchAuthorizationToken';
 
-export default function createSpeechServicesPonyfill(...args) {
+let shouldWarnOnSubscriptionKey = true;
+
+export default function createSpeechServicesPonyfill(options = {}, ...args) {
+  if (shouldWarnOnSubscriptionKey && options.subscriptionKey) {
+    console.warn('web-speech-cognitive-services: In production environment, subscription key should not be used, authorization token should be used instead.');
+
+    shouldWarnOnSubscriptionKey = false;
+  }
+
   const ponyfill = {
-    ...createSpeechRecognitionPonyfill(...args),
-    ...createSpeechSynthesisPonyfill(...args),
+    ...createSpeechRecognitionPonyfill(options, ...args),
+    ...createSpeechSynthesisPonyfill(options, ...args),
   };
 
   return {
