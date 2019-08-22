@@ -91,7 +91,11 @@ class SpeechRecognitionEvent {
 export default ({
   audioConfig = AudioConfig.fromDefaultMicrophoneInput(),
   authorizationToken,
-  enableTelemetry,
+
+  // We set telemetry to true to honor the default telemetry settings of Speech SDK
+  // https://github.com/Microsoft/cognitive-services-speech-sdk-js#data--telemetry
+  enableTelemetry = true,
+
   referenceGrammars,
   region = 'westus',
   speechRecognitionEndpointId,
@@ -140,7 +144,8 @@ export default ({
     })
   );
 
-  SpeechRecognizer.enableTelemetry(enableTelemetry);
+  // If enableTelemetry is set to null or non-boolean, we will default to true.
+  SpeechRecognizer.enableTelemetry(enableTelemetry !== false);
 
   class SpeechRecognition extends EventTarget {
     constructor() {
