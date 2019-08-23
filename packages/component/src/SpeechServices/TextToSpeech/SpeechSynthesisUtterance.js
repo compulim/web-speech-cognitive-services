@@ -43,7 +43,7 @@ function playDecoded(audioContext, audioBuffer, source) {
   });
 }
 
-export default class extends EventTarget {
+class SpeechSynthesisUtterance extends EventTarget {
   constructor(text) {
     super();
 
@@ -137,3 +137,5 @@ defineEventAttribute(SpeechSynthesisUtterance.prototype, 'mark');
 defineEventAttribute(SpeechSynthesisUtterance.prototype, 'pause');
 defineEventAttribute(SpeechSynthesisUtterance.prototype, 'resume');
 defineEventAttribute(SpeechSynthesisUtterance.prototype, 'start');
+
+export default SpeechSynthesisUtterance
