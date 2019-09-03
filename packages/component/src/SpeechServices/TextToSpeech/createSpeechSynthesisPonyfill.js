@@ -46,17 +46,20 @@ export default ({
     )
   );
 
-  const getAuthorizationTokenPromise =
-    typeof authorizationToken === 'function' ?
-      authorizationToken()
-    : authorizationToken ?
-      authorizationToken
-    :
-      fetchMemoizedAuthorizationToken({
-        now: Date.now,
-        region,
-        subscriptionKey
-      });
+  const getAuthorizationToken = async () => {
+    return (
+      typeof authorizationToken === 'function' ?
+        await authorizationToken()
+      : authorizationToken ?
+        await authorizationToken
+      :
+        await fetchMemoizedAuthorizationToken({
+          now: Date.now,
+          region,
+          subscriptionKey
+        })
+    );
+  };
 
   class SpeechSynthesis extends EventTarget {
     constructor() {
@@ -93,8 +96,8 @@ export default ({
         utterance.addEventListener('error', reject);
 
         utterance.preload({
-          authorizationTokenPromise: getAuthorizationTokenPromise,
           deploymentId: speechSynthesisDeploymentId,
+          getAuthorizationToken,
           outputFormat: speechSynthesisOutputFormat,
           region
         });
@@ -128,7 +131,7 @@ export default ({
 
         await onErrorResumeNext(async () => {
           const voices = await fetchVoices({
-            authorizationToken: await getAuthorizationTokenPromise,
+            authorizationToken: await getAuthorizationToken(),
             deploymentId: speechSynthesisDeploymentId,
             region
           });

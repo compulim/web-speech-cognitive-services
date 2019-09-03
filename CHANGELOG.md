@@ -39,6 +39,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Speech synthesis: Fix [#39](https://github.com/compulim/web-speech-cognitive-services/issues/39), support SSML utterance, in PR [#57](https://github.com/compulim/web-speech-cognitive-services/pull/57)
 - Speech recognition: Fix [#59](https://github.com/compulim/web-speech-cognitive-services/issues/59), support `stop()` function by finalizing partial speech, in PR [#60](https://github.com/compulim/web-speech-cognitive-services/pull/60)
 - Fix [#67](https://github.com/compulim/web-speech-cognitive-services/issues/67), add warning when using subscription key instead of authorization token, in PR [#69](https://github.com/compulim/web-speech-cognitive-services/pull/69)
+- Fix [#70](https://github.com/compulim/web-speech-cognitive-services/issues/70), fetch authorization token before every synthesis, in PR [#71](https://github.com/compulim/web-speech-cognitive-services/pull/71)
 
 ### Changed
 

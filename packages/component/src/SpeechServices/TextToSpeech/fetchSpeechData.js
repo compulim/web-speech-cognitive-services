@@ -9,8 +9,8 @@ const SYNTHESIS_CUSTOM_VOICE_URL_TEMPLATE = 'https://{region}.voice.speech.micro
 const SYNTHESIS_URL_TEMPLATE = 'https://{region}.tts.speech.microsoft.com/cognitiveservices/v1';
 
 export default async function ({
-  authorizationTokenPromise,
   deploymentId,
+  getAuthorizationToken,
   lang = DEFAULT_LANGUAGE,
   outputFormat,
   pitch,
@@ -25,7 +25,7 @@ export default async function ({
     return decode(EMPTY_MP3_BASE64);
   }
 
-  const authorizationToken = await authorizationTokenPromise;
+  const authorizationToken = await getAuthorizationToken();
   const ssml = isSSML(text) ? text : buildSSML({ lang, pitch, rate, text, voice, volume });
 
   // Although calling encodeURI on hostname does not actually works, it fails faster and safer.
