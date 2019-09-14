@@ -19,7 +19,7 @@ async function fetchEndpoint({ deploymentId, region, subscriptionKey }) {
     throw new Error('Failed to fetch custom voices');
   }
 
-  return await res.json();
+  return res.json();
 }
 
 export default async function ({ deploymentId, region, subscriptionKey }) {
