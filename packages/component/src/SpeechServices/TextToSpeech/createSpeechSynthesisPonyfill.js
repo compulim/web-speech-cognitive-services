@@ -1,4 +1,6 @@
-import { defineEventAttribute, EventTarget } from 'event-target-shim';
+/* eslint class-methods-use-this: 0 */
+
+import { defineEventAttribute, EventTarget } from '../../external/event-target-shim';
 import memoize from 'memoize-one';
 import onErrorResumeNext from 'on-error-resume-next';
 
@@ -46,20 +48,18 @@ export default ({
     )
   );
 
-  const getAuthorizationToken = async () => {
-    return (
-      typeof authorizationToken === 'function' ?
-        await authorizationToken()
-      : authorizationToken ?
-        await authorizationToken
-      :
-        await fetchMemoizedAuthorizationToken({
-          now: Date.now,
-          region,
-          subscriptionKey
-        })
-    );
-  };
+  const getAuthorizationToken = () => (
+    typeof authorizationToken === 'function' ?
+      authorizationToken()
+    : authorizationToken ?
+      authorizationToken
+    :
+      fetchMemoizedAuthorizationToken({
+        now: Date.now,
+        region,
+        subscriptionKey
+      })
+  );
 
   class SpeechSynthesis extends EventTarget {
     constructor() {

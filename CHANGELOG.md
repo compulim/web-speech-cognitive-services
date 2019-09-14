@@ -20,7 +20,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
    - Quirks: in continuous mode, calling `stop` in-between `recognizing` and `recognized` will not emit final `result` event
 - Speech recognition: New `audioConfig` option to override the default `AudioConfig.fromDefaultMicrophoneInput`, in PR [#33](https://github.com/compulim/web-speech-cognitive-services/pull/33)
 - Speech synthesis: Fix [#32](https://github.com/compulim/web-speech-cognitive-services/issues/32), fetch voices from services, in PR [#35](https://github.com/compulim/web-speech-cognitive-services/pull/35)
-- Speech synthesis: Fix [#34](https://github.com/compulim/web-speech-cognitive-services/issues/34), in PR [#36](https://github.com/compulim/web-speech-cognitive-services/pull/36) and PR [#XXX](https://github.com/compulim/web-speech-cognitive-services/pull/XXX)
+- Speech synthesis: Fix [#34](https://github.com/compulim/web-speech-cognitive-services/issues/34), in PR [#36](https://github.com/compulim/web-speech-cognitive-services/pull/36) and PR [#44](https://github.com/compulim/web-speech-cognitive-services/pull/44)
    - Support user-controlled `AudioContext` object to be passed as an option named `audioContext`
    - If no `audioContext` option is passed, will create a new `AudioContext` object on first synthesis
 - Speech synthesis: If an empty utterance is being synthesized, will play an local empty audio clip, in PR [#36](https://github.com/compulim/web-speech-cognitive-services/pull/36)
@@ -60,6 +60,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added bundle distribution thru https://unpkg.com/web-speech-cognitive-services@latest/umd/, in PR [#21](https://github.com/compulim/web-speech-cognitive-services/pull/21)
 - Bumped to [microsoft-cognitiveservices-speech-sdk@1.6.0](https://www.npmjs.com/package/microsoft-cognitiveservices-speech-sdk), in PR [#22](https://github.com/compulim/web-speech-cognitive-services/pull/22)
 - Fix [#55](https://github.com/compulim/web-speech-cognitive-services/issues/55) and [#63](https://github.com/compulim/web-speech-cognitive-services/issues/63). Moves to [WHATWG `EventTarget` interface](https://dom.spec.whatwg.org/#interface-eventtarget), in PR [#56](https://github.com/compulim/web-speech-cognitive-services/pulls/56) and PR [#64](https://github.com/compulim/web-speech-cognitive-services/pulls/64)
+- Instead of including `event-target-shim@5.0.1`, we are adopting its source code, in PR [#72](https://github.com/compulim/web-speech-cognitive-services/pulls/72)
+   - This is because the original package requires browser to support rest/spread operators
 
 ### Fixed
 
