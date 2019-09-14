@@ -1,11 +1,10 @@
 /* eslint no-empty: ["error", { "allowEmptyCatch": true }] */
 
-import { defineEventAttribute, EventTarget } from 'event-target-shim';
+import { defineEventAttribute, EventTarget } from '../../external/event-target-shim';
 import EventAsPromise from 'event-as-promise';
 
 import fetchSpeechData from './fetchSpeechData';
 import SpeechSynthesisEvent from './SpeechSynthesisEvent';
-import SpeechSynthesisVoice from './SpeechSynthesisVoice';
 import subscribeEvent from './subscribeEvent';
 
 function asyncDecodeAudioData(audioContext, arrayBuffer) {

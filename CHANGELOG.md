@@ -60,6 +60,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added bundle distribution thru https://unpkg.com/web-speech-cognitive-services@latest/umd/, in PR [#21](https://github.com/compulim/web-speech-cognitive-services/pull/21)
 - Bumped to [microsoft-cognitiveservices-speech-sdk@1.6.0](https://www.npmjs.com/package/microsoft-cognitiveservices-speech-sdk), in PR [#22](https://github.com/compulim/web-speech-cognitive-services/pull/22)
 - Fix [#55](https://github.com/compulim/web-speech-cognitive-services/issues/55) and [#63](https://github.com/compulim/web-speech-cognitive-services/issues/63). Moves to [WHATWG `EventTarget` interface](https://dom.spec.whatwg.org/#interface-eventtarget), in PR [#56](https://github.com/compulim/web-speech-cognitive-services/pulls/56) and PR [#64](https://github.com/compulim/web-speech-cognitive-services/pulls/64)
+- Instead of including `event-target-shim@5.0.1`, we are adopting its source code, in PR [#XXX](https://github.com/compulim/web-speech-cognitive-services/pulls/XXX)
+   - This is because the original package requires browser to support rest/spread operators
 
 ### Fixed
 

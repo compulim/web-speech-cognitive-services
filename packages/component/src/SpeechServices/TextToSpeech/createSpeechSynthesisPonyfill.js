@@ -1,4 +1,4 @@
-import { defineEventAttribute, EventTarget } from 'event-target-shim';
+import { defineEventAttribute, EventTarget } from '../../external/event-target-shim';
 import memoize from 'memoize-one';
 import onErrorResumeNext from 'on-error-resume-next';
 
