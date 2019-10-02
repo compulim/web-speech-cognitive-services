@@ -121,7 +121,43 @@ export default ({
   }
 
   let onAudibleChunk;
+  const createRecognizer = async lang => {
+    const speechConfig = authorizationToken ?
+      SpeechConfig.fromAuthorizationToken(typeof authorizationToken === 'function' ? await authorizationToken() : await authorizationToken, region)
+    :
+      SpeechConfig.fromSubscription(subscriptionKey, region);
+
+    if (speechRecognitionEndpointId) {
+      speechConfig.endpointId = speechRecognitionEndpointId;
+    }
+
+    speechConfig.outputFormat = OutputFormat.Detailed;
+    speechConfig.speechRecognitionLanguage = lang || 'en-US';
+
+    return new SpeechRecognizer(speechConfig, audioConfig);
+  };
+
+  return createSpeechRecognitionPonyfillFromRecognizer({
+    audioConfig,
+    createRecognizer,
+    enableTelemetry,
+    looseEvents,
+    referenceGrammars,
+    textNormalization
+  });
+}
+
+export function createSpeechRecognitionPonyfillFromRecognizer({
+  // TODO: Can we not passing audioConfig by reading it from createRecognizer?
+  audioConfig,
+  createRecognizer,
+  enableTelemetry,
+  looseEvents,
+  referenceGrammars,
+  textNormalization
+}) {
   let muted;
+  let onAudibleChunk;
 
   // We modify "attach" function and detect when audible chunk is read.
   // We will only modify "attach" function once.
@@ -166,22 +202,6 @@ export default ({
       this._maxAlternatives = 1;
     }
 
-    async createRecognizer() {
-      const speechConfig = authorizationToken ?
-        SpeechConfig.fromAuthorizationToken(typeof authorizationToken === 'function' ? await authorizationToken() : await authorizationToken, region)
-      :
-        SpeechConfig.fromSubscription(subscriptionKey, region);
-
-      if (speechRecognitionEndpointId) {
-        speechConfig.endpointId = speechRecognitionEndpointId;
-      }
-
-      speechConfig.outputFormat = OutputFormat.Detailed;
-      speechConfig.speechRecognitionLanguage = this.lang || 'en-US';
-
-      return new SpeechRecognizer(speechConfig, audioConfig);
-    }
-
     emitCognitiveServices(type, event) {
       this.dispatchEvent(new SpeechRecognitionEvent('cognitiveservices', {
         data: {
@@ -222,7 +242,7 @@ export default ({
 
     async _startOnce() {
       // TODO: [P2] Should check if recognition is active, we should not start recognition twice
-      const recognizer = await this.createRecognizer();
+      const recognizer = await createRecognizer(this.lang);
       const queue = createPromiseQueue();
       let soundStarted;
       let speechStarted;
