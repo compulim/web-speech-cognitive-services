@@ -20,6 +20,7 @@ const MOCK_SPEECH_SDK = {
     fromDefaultMicrophoneInput: () => {
       const eventHandlers = [];
       const readResolves = [];
+      const onEvent = ({ name }) => eventHandlers.forEach(handler => handler({ name }));
 
       return {
         attach: () =>
@@ -28,9 +29,7 @@ const MOCK_SPEECH_SDK = {
               onSuccessContinueWith: resolve => readResolves.push(resolve)
             })
           }),
-        emitEvent: name => {
-          eventHandlers.forEach(handler => handler({ name }));
-        },
+        emitEvent: name => onEvent({ name }),
         emitRead: (buffer = LOUD_ARRAY_BUFFER) => {
           // TODO: Rename "emitRead" to more meaningful name
           readResolves.forEach(resolve => resolve({ buffer }));
@@ -43,7 +42,8 @@ const MOCK_SPEECH_SDK = {
             return {
               detach: () => eventHandlers.splice(eventHandlers.indexOf(handler), 1)
             };
-          }
+          },
+          onEvent
         }
       };
     }
@@ -685,6 +685,69 @@ describe('SpeechRecognition', () => {
       await errorEventEmitted;
 
       expect(toSnapshot(events)).toMatchSnapshot();
+    });
+
+    test('abort with lingering recognizing/recognized', async () => {
+      speechRecognition.interimResults = true;
+      speechRecognition.start();
+      await recognizer.waitForStartContinuousRecognitionAsync();
+
+      // This will fire "firstAudibleChunk" on "emitRead"
+      recognizer.readAudioChunk();
+
+      recognizer.audioConfig.emitEvent('AudioSourceReadyEvent');
+
+      // cognitiveservices:audioSourceReady
+      // webspeech:start
+      // webspeech:audiostart
+
+      recognizer.audioConfig.emitRead();
+
+      speechRecognition.abort();
+
+      // cognitiveservices:firstAudibleChunk
+      // webspeech:soundstart
+
+      recognizer.recognizing(this, createRecognizingEvent('hello'));
+
+      // cognitiveservices:recognizing
+
+      recognizer.recognizing(this, createRecognizingEvent('hello world'));
+
+      // cognitiveservices:recognizing
+
+      recognizer.recognized(this, createRecognizedEvent('Hello, World!'));
+
+      // cognitiveservices:recognized
+
+      recognizer.audioConfig.emitEvent('AudioSourceOffEvent');
+
+      // cognitiveservices:audioSourceOff
+      // webspeech:soundend
+      // webspeech:audioend
+      // webspeech:error { error: 'aborted' }
+      // webspeech:end
+
+      await endEventEmitted;
+
+      expect(toSnapshot(events)).toMatchInlineSnapshot(`
+        Array [
+          "cognitiveservices:audioSourceReady",
+          "webspeech:start",
+          "webspeech:audiostart",
+          "cognitiveservices:firstAudibleChunk",
+          "webspeech:soundstart",
+          "cognitiveservices:abort",
+          "cognitiveservices:recognizing",
+          "cognitiveservices:recognizing",
+          "cognitiveservices:recognized",
+          "cognitiveservices:audioSourceOff",
+          "webspeech:soundend",
+          "webspeech:audioend",
+          "webspeech:error { error: 'aborted' }",
+          "webspeech:end",
+        ]
+      `);
     });
   });
 

@@ -405,12 +405,14 @@ export function createSpeechRecognitionPonyfillFromRecognizer({
                 error: 'aborted',
                 type: 'error'
               };
+
+              // If we are aborting, we will ignore lingering recognizing/recognized events. But if we are stopping, we need them.
+              stopping = 'abort';
             } else {
               // When we pause, we will send { isEnd: true }, Speech Services will send us "recognized" event.
               pause();
+              stopping = 'stop';
             }
-
-            stopping = true;
 
             if (abort) {
               await cognitiveServicesAsyncToPromise(recognizer.stopContinuousRecognitionAsync.bind(recognizer))();
@@ -424,7 +426,10 @@ export function createSpeechRecognitionPonyfillFromRecognizer({
 
             soundStarted = true;
           } else if (audioSourceOff) {
-            stopping = true;
+            // Looks like we don't need this line and all the tests are still working.
+            // Guessing probably stopping is already truthy.
+            // stopping = true;
+
             speechStarted && this.dispatchEvent(new SpeechRecognitionEvent('speechend'));
             soundStarted && this.dispatchEvent(new SpeechRecognitionEvent('soundend'));
             audioStarted && this.dispatchEvent(new SpeechRecognitionEvent('audioend'));
@@ -432,7 +437,7 @@ export function createSpeechRecognitionPonyfillFromRecognizer({
             audioStarted = soundStarted = speechStarted = false;
 
             break;
-          } else if (!stopping) {
+          } else if (stopping !== 'abort') {
             if (recognized && recognized.result && recognized.result.reason === ResultReason.NoMatch) {
               finalEvent = {
                 error: 'no-speech',
