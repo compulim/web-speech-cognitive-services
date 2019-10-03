@@ -326,6 +326,7 @@ export function createSpeechRecognitionPonyfillFromRecognizer({
 
         recognizer.speechEndDetected = (_, { sessionId }) => {
           // "speechEndDetected" is never fired, probably because we are using startContinuousRecognitionAsync instead of recognizeOnceAsync.
+          // Update: "speechEndDetected" is fired for DLSpeech.listenOnceAsync()
           queue.push({ speechEndDetected: { sessionId } });
         };
 
@@ -431,83 +432,85 @@ export function createSpeechRecognitionPonyfillFromRecognizer({
             audioStarted = soundStarted = speechStarted = false;
 
             break;
-          } else if (recognized && recognized.result && recognized.result.reason === ResultReason.NoMatch) {
-            finalEvent = {
-              error: 'no-speech',
-              type: 'error'
-            };
-          } else if (recognized || recognizing) {
-            if (!audioStarted) {
-              // Unconfirmed prevention of quirks
-              this.dispatchEvent(new SpeechRecognitionEvent('audiostart'));
+          } else if (!stopping) {
+            if (recognized && recognized.result && recognized.result.reason === ResultReason.NoMatch) {
+              finalEvent = {
+                error: 'no-speech',
+                type: 'error'
+              };
+            } else if (recognized || recognizing) {
+              if (!audioStarted) {
+                // Unconfirmed prevention of quirks
+                this.dispatchEvent(new SpeechRecognitionEvent('audiostart'));
 
-              audioStarted = true;
-            }
+                audioStarted = true;
+              }
 
-            if (!soundStarted) {
-              this.dispatchEvent(new SpeechRecognitionEvent('soundstart'));
+              if (!soundStarted) {
+                this.dispatchEvent(new SpeechRecognitionEvent('soundstart'));
 
-              soundStarted = true;
-            }
+                soundStarted = true;
+              }
 
-            if (!speechStarted) {
-              this.dispatchEvent(new SpeechRecognitionEvent('speechstart'));
+              if (!speechStarted) {
+                this.dispatchEvent(new SpeechRecognitionEvent('speechstart'));
 
-              speechStarted = true;
-            }
+                speechStarted = true;
+              }
 
-            if (recognized) {
-              const result = cognitiveServiceEventResultToWebSpeechRecognitionResultList(
-                recognized.result,
-                {
-                  maxAlternatives: this.maxAlternatives,
-                  textNormalization
+              if (recognized) {
+                const result = cognitiveServiceEventResultToWebSpeechRecognitionResultList(
+                  recognized.result,
+                  {
+                    maxAlternatives: this.maxAlternatives,
+                    textNormalization
+                  }
+                );
+
+                const recognizable = !!result[0].transcript;
+
+                if (recognizable) {
+                  finalizedResults = [...finalizedResults, result];
+
+                  this.continuous && this.dispatchEvent(new SpeechRecognitionEvent('result', {
+                    results: finalizedResults
+                  }));
                 }
-              );
 
-              const recognizable = !!result[0].transcript;
+                // If it is continuous, we just sent the finalized results. So we don't need to send it again after "audioend" event.
+                if (this.continuous && recognizable) {
+                  finalEvent = null;
+                } else {
+                  finalEvent = {
+                    results: finalizedResults,
+                    type: 'result'
+                  };
+                }
 
-              if (recognizable) {
-                finalizedResults = [...finalizedResults, result];
+                if (!this.continuous) {
+                  await cognitiveServicesAsyncToPromise(recognizer.stopContinuousRecognitionAsync.bind(recognizer))();
+                }
 
-                this.continuous && this.dispatchEvent(new SpeechRecognitionEvent('result', {
-                  results: finalizedResults
+                // If event order can be loosened, we can send the recognized event as soon as we receive it.
+                // 1. If it is not recognizable (no-speech), we should send an "error" event just before "end" event. We will not loosen "error" events.
+                if (looseEvents && finalEvent && recognizable) {
+                  this.dispatchEvent(new SpeechRecognitionEvent(finalEvent.type, finalEvent));
+                  finalEvent = null;
+                }
+              } else if (recognizing) {
+                this.interimResults && this.dispatchEvent(new SpeechRecognitionEvent('result', {
+                  results: [
+                    ...finalizedResults,
+                    cognitiveServiceEventResultToWebSpeechRecognitionResultList(
+                      recognizing.result,
+                      {
+                        maxAlternatives: this.maxAlternatives,
+                        textNormalization
+                      }
+                    )
+                  ]
                 }));
               }
-
-              // If it is continuous, we just sent the finalized results. So we don't need to send it again after "audioend" event.
-              if (this.continuous && recognizable) {
-                finalEvent = null;
-              } else {
-                finalEvent = {
-                  results: finalizedResults,
-                  type: 'result'
-                };
-              }
-
-              if (!this.continuous) {
-                await cognitiveServicesAsyncToPromise(recognizer.stopContinuousRecognitionAsync.bind(recognizer))();
-              }
-
-              // If event order can be loosened, we can send the recognized event as soon as we receive it.
-              // 1. If it is not recognizable (no-speech), we should send an "error" event just before "end" event. We will not loosen "error" events.
-              if (looseEvents && finalEvent && recognizable) {
-                this.dispatchEvent(new SpeechRecognitionEvent(finalEvent.type, finalEvent));
-                finalEvent = null;
-              }
-            } else if (recognizing) {
-              this.interimResults && this.dispatchEvent(new SpeechRecognitionEvent('result', {
-                results: [
-                  ...finalizedResults,
-                  cognitiveServiceEventResultToWebSpeechRecognitionResultList(
-                    recognizing.result,
-                    {
-                      maxAlternatives: this.maxAlternatives,
-                      textNormalization
-                    }
-                  )
-                ]
-              }));
             }
           }
         }
