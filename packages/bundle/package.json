@@ -19,7 +19,7 @@
   "dependencies": {
     "@babel/runtime": "^7.5.5",
     "eslint": "^6.1.0",
-    "web-speech-cognitive-services": "^4.0.1-0"
+    "web-speech-cognitive-services": "^0.0.0-0"
   },
   "devDependencies": {
     "@babel/cli": "^7.5.5",
