@@ -31,6 +31,6 @@
     "redux": "^4.0.4",
     "redux-saga": "^1.0.5",
     "simple-update-in": "^2.1.0",
-    "web-speech-cognitive-services": "^4.0.1-0"
+    "web-speech-cognitive-services": "^0.0.0-0"
   }
 }
