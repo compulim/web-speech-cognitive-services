@@ -50,8 +50,7 @@
     "testEnvironment": "node"
   },
   "peerDependencies": {
-    "microsoft-speech-browser-sdk": "^0.0.12",
-    "react": "^16.4.2"
+    "microsoft-speech-browser-sdk": "^0.0.12"
   },
   "devDependencies": {
     "@babel/cli": "^7.5.5",
@@ -63,17 +62,15 @@
     "babel-core": "7.0.0-bridge.0",
     "babel-jest": "^24.8.0",
     "babel-plugin-transform-inline-environment-variables": "^0.4.3",
+    "eslint": "^6.1.0",
     "jest": "^24.8.0",
     "microsoft-speech-browser-sdk": "^0.0.12",
-    "react": "^16.4.2",
     "rimraf": "^2.6.3"
   },
   "dependencies": {
     "@babel/runtime": "^7.5.5",
     "base64-arraybuffer": "^0.2.0",
-    "eslint": "^6.1.0",
     "event-as-promise": "^1.0.5",
-    "event-target-shim": "^5.0.1",
     "events": "^3.0.0",
     "memoize-one": "^5.0.5",
     "microsoft-cognitiveservices-speech-sdk": "1.6.0",
