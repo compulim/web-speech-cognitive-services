@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [5.0.1] - 2019-10-25
+
 ### Changed
 
 - Fixed dependences in PR [#76](https://github.com/compulim/web-speech-cognitive-services/pull/76)
@@ -17,6 +19,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
          - Moved `eslint` to development dependencies
          - Removed `event-target-shim` because incompatibility with ES5
       - `devDependencies`: Removed `react`
+   - Removed `import '@babel/runtime'` explicitly
 
 ## [5.0.0] - 2019-10-23
 
