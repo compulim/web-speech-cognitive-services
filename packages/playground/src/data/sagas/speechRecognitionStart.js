@@ -9,11 +9,21 @@ import { START_SPEECH_RECOGNITION } from '../actions/startSpeechRecognition';
 import setSpeechRecognitionInstance from '../actions/setSpeechRecognitionInstance';
 import stopSpeechRecognition, { STOP_SPEECH_RECOGNITION } from '../actions/stopSpeechRecognition';
 
+function sleep(duration) {
+  return new Promise(resolve => setTimeout(resolve, duration));
+}
+
 export default function* () {
   for (;;) {
     let cancelReason;
 
     yield take(START_SPEECH_RECOGNITION);
+
+    const { speechRecognitionDelayedStart: delayedStart } = yield select();
+
+    if (delayedStart) {
+      yield call(sleep, 2000);
+    }
 
     const task = yield fork(startSpeechRecognition, {
       getCancelReason: () => cancelReason

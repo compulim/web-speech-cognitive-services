@@ -10,6 +10,7 @@ import ponyfill from './reducers/ponyfill';
 import ponyfillType from './reducers/ponyfillType';
 import region from './reducers/region';
 import speechRecognitionContinuous from './reducers/speechRecognitionContinuous';
+import speechRecognitionDelayedStart from './reducers/speechRecognitionDelayedStart';
 import speechRecognitionEndpointId from './reducers/speechRecognitionEndpointId';
 import speechRecognitionEvents from './reducers/speechRecognitionEvents';
 import speechRecognitionInterimResults from './reducers/speechRecognitionInterimResults';
@@ -39,6 +40,7 @@ export default combineReducers({
   ponyfillType,
   region,
   speechRecognitionContinuous,
+  speechRecognitionDelayedStart,
   speechRecognitionEndpointId,
   speechRecognitionEvents,
   speechRecognitionInterimResults,
