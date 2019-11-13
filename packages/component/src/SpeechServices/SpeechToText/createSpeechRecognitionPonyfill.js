@@ -360,6 +360,8 @@ export function createSpeechRecognitionPonyfillFromRecognizer({
             stop
           } = event;
 
+          console.warn('web-speech event', event);
+
           // We are emitting event "cognitiveservices" for debugging purpose.
           Object.keys(event).forEach(name => this.emitCognitiveServices(name, event[name]));
 
