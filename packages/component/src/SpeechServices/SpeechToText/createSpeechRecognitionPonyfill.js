@@ -100,6 +100,7 @@ export default ({
   region = 'westus',
   speechRecognitionEndpointId,
   subscriptionKey,
+  strictEvents = true,
   textNormalization = 'display'
 } = {}) => {
   if (!authorizationToken && !subscriptionKey) {
@@ -432,13 +433,25 @@ export default ({
               }));
             }
 
-            finalEvent = {
-              results: finalizedResults,
-              type: 'result'
-            };
+            // If it is continuous, we just sent the finalized results. So we don't need to send it again after "audioend" event.
+            if (this.continuous && recognizable) {
+              finalEvent = null;
+            } else {
+              finalEvent = {
+                results: finalizedResults,
+                type: 'result'
+              };
+            }
 
             if (!this.continuous) {
               recognizer.stopContinuousRecognitionAsync();
+            }
+
+            // If strict event order is not required, we can send the recognized event as soon as we receive it.
+            // 1. If it is not recognizable (no-speech), we should send an "error" event, which means we cannot send sooner.
+            if (!strictEvents && finalEvent && recognizable) {
+              this.dispatchEvent(new SpeechRecognitionEvent(finalEvent.type, finalEvent));
+              finalEvent = null;
             }
           } else if (recognizing) {
             this.interimResults && this.dispatchEvent(new SpeechRecognitionEvent('result', {

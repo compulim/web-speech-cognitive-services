@@ -59,7 +59,6 @@ Array [
   "webspeech:speechend",
   "webspeech:soundend",
   "webspeech:audioend",
-  "webspeech:result ['Hello.' (isFinal), 'World.' (isFinal)]",
   "webspeech:end",
 ]
 `;

@@ -2,8 +2,6 @@
 
 Web Speech API adapter to use Cognitive Services Speech Services for both speech-to-text and text-to-speech service.
 
-> This scaffold is provided by [`react-component-template`](https://github.com/compulim/react-component-template/).
-
 [![npm version](https://badge.fury.io/js/web-speech-cognitive-services.svg)](https://badge.fury.io/js/web-speech-cognitive-services) [![Build Status](https://travis-ci.org/compulim/web-speech-cognitive-services.svg?branch=master)](https://travis-ci.org/compulim/web-speech-cognitive-services)
 
 # Description
@@ -171,8 +169,13 @@ The following list all options supported by the adapter.
     </tr>
     <tr>
       <td><code>speechSynthesisOutputFormat:&nbsp;string</code></td>
-      <td><code>audio-24khz-160kbitrate-mono-mp3</code></td>
+      <td><code>"audio-24khz-160kbitrate-mono-mp3"</code></td>
       <td>Audio format for speech synthesis. Please refer to <a href="https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/rest-text-to-speech#audio-outputs">this article</a> for list of supported formats.</td>
+    </tr>
+    <tr>
+      <td><code>strictEvents: boolean</code></td>
+      <td><code>"true"</code></td>
+      <td>Specifies if the event order should strictly follow observed behavior from browsers (<code>"true"</code>), or loosened behavior that still <a href="https://wicg.github.io/speech-api/#eventdef-speechrecognition-result">conforms to W3C spec</a> (<code>"false"</code>).
     </tr>
     <tr>
       <td><code>subscriptionKey:&nbsp;string</code></td>
@@ -426,6 +429,42 @@ utterance.voice = { voiceURI: 'your-model-name' };
 
 await speechSynthesis.speak(utterance);
 ```
+
+## Strict event orders
+
+According to [W3C specifications](https://wicg.github.io/speech-api/#eventdef-speechrecognition-result), the `result` event can be fire at any time after `audiostart` event.
+
+In continuous mode, finalized `result` event will be sent as early as possible. But in non-continuous mode, we observed browsers send finalized `result` event just before `audioend`, instead of as early as possible.
+
+By default, we follow strict event order observed from browsers. That means, for a speech recognition in non-continuous mode and with interims, the observed event order is:
+
+1. `start`
+1. `audiostart`
+1. `soundstart`
+1. `speechstart`
+1. `result` (these are interim results, with `isFinal` property set to `false`)
+1. `speechend`
+1. `soundend`
+1. `audioend`
+1. `result` (with `isFinal` property set to `true`)
+1. `end`
+
+You can disable strict event orders by setting `strictEvents` to `false`. For the same scenario, the event order will become:
+
+1. `start`
+1. `audiostart`
+1. `soundstart`
+1. `speechstart`
+1. `result` (these are interim results, with `isFinal` property set to `false`)
+1. `result` (with `isFinal` property set to `true`)
+1. `speechend`
+1. `soundend`
+1. `audioend`
+1. `end`
+
+For `error` events (abort, `"no-speech"` or other errors), we always sent it just before the last `end` event.
+
+In some cases, disabling strict event orders may improve recognition performance. This will not break conformance to W3C standard.
 
 # Test matrix
 

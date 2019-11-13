@@ -65,6 +65,7 @@
     "eslint": "^6.1.0",
     "jest": "^24.8.0",
     "microsoft-speech-browser-sdk": "^0.0.12",
+    "prettier": "^1.19.1",
     "rimraf": "^2.6.3"
   },
   "dependencies": {
