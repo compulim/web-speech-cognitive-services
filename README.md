@@ -186,6 +186,11 @@ The following list all options supported by the adapter.
       <td>Audio format for speech synthesis. Please refer to <a href="https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/rest-text-to-speech#audio-outputs">this article</a> for list of supported formats.</td>
     </tr>
     <tr>
+      <td><code>strictEvents: boolean</code></td>
+      <td><code>"true"</code></td>
+      <td>Specifies if the event order should strictly follow observed behavior from browsers (<code>"true"</code>), or loosened behavior that still <a href="https://wicg.github.io/speech-api/#eventdef-speechrecognition-result">conforms to W3C spec</a> (<code>"false"</code>).
+    </tr>
+    <tr>
       <td><code>subscriptionKey:&nbsp;string</code></td>
       <td>(Requires either<br /><code>authorizationToken</code> or<br /><code>subscriptionKey</code>)</td>
       <td>

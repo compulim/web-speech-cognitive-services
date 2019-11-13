@@ -102,7 +102,6 @@ export default ({
   region = 'westus',
   speechRecognitionEndpointId,
   subscriptionKey,
-  strictEventOrder = true,
   textNormalization = 'display'
 } = {}) => {
   if (!authorizationToken && !subscriptionKey) {
