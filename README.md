@@ -131,7 +131,18 @@ The following list all options supported by the adapter.
     <tr>
       <td><code>enableTelemetry</code></td>
       <td><code>undefined</code></td>
-      <td>Pass-through option to enable or disable telemetry for Speech SDK recognizer as <a href="https://github.com/Microsoft/cognitive-services-speech-sdk-js#data--telemetry">outlined in Speech SDK</a>. This adapter does not collect any telemetry.<br /><br />By default, Speech SDK will collect telemetry unless this is set to <code>false</code>.</td>
+      <td>
+        Pass-through option to enable or disable telemetry for Speech SDK recognizer as <a href="https://github.com/Microsoft/cognitive-services-speech-sdk-js#data--telemetry">outlined in Speech SDK</a>. This adapter does not collect any telemetry.<br /><br />By default, Speech SDK will collect telemetry unless this is set to <code>false</code>.
+      </td>
+    </tr>
+    <tr>
+      <td><code>looseEvents: boolean</code></td>
+      <td><code>"false"</code></td>
+      <td>
+        Specifies if the event order should strictly follow observed browser behavior (<code>"false"</code>), or loosened behavior (<code>"true"</code>). Regardless of the option, the package will continue to <a href="https://wicg.github.io/speech-api/#eventdef-speechrecognition-result">conform with W3C specifications</a>.
+        <br /><br />
+        You can read more about this option in <a href="#event-order">event order section</a>.
+      </td>
     </tr>
     <tr>
       <td><code>ponyfill.AudioContext:&nbsp;<a href="https://developer.mozilla.org/en-US/docs/Web/API/AudioContext">AudioContext</a></code></td>
@@ -144,7 +155,9 @@ The following list all options supported by the adapter.
     <tr>
       <td><code>referenceGrammars:&nbsp;string[]</code></td>
       <td><code>undefined</code></td>
-      <td>Reference grammar IDs to send for speech recognition.</td>
+      <td>
+        Reference grammar IDs to send for speech recognition.
+      </td>
     </tr>
     <tr>
       <td><code>region:&nbsp;string</code></td>
@@ -171,11 +184,6 @@ The following list all options supported by the adapter.
       <td><code>speechSynthesisOutputFormat:&nbsp;string</code></td>
       <td><code>"audio-24khz-160kbitrate-mono-mp3"</code></td>
       <td>Audio format for speech synthesis. Please refer to <a href="https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/rest-text-to-speech#audio-outputs">this article</a> for list of supported formats.</td>
-    </tr>
-    <tr>
-      <td><code>strictEvents: boolean</code></td>
-      <td><code>"true"</code></td>
-      <td>Specifies if the event order should strictly follow observed behavior from browsers (<code>"true"</code>), or loosened behavior that still <a href="https://wicg.github.io/speech-api/#eventdef-speechrecognition-result">conforms to W3C spec</a> (<code>"false"</code>).
     </tr>
     <tr>
       <td><code>subscriptionKey:&nbsp;string</code></td>
@@ -430,13 +438,13 @@ utterance.voice = { voiceURI: 'your-model-name' };
 await speechSynthesis.speak(utterance);
 ```
 
-## Strict event orders
+## Event order
 
 According to [W3C specifications](https://wicg.github.io/speech-api/#eventdef-speechrecognition-result), the `result` event can be fire at any time after `audiostart` event.
 
 In continuous mode, finalized `result` event will be sent as early as possible. But in non-continuous mode, we observed browsers send finalized `result` event just before `audioend`, instead of as early as possible.
 
-By default, we follow strict event order observed from browsers. That means, for a speech recognition in non-continuous mode and with interims, the observed event order is:
+By default, we follow event order observed from browsers (a.k.a. strict event order). For a speech recognition in non-continuous mode and with interims, the observed event order will be:
 
 1. `start`
 1. `audiostart`
@@ -449,7 +457,7 @@ By default, we follow strict event order observed from browsers. That means, for
 1. `result` (with `isFinal` property set to `true`)
 1. `end`
 
-You can disable strict event orders by setting `strictEvents` to `false`. For the same scenario, the event order will become:
+You can loosen event order by setting `looseEvents` to `false`. For the same scenario, the event order will become:
 
 1. `start`
 1. `audiostart`
@@ -464,7 +472,7 @@ You can disable strict event orders by setting `strictEvents` to `false`. For th
 
 For `error` events (abort, `"no-speech"` or other errors), we always sent it just before the last `end` event.
 
-In some cases, disabling strict event orders may improve recognition performance. This will not break conformance to W3C standard.
+In some cases, loosening event order may improve recognition performance. This will not break conformance to W3C standard.
 
 # Test matrix
 

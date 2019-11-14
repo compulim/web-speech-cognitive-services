@@ -96,11 +96,12 @@ export default ({
   // https://github.com/Microsoft/cognitive-services-speech-sdk-js#data--telemetry
   enableTelemetry = true,
 
+  looseEvent,
+  looseEvents,
   referenceGrammars,
   region = 'westus',
   speechRecognitionEndpointId,
   subscriptionKey,
-  strictEvents = true,
   textNormalization = 'display'
 } = {}) => {
   if (!authorizationToken && !subscriptionKey) {
@@ -111,6 +112,12 @@ export default ({
     console.warn('web-speech-cognitive-services: This browser does not support WebRTC and it will not work with Cognitive Services Speech Services.');
 
     return {};
+  }
+
+  if (typeof looseEvent !== 'undefined') {
+    console.warn('web-speech-cognitive-services: The option "looseEvent" should be named as "looseEvents".');
+
+    looseEvents = looseEvent;
   }
 
   let onAudibleChunk;
@@ -447,9 +454,9 @@ export default ({
               recognizer.stopContinuousRecognitionAsync();
             }
 
-            // If strict event order is not required, we can send the recognized event as soon as we receive it.
-            // 1. If it is not recognizable (no-speech), we should send an "error" event, which means we cannot send sooner.
-            if (!strictEvents && finalEvent && recognizable) {
+            // If event order can be loosened, we can send the recognized event as soon as we receive it.
+            // 1. If it is not recognizable (no-speech), we should send an "error" event just before "end" event. We will not loosen "error" events.
+            if (looseEvents && finalEvent && recognizable) {
               this.dispatchEvent(new SpeechRecognitionEvent(finalEvent.type, finalEvent));
               finalEvent = null;
             }

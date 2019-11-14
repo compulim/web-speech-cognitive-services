@@ -12,7 +12,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
-- Speech recognition: New `strictEvents` option, default is `true`. When disabled, we will no longer follow observed browser event order. We will send finalized `result` event as early as possible. This will not break conformance to W3C specifications. By [@compulim](https://github.com/compulim), in PR [#79](https://github.com/compulim/web-speech-cognitive-services/pull/79)
+- Speech recognition: New `loosenEvents` option, default is `false`. When enabled, we will no longer follow observed browser event order. We will send finalized `result` event as early as possible. This will not break conformance to W3C specifications. By [@compulim](https://github.com/compulim), in PR [#79](https://github.com/compulim/web-speech-cognitive-services/pull/79)
 
 ## [5.0.1] - 2019-10-25
 

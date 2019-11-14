@@ -1241,7 +1241,7 @@ describe('SpeechRecognition with telemetry', () => {
   });
 });
 
-describe('SpeechRecognition without strict events', () => {
+describe('SpeechRecognition with loosened events', () => {
   let endEventEmitted;
   let errorEventEmitted;
   let events;
@@ -1252,7 +1252,7 @@ describe('SpeechRecognition without strict events', () => {
     const { SpeechRecognition } = createSpeechRecognitionPonyfill({
       region: 'westus',
       subscriptionKey: 'SUBSCRIPTION_KEY',
-      strictEvents: false
+      looseEvents: true
     });
 
     speechRecognition = new SpeechRecognition();
