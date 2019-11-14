@@ -6,18 +6,22 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
-### Changed
-
-- `playground`: Add delayed start to playground for testing speech recognition initiated outside of user gestures, in PR [#78](https://github.com/compulim/web-speech-congitive-services/pull/78)
-
 ### Fixed
 
 - Speech recognition: Removed extraneous finalized `result` event in continuous mode, by [@compulim](https://github.com/compulim), in PR [#79](https://github.com/compulim/web-speech-cognitive-services/pull/79)
 
 ### Added
 
+- `playground`: Add delayed start to playground for testing speech recognition initiated outside of user gestures, in PR [#78](https://github.com/compulim/web-speech-congitive-services/pull/78)
 - Speech recognition: New `looseEvents` option, default is `false`. When enabled, we will no longer follow observed browser event order. We will send finalized `result` event as early as possible. This will not break conformance to W3C specifications. By [@compulim](https://github.com/compulim), in PR [#79](https://github.com/compulim/web-speech-cognitive-services/pull/79)
-- Speech recognition: Create ponyfill using `SpeechRecognizer` object from [`microsoft-cognitiveservices-speech-sdk`](https://npmjs.com/package/microsoft-cognitiveservices-speech-sdk), by [@compulim](https://github.com/compulim), in PR [#XXX](https://github.com/compulim/web-speech-cognitive-services/pull/XXX)
+- Speech recognition: Create ponyfill using `SpeechRecognizer` object from [`microsoft-cognitiveservices-speech-sdk`](https://npmjs.com/package/microsoft-cognitiveservices-speech-sdk), by [@compulim](https://github.com/compulim), in PR [#73](https://github.com/compulim/web-speech-cognitive-services/pull/73)
+
+### Changed
+
+- Bumped dependencies, in PR [#73](https://github.com/compulim/web-speech-cognitive-services/pull/73)
+   - [babel-jest@^24.9.0](https://www.npmjs.com/package/babel-jest)
+   - [jest@^24.9.0](https://www.npmjs.com/package/jest)
+   - [rimraf@^3.0.0](https://www.npmjs.com/package/rimraf)
 
 ## [5.0.1] - 2019-10-25
 
