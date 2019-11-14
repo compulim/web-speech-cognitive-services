@@ -9,11 +9,23 @@ const {
 } = SpeechSDK;
 
 export default function (result, { maxAlternatives = Infinity, textNormalization = 'display' } = {}) {
-  if (result.reason === RecognizingSpeech) {
-    return [{
+  if (
+    result.reason === RecognizingSpeech
+    || (
+      result.reason === RecognizedSpeech
+      && !result.json.NBest
+    )
+  ) {
+    const resultList = [{
       confidence: .5,
       transcript: result.text
     }];
+
+    if (result.reason === RecognizedSpeech) {
+      resultList.isFinal = true;
+    }
+
+    return resultList;
   } else if (result.reason === RecognizedSpeech) {
     const resultList = arrayToMap(
       (result.json.NBest || []).slice(0, maxAlternatives).map(

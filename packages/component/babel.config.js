@@ -15,7 +15,6 @@ module.exports = {
       // forceAllTransforms: true,
       modules: 'commonjs',
       targets: 'last 2 version, not ie <= 11'
-    }],
-    '@babel/preset-react'
+    }]
   ]
 }

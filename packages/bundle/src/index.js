@@ -1,5 +1,6 @@
-import create from 'web-speech-cognitive-services/lib/SpeechServices';
+import create, { createSpeechRecognitionPonyfillFromRecognizer } from 'web-speech-cognitive-services/lib/SpeechServices';
 
 export {
-  create
+  create,
+  createSpeechRecognitionPonyfillFromRecognizer
 }
