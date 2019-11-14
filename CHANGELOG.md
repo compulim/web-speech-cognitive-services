@@ -16,7 +16,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
-- Speech recognition: New `loosenEvents` option, default is `false`. When enabled, we will no longer follow observed browser event order. We will send finalized `result` event as early as possible. This will not break conformance to W3C specifications. By [@compulim](https://github.com/compulim), in PR [#79](https://github.com/compulim/web-speech-cognitive-services/pull/79)
+- Speech recognition: New `looseEvents` option, default is `false`. When enabled, we will no longer follow observed browser event order. We will send finalized `result` event as early as possible. This will not break conformance to W3C specifications. By [@compulim](https://github.com/compulim), in PR [#79](https://github.com/compulim/web-speech-cognitive-services/pull/79)
+- Speech recognition: Create ponyfill using `SpeechRecognizer` object of [`microsoft-cognitiveservices-speech-sdk`](https://npmjs.com/package/microsoft-cognitiveservices-speech-sdk), by [@compulim](https://github.com/compulim), in PR [#XXX](https://github.com/compulim/web-speech-cognitive-services/pull/XXX)
 
 ## [5.0.1] - 2019-10-25
 
