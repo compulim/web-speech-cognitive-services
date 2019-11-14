@@ -60,7 +60,7 @@
     "@babel/preset-env": "^7.5.5",
     "babel-jest": "^24.9.0",
     "babel-plugin-transform-inline-environment-variables": "^0.4.3",
-    "eslint": "^6.1.0",
+    "eslint": "^6.6.0",
     "jest": "^24.9.0",
     "microsoft-speech-browser-sdk": "^0.0.12",
     "prettier": "^1.19.1",

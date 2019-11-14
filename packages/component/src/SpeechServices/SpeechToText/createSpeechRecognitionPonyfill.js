@@ -1,5 +1,5 @@
 /* eslint class-methods-use-this: "off" */
-/* eslint complexity: ["error", 50] */
+/* eslint complexity: ["error", 70] */
 /* eslint no-await-in-loop: "off" */
 /* eslint no-empty-function: "off" */
 /* eslint no-magic-numbers: ["error", { "ignore": [0, 100, 150] }] */
@@ -86,64 +86,6 @@ class SpeechRecognitionEvent {
     this.results = results;
     this.type = type;
   }
-}
-
-export default ({
-  audioConfig = AudioConfig.fromDefaultMicrophoneInput(),
-  authorizationToken,
-
-  // We set telemetry to true to honor the default telemetry settings of Speech SDK
-  // https://github.com/Microsoft/cognitive-services-speech-sdk-js#data--telemetry
-  enableTelemetry = true,
-
-  looseEvent,
-  looseEvents,
-  referenceGrammars,
-  region = 'westus',
-  speechRecognitionEndpointId,
-  subscriptionKey,
-  textNormalization = 'display'
-} = {}) => {
-  if (!authorizationToken && !subscriptionKey) {
-    console.warn('web-speech-cognitive-services: Either authorizationToken or subscriptionKey must be specified');
-
-    return {};
-  } else if (!window.navigator.mediaDevices || !window.navigator.mediaDevices.getUserMedia) {
-    console.warn('web-speech-cognitive-services: This browser does not support WebRTC and it will not work with Cognitive Services Speech Services.');
-
-    return {};
-  }
-
-  if (typeof looseEvent !== 'undefined') {
-    console.warn('web-speech-cognitive-services: The option "looseEvent" should be named as "looseEvents".');
-
-    looseEvents = looseEvent;
-  }
-
-  const createRecognizer = async lang => {
-    const speechConfig = authorizationToken ?
-      SpeechConfig.fromAuthorizationToken(typeof authorizationToken === 'function' ? await authorizationToken() : await authorizationToken, region)
-    :
-      SpeechConfig.fromSubscription(subscriptionKey, region);
-
-    if (speechRecognitionEndpointId) {
-      speechConfig.endpointId = speechRecognitionEndpointId;
-    }
-
-    speechConfig.outputFormat = OutputFormat.Detailed;
-    speechConfig.speechRecognitionLanguage = lang || 'en-US';
-
-    return new SpeechRecognizer(speechConfig, audioConfig);
-  };
-
-  return createSpeechRecognitionPonyfillFromRecognizer({
-    audioConfig,
-    createRecognizer,
-    enableTelemetry,
-    looseEvents,
-    referenceGrammars,
-    textNormalization
-  });
 }
 
 function prepareAudioConfig(audioConfig) {
@@ -584,4 +526,62 @@ export function createSpeechRecognitionPonyfillFromRecognizer({
     SpeechRecognition,
     SpeechRecognitionEvent
   };
+}
+
+export default ({
+  audioConfig = AudioConfig.fromDefaultMicrophoneInput(),
+  authorizationToken,
+
+  // We set telemetry to true to honor the default telemetry settings of Speech SDK
+  // https://github.com/Microsoft/cognitive-services-speech-sdk-js#data--telemetry
+  enableTelemetry = true,
+
+  looseEvent,
+  looseEvents,
+  referenceGrammars,
+  region = 'westus',
+  speechRecognitionEndpointId,
+  subscriptionKey,
+  textNormalization = 'display'
+} = {}) => {
+  if (!authorizationToken && !subscriptionKey) {
+    console.warn('web-speech-cognitive-services: Either authorizationToken or subscriptionKey must be specified');
+
+    return {};
+  } else if (!window.navigator.mediaDevices || !window.navigator.mediaDevices.getUserMedia) {
+    console.warn('web-speech-cognitive-services: This browser does not support WebRTC and it will not work with Cognitive Services Speech Services.');
+
+    return {};
+  }
+
+  if (typeof looseEvent !== 'undefined') {
+    console.warn('web-speech-cognitive-services: The option "looseEvent" should be named as "looseEvents".');
+
+    looseEvents = looseEvent;
+  }
+
+  const createRecognizer = async lang => {
+    const speechConfig = authorizationToken ?
+      SpeechConfig.fromAuthorizationToken(typeof authorizationToken === 'function' ? await authorizationToken() : await authorizationToken, region)
+    :
+      SpeechConfig.fromSubscription(subscriptionKey, region);
+
+    if (speechRecognitionEndpointId) {
+      speechConfig.endpointId = speechRecognitionEndpointId;
+    }
+
+    speechConfig.outputFormat = OutputFormat.Detailed;
+    speechConfig.speechRecognitionLanguage = lang || 'en-US';
+
+    return new SpeechRecognizer(speechConfig, audioConfig);
+  };
+
+  return createSpeechRecognitionPonyfillFromRecognizer({
+    audioConfig,
+    createRecognizer,
+    enableTelemetry,
+    looseEvents,
+    referenceGrammars,
+    textNormalization
+  });
 }
