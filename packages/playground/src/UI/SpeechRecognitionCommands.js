@@ -13,6 +13,7 @@ import stopSpeechRecognition from '../data/actions/stopSpeechRecognition';
 import clearSpeechRecognitionEvent from '../data/actions/clearSpeechRecognitionEvent';
 import getPonyfillCapabilities from '../getPonyfillCapabilities';
 import setSpeechRecognitionContinuous from '../data/actions/setSpeechRecognitionContinuous';
+import setSpeechRecognitionDelayedStart from '../data/actions/setSpeechRecognitionDelayedStart';
 import setSpeechRecognitionInterimResults from '../data/actions/setSpeechRecognitionInterimResults';
 import setSpeechRecognitionMaxAlternatives from '../data/actions/setSpeechRecognitionMaxAlternatives';
 import setSpeechRecognitionPhrases from '../data/actions/setSpeechRecognitionPhrases';
@@ -20,8 +21,9 @@ import setSpeechRecognitionReferenceGrammars from '../data/actions/setSpeechReco
 
 const SpeechRecognitionCommands = () => {
   const {
-    empty,
     continuous,
+    delayedStart,
+    empty,
     interimResults,
     maxAlternatives,
     phrases,
@@ -32,14 +34,16 @@ const SpeechRecognitionCommands = () => {
     ponyfillType,
     speechRecognitionEvents,
     speechRecognitionContinuous,
+    speechRecognitionDelayedStart,
     speechRecognitionInterimResults,
     speechRecognitionMaxAlternatives,
     speechRecognitionPhrases,
     speechRecognitionReferenceGrammars,
     speechRecognitionStarted
   }) => ({
-    empty: !speechRecognitionEvents.length,
     continuous: speechRecognitionContinuous,
+    delayedStart: !!speechRecognitionDelayedStart,
+    empty: !speechRecognitionEvents.length,
     interimResults: speechRecognitionInterimResults,
     maxAlternatives: speechRecognitionMaxAlternatives,
     phrases: speechRecognitionPhrases,
@@ -52,9 +56,11 @@ const SpeechRecognitionCommands = () => {
   const dispatchAbortSpeechRecognition = useCallback(() => dispatch(abortSpeechRecognition()), [dispatch]);
   const dispatchClearSpeechRecognitionEvent = useCallback(() => dispatch(clearSpeechRecognitionEvent()), [dispatch]);
   const dispatchSetSpeechRecognitionContinuous = useCallback(() => dispatch(setSpeechRecognitionContinuous(true)), [dispatch]);
+  const dispatchSetSpeechRecognitionDelayedStart = useCallback(() => dispatch(setSpeechRecognitionDelayedStart(true)), [dispatch]);
   const dispatchSetSpeechRecognitionHideInterimResults = useCallback(() => dispatch(setSpeechRecognitionInterimResults(false)), [dispatch]);
   const dispatchSetSpeechRecognitionInteractive = useCallback(() => dispatch(setSpeechRecognitionContinuous(false)), [dispatch]);
   const dispatchSetSpeechRecognitionMaxAlternatives = useCallback(value => dispatch(setSpeechRecognitionMaxAlternatives(+value)), [dispatch]);
+  const dispatchSetSpeechRecognitionNoDelayedStart = useCallback(() => dispatch(setSpeechRecognitionDelayedStart(false)), [dispatch]);
   const dispatchSetSpeechRecognitionPhrases = useCallback(value => dispatch(setSpeechRecognitionPhrases(value)), [dispatch]);
   const dispatchSetSpeechRecognitionReferenceGrammars = useCallback(value => dispatch(setSpeechRecognitionReferenceGrammars(value)), [dispatch]);
   const dispatchSetSpeechRecognitionShowInterimResults = useCallback(() => dispatch(setSpeechRecognitionInterimResults(true)), [dispatch]);
@@ -82,14 +88,26 @@ const SpeechRecognitionCommands = () => {
             {
               continuous ?
                 interimResults ?
-                  'Start in continuous mode with interims'
+                  delayedStart ?
+                    'Delayed start in continuous mode with interims'
+                  :
+                    'Start in continuous mode with interims'
                 :
-                  'Start in continuous mode'
+                  delayedStart ?
+                    'Delayed start in continuous mode'
+                  :
+                    'Start in continuous mode'
               :
                 interimResults ?
-                  'Start with interims'
+                  delayedStart ?
+                    'Delayed start with interims'
+                  :
+                    'Start with interims'
                 :
-                  'Start'
+                  delayedStart ?
+                    'Delayed start'
+                  :
+                    'Start'
             }
           </button>
           <button
@@ -123,6 +141,17 @@ const SpeechRecognitionCommands = () => {
               onClick={ dispatchSetSpeechRecognitionHideInterimResults }
               type="button"
             >Hide interims</button>
+            <div className="dropdown-divider" />
+            <button
+              className="dropdown-item"
+              onClick={ dispatchSetSpeechRecognitionDelayedStart }
+              type="button"
+            >Delayed start</button>
+            <button
+              className="dropdown-item"
+              onClick={ dispatchSetSpeechRecognitionNoDelayedStart }
+              type="button"
+            >No delayed start</button>
           </div>
         </div>
         &nbsp;

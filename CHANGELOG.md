@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Changed
+
+- `playground`: Add delayed start to playground for testing speech recognition initiated outside of user gestures, in PR [#78](https://github.com/compulim/web-speech-congitive-services/pull/78)
+
 ### Fixed
 
 - Speech recognition: Removed extraneous finalized `result` event in continuous mode, by [@compulim](https://github.com/compulim), in PR [#79](https://github.com/compulim/web-speech-cognitive-services/pull/79)
