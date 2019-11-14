@@ -96,6 +96,8 @@ export default ({
   // https://github.com/Microsoft/cognitive-services-speech-sdk-js#data--telemetry
   enableTelemetry = true,
 
+  looseEvent,
+  looseEvents,
   referenceGrammars,
   region = 'westus',
   speechRecognitionEndpointId,
@@ -111,6 +113,12 @@ export default ({
     console.warn('web-speech-cognitive-services: This browser does not support WebRTC and it will not work with Cognitive Services Speech Services.');
 
     return {};
+  }
+
+  if (typeof looseEvent !== 'undefined') {
+    console.warn('web-speech-cognitive-services: The option "looseEvent" should be named as "looseEvents".');
+
+    looseEvents = looseEvent;
   }
 
   let onAudibleChunk;
@@ -433,13 +441,25 @@ export default ({
               }));
             }
 
-            finalEvent = {
-              results: finalizedResults,
-              type: 'result'
-            };
+            // If it is continuous, we just sent the finalized results. So we don't need to send it again after "audioend" event.
+            if (this.continuous && recognizable) {
+              finalEvent = null;
+            } else {
+              finalEvent = {
+                results: finalizedResults,
+                type: 'result'
+              };
+            }
 
             if (!this.continuous) {
               recognizer.stopContinuousRecognitionAsync();
+            }
+
+            // If event order can be loosened, we can send the recognized event as soon as we receive it.
+            // 1. If it is not recognizable (no-speech), we should send an "error" event just before "end" event. We will not loosen "error" events.
+            if (looseEvents && finalEvent && recognizable) {
+              this.dispatchEvent(new SpeechRecognitionEvent(finalEvent.type, finalEvent));
+              finalEvent = null;
             }
           } else if (recognizing) {
             this.interimResults && this.dispatchEvent(new SpeechRecognitionEvent('result', {
