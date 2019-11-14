@@ -120,7 +120,6 @@ export default ({
     looseEvents = looseEvent;
   }
 
-  let onAudibleChunk;
   const createRecognizer = async lang => {
     const speechConfig = authorizationToken ?
       SpeechConfig.fromAuthorizationToken(typeof authorizationToken === 'function' ? await authorizationToken() : await authorizationToken, region)
@@ -194,7 +193,6 @@ function prepareAudioConfig(audioConfig) {
 }
 
 export function createSpeechRecognitionPonyfillFromRecognizer({
-  // TODO: Can we not passing audioConfig by reading it from createRecognizer?
   createRecognizer,
   enableTelemetry,
   looseEvents,
