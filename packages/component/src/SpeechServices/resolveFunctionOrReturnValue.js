@@ -1,3 +1,3 @@
-export default async function resolveFunctionOrReturnValue(fnOrValue) {
-  return await (typeof fnOrValue === 'function' ? fnOrValue() : fnOrValue);
+export default function resolveFunctionOrReturnValue(fnOrValue) {
+  return typeof fnOrValue === 'function' ? fnOrValue() : fnOrValue;
 }
