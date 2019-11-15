@@ -58,12 +58,10 @@ const MOCK_SPEECH_SDK = {
     RecognizedSpeech: 3
   },
   SpeechConfig: {
-    fromSubscription: (subscriptionKey, region) => {
-      return {
-        region,
-        subscriptionKey
-      };
-    }
+    fromSubscription: (subscriptionKey, region) => ({
+      region,
+      subscriptionKey
+    })
   },
   SpeechRecognizer: class {
     constructor(speechConfig, audioConfig) {
@@ -107,10 +105,6 @@ const MOCK_SPEECH_SDK = {
     }
   }
 };
-
-beforeEach(() => {
-  MOCK_SPEECH_SDK.SpeechRecognizer.enableTelemetry = jest.fn();
-});
 
 function createRecognizingEvent(text, { duration = 1, offset = 0 } = {}) {
   return {
@@ -206,16 +200,26 @@ function toSnapshot(events) {
   });
 }
 
-let recognizer;
+let constructRecognizerDeferred;
+let originalConsole;
+let warnings;
 
 beforeEach(() => {
+  MOCK_SPEECH_SDK.SpeechRecognizer.enableTelemetry = jest.fn();
+
+  constructRecognizerDeferred = createDeferred();
+  originalConsole = console;
+  console = { ...console, warn: (...args) => warnings.push(args) };
+  warnings = [];
+
   jest.resetModules();
   jest.setMock('../SpeechSDK', {
     ...MOCK_SPEECH_SDK,
     SpeechRecognizer: class extends MOCK_SPEECH_SDK.SpeechRecognizer {
       constructor(...args) {
         super(...args);
-        recognizer = this;
+
+        constructRecognizerDeferred.resolve(this);
       }
     }
   });
@@ -248,6 +252,10 @@ beforeEach(() => {
   };
 });
 
+afterEach(() => {
+  console = originalConsole;
+});
+
 describe('SpeechRecognition', () => {
   let endEventEmitted;
   let errorEventEmitted;
@@ -257,8 +265,10 @@ describe('SpeechRecognition', () => {
   beforeEach(async () => {
     const { default: createSpeechRecognitionPonyfill } = require('./createSpeechRecognitionPonyfill');
     const { SpeechRecognition } = createSpeechRecognitionPonyfill({
-      region: 'westus',
-      subscriptionKey: 'SUBSCRIPTION_KEY'
+      credentials: {
+        region: 'westus',
+        subscriptionKey: 'SUBSCRIPTION_KEY'
+      }
     });
 
     speechRecognition = new SpeechRecognition();
@@ -270,6 +280,9 @@ describe('SpeechRecognition', () => {
   describe('in interactive mode', () => {
     test('without interims', async () => {
       speechRecognition.start();
+
+      const recognizer = await constructRecognizerDeferred.promise;
+
       await recognizer.waitForStartContinuousRecognitionAsync();
 
       // This will fire "firstAudibleChunk" on "emitRead"
@@ -312,6 +325,9 @@ describe('SpeechRecognition', () => {
     test('with interims', async () => {
       speechRecognition.interimResults = true;
       speechRecognition.start();
+
+      const recognizer = await constructRecognizerDeferred.promise;
+
       await recognizer.waitForStartContinuousRecognitionAsync();
 
       // This will fire "firstAudibleChunk" on "emitRead"
@@ -359,6 +375,9 @@ describe('SpeechRecognition', () => {
 
     test('with muted microphone', async () => {
       speechRecognition.start();
+
+      const recognizer = await constructRecognizerDeferred.promise;
+
       await recognizer.waitForStartContinuousRecognitionAsync();
 
       // This will fire "firstAudibleChunk" on "emitRead"
@@ -402,6 +421,9 @@ describe('SpeechRecognition', () => {
 
     test('with unrecognizable sound should throw error', async () => {
       speechRecognition.start();
+
+      const recognizer = await constructRecognizerDeferred.promise;
+
       await recognizer.waitForStartContinuousRecognitionAsync();
 
       // This will fire "firstAudibleChunk" on "emitRead"
@@ -444,6 +466,9 @@ describe('SpeechRecognition', () => {
     test('stop after start', async () => {
       speechRecognition.interimResults = true;
       speechRecognition.start();
+
+      const recognizer = await constructRecognizerDeferred.promise;
+
       await recognizer.waitForStartContinuousRecognitionAsync();
 
       // webspeech:start
@@ -461,6 +486,9 @@ describe('SpeechRecognition', () => {
     test('stop after audiostart', async () => {
       speechRecognition.interimResults = true;
       speechRecognition.start();
+
+      const recognizer = await constructRecognizerDeferred.promise;
+
       await recognizer.waitForStartContinuousRecognitionAsync();
 
       // This will fire "firstAudibleChunk" on "emitRead"
@@ -490,6 +518,9 @@ describe('SpeechRecognition', () => {
     test('stop after soundstart', async () => {
       speechRecognition.interimResults = true;
       speechRecognition.start();
+
+      const recognizer = await constructRecognizerDeferred.promise;
+
       await recognizer.waitForStartContinuousRecognitionAsync();
 
       // This will fire "firstAudibleChunk" on "emitRead"
@@ -525,6 +556,9 @@ describe('SpeechRecognition', () => {
     test('stop after recognizing', async () => {
       speechRecognition.interimResults = true;
       speechRecognition.start();
+
+      const recognizer = await constructRecognizerDeferred.promise;
+
       await recognizer.waitForStartContinuousRecognitionAsync();
 
       // This will fire "firstAudibleChunk" on "emitRead"
@@ -567,6 +601,9 @@ describe('SpeechRecognition', () => {
     test('abort after start', async () => {
       speechRecognition.interimResults = true;
       speechRecognition.start();
+
+      const recognizer = await constructRecognizerDeferred.promise;
+
       await recognizer.waitForStartContinuousRecognitionAsync();
 
       // webspeech:start
@@ -584,6 +621,9 @@ describe('SpeechRecognition', () => {
 
     test('abort after audiostart', async () => {
       speechRecognition.start();
+
+      const recognizer = await constructRecognizerDeferred.promise;
+
       await recognizer.waitForStartContinuousRecognitionAsync();
 
       // This will fire "firstAudibleChunk" on "emitRead"
@@ -613,6 +653,9 @@ describe('SpeechRecognition', () => {
 
     test('abort after soundstart', async () => {
       speechRecognition.start();
+
+      const recognizer = await constructRecognizerDeferred.promise;
+
       await recognizer.waitForStartContinuousRecognitionAsync();
 
       // This will fire "firstAudibleChunk" on "emitRead"
@@ -648,6 +691,9 @@ describe('SpeechRecognition', () => {
 
     test('abort after recognizing', async () => {
       speechRecognition.start();
+
+      const recognizer = await constructRecognizerDeferred.promise;
+
       await recognizer.waitForStartContinuousRecognitionAsync();
 
       // This will fire "firstAudibleChunk" on "emitRead"
@@ -690,6 +736,9 @@ describe('SpeechRecognition', () => {
     test('abort with lingering recognizing/recognized', async () => {
       speechRecognition.interimResults = true;
       speechRecognition.start();
+
+      const recognizer = await constructRecognizerDeferred.promise;
+
       await recognizer.waitForStartContinuousRecognitionAsync();
 
       // This will fire "firstAudibleChunk" on "emitRead"
@@ -756,6 +805,9 @@ describe('SpeechRecognition', () => {
       speechRecognition.start();
       speechRecognition.continuous = true;
       speechRecognition.interimResults = true;
+
+      const recognizer = await constructRecognizerDeferred.promise;
+
       await recognizer.waitForStartContinuousRecognitionAsync();
 
       // This will fire "firstAudibleChunk" on "emitRead"
@@ -799,6 +851,9 @@ describe('SpeechRecognition', () => {
       speechRecognition.start();
       speechRecognition.continuous = true;
       speechRecognition.interimResults = true;
+
+      const recognizer = await constructRecognizerDeferred.promise;
+
       await recognizer.waitForStartContinuousRecognitionAsync();
 
       // This will fire "firstAudibleChunk" on "emitRead"
@@ -842,6 +897,9 @@ describe('SpeechRecognition', () => {
       speechRecognition.start();
       speechRecognition.continuous = true;
       speechRecognition.interimResults = true;
+
+      const recognizer = await constructRecognizerDeferred.promise;
+
       await recognizer.waitForStartContinuousRecognitionAsync();
 
       // This will fire "firstAudibleChunk" on "emitRead"
@@ -896,6 +954,9 @@ describe('SpeechRecognition', () => {
       speechRecognition.start();
       speechRecognition.continuous = true;
       speechRecognition.interimResults = true;
+
+      const recognizer = await constructRecognizerDeferred.promise;
+
       await recognizer.waitForStartContinuousRecognitionAsync();
 
       // This will fire "firstAudibleChunk" on "emitRead"
@@ -940,6 +1001,9 @@ describe('SpeechRecognition', () => {
       speechRecognition.start();
       speechRecognition.continuous = true;
       speechRecognition.interimResults = true;
+
+      const recognizer = await constructRecognizerDeferred.promise;
+
       await recognizer.waitForStartContinuousRecognitionAsync();
 
       // This will fire "firstAudibleChunk" on "emitRead"
@@ -984,6 +1048,8 @@ describe('SpeechRecognition', () => {
   test('with network error', async () => {
     speechRecognition.start();
 
+    const recognizer = await constructRecognizerDeferred.promise;
+
     await recognizer.waitForStartContinuousRecognitionAsync();
 
     recognizer.audioConfig.emitEvent('AudioSourceReadyEvent');
@@ -1010,6 +1076,8 @@ describe('SpeechRecognition', () => {
   test('with microphone blocked', async () => {
     speechRecognition.start();
 
+    const recognizer = await constructRecognizerDeferred.promise;
+
     await recognizer.waitForStartContinuousRecognitionAsync();
 
     recognizer.canceled(this, {
@@ -1029,8 +1097,10 @@ describe('SpeechRecognition', () => {
   test('with dynamic grammars', async () => {
     const { default: createSpeechRecognitionPonyfill } = require('./createSpeechRecognitionPonyfill');
     const { SpeechRecognition } = createSpeechRecognitionPonyfill({
-      region: 'westus',
-      subscriptionKey: 'SUBSCRIPTION_KEY',
+      credentials: {
+        region: 'westus',
+        subscriptionKey: 'SUBSCRIPTION_KEY'
+      },
       textNormalization: 'maskeditn'
     });
 
@@ -1039,6 +1109,9 @@ describe('SpeechRecognition', () => {
     speechRecognition.grammars.phrases = ['Bellevue'];
 
     speechRecognition.start();
+
+    const recognizer = await constructRecognizerDeferred.promise;
+
     await recognizer.waitForStartContinuousRecognitionAsync();
 
     expect(recognizer.privReco.dynamicGrammar.addPhrase).toHaveBeenCalledTimes(1);
@@ -1048,15 +1121,20 @@ describe('SpeechRecognition', () => {
   test('with reference grammars', async () => {
     const { default: createSpeechRecognitionPonyfill } = require('./createSpeechRecognitionPonyfill');
     const { SpeechRecognition } = createSpeechRecognitionPonyfill({
+      credentials: {
+        region: 'westus',
+        subscriptionKey: 'SUBSCRIPTION_KEY'
+      },
       referenceGrammars: ['12345678-1234-5678-abcd-12345678abcd'],
-      region: 'westus',
-      subscriptionKey: 'SUBSCRIPTION_KEY',
       textNormalization: 'maskeditn'
     });
 
     let speechRecognition = new SpeechRecognition();
 
     speechRecognition.start();
+
+    const recognizer = await constructRecognizerDeferred.promise;
+
     await recognizer.waitForStartContinuousRecognitionAsync();
 
     expect(recognizer.privReco.dynamicGrammar.addReferenceGrammar).toHaveBeenCalledTimes(1);
@@ -1068,8 +1146,10 @@ describe('SpeechRecognition', () => {
   test('with new SpeechGrammarList', async () => {
     const { default: createSpeechRecognitionPonyfill } = require('./createSpeechRecognitionPonyfill');
     const { SpeechGrammarList, SpeechRecognition } = createSpeechRecognitionPonyfill({
-      region: 'westus',
-      subscriptionKey: 'SUBSCRIPTION_KEY',
+      credentials: {
+        region: 'westus',
+        subscriptionKey: 'SUBSCRIPTION_KEY'
+      },
       textNormalization: 'maskeditn'
     });
 
@@ -1077,6 +1157,9 @@ describe('SpeechRecognition', () => {
 
     speechRecognition.grammars = new SpeechGrammarList();
     speechRecognition.start();
+
+    const recognizer = await constructRecognizerDeferred.promise;
+
     await recognizer.waitForStartContinuousRecognitionAsync();
   });
 });
@@ -1105,8 +1188,10 @@ describe('SpeechRecognition with text normalization', () => {
   test('of ITN should result in ITN', async () => {
     const { default: createSpeechRecognitionPonyfill } = require('./createSpeechRecognitionPonyfill');
     const { SpeechRecognition } = createSpeechRecognitionPonyfill({
-      region: 'westus',
-      subscriptionKey: 'SUBSCRIPTION_KEY',
+      credentials: {
+        region: 'westus',
+        subscriptionKey: 'SUBSCRIPTION_KEY'
+      },
       textNormalization: 'itn'
     });
 
@@ -1116,6 +1201,9 @@ describe('SpeechRecognition with text normalization', () => {
 
     speechRecognition.start();
     speechRecognition.interimResults = true;
+
+    const recognizer = await constructRecognizerDeferred.promise;
+
     await recognizer.waitForStartContinuousRecognitionAsync();
 
     // This will fire "firstAudibleChunk" on "emitRead"
@@ -1155,8 +1243,10 @@ describe('SpeechRecognition with text normalization', () => {
   test('of lexical should result in lexical', async () => {
     const { default: createSpeechRecognitionPonyfill } = require('./createSpeechRecognitionPonyfill');
     const { SpeechRecognition } = createSpeechRecognitionPonyfill({
-      region: 'westus',
-      subscriptionKey: 'SUBSCRIPTION_KEY',
+      credentials: {
+        region: 'westus',
+        subscriptionKey: 'SUBSCRIPTION_KEY'
+      },
       textNormalization: 'lexical'
     });
 
@@ -1166,6 +1256,9 @@ describe('SpeechRecognition with text normalization', () => {
 
     speechRecognition.start();
     speechRecognition.interimResults = true;
+
+    const recognizer = await constructRecognizerDeferred.promise;
+
     await recognizer.waitForStartContinuousRecognitionAsync();
 
     // This will fire "firstAudibleChunk" on "emitRead"
@@ -1205,8 +1298,10 @@ describe('SpeechRecognition with text normalization', () => {
   test('of masked ITN should result in masked ITN', async () => {
     const { default: createSpeechRecognitionPonyfill } = require('./createSpeechRecognitionPonyfill');
     const { SpeechRecognition } = createSpeechRecognitionPonyfill({
-      region: 'westus',
-      subscriptionKey: 'SUBSCRIPTION_KEY',
+      credentials: {
+        region: 'westus',
+        subscriptionKey: 'SUBSCRIPTION_KEY'
+      },
       textNormalization: 'maskeditn'
     });
 
@@ -1216,6 +1311,9 @@ describe('SpeechRecognition with text normalization', () => {
 
     speechRecognition.start();
     speechRecognition.interimResults = true;
+
+    const recognizer = await constructRecognizerDeferred.promise;
+
     await recognizer.waitForStartContinuousRecognitionAsync();
 
     // This will fire "firstAudibleChunk" on "emitRead"
@@ -1257,14 +1355,18 @@ describe('SpeechRecognition with Custom Speech', () => {
   test('should set up SpeechConfig with endpoint ID', async () => {
     const { default: createSpeechRecognitionPonyfill } = require('./createSpeechRecognitionPonyfill');
     const { SpeechRecognition } = createSpeechRecognitionPonyfill({
-      region: 'westus',
-      speechRecognitionEndpointId: '12345678-1234-5678-abcd-12345678abcd',
-      subscriptionKey: 'SUBSCRIPTION_KEY'
+      credentials: {
+        region: 'westus',
+        subscriptionKey: 'SUBSCRIPTION_KEY'
+      },
+      speechRecognitionEndpointId: '12345678-1234-5678-abcd-12345678abcd'
     });
 
     const speechRecognition = new SpeechRecognition();
 
     speechRecognition.start();
+
+    const recognizer = await constructRecognizerDeferred.promise;
 
     expect(recognizer.speechConfig).toHaveProperty('endpointId', '12345678-1234-5678-abcd-12345678abcd');
   });
@@ -1275,8 +1377,10 @@ describe('SpeechRecognition with telemetry', () => {
     const { default: createSpeechRecognitionPonyfill } = require('./createSpeechRecognitionPonyfill');
     const { SpeechRecognition } = createSpeechRecognitionPonyfill({
       enableTelemetry: false,
-      region: 'westus',
-      subscriptionKey: 'SUBSCRIPTION_KEY'
+      credentials: {
+        region: 'westus',
+        subscriptionKey: 'SUBSCRIPTION_KEY'
+      }
     });
 
     const speechRecognition = new SpeechRecognition();
@@ -1291,8 +1395,10 @@ describe('SpeechRecognition with telemetry', () => {
     const { default: createSpeechRecognitionPonyfill } = require('./createSpeechRecognitionPonyfill');
     const { SpeechRecognition } = createSpeechRecognitionPonyfill({
       enableTelemetry: true,
-      region: 'westus',
-      subscriptionKey: 'SUBSCRIPTION_KEY'
+      credentials: {
+        region: 'westus',
+        subscriptionKey: 'SUBSCRIPTION_KEY'
+      }
     });
 
     const speechRecognition = new SpeechRecognition();
@@ -1313,8 +1419,10 @@ describe('SpeechRecognition with loosened events', () => {
   beforeEach(async () => {
     const { default: createSpeechRecognitionPonyfill } = require('./createSpeechRecognitionPonyfill');
     const { SpeechRecognition } = createSpeechRecognitionPonyfill({
-      region: 'westus',
-      subscriptionKey: 'SUBSCRIPTION_KEY',
+      credentials: {
+        region: 'westus',
+        subscriptionKey: 'SUBSCRIPTION_KEY'
+      },
       looseEvents: true
     });
 
@@ -1327,6 +1435,9 @@ describe('SpeechRecognition with loosened events', () => {
   describe('in interactive mode', () => {
     test('without interims', async () => {
       speechRecognition.start();
+
+      const recognizer = await constructRecognizerDeferred.promise;
+
       await recognizer.waitForStartContinuousRecognitionAsync();
 
       // This will fire "firstAudibleChunk" on "emitRead"
@@ -1386,6 +1497,9 @@ describe('SpeechRecognition with loosened events', () => {
     test('with interims', async () => {
       speechRecognition.interimResults = true;
       speechRecognition.start();
+
+      const recognizer = await constructRecognizerDeferred.promise;
+
       await recognizer.waitForStartContinuousRecognitionAsync();
 
       // This will fire "firstAudibleChunk" on "emitRead"
@@ -1453,6 +1567,9 @@ describe('SpeechRecognition with loosened events', () => {
 
     test('with muted microphone', async () => {
       speechRecognition.start();
+
+      const recognizer = await constructRecognizerDeferred.promise;
+
       await recognizer.waitForStartContinuousRecognitionAsync();
 
       // This will fire "firstAudibleChunk" on "emitRead"
@@ -1507,6 +1624,9 @@ describe('SpeechRecognition with loosened events', () => {
 
     test('with unrecognizable sound should throw error', async () => {
       speechRecognition.start();
+
+      const recognizer = await constructRecognizerDeferred.promise;
+
       await recognizer.waitForStartContinuousRecognitionAsync();
 
       // This will fire "firstAudibleChunk" on "emitRead"
@@ -1569,6 +1689,9 @@ describe('SpeechRecognition with loosened events', () => {
       speechRecognition.start();
       speechRecognition.continuous = true;
       speechRecognition.interimResults = true;
+
+      const recognizer = await constructRecognizerDeferred.promise;
+
       await recognizer.waitForStartContinuousRecognitionAsync();
 
       // This will fire "firstAudibleChunk" on "emitRead"
@@ -1629,6 +1752,9 @@ describe('SpeechRecognition with loosened events', () => {
       speechRecognition.start();
       speechRecognition.continuous = true;
       speechRecognition.interimResults = true;
+
+      const recognizer = await constructRecognizerDeferred.promise;
+
       await recognizer.waitForStartContinuousRecognitionAsync();
 
       // This will fire "firstAudibleChunk" on "emitRead"
@@ -1704,6 +1830,9 @@ describe('SpeechRecognition with loosened events', () => {
       speechRecognition.start();
       speechRecognition.continuous = true;
       speechRecognition.interimResults = true;
+
+      const recognizer = await constructRecognizerDeferred.promise;
+
       await recognizer.waitForStartContinuousRecognitionAsync();
 
       // This will fire "firstAudibleChunk" on "emitRead"

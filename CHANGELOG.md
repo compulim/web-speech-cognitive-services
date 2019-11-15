@@ -6,15 +6,39 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Breaking changes
+
+#### Unifying options to pass credentials
+
+`authorizationToken`, `region`, and `subscriptionKey` are being deprecated in favor of `credentials` options. `credentials` can be one of the following types:
+
+- `{ authorizationToken: string, region: string }`
+- `{ region: string, subscriptionKey: string }`
+- `Promise<{ authorizationToken: string, region: string }>`
+- `Promise<{ region: string, subscriptionKey: string }>`
+- `() => { authorizationToken: string, region: string }`
+- `() => { region: string, subscriptionKey: string }`
+- `() => Promise<{ authorizationToken: string, region: string }>`
+- `() => Promise<{ region: string, subscriptionKey: string }>`
+
+If `credentials` is a function, it will be called just before the credentials is needed and may be called very frequently. This behavior matches the deprecating `authorizationToken`. The result of the call is also expected to be cached.
+
+If `region` is not returned, the default value of `"westus"` will be used.
+
 ### Fixed
 
 - Speech recognition: Removed extraneous finalized `result` event in continuous mode, by [@compulim](https://github.com/compulim), in PR [#79](https://github.com/compulim/web-speech-cognitive-services/pull/79)
+
+### Removed
+
+- `authorizationToken`, `region`, and `subscriptionKey` are being deprecated in favor of `credentials` options.
 
 ### Added
 
 - `playground`: Add delayed start to playground for testing speech recognition initiated outside of user gestures, in PR [#78](https://github.com/compulim/web-speech-congitive-services/pull/78)
 - Speech recognition: New `looseEvents` option, default is `false`. When enabled, we will no longer follow observed browser event order. We will send finalized `result` event as early as possible. This will not break conformance to W3C specifications. By [@compulim](https://github.com/compulim), in PR [#79](https://github.com/compulim/web-speech-cognitive-services/pull/79)
 - Speech recognition: Create ponyfill using `SpeechRecognizer` object from [`microsoft-cognitiveservices-speech-sdk`](https://npmjs.com/package/microsoft-cognitiveservices-speech-sdk), by [@compulim](https://github.com/compulim), in PR [#73](https://github.com/compulim/web-speech-cognitive-services/pull/73)
+- `credentials` option is added for obtaining authorization token and region, or subscription key and region, in a single object or function call, in PR [#XXX](https://github.com/compulim/web-speech-cognitive-services/pull/XXX)
 
 ### Changed
 

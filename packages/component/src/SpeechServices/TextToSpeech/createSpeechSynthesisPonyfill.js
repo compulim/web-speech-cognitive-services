@@ -1,13 +1,13 @@
 /* eslint class-methods-use-this: 0 */
 
 import { defineEventAttribute, EventTarget } from '../../external/event-target-shim';
-import memoize from 'memoize-one';
 import onErrorResumeNext from 'on-error-resume-next';
 
 import AudioContextQueue from './AudioContextQueue';
-import fetchAuthorizationToken from '../fetchAuthorizationToken';
+import createFetchAuthorizationTokenWithCache from '../createFetchAuthorizationTokenWithCache';
 import fetchCustomVoices from './fetchCustomVoices';
 import fetchVoices from './fetchVoices';
+import patchOptions from '../patchOptions';
 import SpeechSynthesisEvent from './SpeechSynthesisEvent';
 import SpeechSynthesisUtterance from './SpeechSynthesisUtterance';
 
@@ -15,51 +15,39 @@ import SpeechSynthesisUtterance from './SpeechSynthesisUtterance';
 const DEFAULT_OUTPUT_FORMAT = 'audio-24khz-160kbitrate-mono-mp3';
 const EMPTY_ARRAY = [];
 
-const TOKEN_EXPIRATION = 600000;
-const TOKEN_EARLY_RENEWAL = 60000;
+export default options => {
+  const {
+    audioContext,
+    fetchCredentials,
+    ponyfill = {
+      AudioContext: window.AudioContext || window.webkitAudioContext
+    },
+    region = 'westus',
+    speechSynthesisDeploymentId,
+    speechSynthesisOutputFormat = DEFAULT_OUTPUT_FORMAT,
+    subscriptionKey
+  } = patchOptions(options);
 
-export default ({
-  audioContext,
-  authorizationToken,
-  ponyfill = {
-    AudioContext: window.AudioContext || window.webkitAudioContext
-  },
-  region = 'westus',
-  speechSynthesisDeploymentId,
-  speechSynthesisOutputFormat = DEFAULT_OUTPUT_FORMAT,
-  subscriptionKey
-}) => {
-  if (!authorizationToken && !subscriptionKey) {
-    console.warn('web-speech-cognitive-services: Either authorization token or subscription key must be specified');
-
-    return {};
-  } else if (!ponyfill.AudioContext) {
+  if (!ponyfill.AudioContext) {
     console.warn('web-speech-cognitive-services: This browser does not support Web Audio and it will not work with Cognitive Services Speech Services.');
 
     return {};
   }
 
-  const fetchMemoizedAuthorizationToken = memoize(
-    ({ region, subscriptionKey }) => fetchAuthorizationToken({ region, subscriptionKey }),
-    (arg, prevArg) => (
-      arg.region === prevArg.region
-      && arg.subscriptionKey === prevArg.subscriptionKey
-      && arg.now - prevArg.now < TOKEN_EXPIRATION - TOKEN_EARLY_RENEWAL
-    )
-  );
+  const fetchAuthorizationTokenWithCache = createFetchAuthorizationTokenWithCache();
 
-  const getAuthorizationToken = () => (
-    typeof authorizationToken === 'function' ?
-      authorizationToken()
-    : authorizationToken ?
-      authorizationToken
-    :
-      fetchMemoizedAuthorizationToken({
-        now: Date.now,
-        region,
-        subscriptionKey
-      })
-  );
+  const fetchAuthorizationTokenCredentials = async () => {
+    const { authorizationToken, region, subscriptionKey } = await fetchCredentials();
+
+    if (authorizationToken) {
+      return { authorizationToken, region };
+    }
+
+    return {
+      authorizationToken: await fetchAuthorizationTokenWithCache({ region, subscriptionKey }),
+      region
+    };
+  };
 
   class SpeechSynthesis extends EventTarget {
     constructor() {
@@ -97,9 +85,8 @@ export default ({
 
         utterance.preload({
           deploymentId: speechSynthesisDeploymentId,
-          getAuthorizationToken,
-          outputFormat: speechSynthesisOutputFormat,
-          region
+          fetchAuthorizationTokenCredentials,
+          outputFormat: speechSynthesisOutputFormat
         });
 
         this.queue.push(utterance);
@@ -130,11 +117,8 @@ export default ({
         // In the spec, there is no "error" event.
 
         await onErrorResumeNext(async () => {
-          const voices = await fetchVoices({
-            authorizationToken: await getAuthorizationToken(),
-            deploymentId: speechSynthesisDeploymentId,
-            region
-          });
+          const { authorizationToken, region } = await fetchAuthorizationTokenCredentials();
+          const voices = await fetchVoices({ authorizationToken, region });
 
           this.getVoices = () => voices;
         });

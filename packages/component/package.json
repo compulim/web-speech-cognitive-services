@@ -62,6 +62,7 @@
     "babel-plugin-transform-inline-environment-variables": "^0.4.3",
     "eslint": "^6.6.0",
     "jest": "^24.9.0",
+    "lolex": "^5.1.1",
     "microsoft-speech-browser-sdk": "^0.0.12",
     "prettier": "^1.19.1",
     "rimraf": "^3.0.0"

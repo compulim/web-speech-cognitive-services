@@ -80,18 +80,16 @@ class SpeechSynthesisUtterance extends EventTarget {
 
   async preload({
     deploymentId,
-    getAuthorizationToken,
-    outputFormat,
-    region
+    fetchAuthorizationTokenCredentials,
+    outputFormat
   }) {
     this.arrayBufferPromise = fetchSpeechData({
       deploymentId,
-      getAuthorizationToken,
+      fetchAuthorizationTokenCredentials,
       lang: this.lang || window.navigator.language,
       outputFormat,
       pitch: this.pitch,
       rate: this.rate,
-      region,
       text: this.text,
       voice: this.voice && this.voice.voiceURI,
       volume: this.volume

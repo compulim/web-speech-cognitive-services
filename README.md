@@ -50,8 +50,10 @@ In the sample below, we use the bundle to perform text-to-speech with a voice na
   <body>
     <script>
       const { speechSynthesis, SpeechSynthesisUtterance } = window.WebSpeechCognitiveServices.create({
-        region: 'westus',
-        subscriptionKey: 'YOUR_SUBSCRIPTION_KEY'
+        credentials: {
+          region: 'westus',
+          subscriptionKey: 'YOUR_SUBSCRIPTION_KEY'
+        }
       });
 
       speechSynthesis.addEventListener('voiceschanged', () => {
@@ -116,16 +118,26 @@ The following list all options supported by the adapter.
     </tr>
     <tr>
       <td>
-        <code>authorizationToken:&nbsp;(</code><br />
-        <code>&nbsp;&nbsp;string&nbsp;||</code><br />
-        <code>&nbsp;&nbsp;Promise&lt;string&gt;&nbsp;||</code><br />
-        <code>&nbsp;&nbsp;()&nbsp;=>&nbsp;string&nbsp;||</code><br />
-        <code>&nbsp;&nbsp;()&nbsp;=>&nbsp;Promise&lt;string&gt;</code><br />
-        <code>)</code>
+        <code>credentials:&nbsp;(</code><br />
+        <code>&nbsp;&nbsp;Credentials&nbsp;||</code><br />
+        <code>&nbsp;&nbsp;Promise&lt;Credentials&gt;&nbsp;||</code><br />
+        <code>&nbsp;&nbsp;()&nbsp;=>&nbsp;Credentials&nbsp;||</code><br />
+        <code>&nbsp;&nbsp;()&nbsp;=>&nbsp;Promise&lt;Credentials&gt;</code><br />
+        <code>)</code><br />
+        <br />
+        <code>ICredentials: {</code><br />
+        <code>&nbsp;&nbsp;authorizationToken: string,</code><br />
+        <code>&nbsp;&nbsp;region: string</code><br />
+        <code>} || {</code><br />
+        <code>&nbsp;&nbsp;region: string,</code><br />
+        <code>&nbsp;&nbsp;subscriptionKey: string</code><br />
+        <code>}</code>
       </td>
-      <td>(Requires either<br /><code>authorizationToken</code> or<br /><code>subscriptionKey</code>)</td>
+      <td>(Required)</td>
       <td>
-        Authorization token from Cognitive Services. Please refer to <a href="https://docs.microsoft.com/en-us/azure/cognitive-services/authentication">this article</a> to obtain an authorization token.
+        Credentials (including Azure region) from Cognitive Services. Please refer to <a href="https://docs.microsoft.com/en-us/azure/cognitive-services/authentication">this article</a> to obtain an authorization token.<br />
+        <br />
+        Subscription key is not recommended for production use as it will be leaked in the browser.
       </td>
     </tr>
     <tr>
@@ -160,13 +172,6 @@ The following list all options supported by the adapter.
       </td>
     </tr>
     <tr>
-      <td><code>region:&nbsp;string</code></td>
-      <td><code>"westus"</code></td>
-      <td>
-        Azure region of Cognitive Services to use.
-      </td>
-    </tr>
-    <tr>
       <td><code>speechRecognitionEndpointId:&nbsp;string</code></td>
       <td><code>undefined</code></td>
       <td>
@@ -184,13 +189,6 @@ The following list all options supported by the adapter.
       <td><code>speechSynthesisOutputFormat:&nbsp;string</code></td>
       <td><code>"audio-24khz-160kbitrate-mono-mp3"</code></td>
       <td>Audio format for speech synthesis. Please refer to <a href="https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/rest-text-to-speech#audio-outputs">this article</a> for list of supported formats.</td>
-    </tr>
-    <tr>
-      <td><code>subscriptionKey:&nbsp;string</code></td>
-      <td>(Requires either<br /><code>authorizationToken</code> or<br /><code>subscriptionKey</code>)</td>
-      <td>
-        Subscription key to use. This is not recommended for production use as the subscription key will be leaked in the browser.
-      </td>
     </tr>
     <tr>
       <td><code>textNormalization:&nbsp;string</code></td>
@@ -220,8 +218,10 @@ import { createSpeechRecognitionPonyfill } from 'web-speech-cognitive-services/l
 const {
   SpeechRecognition
 } = await createSpeechRecognitionPonyfill({
-  region: 'westus',
-  subscriptionKey: 'YOUR_SUBSCRIPTION_KEY'
+  credentials: {
+    region: 'westus',
+    subscriptionKey: 'YOUR_SUBSCRIPTION_KEY'
+  }
 });
 
 const recognition = new SpeechRecognition();
@@ -250,8 +250,10 @@ const {
   SpeechGrammarList,
   SpeechRecognition
 } = await createPonyfill({
-  region: 'westus',
-  subscriptionKey: 'YOUR_SUBSCRIPTION_KEY'
+  credentials: {
+    region: 'westus',
+    subscriptionKey: 'YOUR_SUBSCRIPTION_KEY'
+  }
 });
 
 export default props =>
@@ -273,8 +275,10 @@ const {
   speechSynthesis,
   SpeechSynthesisUtterance
 } = await createSpeechSynthesisPonyfill({
-  region: 'westus',
-  subscriptionKey: 'YOUR_SUBSCRIPTION_KEY'
+  credentials: {
+    region: 'westus',
+    subscriptionKey: 'YOUR_SUBSCRIPTION_KEY'
+  }
 });
 
 speechSynthesis.addEventListener('voiceschanged', () => {
@@ -299,40 +303,30 @@ You can use [`react-say`](https://github.com/compulim/react-say/) to integrate s
 
 ```jsx
 import createPonyfill from 'web-speech-cognitive-services/lib/SpeechServices';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Say from 'react-say';
 
-export default class extends React.Component {
-  constructor(props) {
-    super(props);
+export default () => {
+  const [ponyfill, setPonyfill] = useState();
 
-    this.state = {};
-  }
+  useEffect(async () => {
+    setPonyfill(await createPonyfill({
+      credentials: {
+        region: 'westus',
+        subscriptionKey: 'YOUR_SUBSCRIPTION_KEY'
+      }
+    }));
+  }, [setPonyfill]);
 
-  async componentDidMount() {
-    const ponyfill = await createPonyfill({
-      region: 'westus',
-      subscriptionKey: 'YOUR_SUBSCRIPTION_KEY'
-    });
-
-    this.setState(() => ({ ponyfill }));
-  }
-
-  render() {
-    const {
-      state: { ponyfill }
-    } = this;
-
-    return (
-      ponyfill &&
-        <Say
-          speechSynthesis={ ponyfill.speechSynthesis }
-          speechSynthesisUtterance={ ponyfill.SpeechSynthesisUtterance }
-          text="Hello, World!"
-        />
-    );
-  }
-}
+  return (
+    ponyfill &&
+      <Say
+        speechSynthesis={ ponyfill.speechSynthesis }
+        speechSynthesisUtterance={ ponyfill.SpeechSynthesisUtterance }
+        text="Hello, World!"
+      />
+  );
+};
 ```
 
 ## Using authorization token
@@ -343,19 +337,23 @@ Instead of exposing subscription key on the browser, we strongly recommend using
 import createPonyfill from 'web-speech-cognitive-services/lib/SpeechServices';
 
 const ponyfill = await createPonyfill({
-  authorizationToken: 'YOUR_AUTHORIZATION_TOKEN',
-  region: 'westus',
+  credentials: {
+    authorizationToken: 'YOUR_AUTHORIZATION_TOKEN',
+    region: 'westus'
+  }
 });
 ```
 
-You can also provide an async function that will fetch the authorization token on-demand. You should cache the authorization token for subsequent request. For simplicity of this code snippets, we are not caching the result.
+You can also provide an async function that will fetch the authorization token and Azure region on-demand. You should cache the authorization token for subsequent request. For simplicity of this code snippets, we are not caching the result.
 
 ```jsx
 import createPonyfill from 'web-speech-cognitive-services/lib/SpeechServices';
 
 const ponyfill = await createPonyfill({
-  authorizationToken: () => fetch('https://example.com/your-token').then(res => res.text()),
-  region: 'westus',
+  credentials: () => fetch('https://example.com/your-token').then(res => ({
+    authorizationToken: res.text(),
+    region: 'westus'
+  }))
 });
 ```
 
@@ -382,8 +380,10 @@ const {
   SpeechGrammarList,
   SpeechRecognition
 } = await createPonyfill({
-  region: 'westus',
-  subscriptionKey: 'YOUR_SUBSCRIPTION_KEY'
+  credentials: {
+    region: 'westus',
+    subscriptionKey: 'YOUR_SUBSCRIPTION_KEY'
+  }
 });
 
 const recognition = new SpeechRecognition();
@@ -408,9 +408,11 @@ To use custom speech for speech recognition, you need to pass the endpoint ID wh
 import createPonyfill from 'web-speech-cognitive-services/lib/SpeechServices';
 
 const ponyfill = await createPonyfill({
-  region: 'westus',
+  credentials: {
+    region: 'westus',
+    subscriptionKey: 'YOUR_SUBSCRIPTION_KEY'
+  },
   speechRecognitionEndpointId: '12345678-1234-5678-abcd-12345678abcd',
-  subscriptionKey: 'YOUR_SUBSCRIPTION_KEY'
 });
 ```
 
@@ -424,9 +426,11 @@ To use Custom Voice for speech synthesis, you need to pass the deployment ID whi
 import createPonyfill from 'web-speech-cognitive-services/lib/SpeechServices';
 
 const ponyfill = await createPonyfill({
-  region: 'westus',
+  credentials: {
+    region: 'westus',
+    subscriptionKey: 'YOUR_SUBSCRIPTION_KEY'
+  },
   speechSynthesisDeploymentId: '12345678-1234-5678-abcd-12345678abcd',
-  subscriptionKey: 'YOUR_SUBSCRIPTION_KEY'
 });
 
 const { speechSynthesis, SpeechSynthesisUtterance } = ponyfill;

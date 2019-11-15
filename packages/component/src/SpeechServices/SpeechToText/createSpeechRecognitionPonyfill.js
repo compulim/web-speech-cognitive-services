@@ -8,6 +8,7 @@ import { defineEventAttribute, EventTarget } from '../../external/event-target-s
 
 import cognitiveServiceEventResultToWebSpeechRecognitionResultList from './cognitiveServiceEventResultToWebSpeechRecognitionResultList';
 import createPromiseQueue from '../../Util/createPromiseQueue';
+import patchOptions from '../patchOptions';
 import SpeechGrammarList from './SpeechGrammarList';
 import SpeechSDK from '../SpeechSDK';
 
@@ -526,41 +527,31 @@ export function createSpeechRecognitionPonyfillFromRecognizer({
   };
 }
 
-export default ({
-  audioConfig = AudioConfig.fromDefaultMicrophoneInput(),
-  authorizationToken,
+export default options => {
+  const {
+    audioConfig = AudioConfig.fromDefaultMicrophoneInput(),
 
-  // We set telemetry to true to honor the default telemetry settings of Speech SDK
-  // https://github.com/Microsoft/cognitive-services-speech-sdk-js#data--telemetry
-  enableTelemetry = true,
+    // We set telemetry to true to honor the default telemetry settings of Speech SDK
+    // https://github.com/Microsoft/cognitive-services-speech-sdk-js#data--telemetry
+    enableTelemetry = true,
 
-  looseEvent,
-  looseEvents,
-  referenceGrammars,
-  region = 'westus',
-  speechRecognitionEndpointId,
-  subscriptionKey,
-  textNormalization = 'display'
-} = {}) => {
-  if (!authorizationToken && !subscriptionKey) {
-    console.warn('web-speech-cognitive-services: Either authorizationToken or subscriptionKey must be specified');
+    fetchCredentials,
+    looseEvents,
+    referenceGrammars,
+    speechRecognitionEndpointId,
+    textNormalization = 'display'
+  } = patchOptions(options);
 
-    return {};
-  } else if (!window.navigator.mediaDevices || !window.navigator.mediaDevices.getUserMedia) {
+  if (!window.navigator.mediaDevices || !window.navigator.mediaDevices.getUserMedia) {
     console.warn('web-speech-cognitive-services: This browser does not support WebRTC and it will not work with Cognitive Services Speech Services.');
 
     return {};
   }
 
-  if (typeof looseEvent !== 'undefined') {
-    console.warn('web-speech-cognitive-services: The option "looseEvent" should be named as "looseEvents".');
-
-    looseEvents = looseEvent;
-  }
-
   const createRecognizer = async lang => {
+    const { authorizationToken, region, subscriptionKey } = await fetchCredentials();
     const speechConfig = authorizationToken ?
-      SpeechConfig.fromAuthorizationToken(typeof authorizationToken === 'function' ? await authorizationToken() : await authorizationToken, region)
+      SpeechConfig.fromAuthorizationToken(authorizationToken, region)
     :
       SpeechConfig.fromSubscription(subscriptionKey, region);
 
