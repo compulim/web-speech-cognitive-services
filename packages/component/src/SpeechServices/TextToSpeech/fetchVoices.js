@@ -2,7 +2,7 @@
 
 import SpeechSynthesisVoice from './SpeechSynthesisVoice';
 
-export default async function ({ authorizationToken, region }) {
+export default async function fetchVoices({ authorizationToken, region }) {
   // Although encodeURI on a hostname doesn't work as expected for hostname, at least, it will fail peacefully.
 
   const res = await fetch(

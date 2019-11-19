@@ -10,12 +10,11 @@ const SYNTHESIS_URL_TEMPLATE = 'https://{region}.tts.speech.microsoft.com/cognit
 
 export default async function ({
   deploymentId,
-  getAuthorizationToken,
+  fetchAuthorizationTokenCredentials,
   lang = DEFAULT_LANGUAGE,
   outputFormat,
   pitch,
   rate,
-  region,
   text,
   voice = DEFAULT_VOICE,
   volume
@@ -25,7 +24,7 @@ export default async function ({
     return decode(EMPTY_MP3_BASE64);
   }
 
-  const authorizationToken = await getAuthorizationToken();
+  const { authorizationToken, region } = await fetchAuthorizationTokenCredentials();
   const ssml = isSSML(text) ? text : buildSSML({ lang, pitch, rate, text, voice, volume });
 
   // Although calling encodeURI on hostname does not actually works, it fails faster and safer.

@@ -106,23 +106,38 @@ function* setPonyfillSaga() {
     const createPonyfill = ponyfillType === 'speechservices:bundle' ? window.WebSpeechCognitiveServices.create : createSpeechServicesPonyfill;
     const ponyfill = createPonyfill(
       speechServicesAuthorizationToken ?
-        { ...options, authorizationToken: speechServicesAuthorizationToken }
+        {
+          ...options,
+          credentials: {
+            authorizationToken: speechServicesAuthorizationToken,
+            region
+          }
+        }
       :
         {
           ...options,
-          authorizationToken: onDemandAuthorizationToken ? () => {
-            console.log('On-demand fetching Speech Services authorization token');
+          credentials:
+            onDemandAuthorizationToken ?
+              async () => {
+                console.log('On-demand fetching Speech Services authorization token');
 
-            try {
-              return fetchSpeechServicesAuthorizationToken({
+                try {
+                  return {
+                    authorizationToken: await fetchSpeechServicesAuthorizationToken({
+                      region,
+                      subscriptionKey: speechServicesSubscriptionKey
+                    }),
+                    region
+                  };
+                } catch (err) {
+                  console.error('Failed to fetch Speech Services authorization token', err);
+                }
+              }
+            :
+              {
                 region,
                 subscriptionKey: speechServicesSubscriptionKey
-              });
-            } catch (err) {
-              console.error('Failed to fetch Speech Services authorization token', err);
-            }
-          } : null,
-          subscriptionKey: onDemandAuthorizationToken ? null : speechServicesSubscriptionKey
+              }
         }
     );
 
