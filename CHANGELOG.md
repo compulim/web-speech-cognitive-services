@@ -39,6 +39,7 @@ If `region` is not returned, the default value of `"westus"` will be used.
 - Speech recognition: New `looseEvents` option, default is `false`. When enabled, we will no longer follow observed browser event order. We will send finalized `result` event as early as possible. This will not break conformance to W3C specifications. By [@compulim](https://github.com/compulim), in PR [#79](https://github.com/compulim/web-speech-cognitive-services/pull/79)
 - Speech recognition: Create ponyfill using `SpeechRecognizer` object from [`microsoft-cognitiveservices-speech-sdk`](https://npmjs.com/package/microsoft-cognitiveservices-speech-sdk), by [@compulim](https://github.com/compulim), in PR [#73](https://github.com/compulim/web-speech-cognitive-services/pull/73)
 - `credentials` option is added for obtaining authorization token and region, or subscription key and region, in a single object or function call, by [@compulim](https://github.com/compulim) in PR [#80](https://github.com/compulim/web-speech-cognitive-services/pull/80)
+- Speech recognition: Polyfill will have `abort`/`stop` function set to `undefined` if the underlying recognizer from Cognitive Services SDK does not support stop/abort, in PR [#81](https://github.com/compulim/web-speech-cognitive-services/pull/81)
 
 ### Changed
 

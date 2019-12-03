@@ -186,8 +186,6 @@ export function createSpeechRecognitionPonyfillFromRecognizer({
     get lang() { return this._lang; }
     set lang(value) { this._lang = value; }
 
-    abort() {}
-
     start() {
       this._startOnce().catch(err => {
         this.dispatchEvent(new ErrorEvent('error', { error: err, message: err && err.message }));
@@ -281,8 +279,12 @@ export function createSpeechRecognitionPonyfillFromRecognizer({
 
         await cognitiveServicesAsyncToPromise(recognizer.startContinuousRecognitionAsync.bind(recognizer))();
 
-        this.abort = () => queue.push({ abort: {} });
-        this.stop = () => queue.push({ stop: {} });
+        if (recognizer.stopContinuousRecognitionAsync) {
+          this.abort = () => queue.push({ abort: {} });
+          this.stop = () => queue.push({ stop: {} });
+        } else {
+          this.abort = this.stop = undefined;
+        }
 
         let audioStarted;
         let finalEvent;
@@ -355,7 +357,9 @@ export function createSpeechRecognitionPonyfillFromRecognizer({
               stopping = 'stop';
             }
 
-            if (abort) {
+            // Abort should not be dispatched without support of "stopContinuousRecognitionAsync".
+            // But for defensive purpose, we make sure "stopContinuousRecognitionAsync" is available before we can call.
+            if (abort && recognizer.stopContinuousRecognitionAsync) {
               await cognitiveServicesAsyncToPromise(recognizer.stopContinuousRecognitionAsync.bind(recognizer))();
             }
           } else if (audioSourceReady) {
@@ -433,7 +437,7 @@ export function createSpeechRecognitionPonyfillFromRecognizer({
                   };
                 }
 
-                if (!this.continuous) {
+                if (!this.continuous && recognizer.stopContinuousRecognitionAsync) {
                   await cognitiveServicesAsyncToPromise(recognizer.stopContinuousRecognitionAsync.bind(recognizer))();
                 }
 
@@ -503,8 +507,6 @@ export function createSpeechRecognitionPonyfillFromRecognizer({
         recognizer.dispose();
       }
     }
-
-    stop() {}
   }
 
   defineEventAttribute(SpeechRecognition.prototype, 'audioend');
