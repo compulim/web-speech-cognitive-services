@@ -6,9 +6,6 @@ const DEFAULT_LANGUAGE = 'en-US';
 const DEFAULT_VOICE = 'Microsoft Server Speech Text to Speech Voice (en-US, JessaRUS)';
 const EMPTY_MP3_BASE64 =
   'SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU3LjU2LjEwMQAAAAAAAAAAAAAA//tAwAAAAAAAAAAAAAAAAAAAAAAASW5mbwAAAA8AAAACAAABhgC7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7//////////////////////////////////////////////////////////////////8AAAAATGF2YzU3LjY0AAAAAAAAAAAAAAAAJAUHAAAAAAAAAYYoRBqpAAAAAAD/+xDEAAPAAAGkAAAAIAAANIAAAARMQU1FMy45OS41VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/7EMQpg8AAAaQAAAAgAAA0gAAABFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV';
-const SYNTHESIS_CUSTOM_VOICE_URL_TEMPLATE =
-  'https://{region}.voice.speech.microsoft.com/cognitiveservices/v1?deploymentId={deploymentId}';
-const SYNTHESIS_URL_TEMPLATE = 'https://{region}.tts.speech.microsoft.com/cognitiveservices/v1';
 
 export default async function({
   deploymentId,
@@ -26,16 +23,28 @@ export default async function({
     return decode(EMPTY_MP3_BASE64);
   }
 
-  const { authorizationToken, region } = await fetchAuthorizationTokenCredentials();
+  const { authorizationToken, region, speechSynthesisHost } = await fetchAuthorizationTokenCredentials();
+
+  if (!authorizationToken) {
+    throw new Error('web-speech-cognitive-services: "authorizationToken" must be specified.');
+  } else if (typeof authorizationToken !== 'string') {
+    throw new Error('web-speech-cognitive-services: "authorizationToken" must be a string.');
+  } else if (!region && !speechSynthesisHost) {
+    throw new Error('web-speech-cognitive-services: Either "region" or "speechSynthesisHost" must be specified.');
+  } else if (region && speechSynthesisHost) {
+    throw new Error('web-speech-cognitive-services: Only either "region" or "speechSynthesisHost" can be specified.');
+  }
+
   const ssml = isSSML(text) ? text : buildSSML({ lang, pitch, rate, text, voice, volume });
 
   // Although calling encodeURI on hostname does not actually works, it fails faster and safer.
-  const url = deploymentId
-    ? SYNTHESIS_CUSTOM_VOICE_URL_TEMPLATE.replace(/\{region\}/u, encodeURI(region)).replace(
-        /\{deploymentId\}/u,
-        encodeURI(deploymentId)
-      )
-    : SYNTHESIS_URL_TEMPLATE.replace(/\{region\}/u, encodeURI(region));
+  const host =
+    speechSynthesisHost ||
+    (deploymentId
+      ? `${encodeURI(region)}.voice.speech.microsoft.com`
+      : `${encodeURI(region)}.tts.speech.microsoft.com`);
+  const search = deploymentId ? `?deploymentId=${encodeURI(deploymentId)}` : '';
+  const url = `https://${host}/cognitiveservices/v1${search}`;
 
   const res = await fetch(url, {
     headers: {

@@ -2,10 +2,19 @@
 
 import SpeechSynthesisVoice from './SpeechSynthesisVoice';
 
-export default async function fetchVoices({ authorizationToken, region }) {
+export default async function fetchVoices({ authorizationToken, region, speechSynthesisHost }) {
   // Although encodeURI on a hostname doesn't work as expected for hostname, at least, it will fail peacefully.
 
-  const res = await fetch(`https://${encodeURI(region)}.tts.speech.microsoft.com/cognitiveservices/voices/list`, {
+  if (!authorizationToken) {
+    throw new Error('web-speech-cognitive-services: "authorizationToken" must be specified.');
+  } else if (!region && !speechSynthesisHost) {
+    throw new Error('web-speech-cognitive-services: Either "region" or "speechSynthesisHost" must be specified.');
+  } else if (region && speechSynthesisHost) {
+    throw new Error('web-speech-cognitive-services: Only either "region" or "speechSynthesisHost" can be specified.');
+  }
+
+  const host = speechSynthesisHost || `${encodeURI(region)}.tts.speech.microsoft.com`;
+  const res = await fetch(`https://${host}/cognitiveservices/voices/list`, {
     headers: {
       authorization: `Bearer ${authorizationToken}`,
       'content-type': 'application/json'

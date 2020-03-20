@@ -39,16 +39,37 @@ export default options => {
   const fetchAuthorizationTokenWithCache = createFetchAuthorizationTokenWithCache();
 
   const fetchAuthorizationTokenCredentials = async () => {
-    const { authorizationToken, region, subscriptionKey } = await fetchCredentials();
+    const { authorizationToken, region, speechSynthesisHost, subscriptionKey } = await fetchCredentials();
 
-    if (authorizationToken) {
-      return { authorizationToken, region };
+    if (authorizationToken && subscriptionKey) {
+      throw new Error(
+        'web-speech-cognitive-services: Only either "authorizationToken" or "subscriptionKey" can be specified.'
+      );
+    } else if (authorizationToken && typeof authorizationToken !== 'string') {
+      throw new Error('web-speech-cognitive-services: "authorizationToken" must be a string.');
+    } else if (subscriptionKey && typeof subscriptionKey !== 'string') {
+      throw new Error('web-speech-cognitive-services: "subscriptionKey" must be a string.');
+    } else if (!region && !speechSynthesisHost) {
+      throw new Error('web-speech-cognitive-services: Either "region" or "speechSynthesisHost" must be specified.');
+    } else if (region && speechSynthesisHost) {
+      throw new Error('web-speech-cognitive-services: Only either "region" or "speechSynthesisHost" can be specified.');
     }
 
-    return {
-      authorizationToken: await fetchAuthorizationTokenWithCache({ region, subscriptionKey }),
-      region
-    };
+    const fetchedCredentials = {};
+
+    if (region) {
+      fetchedCredentials.region = region;
+    } else {
+      fetchedCredentials.speechSynthesisHost = speechSynthesisHost;
+    }
+
+    if (!authorizationToken) {
+      authorizationToken = await fetchAuthorizationTokenWithCache({ region, subscriptionKey });
+    }
+
+    fetchedCredentials.authorizationToken = authorizationToken;
+
+    return fetchedCredentials;
   };
 
   class SpeechSynthesis extends EventTarget {
@@ -121,8 +142,8 @@ export default options => {
         // In the spec, there is no "error" event.
 
         await onErrorResumeNext(async () => {
-          const { authorizationToken, region } = await fetchAuthorizationTokenCredentials();
-          const voices = await fetchVoices({ authorizationToken, region });
+          const { authorizationToken, region, speechSynthesisHost } = await fetchAuthorizationTokenCredentials();
+          const voices = await fetchVoices({ authorizationToken, region, speechSynthesisHost });
 
           this.getVoices = () => voices;
         });

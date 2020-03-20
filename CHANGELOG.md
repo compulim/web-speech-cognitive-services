@@ -10,6 +10,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - As Bing Speech has deprecated and removed from Azure. Bing Speech support has been removed.
 
+### Added
+
+- Resolves [#88](https://github.com/compulim/web-speech-cognitive-services/issues/88). Support sovereign cloud, by [@compulim](https://github.com/compulim) in PR [#XXX](https://github.com/compulim/web-speech-cognitive-services/pull/XXX)
+
 ### Removed
 
 - Bing Speech support is removed, in PR [#87](https://github.com/compulim/web-speech-cognitive-services/pull/87), by [@compulim](https://github.com/compulim)

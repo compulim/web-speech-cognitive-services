@@ -10,12 +10,14 @@ const TOKEN_EXPIRATION = 600000;
 
 export default function createCachedFetchAuthorizationToken() {
   const fetchMemoizedAuthorizationToken = memoize(
-    (region, subscriptionKey) => fetchAuthorizationToken({ region, subscriptionKey }),
-    ([region, subscriptionKey, now], [prevRegion, prevSubscriptionKey, prevNow]) =>
+    (region, subscriptionKey, tokenURL) => fetchAuthorizationToken({ region, subscriptionKey, tokenURL }),
+    ([region, subscriptionKey, tokenURL, now], [prevRegion, prevSubscriptionKey, prevTokenURL, prevNow]) =>
       region === prevRegion &&
       subscriptionKey === prevSubscriptionKey &&
+      tokenURL === prevTokenURL &&
       now - prevNow < TOKEN_EXPIRATION - TOKEN_EARLY_RENEWAL
   );
 
-  return ({ region, subscriptionKey }) => fetchMemoizedAuthorizationToken(region, subscriptionKey, Date.now());
+  return ({ region, subscriptionKey, tokenURL }) =>
+    fetchMemoizedAuthorizationToken(region, subscriptionKey, tokenURL, Date.now());
 }

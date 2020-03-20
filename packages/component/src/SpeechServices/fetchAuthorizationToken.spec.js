@@ -23,7 +23,7 @@ test('fetch using region and subscriptionKey', async () => {
   await expect(tokenPromise).resolves.toBe('TOKEN');
 });
 
-test('fetch using subscriptionKey and url', async () => {
+test('fetch using subscriptionKey and tokenURL', async () => {
   global.fetch = jest.fn(async () => {
     const res = {
       ok: true,
@@ -33,7 +33,7 @@ test('fetch using subscriptionKey and url', async () => {
     return res;
   });
 
-  const tokenPromise = fetchAuthorizationToken({ subscriptionKey: 'SUBSCRIPTION_KEY', url: 'https://virginia.api.cognitive.microsoft.us/sts/v1.0/issueToken' });
+  const tokenPromise = fetchAuthorizationToken({ subscriptionKey: 'SUBSCRIPTION_KEY', tokenURL: 'https://virginia.api.cognitive.microsoft.us/sts/v1.0/issueToken' });
 
   expect(global.fetch).toHaveBeenCalledTimes(1);
   expect(global.fetch).toHaveBeenCalledWith('https://virginia.api.cognitive.microsoft.us/sts/v1.0/issueToken', {
@@ -46,8 +46,20 @@ test('fetch using subscriptionKey and url', async () => {
   await expect(tokenPromise).resolves.toBe('TOKEN');
 });
 
-test('throw exception when fetching with both region and url', async () => {
-  const tokenPromise = fetchAuthorizationToken({ region: 'westus2', subscriptionKey: 'SUBSCRIPTION_KEY', url: 'https://virginia.api.cognitive.microsoft.us/sts/v1.0/issueToken' });
+test('throw exception when fetching with both "region" and "tokenURL"', async () => {
+  const tokenPromise = fetchAuthorizationToken({ region: 'westus2', subscriptionKey: 'SUBSCRIPTION_KEY', tokenURL: 'https://virginia.api.cognitive.microsoft.us/sts/v1.0/issueToken' });
 
-  expect(tokenPromise).rejects.toThrow('Only either');
+  expect(tokenPromise).rejects.toThrow('either');
+});
+
+test('throw exception when fetching with neither of "region" and "tokenURL"', async () => {
+  const tokenPromise = fetchAuthorizationToken({ subscriptionKey: 'SUBSCRIPTION_KEY' });
+
+  expect(tokenPromise).rejects.toThrow('Either');
+});
+
+test('throw exception when fetching without "subscriptionKey"', async () => {
+  const tokenPromise = fetchAuthorizationToken({ region: 'westus2' });
+
+  expect(tokenPromise).rejects.toThrow('must be specified');
 });

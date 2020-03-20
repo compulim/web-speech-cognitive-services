@@ -554,8 +554,23 @@ export default options => {
   }
 
   const createRecognizer = async lang => {
-    const { authorizationToken, region, subscriptionKey } = await fetchCredentials();
-    const speechConfig = authorizationToken
+    const { authorizationToken, region, speechRecognitionURL, subscriptionKey } = await fetchCredentials();
+
+    if (authorizationToken && subscriptionKey) {
+      throw new Error(
+        'web-speech-cognitive-services: Only either "authorizationToken" or "subscriptionKey" can be specified by fetchCredentials.'
+      );
+    }
+
+    if (region && speechRecognitionURL) {
+      throw new Error(
+        'web-speech-cognitive-services: Only either "region" or "speechRecognitionURL" and "speechSynthesisURL" can be specified by fetchCredentials.'
+      );
+    }
+
+    const speechConfig = speechRecognitionURL
+      ? SpeechConfig.fromHost(speechRecognitionURL, authorizationToken || subscriptionKey)
+      : authorizationToken
       ? SpeechConfig.fromAuthorizationToken(authorizationToken, region)
       : SpeechConfig.fromSubscription(subscriptionKey, region);
 

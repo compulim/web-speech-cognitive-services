@@ -131,6 +131,16 @@ The following list all options supported by the adapter.
         <code>} || {</code><br />
         <code>&nbsp;&nbsp;region: string,</code><br />
         <code>&nbsp;&nbsp;subscriptionKey: string</code><br />
+        <code>} || {</code><br />
+        <code>&nbsp;&nbsp;authorizationToken: string,</code><br />
+        <code>&nbsp;&nbsp;speechRecognitionHost: string,</code><br />
+        <code>&nbsp;&nbsp;speechSynthesisHost: string,</code><br />
+        <code>&nbsp;&nbsp;tokenURL: string</code><br />
+        <code>} || {</code><br />
+        <code>&nbsp;&nbsp;speechRecognitionHost: string,</code><br />
+        <code>&nbsp;&nbsp;speechSynthesisHost: string,</code><br />
+        <code>&nbsp;&nbsp;subscriptionKey: string,</code><br />
+        <code>&nbsp;&nbsp;tokenURL: string</code><br />
         <code>}</code>
       </td>
       <td>(Required)</td>
@@ -138,6 +148,8 @@ The following list all options supported by the adapter.
         Credentials (including Azure region) from Cognitive Services. Please refer to <a href="https://docs.microsoft.com/en-us/azure/cognitive-services/authentication">this article</a> to obtain an authorization token.<br />
         <br />
         Subscription key is not recommended for production use as it will be leaked in the browser.
+        <br />
+        For sovereign cloud such as Azure Government (United States) and Azure China, instead of specifying <code>region</code>, please specify <code>speechRecongitionHost</code>, <code>speechSynthesisHost</code>, and <code>tokenURL</code> instead. You can find the [sovereign cloud connection parameters from this article](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/sovereign-clouds).
       </td>
     </tr>
     <tr>
