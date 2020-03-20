@@ -1,0 +1,53 @@
+import fetchAuthorizationToken from './fetchAuthorizationToken';
+
+test('fetch using region and subscriptionKey', async () => {
+  global.fetch = jest.fn(async () => {
+    const res = {
+      ok: true,
+      text: async () => 'TOKEN'
+    };
+
+    return res;
+  });
+
+  const tokenPromise = fetchAuthorizationToken({ region: 'westus2', subscriptionKey: 'SUBSCRIPTION_KEY' });
+
+  expect(global.fetch).toHaveBeenCalledTimes(1);
+  expect(global.fetch).toHaveBeenCalledWith('https://westus2.api.cognitive.microsoft.com/sts/v1.0/issueToken', {
+    headers: {
+      'Ocp-Apim-Subscription-Key': 'SUBSCRIPTION_KEY'
+    },
+    method: 'POST'
+  });
+
+  await expect(tokenPromise).resolves.toBe('TOKEN');
+});
+
+test('fetch using subscriptionKey and url', async () => {
+  global.fetch = jest.fn(async () => {
+    const res = {
+      ok: true,
+      text: async () => 'TOKEN'
+    };
+
+    return res;
+  });
+
+  const tokenPromise = fetchAuthorizationToken({ subscriptionKey: 'SUBSCRIPTION_KEY', url: 'https://virginia.api.cognitive.microsoft.us/sts/v1.0/issueToken' });
+
+  expect(global.fetch).toHaveBeenCalledTimes(1);
+  expect(global.fetch).toHaveBeenCalledWith('https://virginia.api.cognitive.microsoft.us/sts/v1.0/issueToken', {
+    headers: {
+      'Ocp-Apim-Subscription-Key': 'SUBSCRIPTION_KEY'
+    },
+    method: 'POST'
+  });
+
+  await expect(tokenPromise).resolves.toBe('TOKEN');
+});
+
+test('throw exception when fetching with both region and url', async () => {
+  const tokenPromise = fetchAuthorizationToken({ region: 'westus2', subscriptionKey: 'SUBSCRIPTION_KEY', url: 'https://virginia.api.cognitive.microsoft.us/sts/v1.0/issueToken' });
+
+  expect(tokenPromise).rejects.toThrow('Only either');
+});
