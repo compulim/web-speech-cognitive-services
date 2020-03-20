@@ -6,6 +6,40 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Breaking changes
+
+- As Bing Speech has deprecated and removed from Azure. Bing Speech support has been removed.
+
+### Removed
+
+- Bing Speech support is removed, in PR [#87](https://github.com/compulim/web-speech-cognitive-services/pull/87), by [@compulim](https://github.com/compulim)
+
+### Changed
+
+- Bumped dependencies, in PR [#87](https://github.com/compulim/web-speech-cognitive-services/pull/87), by [@compulim](https://github.com/compulim)
+   - Production dependencies
+      - [`@babel/runtime@7.8.7`](https://npmjs.com/package/@babel/runtime)
+      - [`event-target-shim-es5@1.0.1`](https://npmjs.com/package/event-target-shim-es5)
+      - [`event-target-shim@5.0.1`](https://npmjs.com/package/event-target-shim)
+      - [`memoize-one@5.1.1`](https://npmjs.com/package/memoize-one)
+      - [`microsoft-cognitiveservices-speech-sdk@1.10.1`](https://npmjs.com/package/microsoft-cognitiveservices-speech-sdk)
+      - [`simple-update-in@2.1.1`](https://npmjs.com/package/simple-update-in)
+   - Development dependencies
+      - [`@babel/cli@7.8.4`](https://npmjs.com/package/@babel/cli)
+      - [`@babel/core@7.8.7`](https://npmjs.com/package/@babel/core)
+      - [`@babel/plugin-proposal-object-rest-spread@7.8.3`](https://npmjs.com/package/@babel/plugin-proposal-object-rest-spread)
+      - [`@babel/plugin-transform-runtime@7.8.3`](https://npmjs.com/package/@babel/plugin-transform-runtime)
+      - [`@babel/preset-env@7.8.7`](https://npmjs.com/package/@babel/preset-env)
+      - [`@babel/preset-react@7.8.3`](https://npmjs.com/package/@babel/preset-react)
+      - [`@lerna@3.20.2`](https://npmjs.com/package/@lerna)
+      - [`babel-jest@25.1.0`](https://npmjs.com/package/babel-jest)
+      - [`concurrently@4.1.2`](https://npmjs.com/package/concurrently)
+      - [`eslint@6.8.0`](https://npmjs.com/package/eslint)
+      - [`jest@25.1.0`](https://npmjs.com/package/jest)
+      - [`lolex@5.1.2`](https://npmjs.com/package/lolex)
+      - [`webpack-cli@3.3.11`](https://npmjs.com/package/webpack-cli)
+      - [`webpack@4.42.0`](https://npmjs.com/package/webpack)
+
 ## [6.0.0] - 2019-12-03
 
 ### Breaking changes

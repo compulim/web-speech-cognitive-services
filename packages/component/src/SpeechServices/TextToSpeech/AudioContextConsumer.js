@@ -7,12 +7,12 @@ export default class {
 
   pause() {
     this.audioContext && this.audioContext.suspend();
-    this.playingUtterance && this.playingUtterance.emit('pause');
+    this.playingUtterance && this.playingUtterance.dispatchEvent(new CustomEvent('pause'));
   }
 
   resume() {
     this.audioContext && this.audioContext.resume();
-    this.playingUtterance && this.playingUtterance.emit('resume');
+    this.playingUtterance && this.playingUtterance.dispatchEvent(new CustomEvent('resume'));
   }
 
   async start(queue) {

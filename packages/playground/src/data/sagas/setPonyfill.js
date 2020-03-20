@@ -1,12 +1,5 @@
-import {
-  call,
-  put,
-  select,
-  takeLatest
-} from 'redux-saga/effects';
+import { put, select, takeLatest } from 'redux-saga/effects';
 
-import { SET_BING_SPEECH_AUTHORIZATION_TOKEN } from '../actions/setBingSpeechAuthorizationToken';
-import { SET_BING_SPEECH_SUBSCRIPTION_KEY } from '../actions/setBingSpeechSubscriptionKey';
 import { SET_ENABLE_TELEMETRY } from '../actions/setEnableTelemetry';
 import { SET_ON_DEMAND_AUTHORIZATION_TOKEN } from '../actions/setOnDemandAuthorizationToken';
 import { SET_PONYFILL_TYPE } from '../actions/setPonyfillType';
@@ -20,35 +13,32 @@ import { SET_SPEECH_SYNTHESIS_DEPLOYMENT_ID } from '../actions/setSpeechSynthesi
 import { SET_SPEECH_SYNTHESIS_OUTPUT_FORMAT } from '../actions/setSpeechSynthesisOutputFormat';
 import setPonyfill from '../actions/setPonyfill';
 
-import createBingSpeechPonyfill, { fetchAuthorizationToken as fetchBingSpeechAuthorizationToken } from 'web-speech-cognitive-services/lib/BingSpeech';
-import createSpeechServicesPonyfill, { fetchAuthorizationToken as fetchSpeechServicesAuthorizationToken } from 'web-speech-cognitive-services/lib/SpeechServices';
+import createSpeechServicesPonyfill, {
+  fetchAuthorizationToken as fetchSpeechServicesAuthorizationToken
+} from 'web-speech-cognitive-services/lib/SpeechServices';
 
-export default function* () {
+export default function*() {
   yield* setPonyfillSaga();
 
   yield takeLatest(
     ({ type }) =>
-      type === SET_BING_SPEECH_AUTHORIZATION_TOKEN
-      || type === SET_BING_SPEECH_SUBSCRIPTION_KEY
-      || type === SET_ENABLE_TELEMETRY
-      || type === SET_PONYFILL_TYPE
-      || type === SET_REGION
-      || type === SET_SPEECH_RECOGNITION_REFERENCE_GRAMMARS
-      || type === SET_SPEECH_RECOGNITION_ENDPOINT_ID
-      || type === SET_SPEECH_RECOGNITION_TEXT_NORMALIZATION
-      || type === SET_SPEECH_SERVICES_AUTHORIZATION_TOKEN
-      || type === SET_SPEECH_SERVICES_SUBSCRIPTION_KEY
-      || type === SET_SPEECH_SYNTHESIS_DEPLOYMENT_ID
-      || type === SET_SPEECH_SYNTHESIS_OUTPUT_FORMAT
-      || type === SET_ON_DEMAND_AUTHORIZATION_TOKEN,
+      type === SET_ENABLE_TELEMETRY ||
+      type === SET_PONYFILL_TYPE ||
+      type === SET_REGION ||
+      type === SET_SPEECH_RECOGNITION_REFERENCE_GRAMMARS ||
+      type === SET_SPEECH_RECOGNITION_ENDPOINT_ID ||
+      type === SET_SPEECH_RECOGNITION_TEXT_NORMALIZATION ||
+      type === SET_SPEECH_SERVICES_AUTHORIZATION_TOKEN ||
+      type === SET_SPEECH_SERVICES_SUBSCRIPTION_KEY ||
+      type === SET_SPEECH_SYNTHESIS_DEPLOYMENT_ID ||
+      type === SET_SPEECH_SYNTHESIS_OUTPUT_FORMAT ||
+      type === SET_ON_DEMAND_AUTHORIZATION_TOKEN,
     setPonyfillSaga
   );
 }
 
 function* setPonyfillSaga() {
   const {
-    bingSpeechAuthorizationToken,
-    bingSpeechSubscriptionKey,
     enableTelemetry,
     onDemandAuthorizationToken,
     ponyfillType,
@@ -63,35 +53,14 @@ function* setPonyfillSaga() {
   } = yield select();
 
   if (ponyfillType === 'browser') {
-    yield put(setPonyfill({
-      SpeechGrammarList: window.SpeechGrammarList || window.webkitSpeechGrammarList,
-      SpeechRecognition: window.SpeechRecognition || window.webkitSpeechRecognition,
-      speechSynthesis: window.speechSynthesis,
-      SpeechSynthesisUtterance: window.SpeechSynthesisUtterance
-    }));
-  } else if (ponyfillType === 'bingspeech') {
-    const options = { textNormalization };
-    const ponyfill = yield call(
-      createBingSpeechPonyfill,
-      bingSpeechAuthorizationToken ?
-        { ...options, authorizationToken: bingSpeechAuthorizationToken }
-      :
-        {
-          ...options,
-          authorizationToken: onDemandAuthorizationToken ? () => {
-            console.log('On-demand fetching Bing Speech authorization token');
-
-            try {
-              return fetchBingSpeechAuthorizationToken(bingSpeechSubscriptionKey);
-            } catch (err) {
-              console.error('Failed to fetch Bing Speech authorization token', err);
-            }
-          } : null,
-          subscriptionKey: onDemandAuthorizationToken ? null : bingSpeechSubscriptionKey
-        }
+    yield put(
+      setPonyfill({
+        SpeechGrammarList: window.SpeechGrammarList || window.webkitSpeechGrammarList,
+        SpeechRecognition: window.SpeechRecognition || window.webkitSpeechRecognition,
+        speechSynthesis: window.speechSynthesis,
+        SpeechSynthesisUtterance: window.SpeechSynthesisUtterance
+      })
     );
-
-    yield put(setPonyfill(ponyfill));
   } else {
     const options = {
       enableTelemetry,
@@ -103,42 +72,42 @@ function* setPonyfillSaga() {
       textNormalization
     };
 
-    const createPonyfill = ponyfillType === 'speechservices:bundle' ? window.WebSpeechCognitiveServices.create : createSpeechServicesPonyfill;
+    const createPonyfill =
+      ponyfillType === 'speechservices:bundle'
+        ? window.WebSpeechCognitiveServices.create
+        : createSpeechServicesPonyfill;
     const ponyfill = createPonyfill(
-      speechServicesAuthorizationToken ?
-        {
-          ...options,
-          credentials: {
-            authorizationToken: speechServicesAuthorizationToken,
-            region
+      speechServicesAuthorizationToken
+        ? {
+            ...options,
+            credentials: {
+              authorizationToken: speechServicesAuthorizationToken,
+              region
+            }
           }
-        }
-      :
-        {
-          ...options,
-          credentials:
-            onDemandAuthorizationToken ?
-              async () => {
-                console.log('On-demand fetching Speech Services authorization token');
+        : {
+            ...options,
+            credentials: onDemandAuthorizationToken
+              ? async () => {
+                  console.log('On-demand fetching Speech Services authorization token');
 
-                try {
-                  return {
-                    authorizationToken: await fetchSpeechServicesAuthorizationToken({
-                      region,
-                      subscriptionKey: speechServicesSubscriptionKey
-                    }),
-                    region
-                  };
-                } catch (err) {
-                  console.error('Failed to fetch Speech Services authorization token', err);
+                  try {
+                    return {
+                      authorizationToken: await fetchSpeechServicesAuthorizationToken({
+                        region,
+                        subscriptionKey: speechServicesSubscriptionKey
+                      }),
+                      region
+                    };
+                  } catch (err) {
+                    console.error('Failed to fetch Speech Services authorization token', err);
+                  }
                 }
-              }
-            :
-              {
-                region,
-                subscriptionKey: speechServicesSubscriptionKey
-              }
-        }
+              : {
+                  region,
+                  subscriptionKey: speechServicesSubscriptionKey
+                }
+          }
     );
 
     yield put(setPonyfill(ponyfill));

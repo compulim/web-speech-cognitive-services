@@ -8,13 +8,8 @@ import saga from './saga';
 function loadState() {
   const state = onErrorResumeNext(() => JSON.parse(window.sessionStorage.getItem('REDUX_STORE'))) || {};
   const urlSearchParams = new URLSearchParams(window.location.search);
-  const bingSpeechSubscriptionKeyFromURL = urlSearchParams.get('bs');
   const speechServicesSubscriptionKeyFromURL = urlSearchParams.get('ss');
   const regionFromURL = urlSearchParams.get('r');
-
-  if (bingSpeechSubscriptionKeyFromURL) {
-    state.bingSpeechSubscriptionKey = bingSpeechSubscriptionKeyFromURL;
-  }
 
   if (speechServicesSubscriptionKeyFromURL) {
     state.speechServicesSubscriptionKey = speechServicesSubscriptionKeyFromURL;
@@ -51,7 +46,6 @@ export default function () {
     // Remove keys that should not be serialized
     const {
       authorizationToken,
-      bingSpeechAuthorizationToken,
       ponyfill,
       speechRecognitionStarted,
       speechServicesAuthorizationToken,

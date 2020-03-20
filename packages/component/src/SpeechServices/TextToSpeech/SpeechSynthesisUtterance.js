@@ -1,6 +1,6 @@
 /* eslint no-empty: ["error", { "allowEmptyCatch": true }] */
 
-import { defineEventAttribute, EventTarget } from '../../external/event-target-shim';
+import { defineEventAttribute, EventTarget } from 'event-target-shim-es5';
 import EventAsPromise from 'event-as-promise';
 
 import fetchSpeechData from './fetchSpeechData';

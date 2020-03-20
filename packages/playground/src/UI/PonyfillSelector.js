@@ -31,10 +31,6 @@ const PonyfillSelector = () => {
           value="browser"
         />
         <Option
-          text="Bing Speech"
-          value="bingspeech"
-        />
-        <Option
           text="Speech Services"
           value="speechservices:npm"
         />
