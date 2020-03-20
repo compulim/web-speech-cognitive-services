@@ -361,8 +361,6 @@ const ponyfill = await createPonyfill({
 
 > List of supported regions can be found in [this article](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/rest-apis#regions-and-endpoints).
 
-> If you prefer to use the deprecating Bing Speech, import from `'web-speech-cognitive-services/lib/BingSpeech'` instead.
-
 ## Lexical and ITN support
 
 [Lexical and ITN support](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/rest-apis#response-parameters) is unique in Cognitive Services Speech Services. Our adapter added additional properties `transcriptITN`, `transcriptLexical`, and `transcriptMaskedITN` to surface the result, in addition to `transcript` and `confidence`.

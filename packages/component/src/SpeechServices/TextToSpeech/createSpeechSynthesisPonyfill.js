@@ -1,6 +1,6 @@
 /* eslint class-methods-use-this: 0 */
 
-import { defineEventAttribute, EventTarget } from '../../external/event-target-shim';
+import { defineEventAttribute, EventTarget } from 'event-target-shim-es5';
 import onErrorResumeNext from 'on-error-resume-next';
 
 import AudioContextQueue from './AudioContextQueue';

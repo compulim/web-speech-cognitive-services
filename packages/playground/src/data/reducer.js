@@ -1,7 +1,5 @@
 import { combineReducers } from 'redux';
 
-import bingSpeechAuthorizationToken from './reducers/bingSpeechAuthorizationToken';
-import bingSpeechSubscriptionKey from './reducers/bingSpeechSubscriptionKey';
 import browserSupportedSpeechRecognition from './reducers/browserSupportedSpeechRecognition';
 import enableTelemetry from './reducers/enableTelemetry';
 import navPane from './reducers/navPane';
@@ -30,8 +28,6 @@ import speechSynthesisUtterances from './reducers/speechSynthesisUtterances';
 import speechSynthesisVoiceURI from './reducers/speechSynthesisVoiceURI';
 
 export default combineReducers({
-  bingSpeechAuthorizationToken,
-  bingSpeechSubscriptionKey,
   browserSupportedSpeechRecognition,
   enableTelemetry,
   navPane,
