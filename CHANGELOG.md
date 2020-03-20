@@ -12,11 +12,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Removed
 
-- Bing Speech support is removed, in PR [#XXX](https://github.com/compulim/web-speech-cognitive-services/pull/XXX), by [@compulim](https://github.com/compulim)
+- Bing Speech support is removed, in PR [#87](https://github.com/compulim/web-speech-cognitive-services/pull/87), by [@compulim](https://github.com/compulim)
 
 ### Changed
 
-- Bumped dependencies, in PR [#XXX](https://github.com/compulim/web-speech-cognitive-services/pull/XXX), by [@compulim](https://github.com/compulim)
+- Bumped dependencies, in PR [#87](https://github.com/compulim/web-speech-cognitive-services/pull/87), by [@compulim](https://github.com/compulim)
    - Production dependencies
       - [`@babel/runtime@7.8.7`](https://npmjs.com/package/@babel/runtime)
       - [`event-target-shim-es5@1.0.1`](https://npmjs.com/package/event-target-shim-es5)
