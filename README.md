@@ -133,12 +133,12 @@ The following list all options supported by the adapter.
         <code>&nbsp;&nbsp;subscriptionKey: string</code><br />
         <code>} || {</code><br />
         <code>&nbsp;&nbsp;authorizationToken: string,</code><br />
-        <code>&nbsp;&nbsp;speechRecognitionHost: string,</code><br />
-        <code>&nbsp;&nbsp;speechSynthesisHost: string,</code><br />
+        <code>&nbsp;&nbsp;speechRecognitionHostname: string,</code><br />
+        <code>&nbsp;&nbsp;speechSynthesisHostname: string,</code><br />
         <code>&nbsp;&nbsp;tokenURL: string</code><br />
         <code>} || {</code><br />
-        <code>&nbsp;&nbsp;speechRecognitionHost: string,</code><br />
-        <code>&nbsp;&nbsp;speechSynthesisHost: string,</code><br />
+        <code>&nbsp;&nbsp;speechRecognitionHostname: string,</code><br />
+        <code>&nbsp;&nbsp;speechSynthesisHostname: string,</code><br />
         <code>&nbsp;&nbsp;subscriptionKey: string,</code><br />
         <code>&nbsp;&nbsp;tokenURL: string</code><br />
         <code>}</code>
@@ -149,7 +149,7 @@ The following list all options supported by the adapter.
         <br />
         Subscription key is not recommended for production use as it will be leaked in the browser.
         <br />
-        For sovereign cloud such as Azure Government (United States) and Azure China, instead of specifying <code>region</code>, please specify <code>speechRecongitionHost</code>, <code>speechSynthesisHost</code>, and <code>tokenURL</code> instead. You can find the [sovereign cloud connection parameters from this article](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/sovereign-clouds).
+        For sovereign cloud such as Azure Government (United States) and Azure China, instead of specifying <code>region</code>, please specify <code>speechRecongitionHost</code>, <code>speechSynthesisHostname</code>, and <code>tokenURL</code> instead. You can find the [sovereign cloud connection parameters from this article](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/sovereign-clouds).
       </td>
     </tr>
     <tr>

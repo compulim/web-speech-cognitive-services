@@ -192,7 +192,7 @@ export function createSpeechRecognitionPonyfillFromRecognizer({
 
     start() {
       this._startOnce().catch(err => {
-        this.dispatchEvent(new ErrorEvent('error', { error: err, message: err && err.message }));
+        this.dispatchEvent(new ErrorEvent('error', { error: err, message: err && err.stack }));
       });
     }
 
@@ -545,7 +545,7 @@ export default options => {
     textNormalization = 'display'
   } = patchOptions(options);
 
-  if (!window.navigator.mediaDevices || !window.navigator.mediaDevices.getUserMedia) {
+  if (!audioConfig && (!window.navigator.mediaDevices || !window.navigator.mediaDevices.getUserMedia)) {
     console.warn(
       'web-speech-cognitive-services: This browser does not support WebRTC and it will not work with Cognitive Services Speech Services.'
     );
@@ -554,25 +554,23 @@ export default options => {
   }
 
   const createRecognizer = async lang => {
-    const { authorizationToken, region, speechRecognitionURL, subscriptionKey } = await fetchCredentials();
+    const { authorizationToken, region, speechRecognitionHostname, subscriptionKey } = await fetchCredentials();
+    let speechConfig;
 
-    if (authorizationToken && subscriptionKey) {
-      throw new Error(
-        'web-speech-cognitive-services: Only either "authorizationToken" or "subscriptionKey" can be specified by fetchCredentials.'
-      );
+    if (speechRecognitionHostname) {
+      const host = { hostname: speechRecognitionHostname, port: 443, protocol: 'wss:' };
+
+      if (authorizationToken) {
+        speechConfig = SpeechConfig.fromHost(host);
+        speechConfig.authorizationToken = authorizationToken;
+      } else {
+        speechConfig = SpeechConfig.fromHost(host, subscriptionKey);
+      }
+    } else {
+      speechConfig = authorizationToken
+        ? SpeechConfig.fromAuthorizationToken(authorizationToken, region)
+        : SpeechConfig.fromSubscription(subscriptionKey, region);
     }
-
-    if (region && speechRecognitionURL) {
-      throw new Error(
-        'web-speech-cognitive-services: Only either "region" or "speechRecognitionURL" and "speechSynthesisURL" can be specified by fetchCredentials.'
-      );
-    }
-
-    const speechConfig = speechRecognitionURL
-      ? SpeechConfig.fromHost(speechRecognitionURL, authorizationToken || subscriptionKey)
-      : authorizationToken
-      ? SpeechConfig.fromAuthorizationToken(authorizationToken, region)
-      : SpeechConfig.fromSubscription(subscriptionKey, region);
 
     if (speechRecognitionEndpointId) {
       speechConfig.endpointId = speechRecognitionEndpointId;

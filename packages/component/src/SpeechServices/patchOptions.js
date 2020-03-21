@@ -35,11 +35,28 @@ export default function patchOptions({
   return {
     ...otherOptions,
     fetchCredentials: async () => {
-      const { authorizationToken, region, subscriptionKey } = await resolveFunctionOrReturnValue(credentials);
+      const {
+        authorizationToken,
+        region,
+        speechRecognitionHostname,
+        speechSynthesisHostname,
+        subscriptionKey,
+        tokenURL
+      } = await resolveFunctionOrReturnValue(credentials);
 
       if (!authorizationToken && !subscriptionKey) {
         throw new Error(
           'web-speech-cognitive-services: Either authorization token and subscription key must be provided.'
+        );
+      }
+
+      if (!region && !(speechRecognitionHostname && speechSynthesisHostname && tokenURL)) {
+        throw new Error(
+          'web-speech-cognitive-services: Either "region" or "speechRecognitionHostname", "speechSynthesisHostname", and "tokenURL" must be set.'
+        );
+      } else if (region && (speechRecognitionHostname || speechSynthesisHostname || tokenURL)) {
+        throw new Error(
+          'web-speech-cognitive-services: Only either "region" or "speechRecognitionHostname", "speechSynthesisHostname", and "tokenURL" can be set.'
         );
       }
 
@@ -59,7 +76,17 @@ export default function patchOptions({
         shouldWarnOnSubscriptionKey = false;
       }
 
-      return authorizationToken ? { authorizationToken, region } : { region, subscriptionKey };
+      const resolvedCredentials = authorizationToken ? { authorizationToken } : { subscriptionKey };
+
+      if (region) {
+        resolvedCredentials.region = region;
+      } else {
+        resolvedCredentials.speechRecognitionHostname = speechRecognitionHostname;
+        resolvedCredentials.speechSynthesisHostname = speechSynthesisHostname;
+        resolvedCredentials.tokenURL = tokenURL;
+      }
+
+      return resolvedCredentials;
     },
     looseEvents
   };
