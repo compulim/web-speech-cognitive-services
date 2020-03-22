@@ -7,30 +7,10 @@ import captureAllSpeechSynthesisUtteranceEvents from '../utils/speechSynthesis/c
 import fetchAuthorizationToken from '../utils/fetchAuthorizationToken';
 import MockAudioContext from '../utils/MockAudioContext';
 import recognizeRiffWaveArrayBuffer from '../utils/speechSynthesis/recognizeRiffWaveArrayBuffer';
+import testTableForAuthentication from '../utils/testTableForAuthentication';
 import waitForEvent from '../utils/waitForEvent';
 
-describe.each([
-  ['authorization token and region', true, { region: process.env.REGION }],
-  [
-    'authorization token and host',
-    true,
-    {
-      speechRecognitionHostname: 'westus2.stt.speech.microsoft.com',
-      speechSynthesisHostname: 'westus2.tts.speech.microsoft.com',
-      tokenURL: 'https://westus2.api.cognitive.microsoft.com/sts/v1.0/issueToken'
-    }
-  ],
-  ['subscription key and region', false, { region: process.env.REGION }],
-  [
-    'subscription key and host',
-    false,
-    {
-      speechRecognitionHostname: 'westus2.stt.speech.microsoft.com',
-      speechSynthesisHostname: 'westus2.tts.speech.microsoft.com',
-      tokenURL: 'https://westus2.api.cognitive.microsoft.com/sts/v1.0/issueToken'
-    }
-  ]
-])('using %s', (_, useAuthorizationToken, mergeCredentials) => {
+describe.each(testTableForAuthentication)('using %s', (_, useAuthorizationToken, mergeCredentials) => {
   test('to synthesis', async () => {
     const credentials = { ...mergeCredentials };
 

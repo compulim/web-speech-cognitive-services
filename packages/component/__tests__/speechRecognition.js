@@ -10,34 +10,14 @@ import captureAllSpeechRecognitionEvents from '../utils/speechRecognition/captur
 import createQueuedArrayBufferAudioSource from '../utils/speechRecognition/createQueuedArrayBufferAudioSource';
 import fetchAuthorizationToken from '../utils/fetchAuthorizationToken';
 import fetchSpeechData from '../src/SpeechServices/TextToSpeech/fetchSpeechData';
+import testTableForAuthentication from '../utils/testTableForAuthentication';
 
 const BITS_PER_SAMPLE = 16;
 const CHANNELS = 1;
 const OUTPUT_FORMAT = 'riff-8khz-16bit-mono-pcm';
 const SAMPLES_PER_SECOND = 8000;
 
-describe.each([
-  ['authorization token and region', true, { region: process.env.REGION }],
-  [
-    'authorization token and host',
-    true,
-    {
-      speechRecognitionHostname: 'westus2.stt.speech.microsoft.com',
-      speechSynthesisHostname: 'westus2.tts.speech.microsoft.com',
-      tokenURL: 'https://westus2.api.cognitive.microsoft.com/sts/v1.0/issueToken'
-    }
-  ],
-  ['subscription key and region', false, { region: process.env.REGION }],
-  [
-    'subscription key and host',
-    false,
-    {
-      speechRecognitionHostname: 'westus2.stt.speech.microsoft.com',
-      speechSynthesisHostname: 'westus2.tts.speech.microsoft.com',
-      tokenURL: 'https://westus2.api.cognitive.microsoft.com/sts/v1.0/issueToken'
-    }
-  ]
-])('using %s', (_, useAuthorizationToken, mergeCredentials) => {
+describe.each(testTableForAuthentication)('using %s', (_, useAuthorizationToken, mergeCredentials) => {
   let audioConfig;
 
   beforeEach(async () => {
