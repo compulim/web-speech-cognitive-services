@@ -85,4 +85,8 @@ describe('createTestTable', () => {
   test('with 0x2x0 combos', () => {
     expect(createTestTable([[], [1, 2], []])).toEqual([[1], [2]]);
   });
+
+  test('with 0x2x0x2x0 combos', () => {
+    expect(createTestTable([[], [1, 2], [], ['a', 'b'], []])).toEqual([[1, 'a'], [2, 'a'], [1, 'b'], [2, 'b']]);
+  });
 });

@@ -5,7 +5,7 @@
 import { createSpeechSynthesisPonyfill } from '../src/SpeechServices';
 import captureAllSpeechSynthesisUtteranceEvents from '../utils/speechSynthesis/captureAllSpeechSynthesisUtteranceEvents';
 import fetchAuthorizationToken from '../utils/fetchAuthorizationToken';
-import MockAudioContext from '../utils/MockAudioContext';
+import MockAudioContext from '../utils/speechSynthesis/MockAudioContext';
 import recognizeRiffWaveArrayBuffer from '../utils/speechSynthesis/recognizeRiffWaveArrayBuffer';
 import testTableForAuthentication from '../utils/testTableForAuthentication';
 import waitForEvent from '../utils/waitForEvent';
