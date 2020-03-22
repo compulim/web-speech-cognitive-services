@@ -401,8 +401,6 @@ const ponyfill = await createPonyfill({
 });
 ```
 
-> Note: if you do not specify `region`, we will default to `"westus"`.
-
 > List of supported regions can be found in [this article](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/rest-apis#regions-and-endpoints).
 
 ## Lexical and ITN support
