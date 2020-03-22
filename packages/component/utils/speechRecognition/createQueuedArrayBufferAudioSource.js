@@ -11,15 +11,11 @@ import {
   // AudioStreamNodeErrorEvent,
 } from 'microsoft-cognitiveservices-speech-sdk/distrib/lib/src/common/AudioSourceEvents';
 
-import { EventSource } from 'microsoft-cognitiveservices-speech-sdk/distrib/lib/src/common/EventSource';
-
-import { Events } from 'microsoft-cognitiveservices-speech-sdk/distrib/lib/src/common/Events';
-
-import { PromiseHelper } from 'microsoft-cognitiveservices-speech-sdk/distrib/lib/src/common/Promise';
-
-import { Stream } from 'microsoft-cognitiveservices-speech-sdk/distrib/lib/src/common/Stream';
-
 import { createNoDashGuid } from 'microsoft-cognitiveservices-speech-sdk/distrib/lib/src/common/Guid';
+import { Events } from 'microsoft-cognitiveservices-speech-sdk/distrib/lib/src/common/Events';
+import { EventSource } from 'microsoft-cognitiveservices-speech-sdk/distrib/lib/src/common/EventSource';
+import { PromiseHelper } from 'microsoft-cognitiveservices-speech-sdk/distrib/lib/src/common/Promise';
+import { Stream } from 'microsoft-cognitiveservices-speech-sdk/distrib/lib/src/common/Stream';
 
 class QueuedArrayBufferAudioSource {
   constructor(audioFormat, audioSourceId = createNoDashGuid()) {
@@ -151,6 +147,8 @@ class QueuedArrayBufferAudioSource {
   }
 }
 
-export default function createQueuedArrayBufferAudioSource(audioFormat = AudioStreamFormat.getWaveFormatPCM(16000, 16, 1)) {
+export default function createQueuedArrayBufferAudioSource(
+  audioFormat = AudioStreamFormat.getWaveFormatPCM(16000, 16, 1)
+) {
   return new QueuedArrayBufferAudioSource(audioFormat);
 }

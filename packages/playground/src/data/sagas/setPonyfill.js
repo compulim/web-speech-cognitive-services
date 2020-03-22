@@ -1,4 +1,5 @@
 import { put, select, takeLatest } from 'redux-saga/effects';
+import createSpeechServicesPonyfill from 'web-speech-cognitive-services/lib/SpeechServices';
 
 import { SET_ENABLE_TELEMETRY } from '../actions/setEnableTelemetry';
 import { SET_ON_DEMAND_AUTHORIZATION_TOKEN } from '../actions/setOnDemandAuthorizationToken';
@@ -13,8 +14,6 @@ import { SET_SPEECH_SYNTHESIS_DEPLOYMENT_ID } from '../actions/setSpeechSynthesi
 import { SET_SPEECH_SYNTHESIS_OUTPUT_FORMAT } from '../actions/setSpeechSynthesisOutputFormat';
 import fetchSpeechServicesAuthorizationToken from '../../fetchSpeechServicesAuthorizationToken';
 import setPonyfill from '../actions/setPonyfill';
-
-import createSpeechServicesPonyfill from 'web-speech-cognitive-services/lib/SpeechServices';
 
 export default function* setPonyfillRootSaga() {
   yield* setPonyfillSaga();

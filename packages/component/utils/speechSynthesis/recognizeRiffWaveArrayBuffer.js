@@ -8,13 +8,9 @@ export default async function recognizeRiffWaveArrayBuffer({
   riffWaveArrayBuffer
 }) {
   const hostname = speechRecognitionHostname || `${region}.stt.speech.microsoft.com`;
-  const search =
-    '?' +
-    new URLSearchParams({
-      format: 'detailed',
-      language: lang
-    });
-  const url = `https://${encodeURI(hostname)}/speech/recognition/conversation/cognitiveservices/v1${search}`;
+  const search = new URLSearchParams({ format: 'detailed', language: lang });
+
+  const url = `https://${encodeURI(hostname)}/speech/recognition/conversation/cognitiveservices/v1?${search}`;
 
   const res = await fetch(url, {
     body: riffWaveArrayBuffer,

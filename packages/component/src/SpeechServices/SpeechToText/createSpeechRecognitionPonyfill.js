@@ -154,6 +154,7 @@ export function createSpeechRecognitionPonyfillFromRecognizer({
     get continuous() {
       return this._continuous;
     }
+
     set continuous(value) {
       this._continuous = value;
     }
@@ -161,6 +162,7 @@ export function createSpeechRecognitionPonyfillFromRecognizer({
     get grammars() {
       return this._grammars;
     }
+
     set grammars(value) {
       if (value instanceof SpeechGrammarList) {
         this._grammars = value;
@@ -172,6 +174,7 @@ export function createSpeechRecognitionPonyfillFromRecognizer({
     get interimResults() {
       return this._interimResults;
     }
+
     set interimResults(value) {
       this._interimResults = value;
     }
@@ -179,6 +182,7 @@ export function createSpeechRecognitionPonyfillFromRecognizer({
     get maxAlternatives() {
       return this._maxAlternatives;
     }
+
     set maxAlternatives(value) {
       this._maxAlternatives = value;
     }
@@ -186,13 +190,14 @@ export function createSpeechRecognitionPonyfillFromRecognizer({
     get lang() {
       return this._lang;
     }
+
     set lang(value) {
       this._lang = value;
     }
 
     start() {
       this._startOnce().catch(err => {
-        this.dispatchEvent(new ErrorEvent('error', { error: err, message: err && err.stack }));
+        this.dispatchEvent(new ErrorEvent('error', { error: err, message: err && (err.stack || err.message) }));
       });
     }
 

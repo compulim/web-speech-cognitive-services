@@ -1,6 +1,7 @@
 /* eslint class-methods-use-this: 0 */
 
 import { defineEventAttribute, EventTarget } from 'event-target-shim-es5';
+import createDeferred from 'p-defer';
 import onErrorResumeNext from 'on-error-resume-next';
 
 import AudioContextQueue from './AudioContextQueue';
@@ -65,22 +66,29 @@ export default options => {
         throw new Error('invalid utterance');
       }
 
-      return new Promise((resolve, reject) => {
-        utterance.addEventListener('end', resolve);
-        utterance.addEventListener('error', ({ error: errorCode, message }) => {
-          const error = new Error(errorCode);
+      const { reject, resolve, promise } = createDeferred();
+      const handleError = ({ error: errorCode, message }) => {
+        const error = new Error(errorCode);
 
-          error.stack = message;
-          reject(error);
-        });
+        error.stack = message;
 
-        utterance.preload({
-          deploymentId: speechSynthesisDeploymentId,
-          fetchCredentials,
-          outputFormat: speechSynthesisOutputFormat
-        });
+        reject(error);
+      };
 
-        this.queue.push(utterance);
+      utterance.addEventListener('end', resolve);
+      utterance.addEventListener('error', handleError);
+
+      utterance.preload({
+        deploymentId: speechSynthesisDeploymentId,
+        fetchCredentials,
+        outputFormat: speechSynthesisOutputFormat
+      });
+
+      this.queue.push(utterance);
+
+      return promise.finally(() => {
+        utterance.removeEventListener('end', resolve);
+        utterance.removeEventListener('error', handleError);
       });
     }
 
