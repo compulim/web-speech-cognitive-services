@@ -17,7 +17,7 @@ import createSpeechServicesPonyfill, {
   fetchAuthorizationToken as fetchSpeechServicesAuthorizationToken
 } from 'web-speech-cognitive-services/lib/SpeechServices';
 
-export default function*() {
+export default function* setPonyfillRootSaga() {
   yield* setPonyfillSaga();
 
   yield takeLatest(

@@ -9,7 +9,10 @@ export default class {
     throw new Error('JSGF is not supported');
   }
 
-  get phrases() { return this._phrases; }
+  get phrases() {
+    return this._phrases;
+  }
+
   set phrases(value) {
     if (Array.isArray(value)) {
       this._phrases = value;

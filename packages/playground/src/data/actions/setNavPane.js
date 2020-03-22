@@ -1,6 +1,6 @@
 const SET_NAV_PANE = 'SET_NAV_PANE';
 
-export default function (navPane) {
+export default function setNavPane(navPane) {
   if (navPane !== 'speech synthesis') {
     navPane = 'speech recognition';
   }
@@ -11,4 +11,4 @@ export default function (navPane) {
   };
 }
 
-export { SET_NAV_PANE }
+export { SET_NAV_PANE };

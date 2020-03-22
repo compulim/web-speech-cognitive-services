@@ -1,6 +1,6 @@
 import { SET_SPEECH_SERVICES_SUBSCRIPTION_KEY } from '../actions/setSpeechServicesSubscriptionKey';
 
-export default function (state = '', { payload, type }) {
+export default function speechServicesSubscriptionKey(state = '', { payload, type }) {
   if (type === SET_SPEECH_SERVICES_SUBSCRIPTION_KEY) {
     state = payload.subscriptionKey;
   }

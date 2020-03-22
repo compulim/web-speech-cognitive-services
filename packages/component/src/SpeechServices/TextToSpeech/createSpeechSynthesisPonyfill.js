@@ -29,7 +29,9 @@ export default options => {
   } = patchOptions(options);
 
   if (!ponyfill.AudioContext) {
-    console.warn('web-speech-cognitive-services: This browser does not support Web Audio and it will not work with Cognitive Services Speech Services.');
+    console.warn(
+      'web-speech-cognitive-services: This browser does not support Web Audio and it will not work with Cognitive Services Speech Services.'
+    );
 
     return {};
   }
@@ -100,7 +102,9 @@ export default options => {
     async updateVoices() {
       if (speechSynthesisDeploymentId) {
         if (subscriptionKey) {
-          console.warn('web-speech-cognitive-services: Listing of custom voice models are only available when using subscription key.');
+          console.warn(
+            'web-speech-cognitive-services: Listing of custom voice models are only available when using subscription key.'
+          );
 
           await onErrorResumeNext(async () => {
             const voices = await fetchCustomVoices({
@@ -135,4 +139,4 @@ export default options => {
     SpeechSynthesisEvent,
     SpeechSynthesisUtterance
   };
-}
+};

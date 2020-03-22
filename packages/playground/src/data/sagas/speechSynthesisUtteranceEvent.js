@@ -1,10 +1,4 @@
-import {
-  call,
-  put,
-  race,
-  take,
-  takeEvery
-} from 'redux-saga/effects';
+import { call, put, race, take, takeEvery } from 'redux-saga/effects';
 
 import addSpeechSynthesisNativeUtteranceEvent from '../actions/addSpeechSynthesisNativeUtteranceEvent';
 import { ADD_SPEECH_SYNTHESIS_NATIVE_UTTERANCE } from '../actions/addSpeechSynthesisNativeUtterance';
@@ -12,18 +6,10 @@ import { CLEAR_SPEECH_SYNTHESIS_UTTERANCE } from '../actions/clearSpeechSynthesi
 
 import createPromiseQueue from '../utils/createPromiseQueue';
 
-const MONITORING_EVENTS = [
-  'boundary',
-  'end',
-  'error',
-  'mark',
-  'pause',
-  'resume',
-  'start'
-];
+const MONITORING_EVENTS = ['boundary', 'end', 'error', 'mark', 'pause', 'resume', 'start'];
 
-export default function* () {
-  yield takeEvery(ADD_SPEECH_SYNTHESIS_NATIVE_UTTERANCE, function* ({ payload: { nativeUtterance } }) {
+export default function* speechSynthesisUtteranceEventSaga() {
+  yield takeEvery(ADD_SPEECH_SYNTHESIS_NATIVE_UTTERANCE, function*({ payload: { nativeUtterance } }) {
     const events = createPromiseQueue();
 
     try {
@@ -40,10 +26,7 @@ export default function* () {
         } else if (event) {
           yield put(addSpeechSynthesisNativeUtteranceEvent(nativeUtterance.id, event));
 
-          if (
-            event.type === 'end'
-            || event.type === 'error'
-          ) {
+          if (event.type === 'end' || event.type === 'error') {
             break;
           }
         }

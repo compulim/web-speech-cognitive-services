@@ -13,7 +13,7 @@ function sleep(duration) {
   return new Promise(resolve => setTimeout(resolve, duration));
 }
 
-export default function* () {
+export default function* speechRecognitionStartSaga() {
   for (;;) {
     let cancelReason;
 
@@ -83,11 +83,14 @@ function* startSpeechRecognition({ getCancelReason }) {
 
     yield put(setSpeechRecognitionInstance(speechRecognition));
 
-    yield call(() => new Promise(resolve => {
-      speechRecognition.addEventListener('error', resolve);
-      speechRecognition.addEventListener('end', resolve);
-      speechRecognition.start();
-    }));
+    yield call(
+      () =>
+        new Promise(resolve => {
+          speechRecognition.addEventListener('error', resolve);
+          speechRecognition.addEventListener('end', resolve);
+          speechRecognition.start();
+        })
+    );
   } finally {
     if (speechRecognition) {
       if (getCancelReason() === 'abort') {

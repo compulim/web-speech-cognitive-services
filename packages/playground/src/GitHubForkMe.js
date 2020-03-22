@@ -8,11 +8,12 @@ const FORK_ME_CSS = css({
   top: 0
 });
 
-export default ({ owner, repo }) =>
-  <a href={ `https://github.com/${ encodeURI(owner) }/${ encodeURI(repo) }` } rel="noopener noreferrer" target="_blank">
+export default ({ owner, repo }) => (
+  <a href={`https://github.com/${encodeURI(owner)}/${encodeURI(repo)}`} rel="noopener noreferrer" target="_blank">
     <img
       alt="Fork me on GitHub"
-      className={ FORK_ME_CSS }
+      className={FORK_ME_CSS}
       src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png"
     />
   </a>
+);

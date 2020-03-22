@@ -34,24 +34,9 @@ import SpeechSDK from '../SpeechSDK';
 //   "Duration": 0
 // }
 
-const {
-  AudioConfig,
-  OutputFormat,
-  ResultReason,
-  SpeechConfig,
-  SpeechRecognizer
-} = SpeechSDK;
+const { AudioConfig, OutputFormat, ResultReason, SpeechConfig, SpeechRecognizer } = SpeechSDK;
 
-function serializeRecognitionResult({
-  duration,
-  errorDetails,
-  json,
-  offset,
-  properties,
-  reason,
-  resultId,
-  text
-}) {
+function serializeRecognitionResult({ duration, errorDetails, json, offset, properties, reason, resultId, text }) {
   return {
     duration,
     errorDetails,
@@ -71,7 +56,9 @@ function improviseAsync(fn, improviser) {
 function averageAmplitude(arrayBuffer) {
   const array = new Int16Array(arrayBuffer);
 
-  return [].reduce.call(array, (averageAmplitude, amplitude) => averageAmplitude + Math.abs(amplitude), 0) / array.length;
+  return (
+    [].reduce.call(array, (averageAmplitude, amplitude) => averageAmplitude + Math.abs(amplitude), 0) / array.length
+  );
 }
 
 function cognitiveServicesAsyncToPromise(fn) {
@@ -96,33 +83,27 @@ function prepareAudioConfig(audioConfig) {
 
   // We modify "attach" function and detect when audible chunk is read.
   // We will only modify "attach" function once.
-  audioConfig.attach = improviseAsync(
-    originalAttach.bind(audioConfig),
-    reader => ({
-      ...reader,
-      read: improviseAsync(
-        reader.read.bind(reader),
-        chunk => {
-          // The magic number 150 is measured by:
-          // 1. Set microphone volume to 0
-          // 2. Observe the amplitude (100-110) for the first few chunks
-          //    (There is a short static caught when turning on the microphone)
-          // 3. Set the number a bit higher than the observation
+  audioConfig.attach = improviseAsync(originalAttach.bind(audioConfig), reader => ({
+    ...reader,
+    read: improviseAsync(reader.read.bind(reader), chunk => {
+      // The magic number 150 is measured by:
+      // 1. Set microphone volume to 0
+      // 2. Observe the amplitude (100-110) for the first few chunks
+      //    (There is a short static caught when turning on the microphone)
+      // 3. Set the number a bit higher than the observation
 
-          if (!firstChunk && averageAmplitude(chunk.buffer) > 150) {
-            audioConfig.events.onEvent({ name: 'FirstAudibleChunk' });
-            firstChunk = true;
-          }
+      if (!firstChunk && averageAmplitude(chunk.buffer) > 150) {
+        audioConfig.events.onEvent({ name: 'FirstAudibleChunk' });
+        firstChunk = true;
+      }
 
-          if (muted) {
-            return { buffer: new ArrayBuffer(0), isEnd: true, timeReceived: Date.now() };
-          }
+      if (muted) {
+        return { buffer: new ArrayBuffer(0), isEnd: true, timeReceived: Date.now() };
+      }
 
-          return chunk;
-        }
-      )
+      return chunk;
     })
-  );
+  }));
 
   return {
     audioConfig,
@@ -151,24 +132,35 @@ export function createSpeechRecognitionPonyfillFromRecognizer({
 
       this._continuous = false;
       this._interimResults = false;
-      this._lang = typeof window !== 'undefined' ? (window.document.documentElement.getAttribute('lang') || window.navigator.language) : 'en-US';
+      this._lang =
+        typeof window !== 'undefined'
+          ? window.document.documentElement.getAttribute('lang') || window.navigator.language
+          : 'en-US';
       this._grammars = new SpeechGrammarList();
       this._maxAlternatives = 1;
     }
 
     emitCognitiveServices(type, event) {
-      this.dispatchEvent(new SpeechRecognitionEvent('cognitiveservices', {
-        data: {
-          ...event,
-          type
-        }
-      }));
+      this.dispatchEvent(
+        new SpeechRecognitionEvent('cognitiveservices', {
+          data: {
+            ...event,
+            type
+          }
+        })
+      );
     }
 
-    get continuous() { return this._continuous; }
-    set continuous(value) { this._continuous = value; }
+    get continuous() {
+      return this._continuous;
+    }
+    set continuous(value) {
+      this._continuous = value;
+    }
 
-    get grammars() { return this._grammars; }
+    get grammars() {
+      return this._grammars;
+    }
     set grammars(value) {
       if (value instanceof SpeechGrammarList) {
         this._grammars = value;
@@ -177,14 +169,26 @@ export function createSpeechRecognitionPonyfillFromRecognizer({
       }
     }
 
-    get interimResults() { return this._interimResults; }
-    set interimResults(value) { this._interimResults = value; }
+    get interimResults() {
+      return this._interimResults;
+    }
+    set interimResults(value) {
+      this._interimResults = value;
+    }
 
-    get maxAlternatives() { return this._maxAlternatives; }
-    set maxAlternatives(value) { this._maxAlternatives = value; }
+    get maxAlternatives() {
+      return this._maxAlternatives;
+    }
+    set maxAlternatives(value) {
+      this._maxAlternatives = value;
+    }
 
-    get lang() { return this._lang; }
-    set lang(value) { this._lang = value; }
+    get lang() {
+      return this._lang;
+    }
+    set lang(value) {
+      this._lang = value;
+    }
 
     start() {
       this._startOnce().catch(err => {
@@ -196,10 +200,7 @@ export function createSpeechRecognitionPonyfillFromRecognizer({
       // TODO: [P2] Should check if recognition is active, we should not start recognition twice
       const recognizer = await createRecognizer(this.lang);
 
-      const {
-        pause,
-        unprepare
-      } = prepareAudioConfig(recognizer.audioConfig);
+      const { pause, unprepare } = prepareAudioConfig(recognizer.audioConfig);
 
       try {
         const queue = createPromiseQueue();
@@ -409,22 +410,22 @@ export function createSpeechRecognitionPonyfillFromRecognizer({
               }
 
               if (recognized) {
-                const result = cognitiveServiceEventResultToWebSpeechRecognitionResultList(
-                  recognized.result,
-                  {
-                    maxAlternatives: this.maxAlternatives,
-                    textNormalization
-                  }
-                );
+                const result = cognitiveServiceEventResultToWebSpeechRecognitionResultList(recognized.result, {
+                  maxAlternatives: this.maxAlternatives,
+                  textNormalization
+                });
 
                 const recognizable = !!result[0].transcript;
 
                 if (recognizable) {
                   finalizedResults = [...finalizedResults, result];
 
-                  this.continuous && this.dispatchEvent(new SpeechRecognitionEvent('result', {
-                    results: finalizedResults
-                  }));
+                  this.continuous &&
+                    this.dispatchEvent(
+                      new SpeechRecognitionEvent('result', {
+                        results: finalizedResults
+                      })
+                    );
                 }
 
                 // If it is continuous, we just sent the finalized results. So we don't need to send it again after "audioend" event.
@@ -448,18 +449,18 @@ export function createSpeechRecognitionPonyfillFromRecognizer({
                   finalEvent = null;
                 }
               } else if (recognizing) {
-                this.interimResults && this.dispatchEvent(new SpeechRecognitionEvent('result', {
-                  results: [
-                    ...finalizedResults,
-                    cognitiveServiceEventResultToWebSpeechRecognitionResultList(
-                      recognizing.result,
-                      {
-                        maxAlternatives: this.maxAlternatives,
-                        textNormalization
-                      }
-                    )
-                  ]
-                }));
+                this.interimResults &&
+                  this.dispatchEvent(
+                    new SpeechRecognitionEvent('result', {
+                      results: [
+                        ...finalizedResults,
+                        cognitiveServiceEventResultToWebSpeechRecognitionResultList(recognizing.result, {
+                          maxAlternatives: this.maxAlternatives,
+                          textNormalization
+                        })
+                      ]
+                    })
+                  );
               }
             }
           }
@@ -545,17 +546,18 @@ export default options => {
   } = patchOptions(options);
 
   if (!window.navigator.mediaDevices || !window.navigator.mediaDevices.getUserMedia) {
-    console.warn('web-speech-cognitive-services: This browser does not support WebRTC and it will not work with Cognitive Services Speech Services.');
+    console.warn(
+      'web-speech-cognitive-services: This browser does not support WebRTC and it will not work with Cognitive Services Speech Services.'
+    );
 
     return {};
   }
 
   const createRecognizer = async lang => {
     const { authorizationToken, region, subscriptionKey } = await fetchCredentials();
-    const speechConfig = authorizationToken ?
-      SpeechConfig.fromAuthorizationToken(authorizationToken, region)
-    :
-      SpeechConfig.fromSubscription(subscriptionKey, region);
+    const speechConfig = authorizationToken
+      ? SpeechConfig.fromAuthorizationToken(authorizationToken, region)
+      : SpeechConfig.fromSubscription(subscriptionKey, region);
 
     if (speechRecognitionEndpointId) {
       speechConfig.endpointId = speechRecognitionEndpointId;
@@ -575,4 +577,4 @@ export default options => {
     referenceGrammars,
     textNormalization
   });
-}
+};

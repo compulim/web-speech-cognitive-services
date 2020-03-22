@@ -21,10 +21,10 @@ const MONITORING_EVENTS = [
   'cognitiveservices'
 ];
 
-export default function* () {
+export default function* speechRecognitionSetInstanceSaga() {
   const events = createPromiseQueue();
 
-  yield fork(function* () {
+  yield fork(function*() {
     for (;;) {
       const event = yield call(events.shift);
 
@@ -32,7 +32,7 @@ export default function* () {
     }
   });
 
-  yield takeLatest(SET_SPEECH_RECOGNITION_INSTANCE, function* ({ payload: { speechRecognition } }) {
+  yield takeLatest(SET_SPEECH_RECOGNITION_INSTANCE, function*({ payload: { speechRecognition } }) {
     try {
       MONITORING_EVENTS.forEach(name => speechRecognition.addEventListener(name, events.push));
 

@@ -9,7 +9,7 @@ import speechSynthesisSetNativeVoices from './sagas/speechSynthesisSetNativeVoic
 import speechSynthesisSpeakUtterance from './sagas/speechSynthesisSpeakUtterance';
 import speechSynthesisUtteranceEvent from './sagas/speechSynthesisUtteranceEvent';
 
-export default function* () {
+export default function* saga() {
   yield fork(convertSubscriptionKeyToAuthorizationToken);
   yield fork(setPonyfill);
   yield fork(speechRecognitionSetInstance);

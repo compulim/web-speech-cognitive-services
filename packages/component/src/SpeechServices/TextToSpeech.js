@@ -1,3 +1,3 @@
 import createSpeechSynthesisPonyfill from './TextToSpeech/createSpeechSynthesisPonyfill';
 
-export default createSpeechSynthesisPonyfill
+export default createSpeechSynthesisPonyfill;

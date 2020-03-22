@@ -6,21 +6,25 @@ import Select, { Option } from '../Bootstrap/Select';
 import setSpeechSynthesisOutputFormat from '../data/actions/setSpeechSynthesisOutputFormat';
 
 const SpeechSynthesisOutputFormatSelector = () => {
-  const { ponyfillType, speechSynthesisOutputFormat } = useSelector(({
-    ponyfillType, speechSynthesisOutputFormat
-  }) => ({
-    ponyfillType, speechSynthesisOutputFormat
-  }));
+  const { ponyfillType, speechSynthesisOutputFormat } = useSelector(
+    ({ ponyfillType, speechSynthesisOutputFormat }) => ({
+      ponyfillType,
+      speechSynthesisOutputFormat
+    })
+  );
 
   const dispatch = useDispatch();
-  const dispatchSetSpeechSynthesisOutputFormat = useCallback(value => dispatch(setSpeechSynthesisOutputFormat(value)), [dispatch]);
+  const dispatchSetSpeechSynthesisOutputFormat = useCallback(value => dispatch(setSpeechSynthesisOutputFormat(value)), [
+    dispatch
+  ]);
+
   const ponyfillCapabilities = getPonyfillCapabilities(ponyfillType);
 
   return (
     <Select
-      disabled={ !ponyfillCapabilities.speechServices }
-      onChange={ dispatchSetSpeechSynthesisOutputFormat }
-      value={ speechSynthesisOutputFormat }
+      disabled={!ponyfillCapabilities.speechServices}
+      onChange={dispatchSetSpeechSynthesisOutputFormat}
+      value={speechSynthesisOutputFormat}
     >
       <Option text="MP3 160Kbps 24KHz" value="audio-24khz-160kbitrate-mono-mp3" />
       <Option text="MP3 128Kbps 16KHz" value="audio-16khz-128kbitrate-mono-mp3" />
@@ -34,6 +38,6 @@ const SpeechSynthesisOutputFormatSelector = () => {
       <Option text="WAV 8KHz 8-bit &#x03BC;-law" value="riff-8khz-8bit-mono-mulaw" />
     </Select>
   );
-}
+};
 
-export default SpeechSynthesisOutputFormatSelector
+export default SpeechSynthesisOutputFormatSelector;

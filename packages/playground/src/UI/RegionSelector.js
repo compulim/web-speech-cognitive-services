@@ -6,10 +6,9 @@ import Select, { Option } from '../Bootstrap/Select';
 import setRegion from '../data/actions/setRegion';
 
 const RegionSelector = () => {
-  const { ponyfillType, region } = useSelector(({
-    ponyfillType, region
-  }) => ({
-    ponyfillType, region
+  const { ponyfillType, region } = useSelector(({ ponyfillType, region }) => ({
+    ponyfillType,
+    region
   }));
 
   const dispatch = useDispatch();
@@ -17,11 +16,7 @@ const RegionSelector = () => {
   const ponyfillCapabilities = getPonyfillCapabilities(ponyfillType);
 
   return (
-    <Select
-      disabled={ !ponyfillCapabilities.speechServices }
-      onChange={ dispatchSetRegion }
-      value={ region }
-    >
+    <Select disabled={!ponyfillCapabilities.speechServices} onChange={dispatchSetRegion} value={region}>
       <Option text="West US" value="westus" />
       <Option text="West US 2" value="westus2" />
       <Option text="East US" value="eastus" />
@@ -32,6 +27,6 @@ const RegionSelector = () => {
       <Option text="West Europe" value="westeurope" />
     </Select>
   );
-}
+};
 
-export default RegionSelector
+export default RegionSelector;

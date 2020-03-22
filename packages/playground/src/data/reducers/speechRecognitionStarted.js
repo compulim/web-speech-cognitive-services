@@ -2,7 +2,7 @@ import { ABORT_SPEECH_RECOGNITION } from '../actions/abortSpeechRecognition';
 import { START_SPEECH_RECOGNITION } from '../actions/startSpeechRecognition';
 import { STOP_SPEECH_RECOGNITION } from '../actions/stopSpeechRecognition';
 
-export default function (state = false, { type }) {
+export default function speechRecognitionStarted(state = false, { type }) {
   switch (type) {
     case ABORT_SPEECH_RECOGNITION:
       return false;

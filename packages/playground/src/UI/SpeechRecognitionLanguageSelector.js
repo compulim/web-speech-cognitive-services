@@ -7,13 +7,12 @@ import setSpeechRecognitionLanguage from '../data/actions/setSpeechRecognitionLa
 const RegionSelector = () => {
   const speechRecognitionLanguage = useSelector(({ speechRecognitionLanguage }) => speechRecognitionLanguage);
   const dispatch = useDispatch();
-  const dispatchSetSpeechRecognitionLanguage = useCallback(value => dispatch(setSpeechRecognitionLanguage(value)), [dispatch]);
+  const dispatchSetSpeechRecognitionLanguage = useCallback(value => dispatch(setSpeechRecognitionLanguage(value)), [
+    dispatch
+  ]);
 
   return (
-    <Select
-      onChange={ dispatchSetSpeechRecognitionLanguage }
-      value={ speechRecognitionLanguage }
-    >
+    <Select onChange={dispatchSetSpeechRecognitionLanguage} value={speechRecognitionLanguage}>
       <Option text="English (US)" value="en-US" />
       <Option text="Chinese (Cantonese)" value="zh-HK" />
       <Option text="Chinese (Putonghua)" value="zh-CN" />
@@ -21,6 +20,6 @@ const RegionSelector = () => {
       <Option text="Korean" value="ko-KR" />
     </Select>
   );
-}
+};
 
-export default RegionSelector
+export default RegionSelector;

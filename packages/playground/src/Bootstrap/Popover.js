@@ -7,12 +7,7 @@ const ROOT_CSS = css({
   padding: 0
 });
 
-const Popover = ({
-  children,
-  content,
-  placement,
-  trigger
-}) => {
+const Popover = ({ children, content, placement, trigger }) => {
   const createContentElement = useCallback(() => {
     const element = document.createElement('pre');
 
@@ -35,14 +30,16 @@ const Popover = ({
 
   return (
     <button
-      className={ ROOT_CSS }
-      data-placement={ placement }
+      className={ROOT_CSS}
+      data-placement={placement}
       data-toggle="popover"
-      data-trigger={ trigger }
-      ref={ ref }
+      data-trigger={trigger}
+      ref={ref}
       type="button"
-    >{ children }</button>
+    >
+      {children}
+    </button>
   );
 };
 
-export default Popover
+export default Popover;

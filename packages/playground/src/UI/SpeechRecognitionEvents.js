@@ -14,20 +14,18 @@ const SpeechRecognitionEvents = () => {
         </tr>
       </thead>
       <tbody>
-        {
-          speechRecognitionEvents.map((event, index) =>
-            <tr>
-              <th scope="row">{ index + 1 }</th>
-              <th scope="row">{ event.type }</th>
-              <td>
-                <pre>{ JSON.stringify(event, null, 2) }</pre>
-              </td>
-            </tr>
-          )
-        }
+        {speechRecognitionEvents.map((event, index) => (
+          <tr>
+            <th scope="row">{index + 1}</th>
+            <th scope="row">{event.type}</th>
+            <td>
+              <pre>{JSON.stringify(event, null, 2)}</pre>
+            </td>
+          </tr>
+        ))}
       </tbody>
     </table>
   );
-}
+};
 
-export default SpeechRecognitionEvents
+export default SpeechRecognitionEvents;

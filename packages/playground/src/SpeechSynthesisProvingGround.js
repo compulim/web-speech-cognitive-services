@@ -31,18 +31,17 @@ const SpeechSynthesisProvingGround = () => {
         <br />
         <div className="row">
           <div className="col col-md-9">
-            {
-              hasVoices ?
-                <React.Fragment>
-                  <label>Voice</label>
-                  <SpeechSynthesisVoiceSelector />
-                </React.Fragment>
-              :
-                <React.Fragment>
-                  <label>Voice URI</label>
-                  <SpeechSynthesisVoiceURIInput />
-                </React.Fragment>
-            }
+            {hasVoices ? (
+              <React.Fragment>
+                <label>Voice</label>
+                <SpeechSynthesisVoiceSelector />
+              </React.Fragment>
+            ) : (
+              <React.Fragment>
+                <label>Voice URI</label>
+                <SpeechSynthesisVoiceURIInput />
+              </React.Fragment>
+            )}
           </div>
           <div className="col col-md-3">
             <label>Output format</label>
@@ -64,6 +63,6 @@ const SpeechSynthesisProvingGround = () => {
       </div>
     </div>
   );
-}
+};
 
-export default SpeechSynthesisProvingGround
+export default SpeechSynthesisProvingGround;

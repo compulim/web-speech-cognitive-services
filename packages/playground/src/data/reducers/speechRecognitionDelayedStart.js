@@ -1,6 +1,6 @@
 import { SET_SPEECH_RECOGNITION_DELAYED_START } from '../actions/setSpeechRecognitionDelayedStart';
 
-export default function (state = false, { payload, type }) {
+export default function speechRecognitionDelayedStart(state = false, { payload, type }) {
   if (type === SET_SPEECH_RECOGNITION_DELAYED_START) {
     state = payload.delay;
   }

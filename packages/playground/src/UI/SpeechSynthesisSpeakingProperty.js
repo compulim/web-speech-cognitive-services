@@ -9,28 +9,22 @@ const MonitoredSpeakingProperty = () => {
   const getValue = useCallback(() => speechSynthesis && speechSynthesis.speaking, [speechSynthesis]);
 
   return (
-    <MonitoringComponent
-      getValue={ getValue }
-      interval={ 300 }
-    >
-      { result =>
+    <MonitoringComponent getValue={getValue} interval={300}>
+      {result => (
         <span>
           Speaking&nbsp;
           <span
-            className={ classNames(
-              'badge',
-              {
-                'badge-success': result,
-                'badge-secondary': !result
-              }
-            )
-          }>
-            { result ? 'true' : 'false' }
+            className={classNames('badge', {
+              'badge-success': result,
+              'badge-secondary': !result
+            })}
+          >
+            {result ? 'true' : 'false'}
           </span>
         </span>
-      }
+      )}
     </MonitoringComponent>
   );
-}
+};
 
-export default MonitoredSpeakingProperty
+export default MonitoredSpeakingProperty;

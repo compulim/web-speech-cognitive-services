@@ -1,3 +1,3 @@
 import SpeechServices from './SpeechServices';
 
-export default SpeechServices
+export default SpeechServices;

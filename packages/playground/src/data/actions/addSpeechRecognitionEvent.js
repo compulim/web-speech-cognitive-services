@@ -10,7 +10,7 @@ function serializeEvent(from, ...keys) {
   return to;
 }
 
-export default function (event) {
+export default function addSpeechRecognitionEvent(event) {
   let serializedEvent;
 
   switch (event.type) {
@@ -40,26 +40,34 @@ export default function (event) {
         length: event.results.length
       };
 
-      serializedEvent.results = [].reduce.call(event.results, (serializedResults, result, index) => {
-        serializedResults[index] = [].reduce.call(result, (serializedResult, { confidence, transcript }, index) => {
-          serializedResult[index] = { confidence, transcript };
+      serializedEvent.results = [].reduce.call(
+        event.results,
+        (serializedResults, result, index) => {
+          serializedResults[index] = [].reduce.call(
+            result,
+            (serializedResult, { confidence, transcript }, index) => {
+              serializedResult[index] = { confidence, transcript };
 
-          return serializedResult;
-        }, {
+              return serializedResult;
+            },
+            {
+              isFinal: result.isFinal,
+              length: result.length
+            }
+          );
+
+          return serializedResults;
+        },
+        {
+          length: event.results.length
+        }
+      );
+
+      [].forEach.call(event.results, (result, index) => {
+        const serializedResult = (serializedEvent.results[index] = {
           isFinal: result.isFinal,
           length: result.length
         });
-
-        return serializedResults;
-      }, {
-        length: event.results.length
-      });
-
-      [].forEach.call(event.results, (result, index) => {
-        const serializedResult = serializedEvent.results[index] = {
-          isFinal: result.isFinal,
-          length: result.length
-        };
 
         [].forEach.call(result, (alt, index) => {
           serializedResult[index] = {
@@ -86,4 +94,4 @@ export default function (event) {
   };
 }
 
-export { ADD_SPEECH_RECOGNITION_EVENT }
+export { ADD_SPEECH_RECOGNITION_EVENT };
