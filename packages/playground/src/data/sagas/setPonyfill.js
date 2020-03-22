@@ -11,11 +11,10 @@ import { SET_SPEECH_SERVICES_AUTHORIZATION_TOKEN } from '../actions/setSpeechSer
 import { SET_SPEECH_SERVICES_SUBSCRIPTION_KEY } from '../actions/setSpeechServicesSubscriptionKey';
 import { SET_SPEECH_SYNTHESIS_DEPLOYMENT_ID } from '../actions/setSpeechSynthesisDeploymentId';
 import { SET_SPEECH_SYNTHESIS_OUTPUT_FORMAT } from '../actions/setSpeechSynthesisOutputFormat';
+import fetchSpeechServicesAuthorizationToken from '../../fetchSpeechServicesAuthorizationToken';
 import setPonyfill from '../actions/setPonyfill';
 
-import createSpeechServicesPonyfill, {
-  fetchAuthorizationToken as fetchSpeechServicesAuthorizationToken
-} from 'web-speech-cognitive-services/lib/SpeechServices';
+import createSpeechServicesPonyfill from 'web-speech-cognitive-services/lib/SpeechServices';
 
 export default function* setPonyfillRootSaga() {
   yield* setPonyfillSaga();

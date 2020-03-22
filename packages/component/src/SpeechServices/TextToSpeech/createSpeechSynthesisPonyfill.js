@@ -4,7 +4,6 @@ import { defineEventAttribute, EventTarget } from 'event-target-shim-es5';
 import onErrorResumeNext from 'on-error-resume-next';
 
 import AudioContextQueue from './AudioContextQueue';
-// import createFetchAuthorizationTokenWithCache from '../createFetchAuthorizationTokenWithCache';
 import fetchCustomVoices from './fetchCustomVoices';
 import fetchVoices from './fetchVoices';
 import patchOptions from '../patchOptions';
@@ -35,42 +34,6 @@ export default options => {
 
     return {};
   }
-
-  // const fetchAuthorizationTokenWithCache = createFetchAuthorizationTokenWithCache();
-
-  // const fetchAuthorizationTokenCredentials = async () => {
-  //   const { authorizationToken, region, speechSynthesisHost, subscriptionKey } = await fetchCredentials();
-
-  //   if (authorizationToken && subscriptionKey) {
-  //     throw new Error(
-  //       'web-speech-cognitive-services: Only either "authorizationToken" or "subscriptionKey" can be specified.'
-  //     );
-  //   } else if (authorizationToken && typeof authorizationToken !== 'string') {
-  //     throw new Error('web-speech-cognitive-services: "authorizationToken" must be a string.');
-  //   } else if (subscriptionKey && typeof subscriptionKey !== 'string') {
-  //     throw new Error('web-speech-cognitive-services: "subscriptionKey" must be a string.');
-  //   } else if (!region && !speechSynthesisHost) {
-  //     throw new Error('web-speech-cognitive-services: Either "region" or "speechSynthesisHost" must be specified.');
-  //   } else if (region && speechSynthesisHost) {
-  //     throw new Error('web-speech-cognitive-services: Only either "region" or "speechSynthesisHost" can be specified.');
-  //   }
-
-  //   const fetchedCredentials = {};
-
-  //   if (region) {
-  //     fetchedCredentials.region = region;
-  //   } else {
-  //     fetchedCredentials.speechSynthesisHost = speechSynthesisHost;
-  //   }
-
-  //   if (!authorizationToken) {
-  //     authorizationToken = await fetchAuthorizationTokenWithCache({ region, subscriptionKey });
-  //   }
-
-  //   fetchedCredentials.authorizationToken = authorizationToken;
-
-  //   return fetchedCredentials;
-  // };
 
   class SpeechSynthesis extends EventTarget {
     constructor() {

@@ -167,17 +167,6 @@ test('should throw exception both region and speechRecognitionHostname are not s
   ).rejects.toThrow();
 });
 
-test('should throw exception both region and tokenURL are not specified', async () => {
-  await expect(
-    patchOptions({
-      credentials: {
-        authorizationToken: 'AUTHORIZATION_TOKEN',
-        tokenURL: 'https://westus2.api.cognitive.microsoft.com/sts/v1.0/issueToken'
-      }
-    }).fetchCredentials()
-  ).rejects.toThrow();
-});
-
 test('should throw exception if only speechRecognitionHostname are specified', async () => {
   await expect(
     patchOptions({
@@ -195,14 +184,12 @@ test('using custom hostname', async () => {
       credentials: {
         authorizationToken: 'AUTHORIZATION_TOKEN',
         speechRecognitionHostname: 'westus2.stt.speech.microsoft.com',
-        speechSynthesisHostname: 'westus2.stt.speech.microsoft.com',
-        tokenURL: 'https://westus2.api.cognitive.microsoft.com/sts/v1.0/issueToken'
+        speechSynthesisHostname: 'westus2.stt.speech.microsoft.com'
       }
     }).fetchCredentials()
   ).resolves.toEqual({
     authorizationToken: 'AUTHORIZATION_TOKEN',
     speechRecognitionHostname: 'westus2.stt.speech.microsoft.com',
-    speechSynthesisHostname: 'westus2.stt.speech.microsoft.com',
-    tokenURL: 'https://westus2.api.cognitive.microsoft.com/sts/v1.0/issueToken'
+    speechSynthesisHostname: 'westus2.stt.speech.microsoft.com'
   });
 });

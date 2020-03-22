@@ -134,13 +134,11 @@ The following list all options supported by the adapter.
         <code>} || {</code><br />
         <code>&nbsp;&nbsp;authorizationToken: string,</code><br />
         <code>&nbsp;&nbsp;speechRecognitionHostname: string,</code><br />
-        <code>&nbsp;&nbsp;speechSynthesisHostname: string,</code><br />
-        <code>&nbsp;&nbsp;tokenURL: string</code><br />
+        <code>&nbsp;&nbsp;speechSynthesisHostname: string</code><br />
         <code>} || {</code><br />
         <code>&nbsp;&nbsp;speechRecognitionHostname: string,</code><br />
         <code>&nbsp;&nbsp;speechSynthesisHostname: string,</code><br />
-        <code>&nbsp;&nbsp;subscriptionKey: string,</code><br />
-        <code>&nbsp;&nbsp;tokenURL: string</code><br />
+        <code>&nbsp;&nbsp;subscriptionKey: string</code><br />
         <code>}</code>
       </td>
       <td>(Required)</td>
@@ -149,7 +147,7 @@ The following list all options supported by the adapter.
         <br />
         Subscription key is not recommended for production use as it will be leaked in the browser.
         <br />
-        For sovereign cloud such as Azure Government (United States) and Azure China, instead of specifying <code>region</code>, please specify <code>speechRecongitionHost</code>, <code>speechSynthesisHostname</code>, and <code>tokenURL</code> instead. You can find the [sovereign cloud connection parameters from this article](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/sovereign-clouds).
+        For sovereign cloud such as Azure Government (United States) and Azure China, instead of specifying <code>region</code>, please specify <code>speechRecongitionHost</code> and <code>speechSynthesisHostname</code> instead. You can find the [sovereign cloud connection parameters from this article](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/sovereign-clouds).
       </td>
     </tr>
     <tr>
@@ -231,8 +229,7 @@ createPonyfill({
   credentials: {
     speechRecognitionHostname: 'virginia.stt.speech.azure.us',
     speechSynthesisHostname: 'virginia.tts.speech.azure.us',
-    subscriptionKey: 'YOUR_SUBSCRIPTION_KEY',
-    tokenURL: 'https://virginia.api.cognitive.microsoft.us/sts/v1.0/issueToken'
+    subscriptionKey: 'YOUR_SUBSCRIPTION_KEY'
   }
 });
 ```
@@ -244,8 +241,7 @@ createPonyfill({
   credentials: {
     speechRecognitionHostname: 'chinaeast2.stt.speech.azure.cn',
     speechSynthesisHostname: 'chinaeast2.tts.speech.azure.cn',
-    subscriptionKey: 'YOUR_SUBSCRIPTION_KEY',
-    tokenURL: 'https://chinaeast2.api.cognitive.azure.cn/sts/v1.0/issueToken'
+    subscriptionKey: 'YOUR_SUBSCRIPTION_KEY'
   }
 });
 ```
