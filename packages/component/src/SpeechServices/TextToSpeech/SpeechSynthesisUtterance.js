@@ -142,7 +142,8 @@ class SpeechSynthesisUtterance extends EventTarget {
       this._playingSource = null;
       this.dispatchEvent(new SpeechSynthesisEvent('end'));
     } catch (error) {
-      this.dispatchEvent(new ErrorEvent('error', { error }));
+      // "message" is not in spec but to provide a friendly message.
+      this.dispatchEvent(new ErrorEvent('error', { error: 'synthesis-failed', message: error.stack }));
     }
   }
 

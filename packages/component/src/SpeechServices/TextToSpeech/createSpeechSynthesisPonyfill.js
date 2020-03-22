@@ -28,7 +28,7 @@ export default options => {
     subscriptionKey
   } = patchOptions(options);
 
-  if (!ponyfill.AudioContext) {
+  if (!audioContext && !ponyfill.AudioContext) {
     console.warn(
       'web-speech-cognitive-services: This browser does not support Web Audio and it will not work with Cognitive Services Speech Services.'
     );
@@ -104,7 +104,12 @@ export default options => {
 
       return new Promise((resolve, reject) => {
         utterance.addEventListener('end', resolve);
-        utterance.addEventListener('error', reject);
+        utterance.addEventListener('error', ({ error: errorCode, message }) => {
+          const error = new Error(errorCode);
+
+          error.stack = message;
+          reject(error);
+        });
 
         utterance.preload({
           deploymentId: speechSynthesisDeploymentId,

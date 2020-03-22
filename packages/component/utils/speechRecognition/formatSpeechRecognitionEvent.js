@@ -1,4 +1,4 @@
-export default function formatEvent(event) {
+export default function formatSpeechRecognitionEvent(event) {
   const { type } = event;
 
   switch (type) {

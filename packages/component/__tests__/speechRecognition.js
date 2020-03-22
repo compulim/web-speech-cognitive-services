@@ -2,21 +2,21 @@
  * @jest-environment jsdom
  */
 
+import { AudioStreamFormat } from 'microsoft-cognitiveservices-speech-sdk';
 import createDeferred from 'p-defer';
 
 import { createSpeechRecognitionPonyfill } from '../src/SpeechServices';
-import captureAllSpeechRecognitionEvents from '../utils/captureAllSpeechRecognitionEvents';
-import createQueuedArrayBufferAudioSource from '../utils/createQueuedArrayBufferAudioSource';
+import captureAllSpeechRecognitionEvents from '../utils/speechRecognition/captureAllSpeechRecognitionEvents';
+import createQueuedArrayBufferAudioSource from '../utils/speechRecognition/createQueuedArrayBufferAudioSource';
 import fetchAuthorizationToken from '../utils/fetchAuthorizationToken';
 import fetchSpeechData from '../src/SpeechServices/TextToSpeech/fetchSpeechData';
 
-let audioConfig;
+const BITS_PER_SAMPLE = 16;
+const CHANNELS = 1;
+const OUTPUT_FORMAT = 'riff-8khz-16bit-mono-pcm';
+const SAMPLES_PER_SECOND = 8000;
 
-beforeEach(async () => {
-  audioConfig = createQueuedArrayBufferAudioSource();
-});
-
-test.each([
+describe.each([
   ['authorization token and region', true, { region: process.env.REGION }],
   [
     'authorization token and host',
@@ -37,65 +37,77 @@ test.each([
       tokenURL: 'https://westus2.api.cognitive.microsoft.com/sts/v1.0/issueToken'
     }
   ]
-])('recognize "Hello" using %s', async (_, useAuthorizationToken, mergeCredentials) => {
-  const credentials = { ...mergeCredentials };
+])('using %s', (_, useAuthorizationToken, mergeCredentials) => {
+  let audioConfig;
 
-  if (useAuthorizationToken) {
-    credentials.authorizationToken = await fetchAuthorizationToken({
-      subscriptionKey: process.env.SUBSCRIPTION_KEY,
-      ...mergeCredentials
-    });
-  } else {
-    credentials.subscriptionKey = process.env.SUBSCRIPTION_KEY;
-  }
-
-  const { SpeechRecognition } = createSpeechRecognitionPonyfill({
-    audioConfig,
-    credentials
+  beforeEach(async () => {
+    audioConfig = createQueuedArrayBufferAudioSource(
+      AudioStreamFormat.getWaveFormatPCM(SAMPLES_PER_SECOND, BITS_PER_SAMPLE, CHANNELS)
+    );
   });
 
-  audioConfig.push(await fetchSpeechData({ fetchCredentials: () => credentials, text: 'Hello' }));
+  test('to recognize', async () => {
+    const credentials = { ...mergeCredentials };
 
-  const speechRecognition = new SpeechRecognition();
-  const { promise, reject, resolve } = createDeferred();
+    if (useAuthorizationToken) {
+      credentials.authorizationToken = await fetchAuthorizationToken({
+        subscriptionKey: process.env.SUBSCRIPTION_KEY,
+        ...mergeCredentials
+      });
+    } else {
+      credentials.subscriptionKey = process.env.SUBSCRIPTION_KEY;
+    }
 
-  const { getEvents } = captureAllSpeechRecognitionEvents(speechRecognition);
+    const { SpeechRecognition } = createSpeechRecognitionPonyfill({
+      audioConfig,
+      credentials
+    });
 
-  speechRecognition.addEventListener('end', resolve);
-  speechRecognition.addEventListener('error', ({ error }) => reject(error));
+    audioConfig.push(
+      await fetchSpeechData({
+        fetchCredentials: () => credentials,
+        outputFormat: OUTPUT_FORMAT,
+        text: 'Hello'
+      })
+    );
 
-  speechRecognition.start();
+    const speechRecognition = new SpeechRecognition();
+    const { promise, reject, resolve } = createDeferred();
 
-  await promise;
+    const events = await captureAllSpeechRecognitionEvents(speechRecognition, async () => {
+      speechRecognition.addEventListener('end', resolve);
+      speechRecognition.addEventListener('error', ({ error }) => reject(error));
 
-  expect(getEvents()).toMatchInlineSnapshot(`
-    Array [
-      "start",
-      "audiostart",
-      "soundstart",
-      "speechstart",
-      "speechend",
-      "soundend",
-      "audioend",
-      Array [
-        "result",
-        Object {
-          "resultIndex": undefined,
-          "results": Array [
-            Object {
-              "0": Object {
-                "confidence": 0.95,
-                "transcript": "Hello.",
+      speechRecognition.start();
+
+      await promise;
+    });
+
+    expect(events).toEqual([
+      'start',
+      'audiostart',
+      'soundstart',
+      'speechstart',
+      'speechend',
+      'soundend',
+      'audioend',
+      [
+        'result',
+        {
+          resultIndex: undefined,
+          results: [
+            {
+              '0': {
+                confidence: 0.95,
+                transcript: 'Hello.'
               },
-              "isFinal": true,
-              "length": 1,
-            },
-          ],
-        },
+              isFinal: true,
+              length: 1
+            }
+          ]
+        }
       ],
-      "end",
-    ]
-  `);
-
-  // console.log(JSON.stringify(getEvents(), null, 2));
+      'end'
+    ]);
+  });
 });
