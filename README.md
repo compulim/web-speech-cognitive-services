@@ -218,6 +218,38 @@ The following list all options supported by the adapter.
   </tbody>
 </table>
 
+## Setting up for sovereign clouds
+
+You can use the adapter to connect to sovereign clouds, including [Azure Government (United States)](#azure-government-united-states) and [Microsoft Azure China](#microsoft-azure-china).
+
+Please refer to [this article on limitations](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/sovereign-clouds) when using Cognitive Services Speech Services on sovereign clouds.
+
+### Azure Government (United States)
+
+```js
+createPonyfill({
+  credentials: {
+    speechRecognitionHostname: 'virginia.stt.speech.azure.us',
+    speechSynthesisHostname: 'virginia.tts.speech.azure.us',
+    subscriptionKey: 'YOUR_SUBSCRIPTION_KEY',
+    tokenURL: 'https://virginia.api.cognitive.microsoft.us/sts/v1.0/issueToken'
+  }
+});
+```
+
+### Microsoft Azure China
+
+```js
+createPonyfill({
+  credentials: {
+    speechRecognitionHostname: 'chinaeast2.stt.speech.azure.cn',
+    speechSynthesisHostname: 'chinaeast2.tts.speech.azure.cn',
+    subscriptionKey: 'YOUR_SUBSCRIPTION_KEY',
+    tokenURL: 'https://chinaeast2.api.cognitive.azure.cn/sts/v1.0/issueToken'
+  }
+});
+```
+
 # Code snippets
 
 > For readability, we omitted the async function in all code snippets. To run the code, you will need to wrap the code using an async function.
