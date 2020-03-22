@@ -3,7 +3,7 @@ import { put, select, takeEvery } from 'redux-saga/effects';
 import { SPEECH_SYNTHESIS_SPEAK_UTTERANCE } from '../actions/speechSynthesisSpeakUtterance';
 import addSpeechSynthesisNativeUtterance from '../actions/addSpeechSynthesisNativeUtterance';
 
-export default function* speechSynthesisSpeakUtterance() {
+export default function* speechSynthesisSpeakUtteranceSaga() {
   yield takeEvery(SPEECH_SYNTHESIS_SPEAK_UTTERANCE, function*({ payload: { utterance } }) {
     const { text, voiceURI } = utterance;
 

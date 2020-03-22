@@ -21,7 +21,7 @@ const MONITORING_EVENTS = [
   'cognitiveservices'
 ];
 
-export default function* speechRecognitionSetInstance() {
+export default function* speechRecognitionSetInstanceSaga() {
   const events = createPromiseQueue();
 
   yield fork(function*() {

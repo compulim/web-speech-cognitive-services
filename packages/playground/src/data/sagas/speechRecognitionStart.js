@@ -13,7 +13,7 @@ function sleep(duration) {
   return new Promise(resolve => setTimeout(resolve, duration));
 }
 
-export default function* speechRecognitionStart() {
+export default function* speechRecognitionStartSaga() {
   for (;;) {
     let cancelReason;
 

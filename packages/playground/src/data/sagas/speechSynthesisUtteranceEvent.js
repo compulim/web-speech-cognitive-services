@@ -8,7 +8,7 @@ import createPromiseQueue from '../utils/createPromiseQueue';
 
 const MONITORING_EVENTS = ['boundary', 'end', 'error', 'mark', 'pause', 'resume', 'start'];
 
-export default function* speechSynthesisUtteranceEvent() {
+export default function* speechSynthesisUtteranceEventSaga() {
   yield takeEvery(ADD_SPEECH_SYNTHESIS_NATIVE_UTTERANCE, function*({ payload: { nativeUtterance } }) {
     const events = createPromiseQueue();
 

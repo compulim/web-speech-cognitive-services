@@ -5,7 +5,7 @@ import setSpeechSynthesisNativeVoices from '../actions/setSpeechSynthesisNativeV
 
 import createPromiseQueue from '../utils/createPromiseQueue';
 
-export default function* speechSynthesisSetNativeVoices() {
+export default function* speechSynthesisSetNativeVoicesSaga() {
   yield takeEvery(SET_PONYFILL, function*({ payload: { ponyfill: { speechSynthesis } = {} } }) {
     if (!speechSynthesis) {
       return;

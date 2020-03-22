@@ -4,7 +4,7 @@ import { CANCEL_SPEECH_SYNTHESIS } from '../actions/cancelSpeechSynthesis';
 import { PAUSE_SPEECH_SYNTHESIS } from '../actions/pauseSpeechSynthesis';
 import { RESUME_SPEECH_SYNTHESIS } from '../actions/resumeSpeechSynthesis';
 
-export default function* speechSynthesisCancelPauseResume() {
+export default function* speechSynthesisCancelPauseResumeSaga() {
   yield takeEvery(CANCEL_SPEECH_SYNTHESIS, function*() {
     const { ponyfill: { speechSynthesis } = {} } = yield select();
 
