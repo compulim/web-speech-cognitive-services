@@ -138,3 +138,71 @@ test('should throw exception for subscriptionKey as () => Promise<number>', asyn
 test('should throw exception when authorizationToken and subscriptionKey are not specified', async () => {
   expect(() => patchOptions({ region: 'westus2' })).toThrow();
 });
+
+test('should throw exception when region and speechSynthesisHostname are not specified', async () => {
+  await expect(
+    patchOptions({ credentials: { authorizationToken: 'AUTHORIZATION_TOKEN' } }).fetchCredentials()
+  ).rejects.toThrow();
+});
+
+test('should throw exception both region and speechSynthesisHostname are not specified', async () => {
+  await expect(
+    patchOptions({
+      credentials: {
+        authorizationToken: 'AUTHORIZATION_TOKEN',
+        speechSynthesisHostname: 'westus2.tts.speech.microsoft.com'
+      }
+    }).fetchCredentials()
+  ).rejects.toThrow();
+});
+
+test('should throw exception both region and speechRecognitionHostname are not specified', async () => {
+  await expect(
+    patchOptions({
+      credentials: {
+        authorizationToken: 'AUTHORIZATION_TOKEN',
+        speechSynthesisHostname: 'westus2.stt.speech.microsoft.com'
+      }
+    }).fetchCredentials()
+  ).rejects.toThrow();
+});
+
+test('should throw exception both region and tokenURL are not specified', async () => {
+  await expect(
+    patchOptions({
+      credentials: {
+        authorizationToken: 'AUTHORIZATION_TOKEN',
+        tokenURL: 'https://westus2.api.cognitive.microsoft.com/sts/v1.0/issueToken'
+      }
+    }).fetchCredentials()
+  ).rejects.toThrow();
+});
+
+test('should throw exception if only speechRecognitionHostname are specified', async () => {
+  await expect(
+    patchOptions({
+      credentials: {
+        authorizationToken: 'AUTHORIZATION_TOKEN',
+        speechRecognitionHostname: 'westus2.stt.speech.microsoft.com'
+      }
+    }).fetchCredentials()
+  ).rejects.toThrow();
+});
+
+test('using custom hostname', async () => {
+  await expect(
+    patchOptions({
+      credentials: {
+        authorizationToken: 'AUTHORIZATION_TOKEN',
+        speechRecognitionHostname: 'westus2.stt.speech.microsoft.com',
+        speechSynthesisHostname: 'westus2.stt.speech.microsoft.com',
+        tokenURL: 'https://westus2.api.cognitive.microsoft.com/sts/v1.0/issueToken'
+      }
+    }).fetchCredentials()
+  ).resolves.toEqual({
+    authorizationToken: 'AUTHORIZATION_TOKEN',
+    speechRecognitionHostname: 'westus2.stt.speech.microsoft.com',
+    speechSynthesisHostname: 'westus2.stt.speech.microsoft.com',
+    tokenURL: 'https://westus2.api.cognitive.microsoft.com/sts/v1.0/issueToken'
+  });
+});
