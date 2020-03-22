@@ -2,15 +2,13 @@
  * @jest-environment jsdom
  */
 
-import 'global-agent/bootstrap';
-
 import createDeferred from 'p-defer';
 
 import { createSpeechRecognitionPonyfill } from '../src/SpeechServices';
 import captureAllSpeechRecognitionEvents from '../utils/captureAllSpeechRecognitionEvents';
 import createQueuedArrayBufferAudioSource from '../utils/createQueuedArrayBufferAudioSource';
 import fetchAuthorizationToken from '../utils/fetchAuthorizationToken';
-import fetchSpeechData from '../utils/fetchSpeechData';
+import fetchSpeechData from '../src/SpeechServices/TextToSpeech/fetchSpeechData';
 
 let audioConfig;
 
@@ -56,7 +54,7 @@ test.each([
     credentials
   });
 
-  audioConfig.push(await fetchSpeechData({ credentials, text: 'Hello' }));
+  audioConfig.push(await fetchSpeechData({ fetchCredentials: () => credentials, text: 'Hello' }));
 
   const speechRecognition = new SpeechRecognition();
   const { promise, reject, resolve } = createDeferred();
@@ -86,7 +84,7 @@ test.each([
           "results": Array [
             Object {
               "0": Object {
-                "confidence": 0.9429154,
+                "confidence": 0.95,
                 "transcript": "Hello.",
               },
               "isFinal": true,

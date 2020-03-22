@@ -104,10 +104,14 @@ class SpeechSynthesisUtterance extends EventTarget {
     this._volume = value;
   }
 
-  async preload({ deploymentId, fetchAuthorizationTokenCredentials, outputFormat }) {
+  preload({
+    deploymentId,
+    fetchCredentials,
+    outputFormat
+  }) {
     this.arrayBufferPromise = fetchSpeechData({
+      fetchCredentials,
       deploymentId,
-      fetchAuthorizationTokenCredentials,
       lang: this.lang || window.navigator.language,
       outputFormat,
       pitch: this.pitch,
@@ -117,11 +121,9 @@ class SpeechSynthesisUtterance extends EventTarget {
       volume: this.volume
     });
 
-    // We need to call "await" to make sure the Promise is running.
+    // We need to call "catch" to make sure the Promise is running.
     // We will ignore the reject result and handled in play() later.
-    try {
-      await this.arrayBufferPromise;
-    } catch (err) {}
+    this.arrayBufferPromise.catch();
   }
 
   async play(audioContext) {

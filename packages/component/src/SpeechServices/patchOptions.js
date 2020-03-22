@@ -44,13 +44,11 @@ export default function patchOptions({
         tokenURL
       } = await resolveFunctionOrReturnValue(credentials);
 
-      if (!authorizationToken && !subscriptionKey) {
+      if ((!authorizationToken && !subscriptionKey) || (authorizationToken && subscriptionKey)) {
         throw new Error(
-          'web-speech-cognitive-services: Either authorization token and subscription key must be provided.'
+          'web-speech-cognitive-services: Either "authorizationToken" or "subscriptionKey" must be provided.'
         );
-      }
-
-      if (!region && !(speechRecognitionHostname && speechSynthesisHostname && tokenURL)) {
+      } else if (!region && !(speechRecognitionHostname && speechSynthesisHostname && tokenURL)) {
         throw new Error(
           'web-speech-cognitive-services: Either "region" or "speechRecognitionHostname", "speechSynthesisHostname", and "tokenURL" must be set.'
         );
@@ -58,14 +56,12 @@ export default function patchOptions({
         throw new Error(
           'web-speech-cognitive-services: Only either "region" or "speechRecognitionHostname", "speechSynthesisHostname", and "tokenURL" can be set.'
         );
-      }
-
-      if (authorizationToken) {
+      } else if (authorizationToken) {
         if (typeof authorizationToken !== 'string') {
-          throw new Error('web-speech-cognitive-services: Authorization token must be a string.');
+          throw new Error('web-speech-cognitive-services: "authorizationToken" must be a string.');
         }
       } else if (typeof subscriptionKey !== 'string') {
-        throw new Error('web-speech-cognitive-services: Subscription key must be a string.');
+        throw new Error('web-speech-cognitive-services: "subscriptionKey" must be a string.');
       }
 
       if (shouldWarnOnSubscriptionKey && subscriptionKey) {
