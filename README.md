@@ -133,9 +133,11 @@ The following list all options supported by the adapter.
         <code>&nbsp;&nbsp;subscriptionKey: string</code><br />
         <code>} || {</code><br />
         <code>&nbsp;&nbsp;authorizationToken: string,</code><br />
+        <code>&nbsp;&nbsp;customVoiceHostname?: string,</code><br />
         <code>&nbsp;&nbsp;speechRecognitionHostname: string,</code><br />
         <code>&nbsp;&nbsp;speechSynthesisHostname: string</code><br />
         <code>} || {</code><br />
+        <code>&nbsp;&nbsp;customVoiceHostname?: string,</code><br />
         <code>&nbsp;&nbsp;speechRecognitionHostname: string,</code><br />
         <code>&nbsp;&nbsp;speechSynthesisHostname: string,</code><br />
         <code>&nbsp;&nbsp;subscriptionKey: string</code><br />

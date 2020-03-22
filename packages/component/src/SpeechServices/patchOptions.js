@@ -37,6 +37,7 @@ export default function patchOptions({
     fetchCredentials: async () => {
       const {
         authorizationToken,
+        customVoiceHostname,
         region,
         speechRecognitionHostname,
         speechSynthesisHostname,
@@ -51,9 +52,9 @@ export default function patchOptions({
         throw new Error(
           'web-speech-cognitive-services: Either "region" or "speechRecognitionHostname" and "speechSynthesisHostname" must be set.'
         );
-      } else if (region && (speechRecognitionHostname || speechSynthesisHostname)) {
+      } else if (region && (customVoiceHostname || speechRecognitionHostname || speechSynthesisHostname)) {
         throw new Error(
-          'web-speech-cognitive-services: Only either "region" or "speechRecognitionHostname" and "speechSynthesisHostname" can be set.'
+          'web-speech-cognitive-services: Only either "region" or "customVoiceHostname", "speechRecognitionHostname" and "speechSynthesisHostname" can be set.'
         );
       } else if (authorizationToken) {
         if (typeof authorizationToken !== 'string') {
@@ -76,6 +77,7 @@ export default function patchOptions({
       if (region) {
         resolvedCredentials.region = region;
       } else {
+        resolvedCredentials.customVoiceHostname = customVoiceHostname;
         resolvedCredentials.speechRecognitionHostname = speechRecognitionHostname;
         resolvedCredentials.speechSynthesisHostname = speechSynthesisHostname;
       }

@@ -145,7 +145,18 @@ test('should throw exception when region and speechSynthesisHostname are not spe
   ).rejects.toThrow();
 });
 
-test('should throw exception both region and speechSynthesisHostname are not specified', async () => {
+test('should throw exception both region and customVoiceHostname are specified', async () => {
+  await expect(
+    patchOptions({
+      credentials: {
+        authorizationToken: 'AUTHORIZATION_TOKEN',
+        customVoiceHostname: 'westus2.cris.ai'
+      }
+    }).fetchCredentials()
+  ).rejects.toThrow();
+});
+
+test('should throw exception both region and speechSynthesisHostname are specified', async () => {
   await expect(
     patchOptions({
       credentials: {
@@ -156,7 +167,7 @@ test('should throw exception both region and speechSynthesisHostname are not spe
   ).rejects.toThrow();
 });
 
-test('should throw exception both region and speechRecognitionHostname are not specified', async () => {
+test('should throw exception both region and speechRecognitionHostname are specified', async () => {
   await expect(
     patchOptions({
       credentials: {
@@ -171,14 +182,13 @@ test('should throw exception if only speechRecognitionHostname are specified', a
   await expect(
     patchOptions({
       credentials: {
-        authorizationToken: 'AUTHORIZATION_TOKEN',
         speechRecognitionHostname: 'westus2.stt.speech.microsoft.com'
       }
     }).fetchCredentials()
   ).rejects.toThrow();
 });
 
-test('using custom hostname', async () => {
+test('using custom hostname without Custom Voice', async () => {
   await expect(
     patchOptions({
       credentials: {
@@ -189,6 +199,24 @@ test('using custom hostname', async () => {
     }).fetchCredentials()
   ).resolves.toEqual({
     authorizationToken: 'AUTHORIZATION_TOKEN',
+    speechRecognitionHostname: 'westus2.stt.speech.microsoft.com',
+    speechSynthesisHostname: 'westus2.stt.speech.microsoft.com'
+  });
+});
+
+test('using custom hostname with Custom Voice', async () => {
+  await expect(
+    patchOptions({
+      credentials: {
+        authorizationToken: 'AUTHORIZATION_TOKEN',
+        customVoiceHostname: 'westus2.cris.ai',
+        speechRecognitionHostname: 'westus2.stt.speech.microsoft.com',
+        speechSynthesisHostname: 'westus2.stt.speech.microsoft.com'
+      }
+    }).fetchCredentials()
+  ).resolves.toEqual({
+    authorizationToken: 'AUTHORIZATION_TOKEN',
+    customVoiceHostname: 'westus2.cris.ai',
     speechRecognitionHostname: 'westus2.stt.speech.microsoft.com',
     speechSynthesisHostname: 'westus2.stt.speech.microsoft.com'
   });

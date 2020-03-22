@@ -4,24 +4,26 @@
 
 import { createSpeechSynthesisPonyfill } from '../src/SpeechServices';
 import captureAllSpeechSynthesisUtteranceEvents from '../utils/speechSynthesis/captureAllSpeechSynthesisUtteranceEvents';
-import fetchAuthorizationToken from '../utils/fetchAuthorizationToken';
 import MockAudioContext from '../utils/speechSynthesis/MockAudioContext';
 import recognizeRiffWaveArrayBuffer from '../utils/speechSynthesis/recognizeRiffWaveArrayBuffer';
-import testTableForAuthentication from '../utils/testTableForAuthentication';
 import waitForEvent from '../utils/waitForEvent';
 
-describe.each(testTableForAuthentication)('using %s', (_, useAuthorizationToken, mergeCredentials) => {
-  test('to synthesis', async () => {
-    const credentials = { ...mergeCredentials };
-
-    if (useAuthorizationToken) {
-      credentials.authorizationToken = await fetchAuthorizationToken({
-        subscriptionKey: process.env.SUBSCRIPTION_KEY,
-        ...mergeCredentials
-      });
-    } else {
-      credentials.subscriptionKey = process.env.SUBSCRIPTION_KEY;
+describe.each([
+  ['region', { region: 'westus2' }],
+  [
+    'host',
+    {
+      customVoiceHostname: 'westus2.cris.ai',
+      speechRecognitionHostname: 'westus2.stt.speech.microsoft.com',
+      speechSynthesisHostname: 'westus2.voice.speech.microsoft.com'
     }
+  ]
+])('Custom Voice: using %s', (_, mergeCredentials) => {
+  test('to synthesize', async () => {
+    const credentials = {
+      ...mergeCredentials,
+      subscriptionKey: process.env.SUBSCRIPTION_KEY
+    };
 
     const recognized = [];
 
@@ -32,18 +34,19 @@ describe.each(testTableForAuthentication)('using %s', (_, useAuthorizationToken,
     const { speechSynthesis, SpeechSynthesisUtterance } = createSpeechSynthesisPonyfill({
       audioContext: new MockAudioContext({ bufferSourceStartHandler }),
       credentials,
+      speechSynthesisDeploymentId: '50e5430a-cc1a-4c33-9afb-f0a4470fc921',
       speechSynthesisOutputFormat: 'riff-8khz-16bit-mono-pcm'
     });
 
     await waitForEvent(speechSynthesis, 'voiceschanged');
 
-    const voice = speechSynthesis.getVoices().find(voice => voice.lang === 'en-US' && /Jessa/iu.test(voice.name));
+    const voices = speechSynthesis.getVoices();
 
-    expect(voice.voiceURI).toEqual('Microsoft Server Speech Text to Speech Voice (en-US, Jessa24kRUS)');
+    expect(voices.map(({ voiceURI }) => voiceURI)).toEqual(['William']);
 
     const utterance = new SpeechSynthesisUtterance('Hello');
 
-    utterance.voice = voice;
+    utterance.voice = voices[0];
 
     const events = await captureAllSpeechSynthesisUtteranceEvents(utterance, () => speechSynthesis.speak(utterance));
 

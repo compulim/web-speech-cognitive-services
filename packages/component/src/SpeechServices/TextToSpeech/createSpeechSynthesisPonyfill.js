@@ -22,10 +22,8 @@ export default options => {
     ponyfill = {
       AudioContext: window.AudioContext || window.webkitAudioContext
     },
-    region = 'westus',
     speechSynthesisDeploymentId,
-    speechSynthesisOutputFormat = DEFAULT_OUTPUT_FORMAT,
-    subscriptionKey
+    speechSynthesisOutputFormat = DEFAULT_OUTPUT_FORMAT
   } = patchOptions(options);
 
   if (!audioContext && !ponyfill.AudioContext) {
@@ -97,6 +95,8 @@ export default options => {
     }
 
     async updateVoices() {
+      const { customVoiceHostname, region, speechSynthesisHostname, subscriptionKey } = await fetchCredentials();
+
       if (speechSynthesisDeploymentId) {
         if (subscriptionKey) {
           console.warn(
@@ -105,8 +105,10 @@ export default options => {
 
           await onErrorResumeNext(async () => {
             const voices = await fetchCustomVoices({
+              customVoiceHostname,
               deploymentId: speechSynthesisDeploymentId,
               region,
+              speechSynthesisHostname,
               subscriptionKey
             });
 
