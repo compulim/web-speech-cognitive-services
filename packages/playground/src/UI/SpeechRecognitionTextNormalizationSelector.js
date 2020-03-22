@@ -6,11 +6,12 @@ import Select, { Option } from '../Bootstrap/Select';
 import setSpeechRecognitionTextNormalization from '../data/actions/setSpeechRecognitionTextNormalization';
 
 const RegionSelector = () => {
-  const { ponyfillType, speechRecognitionTextNormalization } = useSelector(({
-    ponyfillType, speechRecognitionTextNormalization
-  }) => ({
-    ponyfillType, speechRecognitionTextNormalization
-  }));
+  const { ponyfillType, speechRecognitionTextNormalization } = useSelector(
+    ({ ponyfillType, speechRecognitionTextNormalization }) => ({
+      ponyfillType,
+      speechRecognitionTextNormalization
+    })
+  );
 
   const dispatch = useDispatch();
   const handleChange = useCallback(value => dispatch(setSpeechRecognitionTextNormalization(value)), [dispatch]);
@@ -18,9 +19,9 @@ const RegionSelector = () => {
 
   return (
     <Select
-      disabled={ !ponyfillCapabilities.inverseTextNormalization }
-      onChange={ handleChange }
-      value={ speechRecognitionTextNormalization }
+      disabled={!ponyfillCapabilities.inverseTextNormalization}
+      onChange={handleChange}
+      value={speechRecognitionTextNormalization}
     >
       <Option text="Display (default)" value="display" />
       <Option text="ITN" value="itn" />
@@ -28,6 +29,6 @@ const RegionSelector = () => {
       <Option text="Lexical" value="lexical" />
     </Select>
   );
-}
+};
 
-export default RegionSelector
+export default RegionSelector;

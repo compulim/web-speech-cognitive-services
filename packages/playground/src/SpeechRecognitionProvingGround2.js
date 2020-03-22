@@ -3,7 +3,7 @@ import React from 'react';
 import SpeechRecognitionCommands from './UI/SpeechRecognitionCommands';
 import SpeechRecognitionEvents from './UI/SpeechRecognitionSimpleEvents';
 
-export default () =>
+export default () => (
   <div>
     <div className="row">
       <div className="col">
@@ -16,3 +16,4 @@ export default () =>
       </div>
     </div>
   </div>
+);

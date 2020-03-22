@@ -1,6 +1,6 @@
 import createDeferred from './createDeferred';
 
-export default function () {
+export default function() {
   let shiftDeferred;
   const queue = [];
 
@@ -26,5 +26,5 @@ export default function () {
   return {
     push,
     shift
-  }
+  };
 }

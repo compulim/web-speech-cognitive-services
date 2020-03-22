@@ -14,4 +14,4 @@ export default {
   ResultReason,
   SpeechConfig,
   SpeechRecognizer
-}
+};

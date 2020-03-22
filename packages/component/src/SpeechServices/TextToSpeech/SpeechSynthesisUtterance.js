@@ -20,7 +20,11 @@ function playDecoded(audioContext, audioBuffer, source) {
   return new Promise((resolve, reject) => {
     const audioContextClosed = new EventAsPromise();
     const sourceEnded = new EventAsPromise();
-    const unsubscribe = subscribeEvent(audioContext, 'statechange', ({ target: { state } }) => state === 'closed' && audioContextClosed.eventListener());
+    const unsubscribe = subscribeEvent(
+      audioContext,
+      'statechange',
+      ({ target: { state } }) => state === 'closed' && audioContextClosed.eventListener()
+    );
 
     try {
       source.buffer = audioBuffer;
@@ -30,10 +34,7 @@ function playDecoded(audioContext, audioBuffer, source) {
       source.connect(audioContext.destination);
       source.start(0);
 
-      Promise.race([
-        audioContextClosed.upcoming(),
-        sourceEnded.upcoming()
-      ]).then(resolve);
+      Promise.race([audioContextClosed.upcoming(), sourceEnded.upcoming()]).then(resolve);
     } catch (err) {
       reject(err);
     } finally {
@@ -63,26 +64,47 @@ class SpeechSynthesisUtterance extends EventTarget {
     this.onstart = null;
   }
 
-  get lang() { return this._lang; }
-  set lang(value) { this._lang = value; }
+  get lang() {
+    return this._lang;
+  }
 
-  get pitch() { return this._pitch; }
-  set pitch(value) { this._pitch = value; }
+  set lang(value) {
+    this._lang = value;
+  }
 
-  get rate() { return this._rate; }
-  set rate(value) { this._rate = value; }
+  get pitch() {
+    return this._pitch;
+  }
 
-  get voice() { return this._voice; }
-  set voice(value) { this._voice = value; }
+  set pitch(value) {
+    this._pitch = value;
+  }
 
-  get volume() { return this._volume; }
-  set volume(value) { this._volume = value; }
+  get rate() {
+    return this._rate;
+  }
 
-  async preload({
-    deploymentId,
-    fetchAuthorizationTokenCredentials,
-    outputFormat
-  }) {
+  set rate(value) {
+    this._rate = value;
+  }
+
+  get voice() {
+    return this._voice;
+  }
+
+  set voice(value) {
+    this._voice = value;
+  }
+
+  get volume() {
+    return this._volume;
+  }
+
+  set volume(value) {
+    this._volume = value;
+  }
+
+  async preload({ deploymentId, fetchAuthorizationTokenCredentials, outputFormat }) {
     this.arrayBufferPromise = fetchSpeechData({
       deploymentId,
       fetchAuthorizationTokenCredentials,
@@ -135,4 +157,4 @@ defineEventAttribute(SpeechSynthesisUtterance.prototype, 'pause');
 defineEventAttribute(SpeechSynthesisUtterance.prototype, 'resume');
 defineEventAttribute(SpeechSynthesisUtterance.prototype, 'start');
 
-export default SpeechSynthesisUtterance
+export default SpeechSynthesisUtterance;

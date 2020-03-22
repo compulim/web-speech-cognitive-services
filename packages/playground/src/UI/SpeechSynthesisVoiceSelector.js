@@ -12,32 +12,30 @@ function isSSML(text) {
 }
 
 const SpeechSynthesisVoiceSelector = () => {
-  const { speechSynthesisNativeVoices, speechSynthesisText, speechSynthesisVoiceURI } = useSelector(({
-    speechSynthesisNativeVoices, speechSynthesisText, speechSynthesisVoiceURI
-  }) => ({
-    speechSynthesisNativeVoices, speechSynthesisText, speechSynthesisVoiceURI
-  }));
+  const { speechSynthesisNativeVoices, speechSynthesisText, speechSynthesisVoiceURI } = useSelector(
+    ({ speechSynthesisNativeVoices, speechSynthesisText, speechSynthesisVoiceURI }) => ({
+      speechSynthesisNativeVoices,
+      speechSynthesisText,
+      speechSynthesisVoiceURI
+    })
+  );
 
   const dispatch = useDispatch();
-  const dispatchSetSpeechSynthesisVoiceURI = useCallback(value => dispatch(setSpeechSynthesisVoiceURI(value)), [dispatch]);
+  const dispatchSetSpeechSynthesisVoiceURI = useCallback(value => dispatch(setSpeechSynthesisVoiceURI(value)), [
+    dispatch
+  ]);
 
   return (
     <Select
-      disabled={ isSSML(speechSynthesisText) || !speechSynthesisNativeVoices.length }
-      onChange={ dispatchSetSpeechSynthesisVoiceURI }
-      value={ speechSynthesisVoiceURI || '' }
+      disabled={isSSML(speechSynthesisText) || !speechSynthesisNativeVoices.length}
+      onChange={dispatchSetSpeechSynthesisVoiceURI}
+      value={speechSynthesisVoiceURI || ''}
     >
-      {
-        speechSynthesisNativeVoices.map(({ name, voiceURI }) =>
-          <Option
-            key={ voiceURI }
-            text={ name }
-            value={ voiceURI }
-          />
-        )
-      }
+      {speechSynthesisNativeVoices.map(({ name, voiceURI }) => (
+        <Option key={voiceURI} text={name} value={voiceURI} />
+      ))}
     </Select>
   );
-}
+};
 
-export default SpeechSynthesisVoiceSelector
+export default SpeechSynthesisVoiceSelector;

@@ -5,25 +5,29 @@ import getPonyfillCapabilities from '../getPonyfillCapabilities';
 import setSpeechRecognitionEndpointId from '../data/actions/setSpeechRecognitionEndpointId';
 
 const SpeechRecognitionEndpointIdInput = () => {
-  const { ponyfillType, speechRecognitionEndpointId } = useSelector(({
-    ponyfillType, speechRecognitionEndpointId
-  }) => ({
-    ponyfillType, speechRecognitionEndpointId
-  }));
+  const { ponyfillType, speechRecognitionEndpointId } = useSelector(
+    ({ ponyfillType, speechRecognitionEndpointId }) => ({
+      ponyfillType,
+      speechRecognitionEndpointId
+    })
+  );
 
   const dispatch = useDispatch();
-  const dispatchSetSpeechRecognitionEndpointId = useCallback(({ target: { value } }) => dispatch(setSpeechRecognitionEndpointId(value)), [dispatch]);
+  const dispatchSetSpeechRecognitionEndpointId = useCallback(
+    ({ target: { value } }) => dispatch(setSpeechRecognitionEndpointId(value)),
+    [dispatch]
+  );
   const ponyfillCapabilities = getPonyfillCapabilities(ponyfillType);
 
   return (
     <input
       className="form-control"
-      disabled={ !ponyfillCapabilities.customSpeech }
-      onChange={ dispatchSetSpeechRecognitionEndpointId }
+      disabled={!ponyfillCapabilities.customSpeech}
+      onChange={dispatchSetSpeechRecognitionEndpointId}
       type="text"
-      value={ speechRecognitionEndpointId }
+      value={speechRecognitionEndpointId}
     />
   );
-}
+};
 
-export default SpeechRecognitionEndpointIdInput
+export default SpeechRecognitionEndpointIdInput;

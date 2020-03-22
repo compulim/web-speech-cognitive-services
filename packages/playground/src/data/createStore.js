@@ -22,14 +22,14 @@ function loadState() {
   return state;
 }
 
-export default function () {
+export default function createStore() {
   const initialState = loadState();
   const sagaMiddleware = createSagaMiddleware();
   const store = createStore(
     reducer,
     initialState,
     applyMiddleware(
-      sagaMiddleware,
+      sagaMiddleware
       // () => next => action => {
       //   console.log(action);
 

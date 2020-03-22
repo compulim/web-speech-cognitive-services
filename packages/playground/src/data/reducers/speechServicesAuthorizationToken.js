@@ -1,6 +1,6 @@
 import { SET_SPEECH_SERVICES_AUTHORIZATION_TOKEN } from '../actions/setSpeechServicesAuthorizationToken';
 
-export default function (state = '', { payload, type }) {
+export default function speechServicesAuthorizationToken(state = '', { payload, type }) {
   if (type === SET_SPEECH_SERVICES_AUTHORIZATION_TOKEN) {
     return payload.authorizationToken;
   }

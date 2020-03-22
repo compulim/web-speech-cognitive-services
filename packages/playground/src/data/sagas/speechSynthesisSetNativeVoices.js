@@ -1,17 +1,15 @@
-import {
-  call,
-  put,
-  takeEvery
-} from 'redux-saga/effects';
+import { call, put, takeEvery } from 'redux-saga/effects';
 
 import { SET_PONYFILL } from '../actions/setPonyfill';
 import setSpeechSynthesisNativeVoices from '../actions/setSpeechSynthesisNativeVoices';
 
 import createPromiseQueue from '../utils/createPromiseQueue';
 
-export default function* () {
-  yield takeEvery(SET_PONYFILL, function* ({ payload: { ponyfill: { speechSynthesis } = {} } }) {
-    if (!speechSynthesis) { return; }
+export default function* speechSynthesisSetNativeVoices() {
+  yield takeEvery(SET_PONYFILL, function*({ payload: { ponyfill: { speechSynthesis } = {} } }) {
+    if (!speechSynthesis) {
+      return;
+    }
 
     const events = createPromiseQueue();
 

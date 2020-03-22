@@ -12,14 +12,10 @@ export default function createCachedFetchAuthorizationToken() {
   const fetchMemoizedAuthorizationToken = memoize(
     (region, subscriptionKey) => fetchAuthorizationToken({ region, subscriptionKey }),
     ([region, subscriptionKey, now], [prevRegion, prevSubscriptionKey, prevNow]) =>
-      region === prevRegion
-      && subscriptionKey === prevSubscriptionKey
-      && now - prevNow < TOKEN_EXPIRATION - TOKEN_EARLY_RENEWAL
+      region === prevRegion &&
+      subscriptionKey === prevSubscriptionKey &&
+      now - prevNow < TOKEN_EXPIRATION - TOKEN_EARLY_RENEWAL
   );
 
-  return ({ region, subscriptionKey }) => fetchMemoizedAuthorizationToken(
-    region,
-    subscriptionKey,
-    Date.now()
-  );
+  return ({ region, subscriptionKey }) => fetchMemoizedAuthorizationToken(region, subscriptionKey, Date.now());
 }

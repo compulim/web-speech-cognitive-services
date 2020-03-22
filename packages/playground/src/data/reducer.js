@@ -54,4 +54,4 @@ export default combineReducers({
   speechSynthesisText,
   speechSynthesisUtterances,
   speechSynthesisVoiceURI
-})
+});

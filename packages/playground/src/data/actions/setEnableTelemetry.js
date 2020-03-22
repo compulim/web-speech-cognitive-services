@@ -7,4 +7,4 @@ export default function setEnableTelemetry(enableTelemetry) {
   };
 }
 
-export { SET_ENABLE_TELEMETRY }
+export { SET_ENABLE_TELEMETRY };

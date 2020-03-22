@@ -17,36 +17,34 @@ import setNavPane from './data/actions/setNavPane';
 css.global('button.nav-link', { backgroundColor: 'Transparent' });
 
 const App = () => {
-  const {
-    authorizationToken,
-    navPane,
-    ponyfill,
-    ponyfillType
-  } = useSelector(({
-    authorizationToken,
-    navPane,
-    ponyfill,
-    ponyfillType
-  }) => ({
-    authorizationToken,
-    navPane,
-    ponyfill,
-    ponyfillType
-  }));
+  const { authorizationToken, navPane, ponyfill, ponyfillType } = useSelector(
+    ({ authorizationToken, navPane, ponyfill, ponyfillType }) => ({
+      authorizationToken,
+      navPane,
+      ponyfill,
+      ponyfillType
+    })
+  );
 
   const dispatch = useDispatch();
 
-  const dispatchSetNavPaneToSpeechRecognition = useCallback(event => {
-    event.preventDefault();
+  const dispatchSetNavPaneToSpeechRecognition = useCallback(
+    event => {
+      event.preventDefault();
 
-    dispatch(setNavPane('speech recognition'));
-  }, [dispatch]);
+      dispatch(setNavPane('speech recognition'));
+    },
+    [dispatch]
+  );
 
-  const dispatchSetNavPaneToSpeechSynthesis = useCallback(event => {
-    event.preventDefault();
+  const dispatchSetNavPaneToSpeechSynthesis = useCallback(
+    event => {
+      event.preventDefault();
 
-    dispatch(setNavPane('speech synthesis'));
-  }, [dispatch]);
+      dispatch(setNavPane('speech synthesis'));
+    },
+    [dispatch]
+  );
 
   return (
     <div>
@@ -68,7 +66,7 @@ const App = () => {
                   <RegionSelector />
                 </div>
                 <div className="form-group col">
-                  <label>{ authorizationToken ? 'Authorization token' : 'Subscription key' }</label>
+                  <label>{authorizationToken ? 'Authorization token' : 'Subscription key'}</label>
                   <SubscriptionKeyInput />
                 </div>
               </div>
@@ -80,17 +78,21 @@ const App = () => {
             <ul className="nav nav-tabs">
               <li className="nav-item">
                 <button
-                  className={ classNames('nav-link', { active: navPane === 'speech recognition' }) }
-                  onClick={ dispatchSetNavPaneToSpeechRecognition }
+                  className={classNames('nav-link', { active: navPane === 'speech recognition' })}
+                  onClick={dispatchSetNavPaneToSpeechRecognition}
                   type="button"
-                >Speech recognition</button>
+                >
+                  Speech recognition
+                </button>
               </li>
               <li className="nav-item">
                 <button
-                  className={ classNames('nav-link', { active: navPane === 'speech synthesis' }) }
-                  onClick={ dispatchSetNavPaneToSpeechSynthesis }
+                  className={classNames('nav-link', { active: navPane === 'speech synthesis' })}
+                  onClick={dispatchSetNavPaneToSpeechSynthesis}
                   type="button"
-                >Speech synthesis</button>
+                >
+                  Speech synthesis
+                </button>
               </li>
             </ul>
             <br />
@@ -98,26 +100,18 @@ const App = () => {
         </div>
         <div className="row">
           <div className="col">
-            {
-              !!ponyfill && (
-                navPane === 'speech synthesis' ?
-                  <SpeechSynthesisProvingGround
-                    key={ ponyfillType }
-                    ponyfill={ ponyfill }
-                  />
-                :
-                  <SpeechRecognitionProvingGround
-                    key={ ponyfillType }
-                    ponyfill={ ponyfill }
-                  />
-              )
-            }
+            {!!ponyfill &&
+              (navPane === 'speech synthesis' ? (
+                <SpeechSynthesisProvingGround key={ponyfillType} ponyfill={ponyfill} />
+              ) : (
+                <SpeechRecognitionProvingGround key={ponyfillType} ponyfill={ponyfill} />
+              ))}
           </div>
         </div>
         <GitHubForkMe owner="compulim" repo="web-speech-cognitive-services" />
       </div>
     </div>
   );
-}
+};
 
-export default App
+export default App;

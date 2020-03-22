@@ -21,13 +21,14 @@ export default function patchOptions({
     if (!authorizationToken && !subscriptionKey) {
       throw new Error('web-speech-cognitive-services: Credentials must be specified.');
     } else {
-      console.warn('web-speech-cognitive-services: We are deprecating authorizationToken, region, and subscriptionKey. Please use credentials instead. The deprecated option will be removed on or after 2020-11-14.');
+      console.warn(
+        'web-speech-cognitive-services: We are deprecating authorizationToken, region, and subscriptionKey. Please use credentials instead. The deprecated option will be removed on or after 2020-11-14.'
+      );
 
       credentials = async () =>
-        authorizationToken ?
-          { authorizationToken: await resolveFunctionOrReturnValue(authorizationToken), region }
-        :
-          { region, subscriptionKey: await resolveFunctionOrReturnValue(subscriptionKey) };
+        authorizationToken
+          ? { authorizationToken: await resolveFunctionOrReturnValue(authorizationToken), region }
+          : { region, subscriptionKey: await resolveFunctionOrReturnValue(subscriptionKey) };
     }
   }
 
@@ -37,7 +38,9 @@ export default function patchOptions({
       const { authorizationToken, region, subscriptionKey } = await resolveFunctionOrReturnValue(credentials);
 
       if (!authorizationToken && !subscriptionKey) {
-        throw new Error('web-speech-cognitive-services: Either authorization token and subscription key must be provided.');
+        throw new Error(
+          'web-speech-cognitive-services: Either authorization token and subscription key must be provided.'
+        );
       }
 
       if (authorizationToken) {
@@ -49,17 +52,14 @@ export default function patchOptions({
       }
 
       if (shouldWarnOnSubscriptionKey && subscriptionKey) {
-        console.warn('web-speech-cognitive-services: In production environment, subscription key should not be used, authorization token should be used instead.');
+        console.warn(
+          'web-speech-cognitive-services: In production environment, subscription key should not be used, authorization token should be used instead.'
+        );
 
         shouldWarnOnSubscriptionKey = false;
       }
 
-      return (
-        authorizationToken ?
-          { authorizationToken, region }
-        :
-          { region, subscriptionKey }
-      );
+      return authorizationToken ? { authorizationToken, region } : { region, subscriptionKey };
     },
     looseEvents
   };

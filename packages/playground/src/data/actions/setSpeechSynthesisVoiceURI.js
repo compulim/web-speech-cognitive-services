@@ -1,6 +1,6 @@
 const SET_SPEECH_SYNTHESIS_VOICE_URI = 'SET_SPEECH_SYNTHESIS_VOICE_URI';
 
-export default function (voiceURI) {
+export default function setSpeechSynthesisVoiceURI(voiceURI) {
   return {
     type: SET_SPEECH_SYNTHESIS_VOICE_URI,
     payload: {
@@ -9,4 +9,4 @@ export default function (voiceURI) {
   };
 }
 
-export { SET_SPEECH_SYNTHESIS_VOICE_URI }
+export { SET_SPEECH_SYNTHESIS_VOICE_URI };

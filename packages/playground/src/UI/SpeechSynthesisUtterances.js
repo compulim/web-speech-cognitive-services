@@ -8,18 +8,15 @@ const SpeechSynthesisUtterances = () => {
 
   return (
     <div className="list-group">
-      { speechSynthesisUtterances.map(utterance =>
-        <div
-          className="list-group-item"
-          key={ utterance.id }
-        >
-          <div>{ utterance.text }</div>
-          <SpeechSynthesisUtteranceEvents utteranceID={ utterance.id } />
+      {speechSynthesisUtterances.map(utterance => (
+        <div className="list-group-item" key={utterance.id}>
+          <div>{utterance.text}</div>
+          <SpeechSynthesisUtteranceEvents utteranceID={utterance.id} />
         </div>
-      ) }
+      ))}
       <br />
     </div>
   );
-}
+};
 
-export default SpeechSynthesisUtterances
+export default SpeechSynthesisUtterances;
