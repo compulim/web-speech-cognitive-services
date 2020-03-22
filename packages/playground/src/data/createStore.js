@@ -22,7 +22,7 @@ function loadState() {
   return state;
 }
 
-export default function createStore() {
+export default function createPlaygroundStore() {
   const initialState = loadState();
   const sagaMiddleware = createSagaMiddleware();
   const store = createStore(
