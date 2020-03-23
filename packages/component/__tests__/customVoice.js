@@ -48,14 +48,14 @@ describe.each(testTableForAuthentication)(
         expect(voices).toEqual([]);
         expect(global.fetch).toHaveBeenCalledTimes(0);
       } else {
-        expect(voices.map(({ voiceURI }) => voiceURI)).toEqual(['William']);
+        expect(voices.map(({ voiceURI }) => voiceURI)).toEqual(['Cities in Hong Kong']);
         expect(global.fetch).toHaveBeenCalledTimes(1);
       }
 
       const utterance = new SpeechSynthesisUtterance('Hello');
 
       // When using authorization token, voice list will not be fetched. We need to put in ourselves.
-      utterance.voice = useAuthorizationToken ? { voiceURI: 'William' } : voices[0];
+      utterance.voice = useAuthorizationToken ? { voiceURI: 'Cities in Hong Kong' } : voices[0];
 
       const events = await captureAllSpeechSynthesisUtteranceEvents(utterance, () => speechSynthesis.speak(utterance));
 
