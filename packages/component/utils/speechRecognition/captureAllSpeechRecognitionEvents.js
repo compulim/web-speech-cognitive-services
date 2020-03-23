@@ -18,11 +18,13 @@ export default async function captureAllSpeechRecognitionEvents(speechRecognitio
   const events = [];
   const pushEvent = event => events.push(formatSpeechRecognitionEvent(event));
 
-  SPEECH_RECOGNITION_EVENTS.forEach(name => speechRecognition.addEventListener(name, pushEvent));
+  try {
+    SPEECH_RECOGNITION_EVENTS.forEach(name => speechRecognition.addEventListener(name, pushEvent));
 
-  await fn();
+    await fn();
 
-  SPEECH_RECOGNITION_EVENTS.forEach(name => speechRecognition.removeEventListener(name, pushEvent));
-
-  return events;
+    return events;
+  } finally {
+    SPEECH_RECOGNITION_EVENTS.forEach(name => speechRecognition.removeEventListener(name, pushEvent));
+  }
 }

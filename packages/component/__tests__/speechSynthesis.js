@@ -4,25 +4,16 @@
 
 import { createSpeechSynthesisPonyfill } from '../src/SpeechServices';
 import captureAllSpeechSynthesisUtteranceEvents from '../utils/speechSynthesis/captureAllSpeechSynthesisUtteranceEvents';
-import fetchAuthorizationToken from '../utils/fetchAuthorizationToken';
 import MockAudioContext from '../utils/speechSynthesis/MockAudioContext';
 import recognizeRiffWaveArrayBuffer from '../utils/speechSynthesis/recognizeRiffWaveArrayBuffer';
 import testTableForAuthentication from '../utils/testTableForAuthentication';
 import waitForEvent from '../utils/waitForEvent';
 
-describe.each(testTableForAuthentication)('using %s', (_, useAuthorizationToken, mergeCredentials) => {
+describe.each(testTableForAuthentication)('using %s', (_name, _useAuthorizationToken, _mergeCredentials, fetchCredentials) => {
+  jest.setTimeout(10000);
+
   test('to synthesis', async () => {
-    const credentials = { ...mergeCredentials };
-
-    if (useAuthorizationToken) {
-      credentials.authorizationToken = await fetchAuthorizationToken({
-        subscriptionKey: process.env.SUBSCRIPTION_KEY,
-        ...mergeCredentials
-      });
-    } else {
-      credentials.subscriptionKey = process.env.SUBSCRIPTION_KEY;
-    }
-
+    const credentials = await fetchCredentials();
     const recognized = [];
 
     const bufferSourceStartHandler = jest.fn(async ({ target: { buffer } }) => {

@@ -8,7 +8,6 @@ import createDeferred from 'p-defer';
 import { createSpeechRecognitionPonyfill } from '../src/SpeechServices';
 import captureAllSpeechRecognitionEvents from '../utils/speechRecognition/captureAllSpeechRecognitionEvents';
 import createQueuedArrayBufferAudioSource from '../utils/speechRecognition/createQueuedArrayBufferAudioSource';
-import fetchAuthorizationToken from '../utils/fetchAuthorizationToken';
 import fetchSpeechData from '../src/SpeechServices/TextToSpeech/fetchSpeechData';
 import testTableForAuthentication from '../utils/testTableForAuthentication';
 
@@ -17,7 +16,9 @@ const CHANNELS = 1;
 const OUTPUT_FORMAT = 'riff-8khz-16bit-mono-pcm';
 const SAMPLES_PER_SECOND = 8000;
 
-describe.each(testTableForAuthentication)('using %s', (_, useAuthorizationToken, mergeCredentials) => {
+describe.each(testTableForAuthentication)('using %s', (_name, _useAuthorizationToken, _mergeCredentials, fetchCredentials) => {
+  jest.setTimeout(10000);
+
   let audioConfig;
 
   beforeEach(async () => {
@@ -27,17 +28,7 @@ describe.each(testTableForAuthentication)('using %s', (_, useAuthorizationToken,
   });
 
   test('to recognize', async () => {
-    const credentials = { ...mergeCredentials };
-
-    if (useAuthorizationToken) {
-      credentials.authorizationToken = await fetchAuthorizationToken({
-        subscriptionKey: process.env.SUBSCRIPTION_KEY,
-        ...mergeCredentials
-      });
-    } else {
-      credentials.subscriptionKey = process.env.SUBSCRIPTION_KEY;
-    }
-
+    const credentials = await fetchCredentials();
     const { SpeechRecognition } = createSpeechRecognitionPonyfill({
       audioConfig,
       credentials
