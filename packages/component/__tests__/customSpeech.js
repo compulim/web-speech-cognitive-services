@@ -40,11 +40,9 @@ describe.each(testTableForAuthentication)(
     test('to recognize', async () => {
       const credentials = {
         ...(await fetchCredentials()),
-        ...(mergeCredentials.region
-          ? {}
-          : {
-              speechRecognitionHostname: 'westus2.stt.speech.microsoft.com'
-            })
+        ...(!mergeCredentials.region && {
+          speechRecognitionHostname: 'westus2.stt.speech.microsoft.com'
+        })
       };
 
       const { SpeechRecognition } = createSpeechRecognitionPonyfill({
