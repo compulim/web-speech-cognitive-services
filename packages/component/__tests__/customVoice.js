@@ -35,7 +35,7 @@ describe.each(testTableForAuthentication)(
       const { speechSynthesis, SpeechSynthesisUtterance } = createSpeechSynthesisPonyfill({
         audioContext: new MockAudioContext({ bufferSourceStartHandler }),
         credentials,
-        speechSynthesisDeploymentId: '50e5430a-cc1a-4c33-9afb-f0a4470fc921',
+        speechSynthesisDeploymentId: process.env.SPEECH_SYNTHESIS_DEPLOYMENT_ID,
         speechSynthesisOutputFormat: 'riff-8khz-16bit-mono-pcm'
       });
 
@@ -48,14 +48,14 @@ describe.each(testTableForAuthentication)(
         expect(voices).toEqual([]);
         expect(global.fetch).toHaveBeenCalledTimes(0);
       } else {
-        expect(voices.map(({ voiceURI }) => voiceURI)).toEqual(['Cities in Hong Kong']);
+        expect(voices.map(({ voiceURI }) => voiceURI)).toEqual([process.env.CUSTOM_VOICE_NAME]);
         expect(global.fetch).toHaveBeenCalledTimes(1);
       }
 
       const utterance = new SpeechSynthesisUtterance('Hello');
 
       // When using authorization token, voice list will not be fetched. We need to put in ourselves.
-      utterance.voice = useAuthorizationToken ? { voiceURI: 'Cities in Hong Kong' } : voices[0];
+      utterance.voice = useAuthorizationToken ? { voiceURI: process.env.CUSTOM_VOICE_NAME } : voices[0];
 
       const events = await captureAllSpeechSynthesisUtteranceEvents(utterance, () => speechSynthesis.speak(utterance));
 
