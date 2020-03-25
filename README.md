@@ -161,9 +161,9 @@ The following list all options supported by the adapter.
     </tr>
     <tr>
       <td><code>looseEvents: boolean</code></td>
-      <td><code>"false"</code></td>
+      <td><code>false</code></td>
       <td>
-        Specifies if the event order should strictly follow observed browser behavior (<code>"false"</code>), or loosened behavior (<code>"true"</code>). Regardless of the option, the package will continue to <a href="https://wicg.github.io/speech-api/#eventdef-speechrecognition-result">conform with W3C specifications</a>.
+        Specifies if the event order should strictly follow observed browser behavior (<code>false</code>), or loosened behavior (<code>true</code>). Regardless of the option, both behaviors <a href="https://wicg.github.io/speech-api/#eventdef-speechrecognition-result">conform with W3C specifications</a>.
         <br /><br />
         You can read more about this option in <a href="#event-order">event order section</a>.
       </td>
@@ -499,7 +499,7 @@ By default, we follow event order observed from browsers (a.k.a. strict event or
 1. `result` (with `isFinal` property set to `true`)
 1. `end`
 
-You can loosen event order by setting `looseEvents` to `false`. For the same scenario, the event order will become:
+You can loosen event order by setting `looseEvents` to `true`. For the same scenario, the event order will become:
 
 1. `start`
 1. `audiostart`
@@ -539,7 +539,7 @@ For detailed test matrix, please refer to [`SPEC-RECOGNITION.md`](SPEC-RECOGNITI
    * [x] Add dynamic phrases
    * [x] Add reference grammars
    * [x] Add continuous mode
-   * [ ] Investigate support of Opus (OGG) encoding
+   * [ ] ~Investigate support of Opus (OGG) encoding~
       * Currently, there is a problem with `microsoft-speech-browser-sdk@0.0.12`, tracking on [this issue](https://github.com/Azure-Samples/SpeechToText-WebSockets-Javascript/issues/88)
    * [x] Support custom speech
    * [x] Support ITN, masked ITN, and lexical output
