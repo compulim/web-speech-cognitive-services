@@ -2,11 +2,12 @@
 
 import SpeechSynthesisVoice from './SpeechSynthesisVoice';
 
-async function fetchEndpoint({ deploymentId, region, subscriptionKey }) {
-  // Although encodeURI on a hostname doesn't work as expected for hostname, at least, it will fail peacefully.
+async function fetchCustomVoices({ customVoiceHostname, deploymentId, region, subscriptionKey }) {
+  const hostname = customVoiceHostname || `${region}.cris.ai`;
 
+  // Although encodeURI on a hostname doesn't work as expected for hostname, at least, it will fail peacefully.
   const res = await fetch(
-    `https://${encodeURI(region)}.cris.ai/api/texttospeech/v2.0/endpoints/${encodeURIComponent(deploymentId)}`,
+    `https://${encodeURI(hostname)}/api/texttospeech/v2.0/endpoints/${encodeURIComponent(deploymentId)}`,
     {
       headers: {
         accept: 'application/json',
@@ -22,8 +23,8 @@ async function fetchEndpoint({ deploymentId, region, subscriptionKey }) {
   return res.json();
 }
 
-export default async function({ deploymentId, region, subscriptionKey }) {
-  const { models } = await fetchEndpoint({ deploymentId, region, subscriptionKey });
+export default async function({ customVoiceHostname, deploymentId, region, subscriptionKey }) {
+  const { models } = await fetchCustomVoices({ customVoiceHostname, deploymentId, region, subscriptionKey });
 
   return models
     .map(

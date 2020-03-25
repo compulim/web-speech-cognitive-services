@@ -119,10 +119,10 @@ The following list all options supported by the adapter.
     <tr>
       <td>
         <code>credentials:&nbsp;(</code><br />
-        <code>&nbsp;&nbsp;Credentials&nbsp;||</code><br />
-        <code>&nbsp;&nbsp;Promise&lt;Credentials&gt;&nbsp;||</code><br />
-        <code>&nbsp;&nbsp;()&nbsp;=>&nbsp;Credentials&nbsp;||</code><br />
-        <code>&nbsp;&nbsp;()&nbsp;=>&nbsp;Promise&lt;Credentials&gt;</code><br />
+        <code>&nbsp;&nbsp;ICredentials&nbsp;||</code><br />
+        <code>&nbsp;&nbsp;Promise&lt;ICredentials&gt;&nbsp;||</code><br />
+        <code>&nbsp;&nbsp;()&nbsp;=>&nbsp;ICredentials&nbsp;||</code><br />
+        <code>&nbsp;&nbsp;()&nbsp;=>&nbsp;Promise&lt;ICredentials&gt;</code><br />
         <code>)</code><br />
         <br />
         <code>ICredentials: {</code><br />
@@ -131,13 +131,25 @@ The following list all options supported by the adapter.
         <code>} || {</code><br />
         <code>&nbsp;&nbsp;region: string,</code><br />
         <code>&nbsp;&nbsp;subscriptionKey: string</code><br />
+        <code>} || {</code><br />
+        <code>&nbsp;&nbsp;authorizationToken: string,</code><br />
+        <code>&nbsp;&nbsp;customVoiceHostname?: string,</code><br />
+        <code>&nbsp;&nbsp;speechRecognitionHostname: string,</code><br />
+        <code>&nbsp;&nbsp;speechSynthesisHostname: string</code><br />
+        <code>} || {</code><br />
+        <code>&nbsp;&nbsp;customVoiceHostname?: string,</code><br />
+        <code>&nbsp;&nbsp;speechRecognitionHostname: string,</code><br />
+        <code>&nbsp;&nbsp;speechSynthesisHostname: string,</code><br />
+        <code>&nbsp;&nbsp;subscriptionKey: string</code><br />
         <code>}</code>
       </td>
       <td>(Required)</td>
       <td>
         Credentials (including Azure region) from Cognitive Services. Please refer to <a href="https://docs.microsoft.com/en-us/azure/cognitive-services/authentication">this article</a> to obtain an authorization token.<br />
         <br />
-        Subscription key is not recommended for production use as it will be leaked in the browser.
+        Subscription key is not recommended for production use as it will be leaked in the browser.<br />
+        <br />
+        For sovereign cloud such as Azure Government (United States) and Azure China, instead of specifying <code>region</code>, please specify <code>speechRecongitionHost</code> and <code>speechSynthesisHostname</code> instead. You can find the <a href="https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/sovereign-clouds">sovereign cloud connection parameters from this article</a>.
       </td>
     </tr>
     <tr>
@@ -149,9 +161,9 @@ The following list all options supported by the adapter.
     </tr>
     <tr>
       <td><code>looseEvents: boolean</code></td>
-      <td><code>"false"</code></td>
+      <td><code>false</code></td>
       <td>
-        Specifies if the event order should strictly follow observed browser behavior (<code>"false"</code>), or loosened behavior (<code>"true"</code>). Regardless of the option, the package will continue to <a href="https://wicg.github.io/speech-api/#eventdef-speechrecognition-result">conform with W3C specifications</a>.
+        Specifies if the event order should strictly follow observed browser behavior (<code>false</code>), or loosened behavior (<code>true</code>). Regardless of the option, both behaviors <a href="https://wicg.github.io/speech-api/#eventdef-speechrecognition-result">conform with W3C specifications</a>.
         <br /><br />
         You can read more about this option in <a href="#event-order">event order section</a>.
       </td>
@@ -205,6 +217,36 @@ The following list all options supported by the adapter.
     </tr>
   </tbody>
 </table>
+
+## Setting up for sovereign clouds
+
+You can use the adapter to connect to sovereign clouds, including [Azure Government (United States)](#azure-government-united-states) and [Microsoft Azure China](#microsoft-azure-china).
+
+Please refer to [this article on limitations](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/sovereign-clouds) when using Cognitive Services Speech Services on sovereign clouds.
+
+### Azure Government (United States)
+
+```js
+createPonyfill({
+  credentials: {
+    authorizationToken: 'YOUR_AUTHORIZATION_TOKEN',
+    speechRecognitionHostname: 'virginia.stt.speech.azure.us',
+    speechSynthesisHostname: 'virginia.tts.speech.azure.us'
+  }
+});
+```
+
+### Microsoft Azure China
+
+```js
+createPonyfill({
+  credentials: {
+    authorizationToken: 'YOUR_AUTHORIZATION_TOKEN',
+    speechRecognitionHostname: 'chinaeast2.stt.speech.azure.cn',
+    speechSynthesisHostname: 'chinaeast2.tts.speech.azure.cn'
+  }
+});
+```
 
 # Code snippets
 
@@ -357,8 +399,6 @@ const ponyfill = await createPonyfill({
 });
 ```
 
-> Note: if you do not specify `region`, we will default to `"westus"`.
-
 > List of supported regions can be found in [this article](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/rest-apis#regions-and-endpoints).
 
 ## Lexical and ITN support
@@ -459,7 +499,7 @@ By default, we follow event order observed from browsers (a.k.a. strict event or
 1. `result` (with `isFinal` property set to `true`)
 1. `end`
 
-You can loosen event order by setting `looseEvents` to `false`. For the same scenario, the event order will become:
+You can loosen event order by setting `looseEvents` to `true`. For the same scenario, the event order will become:
 
 1. `start`
 1. `audiostart`
@@ -499,7 +539,7 @@ For detailed test matrix, please refer to [`SPEC-RECOGNITION.md`](SPEC-RECOGNITI
    * [x] Add dynamic phrases
    * [x] Add reference grammars
    * [x] Add continuous mode
-   * [ ] Investigate support of Opus (OGG) encoding
+   * [ ] ~Investigate support of Opus (OGG) encoding~
       * Currently, there is a problem with `microsoft-speech-browser-sdk@0.0.12`, tracking on [this issue](https://github.com/Azure-Samples/SpeechToText-WebSockets-Javascript/issues/88)
    * [x] Support custom speech
    * [x] Support ITN, masked ITN, and lexical output

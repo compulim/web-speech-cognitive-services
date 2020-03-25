@@ -2,13 +2,19 @@
 
 import SpeechSynthesisVoice from './SpeechSynthesisVoice';
 
-export default async function fetchVoices({ authorizationToken, region }) {
+export default async function fetchVoices({ authorizationToken, region, speechSynthesisHostname, subscriptionKey }) {
   // Although encodeURI on a hostname doesn't work as expected for hostname, at least, it will fail peacefully.
-
-  const res = await fetch(`https://${encodeURI(region)}.tts.speech.microsoft.com/cognitiveservices/voices/list`, {
+  const hostname = speechSynthesisHostname || `${encodeURI(region)}.tts.speech.microsoft.com`;
+  const res = await fetch(`https://${hostname}/cognitiveservices/voices/list`, {
     headers: {
-      authorization: `Bearer ${authorizationToken}`,
-      'content-type': 'application/json'
+      'content-type': 'application/json',
+      ...(authorizationToken
+        ? {
+            authorization: `Bearer ${authorizationToken}`
+          }
+        : {
+            'Ocp-Apim-Subscription-Key': subscriptionKey
+          })
     }
   });
 

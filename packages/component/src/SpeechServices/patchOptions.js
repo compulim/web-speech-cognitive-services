@@ -35,20 +35,33 @@ export default function patchOptions({
   return {
     ...otherOptions,
     fetchCredentials: async () => {
-      const { authorizationToken, region, subscriptionKey } = await resolveFunctionOrReturnValue(credentials);
+      const {
+        authorizationToken,
+        customVoiceHostname,
+        region,
+        speechRecognitionHostname,
+        speechSynthesisHostname,
+        subscriptionKey
+      } = await resolveFunctionOrReturnValue(credentials);
 
-      if (!authorizationToken && !subscriptionKey) {
+      if ((!authorizationToken && !subscriptionKey) || (authorizationToken && subscriptionKey)) {
         throw new Error(
-          'web-speech-cognitive-services: Either authorization token and subscription key must be provided.'
+          'web-speech-cognitive-services: Either "authorizationToken" or "subscriptionKey" must be provided.'
         );
-      }
-
-      if (authorizationToken) {
+      } else if (!region && !(speechRecognitionHostname && speechSynthesisHostname)) {
+        throw new Error(
+          'web-speech-cognitive-services: Either "region" or "speechRecognitionHostname" and "speechSynthesisHostname" must be set.'
+        );
+      } else if (region && (customVoiceHostname || speechRecognitionHostname || speechSynthesisHostname)) {
+        throw new Error(
+          'web-speech-cognitive-services: Only either "region" or "customVoiceHostname", "speechRecognitionHostname" and "speechSynthesisHostname" can be set.'
+        );
+      } else if (authorizationToken) {
         if (typeof authorizationToken !== 'string') {
-          throw new Error('web-speech-cognitive-services: Authorization token must be a string.');
+          throw new Error('web-speech-cognitive-services: "authorizationToken" must be a string.');
         }
       } else if (typeof subscriptionKey !== 'string') {
-        throw new Error('web-speech-cognitive-services: Subscription key must be a string.');
+        throw new Error('web-speech-cognitive-services: "subscriptionKey" must be a string.');
       }
 
       if (shouldWarnOnSubscriptionKey && subscriptionKey) {
@@ -59,7 +72,17 @@ export default function patchOptions({
         shouldWarnOnSubscriptionKey = false;
       }
 
-      return authorizationToken ? { authorizationToken, region } : { region, subscriptionKey };
+      const resolvedCredentials = authorizationToken ? { authorizationToken } : { subscriptionKey };
+
+      if (region) {
+        resolvedCredentials.region = region;
+      } else {
+        resolvedCredentials.customVoiceHostname = customVoiceHostname;
+        resolvedCredentials.speechRecognitionHostname = speechRecognitionHostname;
+        resolvedCredentials.speechSynthesisHostname = speechSynthesisHostname;
+      }
+
+      return resolvedCredentials;
     },
     looseEvents
   };

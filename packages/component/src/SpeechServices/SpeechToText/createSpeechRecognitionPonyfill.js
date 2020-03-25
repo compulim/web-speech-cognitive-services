@@ -154,6 +154,7 @@ export function createSpeechRecognitionPonyfillFromRecognizer({
     get continuous() {
       return this._continuous;
     }
+
     set continuous(value) {
       this._continuous = value;
     }
@@ -161,6 +162,7 @@ export function createSpeechRecognitionPonyfillFromRecognizer({
     get grammars() {
       return this._grammars;
     }
+
     set grammars(value) {
       if (value instanceof SpeechGrammarList) {
         this._grammars = value;
@@ -172,6 +174,7 @@ export function createSpeechRecognitionPonyfillFromRecognizer({
     get interimResults() {
       return this._interimResults;
     }
+
     set interimResults(value) {
       this._interimResults = value;
     }
@@ -179,6 +182,7 @@ export function createSpeechRecognitionPonyfillFromRecognizer({
     get maxAlternatives() {
       return this._maxAlternatives;
     }
+
     set maxAlternatives(value) {
       this._maxAlternatives = value;
     }
@@ -186,13 +190,14 @@ export function createSpeechRecognitionPonyfillFromRecognizer({
     get lang() {
       return this._lang;
     }
+
     set lang(value) {
       this._lang = value;
     }
 
     start() {
       this._startOnce().catch(err => {
-        this.dispatchEvent(new ErrorEvent('error', { error: err, message: err && err.message }));
+        this.dispatchEvent(new ErrorEvent('error', { error: err, message: err && (err.stack || err.message) }));
       });
     }
 
@@ -545,7 +550,7 @@ export default options => {
     textNormalization = 'display'
   } = patchOptions(options);
 
-  if (!window.navigator.mediaDevices || !window.navigator.mediaDevices.getUserMedia) {
+  if (!audioConfig && (!window.navigator.mediaDevices || !window.navigator.mediaDevices.getUserMedia)) {
     console.warn(
       'web-speech-cognitive-services: This browser does not support WebRTC and it will not work with Cognitive Services Speech Services.'
     );
@@ -554,10 +559,23 @@ export default options => {
   }
 
   const createRecognizer = async lang => {
-    const { authorizationToken, region, subscriptionKey } = await fetchCredentials();
-    const speechConfig = authorizationToken
-      ? SpeechConfig.fromAuthorizationToken(authorizationToken, region)
-      : SpeechConfig.fromSubscription(subscriptionKey, region);
+    const { authorizationToken, region, speechRecognitionHostname, subscriptionKey } = await fetchCredentials();
+    let speechConfig;
+
+    if (speechRecognitionHostname) {
+      const host = { hostname: speechRecognitionHostname, port: 443, protocol: 'wss:' };
+
+      if (authorizationToken) {
+        speechConfig = SpeechConfig.fromHost(host);
+        speechConfig.authorizationToken = authorizationToken;
+      } else {
+        speechConfig = SpeechConfig.fromHost(host, subscriptionKey);
+      }
+    } else {
+      speechConfig = authorizationToken
+        ? SpeechConfig.fromAuthorizationToken(authorizationToken, region)
+        : SpeechConfig.fromSubscription(subscriptionKey, region);
+    }
 
     if (speechRecognitionEndpointId) {
       speechConfig.endpointId = speechRecognitionEndpointId;

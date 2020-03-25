@@ -1,10 +1,10 @@
 /* eslint class-methods-use-this: 0 */
 
 import { defineEventAttribute, EventTarget } from 'event-target-shim-es5';
+import createDeferred from 'p-defer-es5';
 import onErrorResumeNext from 'on-error-resume-next';
 
 import AudioContextQueue from './AudioContextQueue';
-import createFetchAuthorizationTokenWithCache from '../createFetchAuthorizationTokenWithCache';
 import fetchCustomVoices from './fetchCustomVoices';
 import fetchVoices from './fetchVoices';
 import patchOptions from '../patchOptions';
@@ -22,34 +22,17 @@ export default options => {
     ponyfill = {
       AudioContext: window.AudioContext || window.webkitAudioContext
     },
-    region = 'westus',
     speechSynthesisDeploymentId,
-    speechSynthesisOutputFormat = DEFAULT_OUTPUT_FORMAT,
-    subscriptionKey
+    speechSynthesisOutputFormat = DEFAULT_OUTPUT_FORMAT
   } = patchOptions(options);
 
-  if (!ponyfill.AudioContext) {
+  if (!audioContext && !ponyfill.AudioContext) {
     console.warn(
       'web-speech-cognitive-services: This browser does not support Web Audio and it will not work with Cognitive Services Speech Services.'
     );
 
     return {};
   }
-
-  const fetchAuthorizationTokenWithCache = createFetchAuthorizationTokenWithCache();
-
-  const fetchAuthorizationTokenCredentials = async () => {
-    const { authorizationToken, region, subscriptionKey } = await fetchCredentials();
-
-    if (authorizationToken) {
-      return { authorizationToken, region };
-    }
-
-    return {
-      authorizationToken: await fetchAuthorizationTokenWithCache({ region, subscriptionKey }),
-      region
-    };
-  };
 
   class SpeechSynthesis extends EventTarget {
     constructor() {
@@ -81,17 +64,29 @@ export default options => {
         throw new Error('invalid utterance');
       }
 
-      return new Promise((resolve, reject) => {
-        utterance.addEventListener('end', resolve);
-        utterance.addEventListener('error', reject);
+      const { reject, resolve, promise } = createDeferred();
+      const handleError = ({ error: errorCode, message }) => {
+        const error = new Error(errorCode);
 
-        utterance.preload({
-          deploymentId: speechSynthesisDeploymentId,
-          fetchAuthorizationTokenCredentials,
-          outputFormat: speechSynthesisOutputFormat
-        });
+        error.stack = message;
 
-        this.queue.push(utterance);
+        reject(error);
+      };
+
+      utterance.addEventListener('end', resolve);
+      utterance.addEventListener('error', handleError);
+
+      utterance.preload({
+        deploymentId: speechSynthesisDeploymentId,
+        fetchCredentials,
+        outputFormat: speechSynthesisOutputFormat
+      });
+
+      this.queue.push(utterance);
+
+      return promise.finally(() => {
+        utterance.removeEventListener('end', resolve);
+        utterance.removeEventListener('error', handleError);
       });
     }
 
@@ -100,6 +95,8 @@ export default options => {
     }
 
     async updateVoices() {
+      const { customVoiceHostname, region, speechSynthesisHostname, subscriptionKey } = await fetchCredentials();
+
       if (speechSynthesisDeploymentId) {
         if (subscriptionKey) {
           console.warn(
@@ -108,8 +105,10 @@ export default options => {
 
           await onErrorResumeNext(async () => {
             const voices = await fetchCustomVoices({
+              customVoiceHostname,
               deploymentId: speechSynthesisDeploymentId,
               region,
+              speechSynthesisHostname,
               subscriptionKey
             });
 
@@ -121,8 +120,7 @@ export default options => {
         // In the spec, there is no "error" event.
 
         await onErrorResumeNext(async () => {
-          const { authorizationToken, region } = await fetchAuthorizationTokenCredentials();
-          const voices = await fetchVoices({ authorizationToken, region });
+          const voices = await fetchVoices(await fetchCredentials());
 
           this.getVoices = () => voices;
         });
