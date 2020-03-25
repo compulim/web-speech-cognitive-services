@@ -1,7 +1,7 @@
 jest.useFakeTimers();
 
 import { PromiseHelper } from 'microsoft-cognitiveservices-speech-sdk/distrib/lib/src/common/Promise';
-import createDeferred from '../../Util/createDeferred';
+import createDeferred from 'p-defer-es5';
 
 function createLoudArrayBuffer() {
   // Single channel, 16-bit.

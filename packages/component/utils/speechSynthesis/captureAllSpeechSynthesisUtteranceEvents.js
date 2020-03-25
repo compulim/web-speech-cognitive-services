@@ -1,4 +1,4 @@
-import createDeferred from 'p-defer';
+import createDeferred from 'p-defer-es5';
 import formatSpeechSynthesisUtteranceEvent from './formatSpeechSynthesisUtteranceEvent';
 
 const SPEECH_SYNTHESIS_UTTERANCE_EVENTS = ['boundary', 'end', 'error', 'mark', 'pause', 'resume', 'start'];

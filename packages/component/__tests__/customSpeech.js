@@ -5,7 +5,7 @@
 import { AudioStreamFormat } from 'microsoft-cognitiveservices-speech-sdk';
 import { join } from 'path';
 import { promisify } from 'util';
-import createDeferred from 'p-defer';
+import createDeferred from 'p-defer-es5';
 import fs from 'fs';
 
 import { createSpeechRecognitionPonyfill } from '../src/SpeechServices';

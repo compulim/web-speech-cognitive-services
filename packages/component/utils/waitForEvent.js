@@ -1,4 +1,4 @@
-import createDeferred from 'p-defer';
+import createDeferred from 'p-defer-es5';
 
 export default function waitForEvent(target, name) {
   const handleError = ({ error }) =>
