@@ -45,6 +45,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
       - [`lolex@5.1.2`](https://npmjs.com/package/lolex)
       - [`webpack-cli@3.3.11`](https://npmjs.com/package/webpack-cli)
       - [`webpack@4.42.0`](https://npmjs.com/package/webpack)
+- Use [`p-defer-es5`](https://npmjs.com/package/p-defer-es5) instead of adopted `createDeferred.js`, in PR [#89](https://github.com/compulim/web-speech-cognitive-services/pull/89).
 
 ## [6.0.0] - 2019-12-03
 
