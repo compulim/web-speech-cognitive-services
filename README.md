@@ -229,9 +229,9 @@ Please refer to [this article on limitations](https://docs.microsoft.com/en-us/a
 ```js
 createPonyfill({
   credentials: {
+    authorizationToken: 'YOUR_AUTHORIZATION_TOKEN',
     speechRecognitionHostname: 'virginia.stt.speech.azure.us',
-    speechSynthesisHostname: 'virginia.tts.speech.azure.us',
-    subscriptionKey: 'YOUR_SUBSCRIPTION_KEY'
+    speechSynthesisHostname: 'virginia.tts.speech.azure.us'
   }
 });
 ```
@@ -241,9 +241,9 @@ createPonyfill({
 ```js
 createPonyfill({
   credentials: {
+    authorizationToken: 'YOUR_AUTHORIZATION_TOKEN',
     speechRecognitionHostname: 'chinaeast2.stt.speech.azure.cn',
-    speechSynthesisHostname: 'chinaeast2.tts.speech.azure.cn',
-    subscriptionKey: 'YOUR_SUBSCRIPTION_KEY'
+    speechSynthesisHostname: 'chinaeast2.tts.speech.azure.cn'
   }
 });
 ```
