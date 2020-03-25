@@ -10,7 +10,7 @@ import testTableForAuthentication from '../utils/testTableForAuthentication';
 import waitForEvent from '../utils/waitForEvent';
 
 describe.each(testTableForAuthentication)('using %s', (_name, _useAuthorizationToken, _mergeCredentials, fetchCredentials) => {
-  jest.setTimeout(10000);
+  jest.setTimeout(15000);
 
   test('to synthesis', async () => {
     const credentials = await fetchCredentials();

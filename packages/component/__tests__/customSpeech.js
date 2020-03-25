@@ -22,7 +22,7 @@ const readFile = promisify(fs.readFile);
 describe.each(testTableForAuthentication)(
   'Custom Speech: using %s',
   (_name, _useAuthorizationToken, mergeCredentials, fetchCredentials) => {
-    jest.setTimeout(10000);
+    jest.setTimeout(15000);
 
     let audioConfig;
     let waveArrayBuffer;

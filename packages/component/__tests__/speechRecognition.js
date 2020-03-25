@@ -17,7 +17,7 @@ const OUTPUT_FORMAT = 'riff-8khz-16bit-mono-pcm';
 const SAMPLES_PER_SECOND = 8000;
 
 describe.each(testTableForAuthentication)('using %s', (_name, _useAuthorizationToken, _mergeCredentials, fetchCredentials) => {
-  jest.setTimeout(10000);
+  jest.setTimeout(15000);
 
   let audioConfig;
 

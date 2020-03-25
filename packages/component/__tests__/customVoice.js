@@ -13,7 +13,7 @@ import testTableForAuthentication from '../utils/testTableForAuthentication';
 describe.each(testTableForAuthentication)(
   'Custom Voice: using %s',
   (_name, useAuthorizationToken, mergeCredentials, fetchCredentials) => {
-    jest.setTimeout(10000);
+    jest.setTimeout(15000);
 
     test('to synthesize', async () => {
       const credentials = {
