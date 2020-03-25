@@ -119,10 +119,10 @@ The following list all options supported by the adapter.
     <tr>
       <td>
         <code>credentials:&nbsp;(</code><br />
-        <code>&nbsp;&nbsp;Credentials&nbsp;||</code><br />
-        <code>&nbsp;&nbsp;Promise&lt;Credentials&gt;&nbsp;||</code><br />
-        <code>&nbsp;&nbsp;()&nbsp;=>&nbsp;Credentials&nbsp;||</code><br />
-        <code>&nbsp;&nbsp;()&nbsp;=>&nbsp;Promise&lt;Credentials&gt;</code><br />
+        <code>&nbsp;&nbsp;ICredentials&nbsp;||</code><br />
+        <code>&nbsp;&nbsp;Promise&lt;ICredentials&gt;&nbsp;||</code><br />
+        <code>&nbsp;&nbsp;()&nbsp;=>&nbsp;ICredentials&nbsp;||</code><br />
+        <code>&nbsp;&nbsp;()&nbsp;=>&nbsp;Promise&lt;ICredentials&gt;</code><br />
         <code>)</code><br />
         <br />
         <code>ICredentials: {</code><br />
