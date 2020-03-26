@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [6.1.0] - 2020-03-26
+
 ### Breaking changes
 
 - As Bing Speech has deprecated and removed from Azure. Bing Speech support has been removed.
