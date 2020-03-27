@@ -1,5 +1,3 @@
-/* eslint no-magic-numbers: ["error", { "ignore": [0, 1, 100] }] */
-
 // Cognitive Services does not support unsigned percentage
 // It must be converted into +/- first.
 function relativePercentage(value) {
@@ -12,12 +10,10 @@ function relativePercentage(value) {
   return relative + '%';
 }
 
-export default function buildSSML({ lang, pitch = 1, rate = 1, text, voice, volume }) {
+export default function buildSSML({ gender, lang, pitch = 1, rate = 1, text, voice, volume }) {
   return `<speak version="1.0" xml:lang="${ lang }">
-  <voice xml:lang="${ lang }" name="${ voice }">
-    <prosody pitch="${ relativePercentage(pitch) }" rate="${ relativePercentage(rate) }" volume="${ relativePercentage(
-    volume
-  ) }">
+  <voice xml:lang="${ lang }" xml:gender="${ gender }" name="${ voice }">
+    <prosody pitch="${ relativePercentage(pitch) }" rate="${ relativePercentage(rate) }" volume="${ relativePercentage(volume) }">
       ${ text }
     </prosody>
   </voice>

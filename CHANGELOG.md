@@ -6,12 +6,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Breaking changes
+
+- Temporarily reverting breaking changes by reintroducing Bing Speech and `fetchAuthorizationToken`, by [@compulim](https://github.com/compulim) in PR [#92](https://github.com/compulim/web-speech-cognitive-services/pull/92).
+
 ## [6.1.0] - 2020-03-26
 
 ### Breaking changes
 
-- As Bing Speech has deprecated and removed from Azure. Bing Speech support has been removed.
-- `fetchAuthorizationToken` is removed, please refer to [this documentation on how to get an access token](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/rest-speech-to-text#how-to-get-an-access-token).
+- ~As Bing Speech has deprecated and removed from Azure. Bing Speech support has been removed.~
+- ~`fetchAuthorizationToken` is removed, please refer to [this documentation on how to get an access token](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/rest-speech-to-text#how-to-get-an-access-token).~
 
 ### Added
 
@@ -19,8 +23,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Removed
 
-- Bing Speech support is removed, by [@compulim](https://github.com/compulim), in PR [#87](https://github.com/compulim/web-speech-cognitive-services/pull/87).
-- `fetchAuthorizationToken` is removed, by [@compulim](https://github.com/compulim), in PR [#89](https://github.com/compulim/web-speech-cognitive-services/pull/89).
+- ~Bing Speech support is removed, by [@compulim](https://github.com/compulim), in PR [#87](https://github.com/compulim/web-speech-cognitive-services/pull/87).~
+- ~`fetchAuthorizationToken` is removed, by [@compulim](https://github.com/compulim), in PR [#89](https://github.com/compulim/web-speech-cognitive-services/pull/89).~
 
 ### Changed
 
