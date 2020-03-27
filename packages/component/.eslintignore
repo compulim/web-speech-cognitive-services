@@ -1,3 +1,4 @@
 /**/*.spec.js
 /**/*.test.js
+/src/BingSpeech/**/*
 /src/external/**/*

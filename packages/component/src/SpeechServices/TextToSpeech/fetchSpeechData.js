@@ -38,10 +38,10 @@ export default async function({
   const hostname =
     speechSynthesisHostname ||
     (deploymentId
-      ? `${encodeURI(region)}.voice.speech.microsoft.com`
-      : `${encodeURI(region)}.tts.speech.microsoft.com`);
-  const search = deploymentId ? `?deploymentId=${encodeURI(deploymentId)}` : '';
-  const url = `https://${hostname}/cognitiveservices/v1${search}`;
+      ? `${ encodeURI(region) }.voice.speech.microsoft.com`
+      : `${ encodeURI(region) }.tts.speech.microsoft.com`);
+  const search = deploymentId ? `?deploymentId=${ encodeURI(deploymentId) }` : '';
+  const url = `https://${ hostname }/cognitiveservices/v1${ search }`;
 
   const res = await fetch(url, {
     headers: {
@@ -49,7 +49,7 @@ export default async function({
       'X-Microsoft-OutputFormat': outputFormat,
       ...(authorizationToken
         ? {
-            Authorization: `Bearer ${authorizationToken}`
+            Authorization: `Bearer ${ authorizationToken }`
           }
         : {
             'Ocp-Apim-Subscription-Key': subscriptionKey
@@ -60,8 +60,8 @@ export default async function({
   });
 
   if (!res.ok) {
-    throw new Error(`web-speech-cognitive-services: Failed to syntheis speech, server returned ${res.status}`);
+    throw new Error(`web-speech-cognitive-services: Failed to syntheis speech, server returned ${ res.status }`);
   }
 
-  return await res.arrayBuffer();
+  return res.arrayBuffer();
 }
