@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [6.2.0] - 2020-03-27
+
 ### Breaking changes
 
 - Temporarily reverting breaking changes by reintroducing Bing Speech and `fetchAuthorizationToken`, by [@compulim](https://github.com/compulim) in PR [#92](https://github.com/compulim/web-speech-cognitive-services/pull/92).
