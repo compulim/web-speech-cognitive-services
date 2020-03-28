@@ -29,7 +29,7 @@ function formatResultList(resultList) {
     [].reduce.call(
       result,
       (result, { confidence, transcript }, index) => {
-        result[index] = { confidence: Math.round(confidence * 100) / 100, transcript };
+        result[index] = { confidence: Math.round(confidence * 10) / 10, transcript };
 
         return result;
       },

@@ -81,7 +81,7 @@ describe.each(testTableForAuthentication)(
             results: [
               {
                 '0': {
-                  confidence: 0.92,
+                  confidence: 0.9,
                   transcript: 'Tuen Mun District Office.'
                 },
                 isFinal: true,
