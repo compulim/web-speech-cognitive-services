@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [6.3.0] - 2020-03-28
+
 ### Changed
 
 - Debumped [`microsoft-cognitiveservices-speech-sdk@1.9.1`](https://npmjs.com/package/microsoft-cognitiveservices-speech-sdk), by [@compulim](https://github.com/compulim) in PR [#94](https://github.com/compulim/web-speech-cognitive-services/pull/94)
