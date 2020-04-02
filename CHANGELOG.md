@@ -6,6 +6,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Breaking changes
+
+- To enable developers to select their version of Cognitive Services Speech SDK and use newer features, we are moving [`microsoft-cognitiveservices-speech-sdk`](https://npmjs.com/package/microsoft-cognitiveservices-speech-sdk) to `peerDependencies`.
+   - When you install `web-speech-cognitive-services`, you will also need to install a compatible version of `microsoft-cognitiveservices-speech-sdk`.
+
+### Changed
+
+- Fixes [#96](https://github.com/compulim/web-speech-cognitive-services/issues/96), move [`microsoft-cognitiveservices-speech-sdk`](https://npmjs.com/package/microsoft-cognitive-services-speech-sdk) to `peerDependencies`, by [@compulim](https://github.com/compulim), in PR [#97](https://github.com/compulim/web-speech-cognitive-services/pull/97)
+
 ## [6.3.0] - 2020-03-28
 
 ### Changed
