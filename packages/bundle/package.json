@@ -29,6 +29,7 @@
     "@babel/preset-react": "^7.8.3",
     "concurrently": "^4.1.2",
     "eslint": "^6.8.0",
+    "microsoft-cognitiveservices-speech-sdk": "1.10.1",
     "rimraf": "^2.6.3",
     "webpack": "^4.42.0",
     "webpack-cli": "^3.3.11",

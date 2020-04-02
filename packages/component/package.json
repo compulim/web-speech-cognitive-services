@@ -59,6 +59,7 @@
     "global-agent": "^2.1.8",
     "jest": "^25.1.0",
     "lolex": "^5.1.2",
+    "microsoft-cognitiveservices-speech-sdk": "1.10.1",
     "node-fetch": "^2.6.0",
     "prettier": "^1.19.1",
     "rimraf": "^3.0.2"
@@ -70,10 +71,12 @@
     "event-target-shim": "^5.0.1",
     "event-target-shim-es5": "^1.0.1",
     "memoize-one": "^5.1.1",
-    "microsoft-cognitiveservices-speech-sdk": "1.9.1",
     "on-error-resume-next": "^1.1.0",
     "p-defer": "^3.0.0",
     "p-defer-es5": "^1.0.1",
     "simple-update-in": "^2.1.1"
+  },
+  "peerDependencies": {
+    "microsoft-cognitiveservices-speech-sdk": "~1.10.1"
   }
 }
