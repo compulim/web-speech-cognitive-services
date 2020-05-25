@@ -73,7 +73,7 @@
     "memoize-one": "^5.1.1",
     "on-error-resume-next": "^1.1.0",
     "p-defer": "^3.0.0",
-    "p-defer-es5": "^1.0.2-master.f92a242",
+    "p-defer-es5": "^1.0.2-master.06521c2",
     "simple-update-in": "^2.1.1"
   },
   "peerDependencies": {
