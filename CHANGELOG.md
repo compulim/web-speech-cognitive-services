@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [7.0.0] - 2020-05-27
+
 ### Breaking changes
 
 - To enable developers to select their version of Cognitive Services Speech SDK and use newer features, we are moving [`microsoft-cognitiveservices-speech-sdk`](https://npmjs.com/package/microsoft-cognitiveservices-speech-sdk) to `peerDependencies`.
