@@ -28,9 +28,9 @@ describe.each(testTableForAuthentication)('using %s', (_name, _useAuthorizationT
 
     await waitForEvent(speechSynthesis, 'voiceschanged');
 
-    const voice = speechSynthesis.getVoices().find(voice => voice.lang === 'en-US' && /Jessa/iu.test(voice.name));
+    const voice = speechSynthesis.getVoices().find(voice => voice.lang === 'en-US' && /Aria/iu.test(voice.name));
 
-    expect(voice.voiceURI).toEqual('Microsoft Server Speech Text to Speech Voice (en-US, Jessa24kRUS)');
+    expect(voice.voiceURI).toEqual('Microsoft Server Speech Text to Speech Voice (en-US, Aria24kRUS)');
 
     const utterance = new SpeechSynthesisUtterance('Hello');
 
