@@ -69,11 +69,11 @@
     "base64-arraybuffer": "0.2.0",
     "event-as-promise": "1.0.5",
     "event-target-shim": "5.0.1",
-    "event-target-shim-es5": "1.1.0",
+    "event-target-shim-es5": "1.2.0",
     "memoize-one": "5.1.1",
     "on-error-resume-next": "1.1.0",
     "p-defer": "3.0.0",
-    "p-defer-es5": "1.1.0",
+    "p-defer-es5": "1.2.1",
     "simple-update-in": "2.1.1"
   },
   "peerDependencies": {

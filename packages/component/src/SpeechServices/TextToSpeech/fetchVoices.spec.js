@@ -15,8 +15,8 @@ describe('Fetch voices', () => {
     global.fetch = jest.fn(async () => ({
       json: async () => [
         {
-          Name: 'Microsoft Server Speech Text to Speech Voice (en-US, Jessa24kRUS)',
-          ShortName: 'en-US-Jessa24kRUS',
+          Name: 'Microsoft Server Speech Text to Speech Voice (en-US, Aria24kRUS)',
+          ShortName: 'en-US-Aria24kRUS',
           Gender: 'Female',
           Locale: 'en-US'
         }
@@ -29,7 +29,7 @@ describe('Fetch voices', () => {
 
     expect(firstVoice).toHaveProperty('gender', 'Female');
     expect(firstVoice).toHaveProperty('lang', 'en-US');
-    expect(firstVoice).toHaveProperty('name', 'Microsoft Server Speech Text to Speech Voice (en-US, Jessa24kRUS)');
+    expect(firstVoice).toHaveProperty('name', 'Microsoft Server Speech Text to Speech Voice (en-US, Aria24kRUS)');
 
     expect(global.fetch).toHaveBeenCalledTimes(1);
     expect(global.fetch).toHaveBeenCalledWith('https://westus.tts.speech.microsoft.com/cognitiveservices/voices/list', {

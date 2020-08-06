@@ -39,7 +39,7 @@ There are two ways to use this package:
 
 To use the ponyfill directly in HTML, you can use our published bundle from unpkg.
 
-In the sample below, we use the bundle to perform text-to-speech with a voice named "JessaRUS".
+In the sample below, we use the bundle to perform text-to-speech with a voice named "Aria24kRUS".
 
 ```html
 <!DOCTYPE html>
@@ -60,7 +60,7 @@ In the sample below, we use the bundle to perform text-to-speech with a voice na
         const voices = speechSynthesis.getVoices();
         const utterance = new SpeechSynthesisUtterance('Hello, World!');
 
-        utterance.voice = voices.find(voice => /JessaRUS/u.test(voice.name));
+        utterance.voice = voices.find(voice => /Aria24kRUS/u.test(voice.name));
 
         speechSynthesis.speak(utterance);
       });
@@ -327,7 +327,7 @@ speechSynthesis.addEventListener('voiceschanged', () => {
   const voices = speechSynthesis.getVoices();
   const utterance = new SpeechSynthesisUtterance('Hello, World!');
 
-  utterance.voice = voices.find(voice => /JessaRUS/u.test(voice.name));
+  utterance.voice = voices.find(voice => /Aria24kRUS/u.test(voice.name));
 
   speechSynthesis.speak(utterance);
 });

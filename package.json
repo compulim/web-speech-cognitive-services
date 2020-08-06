@@ -1,6 +1,6 @@
 {
   "name": "root",
-  "version": "7.0.0-0",
+  "version": "7.0.2-0",
   "description": "",
   "private": true,
   "scripts": {
@@ -10,7 +10,7 @@
     "eslint": "lerna run --scope=bundle --scope=web-speech-cognitive-services --parallel --stream eslint",
     "prepublishOnly": "lerna run --stream prepublishOnly",
     "start": "lerna run --parallel --stream start",
-    "test": "lerna run --stream test"
+    "test": "lerna run --ignore=playground --stream test"
   },
   "devDependencies": {
     "lerna": "^3.20.2"
