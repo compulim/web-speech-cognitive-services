@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Changed
+
+- Bumped dependencies
+   - [`event-target-shim-es5@1.2.0`](https://npmjs.com/package/event-target-shim-es5)
+   - [`p-defer-es5@1.2.1`](https://npmjs.com/package/p-defer-es5)
+
 ## [7.0.0] - 2020-05-27
 
 ### Breaking changes
