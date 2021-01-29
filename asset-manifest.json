@@ -1,0 +1,19 @@
+{
+  "files": {
+    "main.js": "/web-speech-cognitive-services/static/js/main.8a00018b.chunk.js",
+    "main.js.map": "/web-speech-cognitive-services/static/js/main.8a00018b.chunk.js.map",
+    "runtime-main.js": "/web-speech-cognitive-services/static/js/runtime-main.4eb3d730.js",
+    "runtime-main.js.map": "/web-speech-cognitive-services/static/js/runtime-main.4eb3d730.js.map",
+    "static/js/2.4338505a.chunk.js": "/web-speech-cognitive-services/static/js/2.4338505a.chunk.js",
+    "static/js/2.4338505a.chunk.js.map": "/web-speech-cognitive-services/static/js/2.4338505a.chunk.js.map",
+    "index.html": "/web-speech-cognitive-services/index.html",
+    "precache-manifest.757eb92025dd626decde2b7639c92180.js": "/web-speech-cognitive-services/precache-manifest.757eb92025dd626decde2b7639c92180.js",
+    "service-worker.js": "/web-speech-cognitive-services/service-worker.js",
+    "static/js/2.4338505a.chunk.js.LICENSE.txt": "/web-speech-cognitive-services/static/js/2.4338505a.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.4eb3d730.js",
+    "static/js/2.4338505a.chunk.js",
+    "static/js/main.8a00018b.chunk.js"
+  ]
+}
