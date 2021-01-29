@@ -6,7 +6,7 @@ import { CONVERT_SPEECH_SERVICES_SUBSCRIPTION_KEY_TO_AUTHORIZATION_TOKEN } from 
 import setSpeechServicesAuthorizationToken from '../actions/setSpeechServicesAuthorizationToken';
 
 export default function* convertSubscriptionKeyToAuthorizationTokenSaga() {
-  yield takeLatest(CONVERT_SPEECH_SERVICES_SUBSCRIPTION_KEY_TO_AUTHORIZATION_TOKEN, function*() {
+  yield takeLatest(CONVERT_SPEECH_SERVICES_SUBSCRIPTION_KEY_TO_AUTHORIZATION_TOKEN, function* () {
     try {
       const { region, speechServicesSubscriptionKey } = yield select();
       const authorizationToken = yield call(fetchSpeechServicesAuthorizationToken, {
@@ -15,6 +15,8 @@ export default function* convertSubscriptionKeyToAuthorizationTokenSaga() {
       });
 
       yield put(setSpeechServicesAuthorizationToken(authorizationToken));
-    } catch (err) {}
+    } catch (err) {
+      console.error(err);
+    }
   });
 }

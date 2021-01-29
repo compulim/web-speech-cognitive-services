@@ -1,3 +1,5 @@
+/*eslint no-magic-numbers: ["error", { "ignore": [1, 2, 100] }]*/
+
 import { useSelector } from 'react-redux';
 import React from 'react';
 

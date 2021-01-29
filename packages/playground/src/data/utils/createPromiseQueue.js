@@ -1,6 +1,6 @@
 import createDeferred from 'p-defer-es5';
 
-export default function() {
+export default function () {
   let shiftDeferred;
   const queue = [];
 
@@ -18,9 +18,9 @@ export default function() {
   const shift = () => {
     if (queue.length) {
       return Promise.resolve(queue.shift());
-    } else {
-      return (shiftDeferred || (shiftDeferred = createDeferred())).promise;
     }
+
+    return (shiftDeferred || (shiftDeferred = createDeferred())).promise;
   };
 
   return {

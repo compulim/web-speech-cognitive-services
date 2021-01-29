@@ -1,3 +1,5 @@
+/* eslint no-magic-numbers: ["error", { "ignore": [1, 2, 36] }] */
+
 import { put, select, takeEvery } from 'redux-saga/effects';
 
 import { SPEECH_SYNTHESIS_SPEAK_UTTERANCE } from '../actions/speechSynthesisSpeakUtterance';

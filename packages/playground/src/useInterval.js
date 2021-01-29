@@ -1,5 +1,3 @@
-/* eslint react-hooks/exhaustive-deps: "off" */
-
 import { useEffect } from 'react';
 
 export default function useInterval(fn, interval, deps = []) {

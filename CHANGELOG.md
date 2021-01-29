@@ -24,7 +24,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
    - [`jest@26.6.3`](https://npmjs.com/package/jest)
    - [`microsoft-cognitiveservices-speech-sdk@1.15.0`](https://npmjs.com/package/microsoft-cognitiveservices-speech-sdk)
    - [`node-fetch@2.6.1`](https://npmjs.com/package/node-fetch)
+   - [`p-defer-es5@1.2.1`](https://npm.js.com/package/p-defer-es5)
    - [`prettier@2.2.1`](https://npmjs.com/package/prettier)
+   - [`react-dom@17.0.1`](https://npm.js.com/package/react-dom)
+   - [`react-redux@7.2.2`](https://npm.js.com/package/react-redux)
+   - [`react-say@2.0.1`](https://npm.js.com/package/react-say)
+   - [`react-scripts@4.0.1`](https://npm.js.com/package/react-scripts)
+   - [`react@17.0.1`](https://npm.js.com/package/react)
+   - [`simple-update-in@2.2.0`](https://npm.js.com/package/simple-update-in)
 
 ## [7.0.1] - 2020-08-06
 

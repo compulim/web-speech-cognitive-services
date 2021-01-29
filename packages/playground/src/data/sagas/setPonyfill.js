@@ -15,26 +15,6 @@ import { SET_SPEECH_SYNTHESIS_OUTPUT_FORMAT } from '../actions/setSpeechSynthesi
 import fetchSpeechServicesAuthorizationToken from '../../fetchSpeechServicesAuthorizationToken';
 import setPonyfill from '../actions/setPonyfill';
 
-export default function* setPonyfillRootSaga() {
-  yield* setPonyfillSaga();
-
-  yield takeLatest(
-    ({ type }) =>
-      type === SET_ENABLE_TELEMETRY ||
-      type === SET_PONYFILL_TYPE ||
-      type === SET_REGION ||
-      type === SET_SPEECH_RECOGNITION_REFERENCE_GRAMMARS ||
-      type === SET_SPEECH_RECOGNITION_ENDPOINT_ID ||
-      type === SET_SPEECH_RECOGNITION_TEXT_NORMALIZATION ||
-      type === SET_SPEECH_SERVICES_AUTHORIZATION_TOKEN ||
-      type === SET_SPEECH_SERVICES_SUBSCRIPTION_KEY ||
-      type === SET_SPEECH_SYNTHESIS_DEPLOYMENT_ID ||
-      type === SET_SPEECH_SYNTHESIS_OUTPUT_FORMAT ||
-      type === SET_ON_DEMAND_AUTHORIZATION_TOKEN,
-    setPonyfillSaga
-  );
-}
-
 function* setPonyfillSaga() {
   const {
     enableTelemetry,
@@ -92,6 +72,7 @@ function* setPonyfillSaga() {
             ...options,
             credentials: onDemandAuthorizationToken
               ? async () => {
+                  /* eslint-disable-next-line no-console */
                   console.log('On-demand fetching Speech Services authorization token');
 
                   try {
@@ -115,4 +96,24 @@ function* setPonyfillSaga() {
 
     yield put(setPonyfill(ponyfill));
   }
+}
+
+export default function* setPonyfillRootSaga() {
+  yield* setPonyfillSaga();
+
+  yield takeLatest(
+    ({ type }) =>
+      type === SET_ENABLE_TELEMETRY ||
+      type === SET_PONYFILL_TYPE ||
+      type === SET_REGION ||
+      type === SET_SPEECH_RECOGNITION_REFERENCE_GRAMMARS ||
+      type === SET_SPEECH_RECOGNITION_ENDPOINT_ID ||
+      type === SET_SPEECH_RECOGNITION_TEXT_NORMALIZATION ||
+      type === SET_SPEECH_SERVICES_AUTHORIZATION_TOKEN ||
+      type === SET_SPEECH_SERVICES_SUBSCRIPTION_KEY ||
+      type === SET_SPEECH_SYNTHESIS_DEPLOYMENT_ID ||
+      type === SET_SPEECH_SYNTHESIS_OUTPUT_FORMAT ||
+      type === SET_ON_DEMAND_AUTHORIZATION_TOKEN,
+    setPonyfillSaga
+  );
 }

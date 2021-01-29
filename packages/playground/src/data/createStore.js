@@ -45,11 +45,11 @@ export default function createPlaygroundStore() {
 
     // Remove keys that should not be serialized
     const {
-      authorizationToken,
-      ponyfill,
-      speechRecognitionStarted,
-      speechServicesAuthorizationToken,
-      speechSynthesisNativeVoices,
+      authorizationToken: _authorizationToken,
+      ponyfill: _ponyfill,
+      speechRecognitionStarted: _speechRecognitionStarted,
+      speechServicesAuthorizationToken: _speechServicesAuthorizationToken,
+      speechSynthesisNativeVoices: _speechSynthesisNativeVoices,
       ...serializableState
     } = state;
 

@@ -1,3 +1,5 @@
+/*eslint no-magic-numbers: ["error", { "ignore": [300] }]*/
+
 import React, { useState } from 'react';
 
 import useInterval from '../useInterval';
