@@ -9,10 +9,16 @@ import recognizeRiffWaveArrayBuffer from '../utils/speechSynthesis/recognizeRiff
 import testTableForAuthentication from '../utils/testTableForAuthentication';
 import waitForEvent from '../utils/waitForEvent';
 
+const { CI, REGION } = process.env;
+
 describe.each(testTableForAuthentication)('using %s', (_name, _useAuthorizationToken, _mergeCredentials, fetchCredentials) => {
   jest.setTimeout(15000);
 
   test('to synthesis', async () => {
+    if (CI && !REGION) {
+      return console.warn('Skipping tests against production system when running in CI without subscription key.');
+    }
+
     const credentials = await fetchCredentials();
     const recognized = [];
 
