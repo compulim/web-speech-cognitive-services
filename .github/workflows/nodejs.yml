@@ -48,6 +48,12 @@ jobs:
       - run: npm run build --if-present
 
       - run: npm test
+        env:
+          CUSTOM_VOICE_NAME: ${{ secrets.CUSTOM_VOICE_NAME }}
+          REGION: ${{ secrets.REGION }}
+          SPEECH_RECOGNITION_ENDPOINT_ID: ${{ secrets.SPEECH_RECOGNITION_ENDPOINT_ID }}
+          SPEECH_SYNTHESIS_DEPLOYMENT_ID: ${{ secrets.SPEECH_SYNTHESIS_DEPLOYMENT_ID }}
+          SUBSCRIPTION_KEY: ${{ secrets.SUBSCRIPTION_KEY }}
 
       - name: Copy documents
         run: |
