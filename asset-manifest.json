@@ -1,19 +1,17 @@
 {
   "files": {
-    "main.js": "/web-speech-cognitive-services/static/js/main.ff441517.chunk.js",
-    "main.js.map": "/web-speech-cognitive-services/static/js/main.ff441517.chunk.js.map",
-    "runtime-main.js": "/web-speech-cognitive-services/static/js/runtime-main.4eb3d730.js",
-    "runtime-main.js.map": "/web-speech-cognitive-services/static/js/runtime-main.4eb3d730.js.map",
-    "static/js/2.cbdf1d00.chunk.js": "/web-speech-cognitive-services/static/js/2.cbdf1d00.chunk.js",
-    "static/js/2.cbdf1d00.chunk.js.map": "/web-speech-cognitive-services/static/js/2.cbdf1d00.chunk.js.map",
+    "main.js": "/web-speech-cognitive-services/static/js/main.87527fbd.chunk.js",
+    "main.js.map": "/web-speech-cognitive-services/static/js/main.87527fbd.chunk.js.map",
+    "runtime-main.js": "/web-speech-cognitive-services/static/js/runtime-main.7e1d0c06.js",
+    "runtime-main.js.map": "/web-speech-cognitive-services/static/js/runtime-main.7e1d0c06.js.map",
+    "static/js/2.59fe7b00.chunk.js": "/web-speech-cognitive-services/static/js/2.59fe7b00.chunk.js",
+    "static/js/2.59fe7b00.chunk.js.map": "/web-speech-cognitive-services/static/js/2.59fe7b00.chunk.js.map",
     "index.html": "/web-speech-cognitive-services/index.html",
-    "precache-manifest.19bd14a30d48ae2435d0135054a853ff.js": "/web-speech-cognitive-services/precache-manifest.19bd14a30d48ae2435d0135054a853ff.js",
-    "service-worker.js": "/web-speech-cognitive-services/service-worker.js",
-    "static/js/2.cbdf1d00.chunk.js.LICENSE.txt": "/web-speech-cognitive-services/static/js/2.cbdf1d00.chunk.js.LICENSE.txt"
+    "static/js/2.59fe7b00.chunk.js.LICENSE.txt": "/web-speech-cognitive-services/static/js/2.59fe7b00.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.4eb3d730.js",
-    "static/js/2.cbdf1d00.chunk.js",
-    "static/js/main.ff441517.chunk.js"
+    "static/js/runtime-main.7e1d0c06.js",
+    "static/js/2.59fe7b00.chunk.js",
+    "static/js/main.87527fbd.chunk.js"
   ]
 }
