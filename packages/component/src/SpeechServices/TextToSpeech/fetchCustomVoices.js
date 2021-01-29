@@ -3,7 +3,7 @@
 import SpeechSynthesisVoice from './SpeechSynthesisVoice';
 
 async function fetchCustomVoices({ customVoiceHostname, deploymentId, region, subscriptionKey }) {
-  const hostname = customVoiceHostname || `${ region }.cris.ai`;
+  const hostname = customVoiceHostname || `${ region }.customvoice.api.speech.microsoft.com`;
 
   // Although encodeURI on a hostname doesn't work as expected for hostname, at least, it will fail peacefully.
   const res = await fetch(

@@ -6,6 +6,26 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Changed
+
+- Moved from [`webpack-visualizer-plugin`](https://npmjs.com/package/webpack-visualizer-plugin) to [`webpack-stats-plugin`](https://npmjs.com/package/webpack-stats-plugin)
+- Bumped production dependencies
+   - [`@babel/runtime@7.12.5`](https://npmjs.com/package/@babel/runtime)
+   - [`event-target-shim@6.0.2`](https://npmjs.com/package/event-target-shim)
+- Bumped development dependencies
+   - [`@babel/cli@7.12.10`](https://npmjs.com/package/@babel/cli)
+   - [`@babel/core@7.12.10`](https://npmjs.com/package/@babel/core)
+   - [`@babel/plugin-proposal-object-rest-spread@7.12.1`](https://npmjs.com/package/@babel/plugin-proposal-object-rest-spread)
+   - [`@babel/plugin-transform-runtime@7.12.10`](https://npmjs.com/package/@babel/plugin-transform-runtime)
+   - [`@babel/preset-env@7.12.11`](https://npmjs.com/package/@babel/preset-env)
+   - [`babel-jest@26.6.3`](https://npmjs.com/package/babel-jest)
+   - [`eslint@7.18.0`](https://npmjs.com/package/eslint)
+   - [`global-agent@2.1.12`](https://npmjs.com/package/global-agent)
+   - [`jest@26.6.3`](https://npmjs.com/package/jest)
+   - [`microsoft-cognitiveservices-speech-sdk@1.15.0`](https://npmjs.com/package/microsoft-cognitiveservices-speech-sdk)
+   - [`node-fetch@2.6.1`](https://npmjs.com/package/node-fetch)
+   - [`prettier@2.2.1`](https://npmjs.com/package/prettier)
+
 ## [7.0.1] - 2020-08-06
 
 ### Changed

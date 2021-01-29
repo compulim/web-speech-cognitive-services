@@ -60,6 +60,10 @@ function* setPonyfillSaga() {
       })
     );
   } else {
+    if (!speechServicesAuthorizationToken && !speechServicesSubscriptionKey) {
+      return;
+    }
+
     const options = {
       enableTelemetry,
       referenceGrammars,
@@ -74,6 +78,7 @@ function* setPonyfillSaga() {
       ponyfillType === 'speechservices:bundle'
         ? window.WebSpeechCognitiveServices.create
         : createSpeechServicesPonyfill;
+
     const ponyfill = createPonyfill(
       speechServicesAuthorizationToken
         ? {

@@ -1,6 +1,5 @@
 jest.useFakeTimers();
 
-import { PromiseHelper } from 'microsoft-cognitiveservices-speech-sdk/distrib/lib/src/common/Promise';
 import createDeferred from 'p-defer-es5';
 
 function createLoudArrayBuffer() {
@@ -23,12 +22,15 @@ const MOCK_SPEECH_SDK = {
       const onEvent = ({ name }) => eventHandlers.forEach(handler => handler({ name }));
 
       return {
-        attach: () =>
-          PromiseHelper.fromResult({
-            read: () => ({
-              onSuccessContinueWith: resolve => readResolves.push(resolve)
-            })
-          }),
+        attach: async () => ({
+          read: () => {
+            const { promise, resolve } = createDeferred();
+
+            readResolves.push(resolve);
+
+            return promise;
+          }
+        }),
         emitEvent: name => onEvent({ name }),
         emitRead: (buffer = LOUD_ARRAY_BUFFER) => {
           // TODO: Rename "emitRead" to more meaningful name
@@ -93,7 +95,11 @@ const MOCK_SPEECH_SDK = {
     }
 
     async readAudioChunk() {
-      this.audioConfig.attach().onSuccessContinueWith(reader => reader.read());
+      const reader = await this.audioConfig.attach();
+
+      // We intentionally not awaiting this read().
+      // We will await on "soundstart" event later.
+      reader.read();
     }
 
     async waitForStartContinuousRecognitionAsync() {
@@ -260,6 +266,7 @@ describe('SpeechRecognition', () => {
   let endEventEmitted;
   let errorEventEmitted;
   let events;
+  let soundStartEmitted;
   let speechRecognition;
 
   beforeEach(async () => {
@@ -275,6 +282,7 @@ describe('SpeechRecognition', () => {
     events = captureSpeechEvents(speechRecognition);
     endEventEmitted = new Promise(resolve => speechRecognition.addEventListener('end', resolve));
     errorEventEmitted = new Promise(resolve => speechRecognition.addEventListener('error', resolve));
+    soundStartEmitted = new Promise(resolve => speechRecognition.addEventListener('soundstart', resolve));
   });
 
   describe('in interactive mode', () => {
@@ -286,7 +294,7 @@ describe('SpeechRecognition', () => {
       await recognizer.waitForStartContinuousRecognitionAsync();
 
       // This will fire "firstAudibleChunk" on "emitRead"
-      recognizer.readAudioChunk();
+      await recognizer.readAudioChunk();
 
       recognizer.audioConfig.emitEvent('AudioSourceReadyEvent');
 
@@ -295,6 +303,7 @@ describe('SpeechRecognition', () => {
       // webspeech:audiostart
 
       recognizer.audioConfig.emitRead();
+      await soundStartEmitted;
 
       // cognitiveservices:firstAudibleChunk
       // webspeech:soundstart
@@ -331,7 +340,7 @@ describe('SpeechRecognition', () => {
       await recognizer.waitForStartContinuousRecognitionAsync();
 
       // This will fire "firstAudibleChunk" on "emitRead"
-      recognizer.readAudioChunk();
+      await recognizer.readAudioChunk();
 
       recognizer.audioConfig.emitEvent('AudioSourceReadyEvent');
 
@@ -340,6 +349,7 @@ describe('SpeechRecognition', () => {
       // webspeech:audiostart
 
       recognizer.audioConfig.emitRead();
+      await soundStartEmitted;
 
       // cognitiveservices:firstAudibleChunk
       // webspeech:soundstart
@@ -381,7 +391,7 @@ describe('SpeechRecognition', () => {
       await recognizer.waitForStartContinuousRecognitionAsync();
 
       // This will fire "firstAudibleChunk" on "emitRead"
-      recognizer.readAudioChunk();
+      await recognizer.readAudioChunk();
 
       recognizer.audioConfig.emitEvent('AudioSourceReadyEvent');
 
@@ -427,7 +437,7 @@ describe('SpeechRecognition', () => {
       await recognizer.waitForStartContinuousRecognitionAsync();
 
       // This will fire "firstAudibleChunk" on "emitRead"
-      recognizer.readAudioChunk();
+      await recognizer.readAudioChunk();
 
       recognizer.audioConfig.emitEvent('AudioSourceReadyEvent');
 
@@ -436,6 +446,7 @@ describe('SpeechRecognition', () => {
       // webspeech:audiostart
 
       recognizer.audioConfig.emitRead();
+      await soundStartEmitted;
 
       // cognitiveservices:firstAudibleChunk
       // webspeech:soundstart
@@ -492,7 +503,7 @@ describe('SpeechRecognition', () => {
       await recognizer.waitForStartContinuousRecognitionAsync();
 
       // This will fire "firstAudibleChunk" on "emitRead"
-      recognizer.readAudioChunk();
+      await recognizer.readAudioChunk();
 
       recognizer.audioConfig.emitEvent('AudioSourceReadyEvent');
 
@@ -524,7 +535,7 @@ describe('SpeechRecognition', () => {
       await recognizer.waitForStartContinuousRecognitionAsync();
 
       // This will fire "firstAudibleChunk" on "emitRead"
-      recognizer.readAudioChunk();
+      await recognizer.readAudioChunk();
 
       recognizer.audioConfig.emitEvent('AudioSourceReadyEvent');
 
@@ -533,6 +544,7 @@ describe('SpeechRecognition', () => {
       // webspeech:audiostart
 
       recognizer.audioConfig.emitRead();
+      await soundStartEmitted;
 
       // cognitiveservices:firstAudibleChunk
       // webspeech:soundstart
@@ -562,7 +574,7 @@ describe('SpeechRecognition', () => {
       await recognizer.waitForStartContinuousRecognitionAsync();
 
       // This will fire "firstAudibleChunk" on "emitRead"
-      recognizer.readAudioChunk();
+      await recognizer.readAudioChunk();
 
       recognizer.audioConfig.emitEvent('AudioSourceReadyEvent');
 
@@ -571,6 +583,7 @@ describe('SpeechRecognition', () => {
       // webspeech:audiostart
 
       recognizer.audioConfig.emitRead();
+      await soundStartEmitted;
 
       // cognitiveservices:firstAudibleChunk
       // webspeech:soundstart
@@ -627,7 +640,7 @@ describe('SpeechRecognition', () => {
       await recognizer.waitForStartContinuousRecognitionAsync();
 
       // This will fire "firstAudibleChunk" on "emitRead"
-      recognizer.readAudioChunk();
+      await recognizer.readAudioChunk();
       recognizer.audioConfig.emitEvent('AudioSourceReadyEvent');
 
       // cognitiveservices:audioSourceReady
@@ -659,7 +672,7 @@ describe('SpeechRecognition', () => {
       await recognizer.waitForStartContinuousRecognitionAsync();
 
       // This will fire "firstAudibleChunk" on "emitRead"
-      recognizer.readAudioChunk();
+      await recognizer.readAudioChunk();
       recognizer.audioConfig.emitEvent('AudioSourceReadyEvent');
 
       // cognitiveservices:audioSourceReady
@@ -667,6 +680,7 @@ describe('SpeechRecognition', () => {
       // webspeech:audiostart
 
       recognizer.audioConfig.emitRead();
+      await soundStartEmitted;
 
       // cognitiveservices:firstAudibleChunk
       // webspeech:soundstart
@@ -697,7 +711,7 @@ describe('SpeechRecognition', () => {
       await recognizer.waitForStartContinuousRecognitionAsync();
 
       // This will fire "firstAudibleChunk" on "emitRead"
-      recognizer.readAudioChunk();
+      await recognizer.readAudioChunk();
       recognizer.audioConfig.emitEvent('AudioSourceReadyEvent');
 
       // cognitiveservices:audioSourceReady
@@ -705,6 +719,7 @@ describe('SpeechRecognition', () => {
       // webspeech:audiostart
 
       recognizer.audioConfig.emitRead();
+      await soundStartEmitted;
 
       // cognitiveservices:firstAudibleChunk
       // webspeech:soundstart
@@ -742,7 +757,7 @@ describe('SpeechRecognition', () => {
       await recognizer.waitForStartContinuousRecognitionAsync();
 
       // This will fire "firstAudibleChunk" on "emitRead"
-      recognizer.readAudioChunk();
+      await recognizer.readAudioChunk();
 
       recognizer.audioConfig.emitEvent('AudioSourceReadyEvent');
 
@@ -751,6 +766,7 @@ describe('SpeechRecognition', () => {
       // webspeech:audiostart
 
       recognizer.audioConfig.emitRead();
+      await soundStartEmitted;
 
       speechRecognition.abort();
 
@@ -811,7 +827,7 @@ describe('SpeechRecognition', () => {
       await recognizer.waitForStartContinuousRecognitionAsync();
 
       // This will fire "firstAudibleChunk" on "emitRead"
-      recognizer.readAudioChunk();
+      await recognizer.readAudioChunk();
 
       recognizer.audioConfig.emitEvent('AudioSourceReadyEvent');
 
@@ -820,6 +836,7 @@ describe('SpeechRecognition', () => {
       // webspeech:audiostart
 
       recognizer.audioConfig.emitRead();
+      await soundStartEmitted;
 
       // cognitiveservices:firstAudibleChunk
       // webspeech:soundstart
@@ -857,7 +874,7 @@ describe('SpeechRecognition', () => {
       await recognizer.waitForStartContinuousRecognitionAsync();
 
       // This will fire "firstAudibleChunk" on "emitRead"
-      recognizer.readAudioChunk();
+      await recognizer.readAudioChunk();
 
       recognizer.audioConfig.emitEvent('AudioSourceReadyEvent');
 
@@ -866,6 +883,7 @@ describe('SpeechRecognition', () => {
       // webspeech:audiostart
 
       recognizer.audioConfig.emitRead();
+      await soundStartEmitted;
 
       // cognitiveservices:firstAudibleChunk
       // webspeech:soundstart
@@ -903,7 +921,7 @@ describe('SpeechRecognition', () => {
       await recognizer.waitForStartContinuousRecognitionAsync();
 
       // This will fire "firstAudibleChunk" on "emitRead"
-      recognizer.readAudioChunk();
+      await recognizer.readAudioChunk();
 
       recognizer.audioConfig.emitEvent('AudioSourceReadyEvent');
 
@@ -912,6 +930,7 @@ describe('SpeechRecognition', () => {
       // webspeech:audiostart
 
       recognizer.audioConfig.emitRead();
+      await soundStartEmitted;
 
       // cognitiveservices:firstAudibleChunk
       // webspeech:soundstart
@@ -960,7 +979,7 @@ describe('SpeechRecognition', () => {
       await recognizer.waitForStartContinuousRecognitionAsync();
 
       // This will fire "firstAudibleChunk" on "emitRead"
-      recognizer.readAudioChunk();
+      await recognizer.readAudioChunk();
 
       recognizer.audioConfig.emitEvent('AudioSourceReadyEvent');
 
@@ -969,6 +988,7 @@ describe('SpeechRecognition', () => {
       // webspeech:audiostart
 
       recognizer.audioConfig.emitRead();
+      await soundStartEmitted;
 
       // cognitiveservices:firstAudibleChunk
       // webspeech:soundstart
@@ -1007,7 +1027,7 @@ describe('SpeechRecognition', () => {
       await recognizer.waitForStartContinuousRecognitionAsync();
 
       // This will fire "firstAudibleChunk" on "emitRead"
-      recognizer.readAudioChunk();
+      await recognizer.readAudioChunk();
 
       recognizer.audioConfig.emitEvent('AudioSourceReadyEvent');
 
@@ -1016,6 +1036,7 @@ describe('SpeechRecognition', () => {
       // webspeech:audiostart
 
       recognizer.audioConfig.emitRead();
+      await soundStartEmitted;
 
       // cognitiveservices:firstAudibleChunk
       // webspeech:soundstart
@@ -1198,6 +1219,7 @@ describe('SpeechRecognition with text normalization', () => {
     let speechRecognition = new SpeechRecognition();
     let events = captureSpeechEvents(speechRecognition);
     let endEventEmitted = new Promise(resolve => speechRecognition.addEventListener('end', resolve));
+    let soundStartEmitted = new Promise(resolve => speechRecognition.addEventListener('soundstart', resolve));
 
     speechRecognition.start();
     speechRecognition.interimResults = true;
@@ -1207,7 +1229,7 @@ describe('SpeechRecognition with text normalization', () => {
     await recognizer.waitForStartContinuousRecognitionAsync();
 
     // This will fire "firstAudibleChunk" on "emitRead"
-    recognizer.readAudioChunk();
+    await recognizer.readAudioChunk();
 
     recognizer.audioConfig.emitEvent('AudioSourceReadyEvent');
 
@@ -1216,6 +1238,7 @@ describe('SpeechRecognition with text normalization', () => {
     // webspeech:audiostart
 
     recognizer.audioConfig.emitRead();
+    await soundStartEmitted;
 
     // cognitiveservices:firstAudibleChunk
     // webspeech:soundstart
@@ -1253,6 +1276,7 @@ describe('SpeechRecognition with text normalization', () => {
     let speechRecognition = new SpeechRecognition();
     let events = captureSpeechEvents(speechRecognition);
     let endEventEmitted = new Promise(resolve => speechRecognition.addEventListener('end', resolve));
+    let soundStartEmitted = new Promise(resolve => speechRecognition.addEventListener('soundstart', resolve));
 
     speechRecognition.start();
     speechRecognition.interimResults = true;
@@ -1262,7 +1286,7 @@ describe('SpeechRecognition with text normalization', () => {
     await recognizer.waitForStartContinuousRecognitionAsync();
 
     // This will fire "firstAudibleChunk" on "emitRead"
-    recognizer.readAudioChunk();
+    await recognizer.readAudioChunk();
 
     recognizer.audioConfig.emitEvent('AudioSourceReadyEvent');
 
@@ -1271,6 +1295,7 @@ describe('SpeechRecognition with text normalization', () => {
     // webspeech:audiostart
 
     recognizer.audioConfig.emitRead();
+    await soundStartEmitted;
 
     // cognitiveservices:firstAudibleChunk
     // webspeech:soundstart
@@ -1308,6 +1333,7 @@ describe('SpeechRecognition with text normalization', () => {
     let speechRecognition = new SpeechRecognition();
     let events = captureSpeechEvents(speechRecognition);
     let endEventEmitted = new Promise(resolve => speechRecognition.addEventListener('end', resolve));
+    let soundStartEmitted = new Promise(resolve => speechRecognition.addEventListener('soundstart', resolve));
 
     speechRecognition.start();
     speechRecognition.interimResults = true;
@@ -1317,7 +1343,7 @@ describe('SpeechRecognition with text normalization', () => {
     await recognizer.waitForStartContinuousRecognitionAsync();
 
     // This will fire "firstAudibleChunk" on "emitRead"
-    recognizer.readAudioChunk();
+    await recognizer.readAudioChunk();
 
     recognizer.audioConfig.emitEvent('AudioSourceReadyEvent');
 
@@ -1326,6 +1352,7 @@ describe('SpeechRecognition with text normalization', () => {
     // webspeech:audiostart
 
     recognizer.audioConfig.emitRead();
+    await soundStartEmitted;
 
     // cognitiveservices:firstAudibleChunk
     // webspeech:soundstart
@@ -1415,6 +1442,7 @@ describe('SpeechRecognition with loosened events', () => {
   let errorEventEmitted;
   let events;
   let speechRecognition;
+  let soundStartEmitted;
 
   beforeEach(async () => {
     const { default: createSpeechRecognitionPonyfill } = require('./createSpeechRecognitionPonyfill');
@@ -1430,6 +1458,7 @@ describe('SpeechRecognition with loosened events', () => {
     events = captureSpeechEvents(speechRecognition);
     endEventEmitted = new Promise(resolve => speechRecognition.addEventListener('end', resolve));
     errorEventEmitted = new Promise(resolve => speechRecognition.addEventListener('error', resolve));
+    soundStartEmitted = new Promise(resolve => speechRecognition.addEventListener('soundstart', resolve));
   });
 
   describe('in interactive mode', () => {
@@ -1441,7 +1470,7 @@ describe('SpeechRecognition with loosened events', () => {
       await recognizer.waitForStartContinuousRecognitionAsync();
 
       // This will fire "firstAudibleChunk" on "emitRead"
-      recognizer.readAudioChunk();
+      await recognizer.readAudioChunk();
 
       recognizer.audioConfig.emitEvent('AudioSourceReadyEvent');
 
@@ -1450,6 +1479,7 @@ describe('SpeechRecognition with loosened events', () => {
       // webspeech:audiostart
 
       recognizer.audioConfig.emitRead();
+      await soundStartEmitted;
 
       // cognitiveservices:firstAudibleChunk
       // webspeech:soundstart
@@ -1503,7 +1533,7 @@ describe('SpeechRecognition with loosened events', () => {
       await recognizer.waitForStartContinuousRecognitionAsync();
 
       // This will fire "firstAudibleChunk" on "emitRead"
-      recognizer.readAudioChunk();
+      await recognizer.readAudioChunk();
 
       recognizer.audioConfig.emitEvent('AudioSourceReadyEvent');
 
@@ -1512,6 +1542,7 @@ describe('SpeechRecognition with loosened events', () => {
       // webspeech:audiostart
 
       recognizer.audioConfig.emitRead();
+      await soundStartEmitted;
 
       // cognitiveservices:firstAudibleChunk
       // webspeech:soundstart
@@ -1573,7 +1604,7 @@ describe('SpeechRecognition with loosened events', () => {
       await recognizer.waitForStartContinuousRecognitionAsync();
 
       // This will fire "firstAudibleChunk" on "emitRead"
-      recognizer.readAudioChunk();
+      await recognizer.readAudioChunk();
 
       recognizer.audioConfig.emitEvent('AudioSourceReadyEvent');
 
@@ -1630,7 +1661,7 @@ describe('SpeechRecognition with loosened events', () => {
       await recognizer.waitForStartContinuousRecognitionAsync();
 
       // This will fire "firstAudibleChunk" on "emitRead"
-      recognizer.readAudioChunk();
+      await recognizer.readAudioChunk();
 
       recognizer.audioConfig.emitEvent('AudioSourceReadyEvent');
 
@@ -1639,6 +1670,7 @@ describe('SpeechRecognition with loosened events', () => {
       // webspeech:audiostart
 
       recognizer.audioConfig.emitRead();
+      await soundStartEmitted;
 
       // cognitiveservices:firstAudibleChunk
       // webspeech:soundstart
@@ -1695,7 +1727,7 @@ describe('SpeechRecognition with loosened events', () => {
       await recognizer.waitForStartContinuousRecognitionAsync();
 
       // This will fire "firstAudibleChunk" on "emitRead"
-      recognizer.readAudioChunk();
+      await recognizer.readAudioChunk();
 
       recognizer.audioConfig.emitEvent('AudioSourceReadyEvent');
 
@@ -1704,6 +1736,7 @@ describe('SpeechRecognition with loosened events', () => {
       // webspeech:audiostart
 
       recognizer.audioConfig.emitRead();
+      await soundStartEmitted;
 
       // cognitiveservices:firstAudibleChunk
       // webspeech:soundstart
@@ -1758,7 +1791,7 @@ describe('SpeechRecognition with loosened events', () => {
       await recognizer.waitForStartContinuousRecognitionAsync();
 
       // This will fire "firstAudibleChunk" on "emitRead"
-      recognizer.readAudioChunk();
+      await recognizer.readAudioChunk();
 
       recognizer.audioConfig.emitEvent('AudioSourceReadyEvent');
 
@@ -1767,6 +1800,7 @@ describe('SpeechRecognition with loosened events', () => {
       // webspeech:audiostart
 
       recognizer.audioConfig.emitRead();
+      await soundStartEmitted;
 
       // cognitiveservices:firstAudibleChunk
       // webspeech:soundstart
@@ -1836,7 +1870,7 @@ describe('SpeechRecognition with loosened events', () => {
       await recognizer.waitForStartContinuousRecognitionAsync();
 
       // This will fire "firstAudibleChunk" on "emitRead"
-      recognizer.readAudioChunk();
+      await recognizer.readAudioChunk();
 
       recognizer.audioConfig.emitEvent('AudioSourceReadyEvent');
 
@@ -1845,6 +1879,7 @@ describe('SpeechRecognition with loosened events', () => {
       // webspeech:audiostart
 
       recognizer.audioConfig.emitRead();
+      await soundStartEmitted;
 
       // cognitiveservices:firstAudibleChunk
       // webspeech:soundstart

@@ -4,7 +4,7 @@
 
 import { createSpeechSynthesisPonyfill } from '../src/SpeechServices';
 import captureAllSpeechSynthesisUtteranceEvents from '../utils/speechSynthesis/captureAllSpeechSynthesisUtteranceEvents';
-import fetchAuthorizationToken from '../utils/fetchAuthorizationToken';
+// import fetchAuthorizationToken from '../utils/fetchAuthorizationToken';
 import MockAudioContext from '../utils/speechSynthesis/MockAudioContext';
 import recognizeRiffWaveArrayBuffer from '../utils/speechSynthesis/recognizeRiffWaveArrayBuffer';
 import waitForEvent from '../utils/waitForEvent';
@@ -21,7 +21,7 @@ describe.each(testTableForAuthentication)(
         ...(mergeCredentials.region
           ? {}
           : {
-              customVoiceHostname: 'westus2.cris.ai',
+              customVoiceHostname: 'westus2.customvoice.api.speech.microsoft.com',
               speechSynthesisHostname: 'westus2.voice.speech.microsoft.com'
             })
       };

@@ -33,7 +33,7 @@
     "clean": "rimraf lib",
     "eslint": "eslint src/**/*.js",
     "prepublishOnly": "npm run eslint && npm run build",
-    "start": "npm run build -- --verbose --watch",
+    "start": "npm run build -- --skip-initial-build --watch",
     "test": "jest"
   },
   "author": "William Wong <compulim@hotmail.com> (http://compulim.info/)",
@@ -47,25 +47,25 @@
   },
   "homepage": "https://github.com/compulim/web-speech-cognitive-services#readme",
   "devDependencies": {
-    "@babel/cli": "^7.8.4",
-    "@babel/core": "^7.9.6",
-    "@babel/plugin-proposal-object-rest-spread": "^7.9.6",
-    "@babel/plugin-transform-runtime": "^7.9.6",
-    "@babel/preset-env": "^7.9.6",
-    "babel-jest": "^26.0.1",
+    "@babel/cli": "^7.12.10",
+    "@babel/core": "^7.12.10",
+    "@babel/plugin-proposal-object-rest-spread": "^7.12.1",
+    "@babel/plugin-transform-runtime": "^7.12.10",
+    "@babel/preset-env": "^7.12.11",
+    "babel-jest": "^26.6.3",
     "babel-plugin-transform-inline-environment-variables": "^0.4.3",
     "dotenv": "^8.2.0",
-    "eslint": "^7.1.0",
-    "global-agent": "^2.1.8",
-    "jest": "^26.0.1",
+    "eslint": "^7.18.0",
+    "global-agent": "^2.1.12",
+    "jest": "^26.6.3",
     "lolex": "^6.0.0",
-    "microsoft-cognitiveservices-speech-sdk": "1.10.1",
-    "node-fetch": "^2.6.0",
-    "prettier": "^2.0.5",
+    "microsoft-cognitiveservices-speech-sdk": "^1.15.0",
+    "node-fetch": "^2.6.1",
+    "prettier": "^2.2.1",
     "rimraf": "^3.0.2"
   },
   "dependencies": {
-    "@babel/runtime": "7.9.6",
+    "@babel/runtime": "7.12.5",
     "base64-arraybuffer": "0.2.0",
     "event-as-promise": "1.0.5",
     "event-target-shim": "5.0.1",
@@ -74,9 +74,9 @@
     "on-error-resume-next": "1.1.0",
     "p-defer": "3.0.0",
     "p-defer-es5": "1.2.1",
-    "simple-update-in": "2.1.1"
+    "simple-update-in": "2.2.0"
   },
   "peerDependencies": {
-    "microsoft-cognitiveservices-speech-sdk": "~1.10.1"
+    "microsoft-cognitiveservices-speech-sdk": "~1.15.0"
   }
 }

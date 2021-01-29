@@ -30,7 +30,7 @@ describe.each(testTableForAuthentication)('using %s', (_name, _useAuthorizationT
 
     const voice = speechSynthesis.getVoices().find(voice => voice.lang === 'en-US' && /Aria/iu.test(voice.name));
 
-    expect(voice.voiceURI).toEqual('Microsoft Server Speech Text to Speech Voice (en-US, Aria24kRUS)');
+    expect(voice.voiceURI).toEqual('Microsoft Server Speech Text to Speech Voice (en-US, AriaNeural)');
 
     const utterance = new SpeechSynthesisUtterance('Hello');
 

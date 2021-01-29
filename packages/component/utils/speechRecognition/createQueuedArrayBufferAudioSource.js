@@ -11,12 +11,12 @@ import {
   // AudioStreamNodeErrorEvent,
 } from 'microsoft-cognitiveservices-speech-sdk/distrib/lib/src/common/AudioSourceEvents';
 
+import { ChunkedArrayBufferStream } from 'microsoft-cognitiveservices-speech-sdk/distrib/lib/src/common/ChunkedArrayBufferStream';
 import { createNoDashGuid } from 'microsoft-cognitiveservices-speech-sdk/distrib/lib/src/common/Guid';
 import { Events } from 'microsoft-cognitiveservices-speech-sdk/distrib/lib/src/common/Events';
 import { EventSource } from 'microsoft-cognitiveservices-speech-sdk/distrib/lib/src/common/EventSource';
-import { PromiseHelper } from 'microsoft-cognitiveservices-speech-sdk/distrib/lib/src/common/Promise';
-import { Stream } from 'microsoft-cognitiveservices-speech-sdk/distrib/lib/src/common/Stream';
 
+// This is copied from MicAudioSource, but instead of retrieving from MediaStream, we dump the ArrayBuffer directly.
 class QueuedArrayBufferAudioSource {
   constructor(audioFormat, audioSourceId = createNoDashGuid()) {
     this._audioFormat = audioFormat;
@@ -34,10 +34,10 @@ class QueuedArrayBufferAudioSource {
     this.attach = this.attach.bind(this);
     this.detach = this.detach.bind(this);
     this.id = this.id.bind(this);
+    this.listen = this.listen.bind(this);
     this.push = this.push.bind(this);
     this.turnOff = this.turnOff.bind(this);
     this.turnOn = this.turnOn.bind(this);
-    this.upload = this.upload.bind(this);
   }
 
   push(arrayBuffer) {
@@ -50,7 +50,7 @@ class QueuedArrayBufferAudioSource {
 
       this.onEvent(new AudioSourceErrorEvent(errorMsg, ''));
 
-      return PromiseHelper.fromError(errorMsg);
+      return Promise.reject(errorMsg);
     }
 
     this._queue.push(arrayBuffer);
@@ -60,32 +60,33 @@ class QueuedArrayBufferAudioSource {
     this.onEvent(new AudioSourceInitializingEvent(this._id)); // no stream id
     this.onEvent(new AudioSourceReadyEvent(this._id));
 
-    return PromiseHelper.fromResult(true);
+    return true;
   }
 
   id() {
     return this._id;
   }
 
-  attach(audioNodeId) {
+  async attach(audioNodeId) {
     this.onEvent(new AudioStreamNodeAttachingEvent(this._id, audioNodeId));
 
-    return this.upload(audioNodeId).onSuccessContinueWith(streamReader => {
-      this.onEvent(new AudioStreamNodeAttachedEvent(this._id, audioNodeId));
+    const stream = await this.listen(audioNodeId);
 
-      return {
-        detach: () => {
-          streamReader.close();
+    this.onEvent(new AudioStreamNodeAttachedEvent(this._id, audioNodeId));
 
-          delete this._streams[audioNodeId];
+    return {
+      detach: () => {
+        stream.readEnded();
 
-          this.onEvent(new AudioStreamNodeDetachedEvent(this._id, audioNodeId));
-          this.turnOff();
-        },
-        id: () => audioNodeId,
-        read: () => streamReader.read()
-      };
-    });
+        delete this._streams[audioNodeId];
+
+        this.onEvent(new AudioStreamNodeDetachedEvent(this._id, audioNodeId));
+
+        return this.turnOff();
+      },
+      id: () => audioNodeId,
+      read: () => stream.read()
+    };
   }
 
   detach(audioNodeId) {
@@ -103,31 +104,31 @@ class QueuedArrayBufferAudioSource {
 
     this.onEvent(new AudioSourceOffEvent(this._id)); // no stream now
 
-    return PromiseHelper.fromResult(true);
+    return true;
   }
 
-  upload(audioNodeId) {
-    return this.turnOn().onSuccessContinueWith(() => {
-      const stream = new Stream(audioNodeId);
+  async listen(audioNodeId) {
+    await this.turnOn();
 
-      this._streams[audioNodeId] = stream;
+    const stream = new ChunkedArrayBufferStream(this.format.avgBytesPerSec / 10, audioNodeId);
 
-      const arrayBuffer = this._queue.shift();
+    this._streams[audioNodeId] = stream;
 
-      stream.writeStreamChunk({
-        buffer: arrayBuffer,
-        isEnd: false,
-        timeReceived: Date.now()
-      });
+    const arrayBuffer = this._queue.shift();
 
-      stream.close();
-
-      return stream.getReader();
+    stream.writeStreamChunk({
+      buffer: arrayBuffer,
+      isEnd: false,
+      timeReceived: Date.now()
     });
+
+    stream.close();
+
+    return stream;
   }
 
   get format() {
-    return PromiseHelper.fromResult(this._audioFormat);
+    return this._audioFormat;
   }
 
   get events() {
@@ -135,7 +136,7 @@ class QueuedArrayBufferAudioSource {
   }
 
   get deviceInfo() {
-    return PromiseHelper.fromResult({
+    return {
       bitspersample: this._audioFormat.bitsPerSample,
       channelcount: this._audioFormat.channels,
       connectivity: 'Unknown',
@@ -143,7 +144,7 @@ class QueuedArrayBufferAudioSource {
       model: 'File',
       samplerate: this._audioFormat.samplesPerSec,
       type: 'File'
-    });
+    };
   }
 }
 

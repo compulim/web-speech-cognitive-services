@@ -9,7 +9,7 @@
     "clean": "lerna run --parallel --stream clean",
     "eslint": "lerna run --scope=bundle --scope=web-speech-cognitive-services --parallel --stream eslint",
     "prepublishOnly": "lerna run --stream prepublishOnly",
-    "start": "lerna run --parallel --stream start",
+    "start": "npm run build && lerna run --parallel --stream start",
     "test": "lerna run --ignore=playground --stream test"
   },
   "devDependencies": {

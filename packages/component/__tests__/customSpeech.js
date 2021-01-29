@@ -82,7 +82,7 @@ describe.each(testTableForAuthentication)(
               {
                 '0': {
                   confidence: 0.9,
-                  transcript: 'Tuen Mun District Office.'
+                  transcript: 'Tuen Mun district office.'
                 },
                 isFinal: true,
                 length: 1
