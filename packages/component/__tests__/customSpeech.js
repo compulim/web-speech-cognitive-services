@@ -13,6 +13,7 @@ import captureAllSpeechRecognitionEvents from '../utils/speechRecognition/captur
 import createQueuedArrayBufferAudioSource from '../utils/speechRecognition/createQueuedArrayBufferAudioSource';
 import testTableForAuthentication from '../utils/testTableForAuthentication';
 
+const { CI, REGION } = process.env;
 const BITS_PER_SAMPLE = 16;
 const CHANNELS = 1;
 const SAMPLES_PER_SECOND = 16000;
@@ -38,6 +39,10 @@ describe.each(testTableForAuthentication)(
     });
 
     test('to recognize', async () => {
+      if (CI && !REGION) {
+        return console.warn('Skipping tests against production system when running in CI without subscription key.');
+      }
+
       const credentials = {
         ...(await fetchCredentials()),
         ...(!mergeCredentials.region && {
@@ -80,7 +85,7 @@ describe.each(testTableForAuthentication)(
             resultIndex: undefined,
             results: [
               {
-                '0': {
+                0: {
                   confidence: 0.9,
                   transcript: 'Tuen Mun district office.'
                 },
