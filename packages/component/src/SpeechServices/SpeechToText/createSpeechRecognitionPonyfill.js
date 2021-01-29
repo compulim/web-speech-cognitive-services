@@ -49,10 +49,6 @@ function serializeRecognitionResult({ duration, errorDetails, json, offset, prop
   };
 }
 
-function improviseAsync(fn, improviser) {
-  return (...args) => fn(...args).onSuccessContinueWith(result => improviser(result));
-}
-
 function averageAmplitude(arrayBuffer) {
   const array = new Int16Array(arrayBuffer);
 
@@ -78,32 +74,39 @@ class SpeechRecognitionEvent {
 
 function prepareAudioConfig(audioConfig) {
   const originalAttach = audioConfig.attach;
+  const boundOriginalAttach = audioConfig.attach.bind(audioConfig);
   let firstChunk;
   let muted;
 
   // We modify "attach" function and detect when audible chunk is read.
   // We will only modify "attach" function once.
-  audioConfig.attach = improviseAsync(originalAttach.bind(audioConfig), reader => ({
-    ...reader,
-    read: improviseAsync(reader.read.bind(reader), chunk => {
-      // The magic number 150 is measured by:
-      // 1. Set microphone volume to 0
-      // 2. Observe the amplitude (100-110) for the first few chunks
-      //    (There is a short static caught when turning on the microphone)
-      // 3. Set the number a bit higher than the observation
+  audioConfig.attach = async () => {
+    const reader = await boundOriginalAttach();
 
-      if (!firstChunk && averageAmplitude(chunk.buffer) > 150) {
-        audioConfig.events.onEvent({ name: 'FirstAudibleChunk' });
-        firstChunk = true;
+    return {
+      ...reader,
+      read: async () => {
+        const chunk = await reader.read();
+
+        // The magic number 150 is measured by:
+        // 1. Set microphone volume to 0
+        // 2. Observe the amplitude (100-110) for the first few chunks
+        //    (There is a short static caught when turning on the microphone)
+        // 3. Set the number a bit higher than the observation
+
+        if (!firstChunk && averageAmplitude(chunk.buffer) > 150) {
+          audioConfig.events.onEvent({ name: 'FirstAudibleChunk' });
+          firstChunk = true;
+        }
+
+        if (muted) {
+          return { buffer: new ArrayBuffer(0), isEnd: true, timeReceived: Date.now() };
+        }
+
+        return chunk;
       }
-
-      if (muted) {
-        return { buffer: new ArrayBuffer(0), isEnd: true, timeReceived: Date.now() };
-      }
-
-      return chunk;
-    })
-  }));
+    };
+  };
 
   return {
     audioConfig,

@@ -69,7 +69,7 @@ describe.each(testTableForAuthentication)('using %s', (_name, _useAuthorizationT
           results: [
             {
               '0': {
-                confidence: 0.9,
+                confidence: 1,
                 transcript: 'Hello.'
               },
               isFinal: true,
