@@ -1,5 +1,7 @@
 import createTestTable from '../utils/createTestTable';
 
+const { CI, REGION } = process.env;
+
 describe('createTestTable', () => {
   test('with 3x3x2 combos', () => {
     const actual = createTestTable(
@@ -34,6 +36,10 @@ describe('createTestTable', () => {
   });
 
   test('with authentication options', () => {
+    if (CI && !REGION) {
+      return console.warn('Skipping tests against production system when running in CI without subscription key.');
+    }
+
     const combos = [
       [true, false],
       [
