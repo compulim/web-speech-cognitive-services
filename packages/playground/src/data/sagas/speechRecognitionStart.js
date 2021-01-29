@@ -1,3 +1,5 @@
+/* eslint no-magic-numbers: ["error", { "ignore": [2000] }] */
+
 import { call, cancel, fork, join, put, race, select, take } from 'redux-saga/effects';
 
 import addSpeechRecognitionEvent from '../actions/addSpeechRecognitionEvent';
@@ -11,44 +13,6 @@ import stopSpeechRecognition, { STOP_SPEECH_RECOGNITION } from '../actions/stopS
 
 function sleep(duration) {
   return new Promise(resolve => setTimeout(resolve, duration));
-}
-
-export default function* speechRecognitionStartSaga() {
-  for (;;) {
-    let cancelReason;
-
-    yield take(START_SPEECH_RECOGNITION);
-
-    const { speechRecognitionDelayedStart: delayedStart } = yield select();
-
-    if (delayedStart) {
-      yield call(sleep, 2000);
-    }
-
-    const task = yield fork(startSpeechRecognition, {
-      getCancelReason: () => cancelReason
-    });
-
-    const { abort, stop } = yield race({
-      abort: take(ABORT_SPEECH_RECOGNITION),
-      stop: take(STOP_SPEECH_RECOGNITION),
-      taskCompleted: join(task)
-    });
-
-    if (abort || stop) {
-      if (abort) {
-        yield put(addSpeechRecognitionEvent({ type: 'ui:abort' }));
-        cancelReason = 'abort';
-      } else if (stop) {
-        yield put(addSpeechRecognitionEvent({ type: 'ui:stop' }));
-        cancelReason = 'stop';
-      }
-
-      yield cancel(task);
-    } else {
-      yield put(stopSpeechRecognition());
-    }
-  }
 }
 
 function* startSpeechRecognition({ getCancelReason }) {
@@ -98,6 +62,44 @@ function* startSpeechRecognition({ getCancelReason }) {
       } else {
         speechRecognition.stop();
       }
+    }
+  }
+}
+
+export default function* speechRecognitionStartSaga() {
+  for (;;) {
+    let cancelReason;
+
+    yield take(START_SPEECH_RECOGNITION);
+
+    const { speechRecognitionDelayedStart: delayedStart } = yield select();
+
+    if (delayedStart) {
+      yield call(sleep, 2000);
+    }
+
+    const task = yield fork(startSpeechRecognition, {
+      getCancelReason: () => cancelReason
+    });
+
+    const { abort, stop } = yield race({
+      abort: take(ABORT_SPEECH_RECOGNITION),
+      stop: take(STOP_SPEECH_RECOGNITION),
+      taskCompleted: join(task)
+    });
+
+    if (abort || stop) {
+      if (abort) {
+        yield put(addSpeechRecognitionEvent({ type: 'ui:abort' }));
+        cancelReason = 'abort';
+      } else if (stop) {
+        yield put(addSpeechRecognitionEvent({ type: 'ui:stop' }));
+        cancelReason = 'stop';
+      }
+
+      yield cancel(task);
+    } else {
+      yield put(stopSpeechRecognition());
     }
   }
 }
