@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [7.1.0] - 2021-02-01
+
 ### Changed
 
 - Moved from [`webpack-visualizer-plugin`](https://npmjs.com/package/webpack-visualizer-plugin) to [`webpack-stats-plugin`](https://npmjs.com/package/webpack-stats-plugin)
