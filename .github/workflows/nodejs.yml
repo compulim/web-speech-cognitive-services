@@ -22,7 +22,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [12.x, 14.x]
+        node-version: [12.x, 14.x, 16.x]
 
     steps:
       - name: Checking out for ${{ github.ref }}
@@ -55,6 +55,11 @@ jobs:
           SPEECH_SYNTHESIS_DEPLOYMENT_ID: ${{ secrets.SPEECH_SYNTHESIS_DEPLOYMENT_ID }}
           SUBSCRIPTION_KEY: ${{ secrets.SUBSCRIPTION_KEY }}
 
+      - name: Copy UMD
+        run: |
+          mkdir -p packages/component/umd/
+          cp packages/bundle/dist/*.js packages/component/umd/
+
       - name: Copy documents
         run: |
           cp CHANGELOG.md packages/component
@@ -68,14 +73,14 @@ jobs:
 
       - name: Upload npm-tarball
         uses: actions/upload-artifact@v2
-        if: ${{ matrix.node-version == '14.x' }}
+        if: ${{ matrix.node-version == '16.x' }}
         with:
           name: npm-tarball
           path: 'packages/component/*.tgz'
 
       - name: Upload gh-pages
         uses: actions/upload-artifact@v2
-        if: ${{ matrix.node-version == '14.x' }}
+        if: ${{ matrix.node-version == '16.x' }}
         with:
           name: gh-pages
           path: 'packages/playground/build/**/*'

@@ -17,22 +17,22 @@
     "start:webpack": "webpack --config webpack-watch.config.js --watch"
   },
   "dependencies": {
-    "@babel/runtime": "7.12.5",
-    "web-speech-cognitive-services": "^0.0.0-0",
-    "webpack-stats-plugin": "^1.0.3"
+    "@babel/runtime": "7.14.6",
+    "web-speech-cognitive-services": "^0.0.0-0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.12.10",
-    "@babel/core": "^7.12.10",
-    "@babel/plugin-proposal-object-rest-spread": "^7.12.1",
-    "@babel/plugin-transform-runtime": "^7.12.10",
-    "@babel/preset-env": "^7.12.11",
-    "@babel/preset-react": "^7.12.10",
-    "concurrently": "^5.3.0",
-    "eslint": "^7.18.0",
-    "microsoft-cognitiveservices-speech-sdk": "^1.15.0",
+    "@babel/cli": "^7.14.5",
+    "@babel/core": "^7.14.6",
+    "@babel/plugin-proposal-object-rest-spread": "^7.14.7",
+    "@babel/plugin-transform-runtime": "^7.14.5",
+    "@babel/preset-env": "^7.14.7",
+    "@babel/preset-react": "^7.14.5",
+    "concurrently": "^6.2.0",
+    "eslint": "^7.30.0",
+    "microsoft-cognitiveservices-speech-sdk": "^1.17.0",
     "rimraf": "^3.0.2",
-    "webpack": "^5.18.0",
-    "webpack-cli": "^4.4.0"
+    "webpack": "^5.44.0",
+    "webpack-cli": "^4.7.2",
+    "webpack-stats-plugin": "^1.0.3"
   }
 }

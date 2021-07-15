@@ -3,9 +3,9 @@ module.exports = {
     '@babel/plugin-proposal-object-rest-spread',
     '@babel/plugin-transform-runtime',
     [
-      'transform-inline-environment-variables',
+      'babel-plugin-transform-inline-environment-variables',
       {
-        include: ['NPM_PACKAGE_VERSION']
+        include: ['npm_package_version']
       }
     ]
   ],
