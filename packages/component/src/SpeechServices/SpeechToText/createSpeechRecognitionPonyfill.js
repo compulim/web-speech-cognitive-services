@@ -70,7 +70,6 @@ class SpeechRecognitionEvent extends Event {
     this.interpretation = interpretation;
     this.resultIndex = resultIndex;
     this.results = results;
-    this.type = type;
   }
 }
 
