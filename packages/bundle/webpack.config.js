@@ -1,4 +1,3 @@
-const { resolve } = require('path');
 const { StatsWriterPlugin } = require('webpack-stats-plugin');
 
 module.exports = {
@@ -7,15 +6,14 @@ module.exports = {
   },
   mode: 'production',
   output: {
-    filename: '[name].js',
     library: 'WebSpeechCognitiveServices',
-    libraryTarget: 'umd',
-    path: resolve(__dirname, 'dist')
+    libraryTarget: 'umd'
   },
   plugins: [
     new StatsWriterPlugin({
       filename: 'stats.json',
       transform: (_, opts) => JSON.stringify(opts.compiler.getStats().toJson({ chunkModules: true }), null, 2)
     })
-  ]
+  ],
+  target: ['web', 'es5']
 };

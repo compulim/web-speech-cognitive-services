@@ -1,6 +1,6 @@
 {
   "name": "root",
-  "version": "7.1.0",
+  "version": "7.1.1-0",
   "description": "",
   "private": true,
   "scripts": {
@@ -13,6 +13,6 @@
     "test": "lerna run --ignore=playground --stream test"
   },
   "devDependencies": {
-    "lerna": "^3.20.2"
+    "lerna": "^4.0.0"
   }
 }

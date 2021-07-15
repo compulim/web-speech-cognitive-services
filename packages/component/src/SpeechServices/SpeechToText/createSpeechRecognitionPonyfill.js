@@ -4,7 +4,7 @@
 /* eslint no-empty-function: "off" */
 /* eslint no-magic-numbers: ["error", { "ignore": [0, 100, 150] }] */
 
-import { defineEventAttribute, EventTarget } from 'event-target-shim-es5';
+import { Event, EventTarget, getEventAttributeValue, setEventAttributeValue } from 'event-target-shim-es5';
 
 import cognitiveServiceEventResultToWebSpeechRecognitionResultList from './cognitiveServiceEventResultToWebSpeechRecognitionResultList';
 import createPromiseQueue from '../../Util/createPromiseQueue';
@@ -61,14 +61,15 @@ function cognitiveServicesAsyncToPromise(fn) {
   return (...args) => new Promise((resolve, reject) => fn(...args, resolve, reject));
 }
 
-class SpeechRecognitionEvent {
+class SpeechRecognitionEvent extends Event {
   constructor(type, { data, emma, interpretation, resultIndex, results } = {}) {
+    super(type);
+
     this.data = data;
     this.emma = emma;
     this.interpretation = interpretation;
     this.resultIndex = resultIndex;
     this.results = results;
-    this.type = type;
   }
 }
 
@@ -196,6 +197,94 @@ export function createSpeechRecognitionPonyfillFromRecognizer({
 
     set lang(value) {
       this._lang = value;
+    }
+
+    get onaudioend() {
+      return getEventAttributeValue(this, 'audioend');
+    }
+
+    set onaudioend(value) {
+      setEventAttributeValue(this, 'audioend', value);
+    }
+
+    get onaudiostart() {
+      return getEventAttributeValue(this, 'audiostart');
+    }
+
+    set onaudiostart(value) {
+      setEventAttributeValue(this, 'audiostart', value);
+    }
+
+    get oncognitiveservices() {
+      return getEventAttributeValue(this, 'cognitiveservices');
+    }
+
+    set oncognitiveservices(value) {
+      setEventAttributeValue(this, 'cognitiveservices', value);
+    }
+
+    get onend() {
+      return getEventAttributeValue(this, 'end');
+    }
+
+    set onend(value) {
+      setEventAttributeValue(this, 'end', value);
+    }
+
+    get onerror() {
+      return getEventAttributeValue(this, 'error');
+    }
+
+    set onerror(value) {
+      setEventAttributeValue(this, 'error', value);
+    }
+
+    get onresult() {
+      return getEventAttributeValue(this, 'result');
+    }
+
+    set onresult(value) {
+      setEventAttributeValue(this, 'result', value);
+    }
+
+    get onsoundend() {
+      return getEventAttributeValue(this, 'soundend');
+    }
+
+    set onsoundend(value) {
+      setEventAttributeValue(this, 'soundend', value);
+    }
+
+    get onsoundstart() {
+      return getEventAttributeValue(this, 'soundstart');
+    }
+
+    set onsoundstart(value) {
+      setEventAttributeValue(this, 'soundstart', value);
+    }
+
+    get onspeechend() {
+      return getEventAttributeValue(this, 'speechend');
+    }
+
+    set onspeechend(value) {
+      setEventAttributeValue(this, 'speechend', value);
+    }
+
+    get onspeechstart() {
+      return getEventAttributeValue(this, 'speechstart');
+    }
+
+    set onspeechstart(value) {
+      setEventAttributeValue(this, 'speechstart', value);
+    }
+
+    get onstart() {
+      return getEventAttributeValue(this, 'start');
+    }
+
+    set onstart(value) {
+      setEventAttributeValue(this, 'start', value);
     }
 
     start() {
@@ -517,19 +606,6 @@ export function createSpeechRecognitionPonyfillFromRecognizer({
       }
     }
   }
-
-  defineEventAttribute(SpeechRecognition.prototype, 'audioend');
-  defineEventAttribute(SpeechRecognition.prototype, 'audiostart');
-  defineEventAttribute(SpeechRecognition.prototype, 'cognitiveservices');
-  defineEventAttribute(SpeechRecognition.prototype, 'end');
-  defineEventAttribute(SpeechRecognition.prototype, 'error');
-  defineEventAttribute(SpeechRecognition.prototype, 'nomatch');
-  defineEventAttribute(SpeechRecognition.prototype, 'result');
-  defineEventAttribute(SpeechRecognition.prototype, 'soundend');
-  defineEventAttribute(SpeechRecognition.prototype, 'soundstart');
-  defineEventAttribute(SpeechRecognition.prototype, 'speechend');
-  defineEventAttribute(SpeechRecognition.prototype, 'speechstart');
-  defineEventAttribute(SpeechRecognition.prototype, 'start');
 
   return {
     SpeechGrammarList,

@@ -55,6 +55,11 @@ jobs:
           SPEECH_SYNTHESIS_DEPLOYMENT_ID: ${{ secrets.SPEECH_SYNTHESIS_DEPLOYMENT_ID }}
           SUBSCRIPTION_KEY: ${{ secrets.SUBSCRIPTION_KEY }}
 
+      - name: Copy UMD
+        run: |
+          mkdir -p packages/component/umd/
+          cp packages/bundle/dist/*.js packages/component/umd/
+
       - name: Copy documents
         run: |
           cp CHANGELOG.md packages/component

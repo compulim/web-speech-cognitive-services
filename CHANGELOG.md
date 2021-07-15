@@ -6,6 +6,41 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Changed
+
+- Bumped dependencies, in PR [#151](https://github.com/compulim/web-speech-cognitive-services/pull/151)
+   - [`@babel/cli@7.14.5`](https://npmjs.com/package/@babel/cli)
+   - [`@babel/core@7.14.6`](https://npmjs.com/package/@babel/core)
+   - [`@babel/plugin-proposal-object-rest-spread@7.14.7`](https://npmjs.com/package/@babel/plugin-proposal-object-rest-spread)
+   - [`@babel/plugin-transform-runtime@7.14.5`](https://npmjs.com/package/@babel/plugin-transform-runtime)
+   - [`@babel/preset-env@7.14.7`](https://npmjs.com/package/@babel/preset-env)
+   - [`@babel/preset-react@7.14.5`](https://npmjs.com/package/@babel/preset-react)
+   - [`@babel/runtime@7.14.6`](https://npmjs.com/package/@babel/runtime)
+   - [`babel-jest@27.0.6`](https://npmjs.com/package/babel-jest)
+   - [`classnames@2.3.1`](https://npmjs.com/package/classnames)
+   - [`concurrently@6.2.0`](https://npmjs.com/package/concurrently)
+   - [`dotenv@10.0.0`](https://npmjs.com/package/dotenv)
+   - [`eslint@7.30.0`](https://npmjs.com/package/eslint)
+   - [`event-target-shim-es5@2.0.0-master.416b327`](https://npmjs.com/package/event-target-shim-es5)
+   - [`event-target-shim@6.0.2`](https://npmjs.com/package/event-target-shim)
+   - [`global-agent@2.2.0`](https://npmjs.com/package/global-agent)
+   - [`jest@27.0.6`](https://npmjs.com/package/jest)
+   - [`lerna@4.0.0`](https://npmjs.com/package/lerna)
+   - [`memoize-one@5.2.1`](https://npmjs.com/package/memoize-one)
+   - [`microsoft-cognitiveservices-speech-sdk@1.17.0`](https://npmjs.com/package/microsoft-cognitiveservices-speech-sdk)
+   - [`p-defer-es5@2.0.0-master.10e6578`](https://npmjs.com/package/p-defer-es5)
+   - [`p-defer@4.0.0`](https://npmjs.com/package/p-defer)
+   - [`prettier@2.3.2`](https://npmjs.com/package/prettier)
+   - [`react-dictate-button@2.0.1`](https://npmjs.com/package/react-dictate-button)
+   - [`react-dom@17.0.2`](https://npmjs.com/package/react-dom)
+   - [`react-redux@7.2.4`](https://npmjs.com/package/react-redux)
+   - [`react-scripts@4.0.3`](https://npmjs.com/package/react-scripts)
+   - [`react@17.0.2`](https://npmjs.com/package/react)
+   - [`redux@4.1.0`](https://npmjs.com/package/redux)
+   - [`webpack-cli@4.7.2`](https://npmjs.com/package/webpack-cli)
+   - [`webpack-stats-plugin@1.0.3`](https://npmjs.com/package/webpack-stats-plugin)
+   - [`webpack@5.44.0`](https://npmjs.com/package/webpack)
+
 ## [7.1.0] - 2021-02-01
 
 ### Changed
