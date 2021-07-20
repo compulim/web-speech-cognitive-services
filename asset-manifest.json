@@ -1,17 +1,17 @@
 {
   "files": {
-    "main.js": "/web-speech-cognitive-services/static/js/main.f79491e4.chunk.js",
-    "main.js.map": "/web-speech-cognitive-services/static/js/main.f79491e4.chunk.js.map",
+    "main.js": "/web-speech-cognitive-services/static/js/main.28a7b9e3.chunk.js",
+    "main.js.map": "/web-speech-cognitive-services/static/js/main.28a7b9e3.chunk.js.map",
     "runtime-main.js": "/web-speech-cognitive-services/static/js/runtime-main.09da1a88.js",
     "runtime-main.js.map": "/web-speech-cognitive-services/static/js/runtime-main.09da1a88.js.map",
-    "static/js/2.bd68572a.chunk.js": "/web-speech-cognitive-services/static/js/2.bd68572a.chunk.js",
-    "static/js/2.bd68572a.chunk.js.map": "/web-speech-cognitive-services/static/js/2.bd68572a.chunk.js.map",
+    "static/js/2.9eccecab.chunk.js": "/web-speech-cognitive-services/static/js/2.9eccecab.chunk.js",
+    "static/js/2.9eccecab.chunk.js.map": "/web-speech-cognitive-services/static/js/2.9eccecab.chunk.js.map",
     "index.html": "/web-speech-cognitive-services/index.html",
-    "static/js/2.bd68572a.chunk.js.LICENSE.txt": "/web-speech-cognitive-services/static/js/2.bd68572a.chunk.js.LICENSE.txt"
+    "static/js/2.9eccecab.chunk.js.LICENSE.txt": "/web-speech-cognitive-services/static/js/2.9eccecab.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.09da1a88.js",
-    "static/js/2.bd68572a.chunk.js",
-    "static/js/main.f79491e4.chunk.js"
+    "static/js/2.9eccecab.chunk.js",
+    "static/js/main.28a7b9e3.chunk.js"
   ]
 }
