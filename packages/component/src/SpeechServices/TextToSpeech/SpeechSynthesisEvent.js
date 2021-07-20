@@ -1,5 +1,7 @@
-export default class SpeechSynthesisEvent {
+import { Event } from 'event-target-shim/es5';
+
+export default class SpeechSynthesisEvent extends Event {
   constructor(type) {
-    this.type = type;
+    super(type);
   }
 }
