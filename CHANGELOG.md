@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 
-- Bumped dependencies, in PR [#151](https://github.com/compulim/web-speech-cognitive-services/pull/151) and PR [#152](https://github.com/compulim/web-speech-cognitive-services/pull/152)
+- Bumped dependencies, in PR [#151](https://github.com/compulim/web-speech-cognitive-services/pull/151), PR [#152](https://github.com/compulim/web-speech-cognitive-services/pull/152) and PR [#153](https://github.com/compulim/web-speech-cognitive-services/pull/153)
    - [`@babel/cli@7.14.5`](https://npmjs.com/package/@babel/cli)
    - [`@babel/core@7.14.6`](https://npmjs.com/package/@babel/core)
    - [`@babel/plugin-proposal-object-rest-spread@7.14.7`](https://npmjs.com/package/@babel/plugin-proposal-object-rest-spread)
