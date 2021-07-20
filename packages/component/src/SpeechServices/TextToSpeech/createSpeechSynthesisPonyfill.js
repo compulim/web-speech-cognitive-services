@@ -1,6 +1,6 @@
 /* eslint class-methods-use-this: 0 */
 
-import { defineEventAttribute, EventTarget } from 'event-target-shim-es5';
+import { EventTarget, getEventAttributeValue, setEventAttributeValue } from 'event-target-shim/es5';
 import createDeferred from 'p-defer-es5';
 import onErrorResumeNext from 'on-error-resume-next';
 
@@ -49,6 +49,14 @@ export default options => {
 
     getVoices() {
       return EMPTY_ARRAY;
+    }
+
+    get onvoiceschanged() {
+      return getEventAttributeValue(this, 'voiceschanged');
+    }
+
+    set onvoiceschanged(value) {
+      setEventAttributeValue(this, 'voiceschanged', value);
     }
 
     pause() {
@@ -129,8 +137,6 @@ export default options => {
       this.dispatchEvent(new SpeechSynthesisEvent('voiceschanged'));
     }
   }
-
-  defineEventAttribute(SpeechSynthesis.prototype, 'voiceschanged');
 
   return {
     speechSynthesis: new SpeechSynthesis(),

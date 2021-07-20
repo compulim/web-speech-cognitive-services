@@ -4,7 +4,7 @@
 /* eslint no-empty-function: "off" */
 /* eslint no-magic-numbers: ["error", { "ignore": [0, 100, 150] }] */
 
-import { Event, EventTarget, getEventAttributeValue, setEventAttributeValue } from 'event-target-shim-es5';
+import { Event, EventTarget, getEventAttributeValue, setEventAttributeValue } from 'event-target-shim/es5';
 
 import cognitiveServiceEventResultToWebSpeechRecognitionResultList from './cognitiveServiceEventResultToWebSpeechRecognitionResultList';
 import createPromiseQueue from '../../Util/createPromiseQueue';

@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 
-- Bumped dependencies, in PR [#151](https://github.com/compulim/web-speech-cognitive-services/pull/151)
+- Bumped dependencies, in PR [#151](https://github.com/compulim/web-speech-cognitive-services/pull/151) and PR [#XXX](https://github.com/compulim/web-speech-cognitive-services/pull/XXX)
    - [`@babel/cli@7.14.5`](https://npmjs.com/package/@babel/cli)
    - [`@babel/core@7.14.6`](https://npmjs.com/package/@babel/core)
    - [`@babel/plugin-proposal-object-rest-spread@7.14.7`](https://npmjs.com/package/@babel/plugin-proposal-object-rest-spread)
@@ -21,14 +21,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
    - [`concurrently@6.2.0`](https://npmjs.com/package/concurrently)
    - [`dotenv@10.0.0`](https://npmjs.com/package/dotenv)
    - [`eslint@7.30.0`](https://npmjs.com/package/eslint)
-   - [`event-target-shim-es5@2.0.0-master.416b327`](https://npmjs.com/package/event-target-shim-es5)
    - [`event-target-shim@6.0.2`](https://npmjs.com/package/event-target-shim)
    - [`global-agent@2.2.0`](https://npmjs.com/package/global-agent)
    - [`jest@27.0.6`](https://npmjs.com/package/jest)
    - [`lerna@4.0.0`](https://npmjs.com/package/lerna)
    - [`memoize-one@5.2.1`](https://npmjs.com/package/memoize-one)
    - [`microsoft-cognitiveservices-speech-sdk@1.17.0`](https://npmjs.com/package/microsoft-cognitiveservices-speech-sdk)
-   - [`p-defer-es5@2.0.0-master.10e6578`](https://npmjs.com/package/p-defer-es5)
+   - [`p-defer-es5@2.0.0`](https://npmjs.com/package/p-defer-es5)
    - [`p-defer@4.0.0`](https://npmjs.com/package/p-defer)
    - [`prettier@2.3.2`](https://npmjs.com/package/prettier)
    - [`react-dictate-button@2.0.1`](https://npmjs.com/package/react-dictate-button)

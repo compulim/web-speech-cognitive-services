@@ -1,6 +1,6 @@
 /* eslint no-empty: ["error", { "allowEmptyCatch": true }] */
 
-import { defineEventAttribute, EventTarget } from 'event-target-shim-es5';
+import { EventTarget, getEventAttributeValue, setEventAttributeValue } from 'event-target-shim/es5';
 import EventAsPromise from 'event-as-promise';
 
 import fetchSpeechData from './fetchSpeechData';
@@ -72,6 +72,62 @@ class SpeechSynthesisUtterance extends EventTarget {
     this._lang = value;
   }
 
+  get onboundary() {
+    return getEventAttributeValue(this, 'boundary');
+  }
+
+  set onboundary(value) {
+    setEventAttributeValue(this, 'boundary', value);
+  }
+
+  get onend() {
+    return getEventAttributeValue(this, 'end');
+  }
+
+  set onend(value) {
+    setEventAttributeValue(this, 'end', value);
+  }
+
+  get onerror() {
+    return getEventAttributeValue(this, 'error');
+  }
+
+  set onerror(value) {
+    setEventAttributeValue(this, 'error', value);
+  }
+
+  get onmark() {
+    return getEventAttributeValue(this, 'mark');
+  }
+
+  set onmark(value) {
+    setEventAttributeValue(this, 'mark', value);
+  }
+
+  get onpause() {
+    return getEventAttributeValue(this, 'pause');
+  }
+
+  set onpause(value) {
+    setEventAttributeValue(this, 'pause', value);
+  }
+
+  get onresume() {
+    return getEventAttributeValue(this, 'resume');
+  }
+
+  set onresume(value) {
+    setEventAttributeValue(this, 'resume', value);
+  }
+
+  get onstart() {
+    return getEventAttributeValue(this, 'start');
+  }
+
+  set onstart(value) {
+    setEventAttributeValue(this, 'start', value);
+  }
+
   get pitch() {
     return this._pitch;
   }
@@ -104,11 +160,7 @@ class SpeechSynthesisUtterance extends EventTarget {
     this._volume = value;
   }
 
-  preload({
-    deploymentId,
-    fetchCredentials,
-    outputFormat
-  }) {
+  preload({ deploymentId, fetchCredentials, outputFormat }) {
     this.arrayBufferPromise = fetchSpeechData({
       fetchCredentials,
       deploymentId,
@@ -151,13 +203,5 @@ class SpeechSynthesisUtterance extends EventTarget {
     this._playingSource && this._playingSource.stop();
   }
 }
-
-defineEventAttribute(SpeechSynthesisUtterance.prototype, 'boundary');
-defineEventAttribute(SpeechSynthesisUtterance.prototype, 'end');
-defineEventAttribute(SpeechSynthesisUtterance.prototype, 'error');
-defineEventAttribute(SpeechSynthesisUtterance.prototype, 'mark');
-defineEventAttribute(SpeechSynthesisUtterance.prototype, 'pause');
-defineEventAttribute(SpeechSynthesisUtterance.prototype, 'resume');
-defineEventAttribute(SpeechSynthesisUtterance.prototype, 'start');
 
 export default SpeechSynthesisUtterance;
