@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [7.1.1] - 2021-07-20
+
 ### Changed
 
 - Bumped dependencies, in PR [#151](https://github.com/compulim/web-speech-cognitive-services/pull/151), PR [#152](https://github.com/compulim/web-speech-cognitive-services/pull/152) and PR [#153](https://github.com/compulim/web-speech-cognitive-services/pull/153)
