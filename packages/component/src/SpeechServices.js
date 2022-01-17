@@ -31,9 +31,9 @@ export {
   fetchAuthorizationToken
 }
 
-const meta = document.createElement('meta');
+//const meta = document.createElement('meta');
 
-meta.setAttribute('name', 'web-speech-cognitive-services');
-meta.setAttribute('content', `version=${ process.env.npm_package_version }`);
+//meta.setAttribute('name', 'web-speech-cognitive-services');
+//meta.setAttribute('content', `version=${ process.env.npm_package_version }`);
 
-document.head.appendChild(meta);
+//document.head.appendChild(meta);
