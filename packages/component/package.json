@@ -60,7 +60,7 @@
     "jest": "^27.0.6",
     "lolex": "^6.0.0",
     "microsoft-cognitiveservices-speech-sdk": "^1.17.0",
-    "node-fetch": "^2.6.1",
+    "node-fetch": "^3.1.1",
     "prettier": "^2.3.2",
     "rimraf": "^3.0.2"
   },
