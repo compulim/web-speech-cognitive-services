@@ -1,4 +1,4 @@
-import { css } from 'glamor';
+import { injectGlobal } from '@emotion/css';
 import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames';
 import React, { useCallback } from 'react';
@@ -14,7 +14,9 @@ import SpeechSynthesisProvingGround from './SpeechSynthesisProvingGround';
 import setNavPane from './data/actions/setNavPane';
 
 // Patching Bootstrap
-css.global('button.nav-link', { backgroundColor: 'Transparent' });
+injectGlobal({
+  'button.nav-link': { backgroundColor: 'Transparent' }
+});
 
 const App = () => {
   const { authorizationToken, navPane, ponyfill, ponyfillType } = useSelector(

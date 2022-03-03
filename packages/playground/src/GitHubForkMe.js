@@ -1,4 +1,4 @@
-import { css } from 'glamor';
+import { css } from '@emotion/css';
 import React from 'react';
 
 const FORK_ME_CSS = css({

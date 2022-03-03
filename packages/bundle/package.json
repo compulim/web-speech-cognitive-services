@@ -13,26 +13,27 @@
     "eslint": "eslint src/**/*.js",
     "prepublishOnly": "npm run eslint && npm run build",
     "start": "npm run build && concurrently --kill-others --names \"babel,webpack\" \"npm run start:babel\" \"npm run start:webpack\"",
-    "start:babel": "npm run build:babel -- --skip-initial-build --watch",
-    "start:webpack": "webpack --config webpack-watch.config.js --watch"
+    "start:babel": "npm run build:babel -- --watch",
+    "start:webpack": "webpack --config webpack-watch.config.js --watch",
+    "update": "npm install $(cat package.json | jq -r '.dependencies + .devDependencies | keys | .[]' | awk '{print $1 \"@latest\"}')"
   },
   "dependencies": {
-    "@babel/runtime": "7.14.6",
+    "@babel/runtime": "^7.17.2",
+    "@babel/runtime-corejs3": "^7.17.2",
     "web-speech-cognitive-services": "^0.0.0-0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.14.5",
-    "@babel/core": "^7.14.6",
-    "@babel/plugin-proposal-object-rest-spread": "^7.14.7",
-    "@babel/plugin-transform-runtime": "^7.14.5",
-    "@babel/preset-env": "^7.14.7",
-    "@babel/preset-react": "^7.14.5",
-    "concurrently": "^6.2.0",
-    "eslint": "^7.30.0",
+    "@babel/cli": "^7.17.6",
+    "@babel/core": "^7.17.5",
+    "@babel/plugin-proposal-object-rest-spread": "^7.17.3",
+    "@babel/plugin-transform-runtime": "^7.17.0",
+    "@babel/preset-env": "^7.16.11",
+    "concurrently": "^7.0.0",
+    "eslint": "^8.10.0",
     "microsoft-cognitiveservices-speech-sdk": "^1.17.0",
     "rimraf": "^3.0.2",
-    "webpack": "^5.44.0",
-    "webpack-cli": "^4.7.2",
+    "webpack": "^5.69.1",
+    "webpack-cli": "^4.9.2",
     "webpack-stats-plugin": "^1.0.3"
   }
 }

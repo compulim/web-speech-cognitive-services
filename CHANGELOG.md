@@ -6,6 +6,40 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Changed
+
+- Playground, moved from [`glamor`](https://npmjs.com/package/glamor) to [`@emotion/css@11.7.1`](https://npmjs.com/package/@emotion/css)
+- Bumped dependencies, by [@compulim](https://github.com/compulim), in PR [#XXX](https://github.com/compulim/web-speech-cognitive-services/pull/XXX)
+   - Production dependencies
+      - [`@babel/runtime-corejs3@7.17.2`](https://npmjs.com/package/@babel/runtime-corejs3)
+      - [`@babel/runtime@7.17.2`](https://npmjs.com/package/@babel/runtime)
+      - [`base64-arraybuffer@1.0.2`](https://npmjs.com/package/base64-arraybuffer)
+      - [`event-as-promise@1.0.5`](https://npmjs.com/package/event-as-promise)
+      - [`event-target-shim@6.0.2`](https://npmjs.com/package/event-target-shim)
+      - [`memoize-one@6.0.0`](https://npmjs.com/package/memoize-one)
+      - [`on-error-resume-next@1.1.0`](https://npmjs.com/package/on-error-resume-next)
+      - [`p-defer-es5@2.0.1`](https://npmjs.com/package/p-defer-es5)
+      - [`p-defer@4.0.0`](https://npmjs.com/package/p-defer)
+      - [`simple-update-in@2.2.0`](https://npmjs.com/package/simple-update-in)
+   - Development dependencies
+      - [`@babel/cli@7.17.6`](https://npmjs.com/package/@babel/cli)
+      - [`@babel/core@7.17.5`](https://npmjs.com/package/@babel/core)
+      - [`@babel/plugin-proposal-object-rest-spread@7.17.3`](https://npmjs.com/package/@babel/plugin-proposal-object-rest-spread)
+      - [`@babel/plugin-transform-runtime@7.17.0`](https://npmjs.com/package/@babel/plugin-transform-runtime)
+      - [`@babel/preset-env@7.16.11`](https://npmjs.com/package/@babel/preset-env)
+      - [`@babel/preset-react@7.16.7`](https://npmjs.com/package/@babel/preset-react)
+      - [`babel-jest@27.5.1`](https://npmjs.com/package/babel-jest)
+      - [`concurrently@7.0.0`](https://npmjs.com/package/concurrently)
+      - [`dotenv@16.0.0`](https://npmjs.com/package/dotenv)
+      - [`eslint@8.10.0`](https://npmjs.com/package/eslint)
+      - [`global-agent@3.0.0`](https://npmjs.com/package/global-agent)
+      - [`jest@27.5.1`](https://npmjs.com/package/jest)
+      - [`node-fetch@3.2.1`](https://npmjs.com/package/node-fetch)
+      - [`prettier@2.5.1`](https://npmjs.com/package/prettier)
+      - [`react-scripts@5.0.0`](https://npmjs.com/package/react-scripts)
+      - [`webpack-cli@4.9.2`](https://npmjs.com/package/webpack-cli)
+      - [`webpack@5.69.1`](https://npmjs.com/package/webpack)
+
 ## [7.1.1] - 2021-07-20
 
 ### Changed

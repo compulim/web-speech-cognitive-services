@@ -1,7 +1,12 @@
 module.exports = {
   plugins: [
-    '@babel/plugin-proposal-object-rest-spread',
-    '@babel/plugin-transform-runtime',
+    [
+      '@babel/plugin-transform-runtime',
+      {
+        corejs: 3,
+        version: '7.17.2'
+      }
+    ],
     [
       'babel-plugin-transform-inline-environment-variables',
       {
