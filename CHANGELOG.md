@@ -38,7 +38,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
       - [`jest@27.5.1`](https://npmjs.com/package/jest)
       - [`node-fetch@3.2.1`](https://npmjs.com/package/node-fetch)
       - [`prettier@2.5.1`](https://npmjs.com/package/prettier)
+      - [`react-redux@7.2.6`](https://npmjs.com/package/react-redux)
+      - [`react-say@2.1.0`](https://npmjs.com/package/react-say)
       - [`react-scripts@5.0.0`](https://npmjs.com/package/react-scripts)
+      - [`redux@4.1.2`](https://npmjs.com/package/redux)
       - [`webpack-cli@4.9.2`](https://npmjs.com/package/webpack-cli)
       - [`webpack@5.69.1`](https://npmjs.com/package/webpack)
 
