@@ -8,8 +8,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 
-- Playground, moved from [`glamor`](https://npmjs.com/package/glamor) to [`@emotion/css@11.7.1`](https://npmjs.com/package/@emotion/css)
-- Bumped dependencies, by [@compulim](https://github.com/compulim), in PR [#XXX](https://github.com/compulim/web-speech-cognitive-services/pull/XXX)
+- Babel runtime now using `@babel/runtime-corejs3` to reduce final bundle size, by [@compulim](https://github.com/compulim), in PR [#182](https://github.com/compulim/web-speech-cognitive-services/pull/182)
+- Playground, moved from [`glamor`](https://npmjs.com/package/glamor) to [`@emotion/css@11.7.1`](https://npmjs.com/package/@emotion/css), by [@compulim](https://github.com/compulim), in PR [#182](https://github.com/compulim/web-speech-cognitive-services/pull/182)
+- Bumped dependencies, by [@compulim](https://github.com/compulim), in PR [#182](https://github.com/compulim/web-speech-cognitive-services/pull/182)
    - Production dependencies
       - [`@babel/runtime-corejs3@7.17.2`](https://npmjs.com/package/@babel/runtime-corejs3)
       - [`@babel/runtime@7.17.2`](https://npmjs.com/package/@babel/runtime)
