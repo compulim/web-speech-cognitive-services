@@ -6,6 +6,44 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Changed
+
+- Bumped dependencies, in PR [#196](https://github.com/compulim/web-speech-cognitive-services/pull/196)
+   -  Production dependencies
+      -  [`@babel/runtime@7.19.0`](https://npmjs.com/package/@babel/runtime)
+      -  [`base64-arraybuffer@1.0.2`](https://npmjs.com/package/base64-arraybuffer)
+      -  [`memoize-one@6.0.0`](https://npmjs.com/package/memoize-one)
+      -  [`p-defer-es5@2.0.1`](https://npmjs.com/package/p-defer-es5)
+   -  Development dependencies
+      -  [`@babel/cli@7.18.10`](https://npmjs.com/package/@babel/cli)
+      -  [`@babel/core@7.19.1`](https://npmjs.com/package/@babel/core)
+      -  [`@babel/plugin-proposal-object-rest-spread@7.18.9`](https://npmjs.com/package/@babel/plugin-proposal-object-rest-spread)
+      -  [`@babel/plugin-transform-runtime@7.19.1`](https://npmjs.com/package/@babel/plugin-transform-runtime)
+      -  [`@babel/preset-env@7.19.1`](https://npmjs.com/package/@babel/preset-env)
+      -  [`@babel/preset-react@7.18.6`](https://npmjs.com/package/@babel/preset-react)
+      -  [`babel-jest@29.0.3`](https://npmjs.com/package/babel-jest)
+      -  [`babel-plugin-transform-inline-environment-variables@0.4.4`](https://npmjs.com/package/babel-plugin-transform-inline-environment-variables)
+      -  [`classnames@2.3.2`](https://npmjs.com/package/classnames)
+      -  [`concurrently@7.4.0`](https://npmjs.com/package/concurrently)
+      -  [`dotenv@16.0.2`](https://npmjs.com/package/dotenv)
+      -  [`eslint@8.24.0`](https://npmjs.com/package/eslint)
+      -  [`global-agent@3.0.0`](https://npmjs.com/package/global-agent)
+      -  [`jest@29.0.3`](https://npmjs.com/package/jest)
+      -  [`microsoft-cognitiveservices-speech-sdk@1.23.0`](https://npmjs.com/package/microsoft-cognitiveservices-speech-sdk)
+      -  [`node-fetch@2.6.7`](https://npmjs.com/package/node-fetch)
+      -  [`p-defer-es5@2.0.1`](https://npmjs.com/package/p-defer-es5)
+      -  [`prettier@2.7.1`](https://npmjs.com/package/prettier)
+      -  [`react-dom@18.2.0`](https://npmjs.com/package/react-dom)
+      -  [`react-redux@8.0.4`](https://npmjs.com/package/react-redux)
+      -  [`react-say@2.1.0`](https://npmjs.com/package/react-say)
+      -  [`react-scripts@5.0.1`](https://npmjs.com/package/react-scripts)
+      -  [`react@18.2.0`](https://npmjs.com/package/react)
+      -  [`redux-saga@1.2.1`](https://npmjs.com/package/redux-saga)
+      -  [`redux@4.2.0`](https://npmjs.com/package/redux)
+      -  [`webpack-cli@4.10.0`](https://npmjs.com/package/webpack-cli)
+      -  [`webpack-stats-plugin@1.1.0`](https://npmjs.com/package/webpack-stats-plugin)
+      -  [`webpack@5.74.0`](https://npmjs.com/package/webpack)
+
 ## [7.1.1] - 2021-07-20
 
 ### Changed
