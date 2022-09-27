@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 
-- Bumped dependencies, in PR [#XXX](https://github.com/compulim/web-speech-cognitive-services/pull/XXX)
+- Bumped dependencies, in PR [#196](https://github.com/compulim/web-speech-cognitive-services/pull/196)
    -  Production dependencies
       -  [`@babel/runtime@7.19.0`](https://npmjs.com/package/@babel/runtime)
       -  [`base64-arraybuffer@1.0.2`](https://npmjs.com/package/base64-arraybuffer)
