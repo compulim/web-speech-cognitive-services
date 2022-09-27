@@ -61,6 +61,14 @@ describe.each(testTableForAuthentication)(
         await promise;
       });
 
+      // `result` sometimes return confidence of 0.9 or 1.
+      // It weirdly depends on whether subscription key or authorization token is being used.
+      expect(events[7][0]).toEqual('result');
+
+      if (events[7][1].results[0][0].confidence === 0.9) {
+        events[7][1].results[0][0].confidence = 1;
+      }
+
       expect(events).toEqual([
         'start',
         'audiostart',
