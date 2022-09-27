@@ -64,6 +64,7 @@
     "eslint": "^8.24.0",
     "global-agent": "^3.0.0",
     "jest": "^29.0.3",
+    "jest-environment-jsdom": "^29.0.3",
     "lolex": "^6.0.0",
     "microsoft-cognitiveservices-speech-sdk": "^1.23.0",
     "node-fetch": "^2.6.7",

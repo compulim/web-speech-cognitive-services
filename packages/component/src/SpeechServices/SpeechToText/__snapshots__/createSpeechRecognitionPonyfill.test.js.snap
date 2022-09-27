@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`SpeechRecognition in continuous mode abort after recognized 1`] = `
-Array [
+[
   "cognitiveservices:audioSourceReady",
   "webspeech:start",
   "webspeech:audiostart",
@@ -21,7 +21,7 @@ Array [
 `;
 
 exports[`SpeechRecognition in continuous mode abort after recognizing 1`] = `
-Array [
+[
   "cognitiveservices:audioSourceReady",
   "webspeech:start",
   "webspeech:audiostart",
@@ -41,7 +41,7 @@ Array [
 `;
 
 exports[`SpeechRecognition in continuous mode stop after recognized 1 speech and 1 ongoing 1`] = `
-Array [
+[
   "cognitiveservices:audioSourceReady",
   "webspeech:start",
   "webspeech:audiostart",
@@ -64,7 +64,7 @@ Array [
 `;
 
 exports[`SpeechRecognition in continuous mode stop after recognizing 1`] = `
-Array [
+[
   "cognitiveservices:audioSourceReady",
   "webspeech:start",
   "webspeech:audiostart",
@@ -83,7 +83,7 @@ Array [
 `;
 
 exports[`SpeechRecognition in continuous mode with unrecognizable sound should throw error 1`] = `
-Array [
+[
   "cognitiveservices:audioSourceReady",
   "webspeech:start",
   "webspeech:audiostart",
@@ -102,7 +102,7 @@ Array [
 `;
 
 exports[`SpeechRecognition in interactive mode abort after audiostart 1`] = `
-Array [
+[
   "cognitiveservices:audioSourceReady",
   "webspeech:start",
   "webspeech:audiostart",
@@ -115,7 +115,7 @@ Array [
 `;
 
 exports[`SpeechRecognition in interactive mode abort after recognizing 1`] = `
-Array [
+[
   "cognitiveservices:audioSourceReady",
   "webspeech:start",
   "webspeech:audiostart",
@@ -134,7 +134,7 @@ Array [
 `;
 
 exports[`SpeechRecognition in interactive mode abort after soundstart 1`] = `
-Array [
+[
   "cognitiveservices:audioSourceReady",
   "webspeech:start",
   "webspeech:audiostart",
@@ -150,7 +150,7 @@ Array [
 `;
 
 exports[`SpeechRecognition in interactive mode abort after start 1`] = `
-Array [
+[
   "cognitiveservices:abort",
   "webspeech:start",
   "webspeech:error { error: 'aborted' }",
@@ -159,7 +159,7 @@ Array [
 `;
 
 exports[`SpeechRecognition in interactive mode stop after audiostart 1`] = `
-Array [
+[
   "cognitiveservices:audioSourceReady",
   "webspeech:start",
   "webspeech:audiostart",
@@ -171,7 +171,7 @@ Array [
 `;
 
 exports[`SpeechRecognition in interactive mode stop after recognizing 1`] = `
-Array [
+[
   "cognitiveservices:audioSourceReady",
   "webspeech:start",
   "webspeech:audiostart",
@@ -190,7 +190,7 @@ Array [
 `;
 
 exports[`SpeechRecognition in interactive mode stop after soundstart 1`] = `
-Array [
+[
   "cognitiveservices:audioSourceReady",
   "webspeech:start",
   "webspeech:audiostart",
@@ -205,7 +205,7 @@ Array [
 `;
 
 exports[`SpeechRecognition in interactive mode stop after start 1`] = `
-Array [
+[
   "cognitiveservices:stop",
   "webspeech:start",
   "webspeech:end",
@@ -213,7 +213,7 @@ Array [
 `;
 
 exports[`SpeechRecognition in interactive mode with interims 1`] = `
-Array [
+[
   "cognitiveservices:audioSourceReady",
   "webspeech:start",
   "webspeech:audiostart",
@@ -235,7 +235,7 @@ Array [
 `;
 
 exports[`SpeechRecognition in interactive mode with muted microphone 1`] = `
-Array [
+[
   "cognitiveservices:audioSourceReady",
   "webspeech:start",
   "webspeech:audiostart",
@@ -248,7 +248,7 @@ Array [
 `;
 
 exports[`SpeechRecognition in interactive mode with unrecognizable sound should throw error 1`] = `
-Array [
+[
   "cognitiveservices:audioSourceReady",
   "webspeech:start",
   "webspeech:audiostart",
@@ -267,7 +267,7 @@ Array [
 `;
 
 exports[`SpeechRecognition in interactive mode without interims 1`] = `
-Array [
+[
   "cognitiveservices:audioSourceReady",
   "webspeech:start",
   "webspeech:audiostart",
@@ -286,7 +286,7 @@ Array [
 `;
 
 exports[`SpeechRecognition with microphone blocked 1`] = `
-Array [
+[
   "cognitiveservices:canceled",
   "webspeech:error { error: 'not-allowed' }",
   "webspeech:end",
@@ -294,7 +294,7 @@ Array [
 `;
 
 exports[`SpeechRecognition with network error 1`] = `
-Array [
+[
   "cognitiveservices:audioSourceReady",
   "webspeech:start",
   "webspeech:audiostart",
@@ -306,7 +306,7 @@ Array [
 `;
 
 exports[`SpeechRecognition with text normalization of ITN should result in ITN 1`] = `
-Array [
+[
   "cognitiveservices:audioSourceReady",
   "webspeech:start",
   "webspeech:audiostart",
@@ -324,7 +324,7 @@ Array [
 `;
 
 exports[`SpeechRecognition with text normalization of lexical should result in lexical 1`] = `
-Array [
+[
   "cognitiveservices:audioSourceReady",
   "webspeech:start",
   "webspeech:audiostart",
@@ -342,7 +342,7 @@ Array [
 `;
 
 exports[`SpeechRecognition with text normalization of masked ITN should result in masked ITN 1`] = `
-Array [
+[
   "cognitiveservices:audioSourceReady",
   "webspeech:start",
   "webspeech:audiostart",

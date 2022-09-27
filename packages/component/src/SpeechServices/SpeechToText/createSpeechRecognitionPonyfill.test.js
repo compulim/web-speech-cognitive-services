@@ -796,7 +796,7 @@ describe('SpeechRecognition', () => {
       await endEventEmitted;
 
       expect(toSnapshot(events)).toMatchInlineSnapshot(`
-        Array [
+        [
           "cognitiveservices:audioSourceReady",
           "webspeech:start",
           "webspeech:audiostart",
@@ -1505,7 +1505,7 @@ describe('SpeechRecognition with loosened events', () => {
       await endEventEmitted;
 
       expect(toSnapshot(events)).toMatchInlineSnapshot(`
-        Array [
+        [
           "cognitiveservices:audioSourceReady",
           "webspeech:start",
           "webspeech:audiostart",
@@ -1574,7 +1574,7 @@ describe('SpeechRecognition with loosened events', () => {
       await endEventEmitted;
 
       expect(toSnapshot(events)).toMatchInlineSnapshot(`
-        Array [
+        [
           "cognitiveservices:audioSourceReady",
           "webspeech:start",
           "webspeech:audiostart",
@@ -1640,7 +1640,7 @@ describe('SpeechRecognition with loosened events', () => {
       await errorEventEmitted;
 
       expect(toSnapshot(events)).toMatchInlineSnapshot(`
-        Array [
+        [
           "cognitiveservices:audioSourceReady",
           "webspeech:start",
           "webspeech:audiostart",
@@ -1696,7 +1696,7 @@ describe('SpeechRecognition with loosened events', () => {
       await endEventEmitted;
 
       expect(toSnapshot(events)).toMatchInlineSnapshot(`
-        Array [
+        [
           "cognitiveservices:audioSourceReady",
           "webspeech:start",
           "webspeech:audiostart",
@@ -1762,7 +1762,7 @@ describe('SpeechRecognition with loosened events', () => {
       await endEventEmitted;
 
       expect(toSnapshot(events)).toMatchInlineSnapshot(`
-        Array [
+        [
           "cognitiveservices:audioSourceReady",
           "webspeech:start",
           "webspeech:audiostart",
@@ -1837,7 +1837,7 @@ describe('SpeechRecognition with loosened events', () => {
       await endEventEmitted;
 
       expect(toSnapshot(events)).toMatchInlineSnapshot(`
-        Array [
+        [
           "cognitiveservices:audioSourceReady",
           "webspeech:start",
           "webspeech:audiostart",
@@ -1906,7 +1906,7 @@ describe('SpeechRecognition with loosened events', () => {
       await endEventEmitted;
 
       expect(toSnapshot(events)).toMatchInlineSnapshot(`
-        Array [
+        [
           "cognitiveservices:audioSourceReady",
           "webspeech:start",
           "webspeech:audiostart",
