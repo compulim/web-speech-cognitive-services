@@ -13,6 +13,6 @@
     "test": "lerna run --ignore=playground --stream test"
   },
   "devDependencies": {
-    "lerna": "^4.0.0"
+    "lerna": "^5.5.2"
   }
 }
