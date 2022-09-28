@@ -1,10 +1,10 @@
 {
   "files": {
-    "main.js": "/web-speech-cognitive-services/static/js/main.269a85fa.js",
+    "main.js": "/web-speech-cognitive-services/static/js/main.05290a6c.js",
     "index.html": "/web-speech-cognitive-services/index.html",
-    "main.269a85fa.js.map": "/web-speech-cognitive-services/static/js/main.269a85fa.js.map"
+    "main.05290a6c.js.map": "/web-speech-cognitive-services/static/js/main.05290a6c.js.map"
   },
   "entrypoints": [
-    "static/js/main.269a85fa.js"
+    "static/js/main.05290a6c.js"
   ]
 }
