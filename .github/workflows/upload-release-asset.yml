@@ -1,0 +1,22 @@
+name: Upload release asset
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Version
+        required: true
+        type: string
+
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download tarball
+        run: curl -LO `npm view --json web-speech-cognitive-services@${{ inputs.version }} | jq -r .dist.tarball`
+
+      - name: Upload
+        uses: softprops/action-gh-release@v1
+        with:
+          files: web-speech-cognitive-services-${{ inputs.version }}.tgz
+          tag_name: v${{ inputs.version }}
