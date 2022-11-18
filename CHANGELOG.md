@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 
-- Bumped dependencies, in PR [#XXX](https://github.com/compulim/web-speech-cognitive-services/pull/XXX)
+- Bumped dependencies, in PR [#200](https://github.com/compulim/web-speech-cognitive-services/pull/200)
    -  Development dependencies
       -  [`microsoft-cognitiveservices-speech-sdk@1.17.0`](https://npmjs.com/package/microsoft-cognitiveservices-speech-sdk)
 
