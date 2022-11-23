@@ -92,7 +92,7 @@ jobs:
         uses: actions/upload-pages-artifact@v1
         if: ${{ matrix.node-version == '14.x' }}
         with:
-          path: 'packages/playground/build/**/*'
+          path: 'packages/playground/build/'
 
   test-package:
     needs: build
