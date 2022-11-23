@@ -1,0 +1,17 @@
+{
+  "name": "integration-test",
+  "version": "0.0.0-0",
+  "private": true,
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "William Wong (https://github.com/compulim)",
+  "license": "MIT",
+  "devDependencies": {
+    "jest": "^29.3.1",
+    "jest-environment-jsdom": "^29.3.1"
+  },
+  "dependencies": {
+    "microsoft-cognitiveservices-speech-sdk": "1.17.0"
+  }
+}

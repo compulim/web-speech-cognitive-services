@@ -1,4 +1,4 @@
 /.env
 /*.tgz
-/lib
+/dist
 /node_modules
