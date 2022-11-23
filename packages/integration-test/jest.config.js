@@ -1,3 +1,3 @@
 module.exports = {
-  transformIgnorePatterns: ['<rootDir>/node_modules/(?!(uuid)/)']
+  transformIgnorePatterns: ['/(?!(uuid)/)']
 };
