@@ -142,7 +142,7 @@ jobs:
           corepack enable
           corepack prepare yarn@stable --activate
           yarn install
-          yarn add `ls web-speech-cognitive-services-*.tgz`
+          yarn add ./`ls web-speech-cognitive-services-*.tgz`
 
       - run: npm test
 
