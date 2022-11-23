@@ -7,4 +7,5 @@ const { default: createSpeechServicesPonyfill } = require('web-speech-cognitive-
 test('package is installed', () => {
   expect(createSpeechServicesPonyfill).not.toBeUndefined();
   expect(typeof createSpeechServicesPonyfill).toBe('function');
+  expect(createSpeechServicesPonyfill.name).toBe('createSpeechServicesPonyfill');
 });
