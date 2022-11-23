@@ -78,19 +78,21 @@ jobs:
           name: npm-tarball
           path: 'packages/component/*.tgz'
 
-      - name: Upload github-pages
-        uses: actions/upload-artifact@v2
-        if: ${{ matrix.node-version == '14.x' }}
-        with:
-          name: github-pages
-          path: 'packages/playground/build/**/*'
-
       - name: Upload integration-test
         uses: actions/upload-artifact@v2
         if: ${{ matrix.node-version == '14.x' }}
         with:
           name: integration-test
           path: 'packages/integration-test/**/*'
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v2
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v1
+        if: ${{ matrix.node-version == '14.x' }}
+        with:
+          path: 'packages/playground/build/'
 
   test-package:
     needs: build
