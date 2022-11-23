@@ -1,3 +1,3 @@
 module.exports = {
-  transformIgnorePatterns: ['/(?!(uuid)/)']
+  transformIgnorePatterns: ['/node_modules/(?!(uuid)/)', '\\.pnp\\.[^\\/]+$']
 };
