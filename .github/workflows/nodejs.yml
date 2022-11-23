@@ -88,8 +88,9 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v2
 
-      - name: Upload artifact
+      - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v1
+        if: ${{ matrix.node-version == '14.x' }}
         with:
           path: 'packages/playground/build/**/*'
 
