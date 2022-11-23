@@ -136,6 +136,8 @@ jobs:
 
       - name: yarn install
         if: ${{ matrix.pkg-manager == 'yarn' }}
+        env:
+          YARN_ENABLE_IMMUTABLE_INSTALLS: false
         run: |
           corepack enable
           corepack prepare yarn@stable --activate
