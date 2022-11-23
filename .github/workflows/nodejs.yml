@@ -85,6 +85,64 @@ jobs:
           name: gh-pages
           path: 'packages/playground/build/**/*'
 
+      - name: Upload integration-test
+        uses: actions/upload-artifact@v2
+        if: ${{ matrix.node-version == '14.x' }}
+        with:
+          name: integration-test
+          path: 'packages/integration-test/**/*'
+
+  test-package:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [16.x]
+        pkg-manager:
+          - npm
+          - pnpm
+          - yarn
+
+    steps:
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Download integration-test
+        uses: actions/download-artifact@v2
+        with:
+          name: integration-test
+
+      - name: Download npm-tarball
+        uses: actions/download-artifact@v2
+        with:
+          name: npm-tarball
+
+      - name: npm install
+        if: ${{ matrix.pkg-manager == 'npm' }}
+        run: |
+          npm ci
+          npm install `ls web-speech-cognitive-services-*.tgz`
+
+      - name: pnpm install
+        if: ${{ matrix.pkg-manager == 'pnpm' }}
+        run: |
+          corepack enable
+          corepack prepare pnpm@latest --activate
+          pnpm install
+          pnpm add `ls web-speech-cognitive-services-*.tgz`
+
+      - name: yarn install
+        if: ${{ matrix.pkg-manager == 'yarn' }}
+        run: |
+          corepack enable
+          corepack prepare yarn@stable --activate
+          yarn install --immutable
+          yarn install `ls web-speech-cognitive-services-*.tgz`
+
+      - run: npm test
+
   publish:
     needs: build
     runs-on: ubuntu-latest
