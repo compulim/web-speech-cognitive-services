@@ -93,6 +93,7 @@ jobs:
           path: 'packages/integration-test/**/*'
 
   test-package:
+    needs: build
     runs-on: ubuntu-latest
 
     strategy:
