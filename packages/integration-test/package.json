@@ -12,6 +12,6 @@
     "jest-environment-jsdom": "^29.3.1"
   },
   "dependencies": {
-    "microsoft-cognitiveservices-speech-sdk": "^1.17.0"
+    "microsoft-cognitiveservices-speech-sdk": "1.17.0"
   }
 }
