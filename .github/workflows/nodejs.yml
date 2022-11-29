@@ -200,7 +200,7 @@ jobs:
           asset_content_type: application/octet-stream
 
   deploy-pages:
-    if: ${{ startsWith(github.ref, 'refs/heads/') || startsWith(github.ref, 'refs/tags/') }}
+    if: ${{ startsWith(github.ref, 'refs/heads/') }}
     needs: build
 
     permissions:
