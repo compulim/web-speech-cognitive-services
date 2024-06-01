@@ -1,0 +1,114 @@
+name: Bug report
+description: Use this template to report a bug.
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        We run this project out of our spare time and may not monitor this repository every day. Our support capacity is very limited.
+
+        Developers in professional capacity will receive prioritized support.
+  - type: dropdown
+    attributes:
+      label: Version
+      description: |
+        Please verify the issue on latest versions. Support on non-latest version is minimal and on a per case basis.
+
+        If you are using latest production, please verify against our latest development version as the issue could have been resolved recently. To install latest development version, run `npm install message-port-rpc@main`.
+
+      multiple: true
+      options:
+        - Latest production (@latest)
+        - Latest development (@main)
+        - Not latest
+    validations:
+      required: true
+  - type: dropdown
+    attributes:
+      label: Module resolution
+      description: Please describe how you import our package.
+      multiple: true
+      options:
+        - 'ESM: import { createSpeechServicesPonyfill } from "web-speech-cognitive-services"'
+        - 'CommonJS: require("web-speech-cognitive-services")'
+        - Others or unrelated
+    validations:
+      required: true
+  - type: dropdown
+    attributes:
+      label: Bundler
+      description: For apps, please tell us what bundler is used to create your app bundle.
+      multiple: true
+      options:
+        - 'Webpack: Plain'
+        - 'Webpack: Complex'
+        - ESBuild
+        - 'create-react-app'
+        - Not an app
+        - Others or unrelated
+    validations:
+      required: true
+  - type: dropdown
+    attributes:
+      label: Environment
+      description: |
+        We support [Browserslist "defaults"](https://github.com/browserslist/browserslist#full-list) and [Internet Explorer mode](https://aka.ms/iemode). Support of other environments is minimal.
+
+        When using in a sandboxed environment (e.g. SharePoint, Salesforce, etc.), please verify the issue outside of the sandbox. If the issue is related to the sandbox, please file it to your sandbox vendor.
+      multiple: true
+      options:
+        - '> 0.5%, last 2 versions, Firefox ESR, not dead'
+        - Internet Explorer mode
+        - Server-side rendering
+        - Others or unrelated
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Test case
+      description: |
+        Please write a minimal test case which fail the scenario with comments in [BDD format (given/when/then)](https://www.thoughtworks.com/insights/blog/applying-bdd-acceptance-criteria-user-stories).
+
+        To protect from regressions, once the issue is resolved, your test case will be added to [our test suite](../tree/main/packages/integration-test/).
+
+        For your convenience, a basic test case is provided below. For advanced scenarios, please look at [our test suite](../tree/main/packages/integration-test/).
+
+        *Support will be slow or denied if a test case is not provided.*
+      render: js
+      value: |
+        import { beforeEach, describe, expect, jest, test } from '@jest/globals';
+
+        import messagePortRPC from './messagePortRPC';
+
+        describe('scenario name', () => {
+          let ponyfill;
+
+          // GIVEN: Stub to perform summation.
+          beforeEach(async () => {
+            ponyfill = createSpeechServicesPonyfill();
+          });
+
+          describe('when ...', () => {
+          });
+        });
+
+  - type: input
+    attributes:
+      label: Coding sandbox URL
+      description: |
+        If you have a minimal repro in a coding sandbox, please provide a URL here. Please prepare it from scratch. We cannot work directly on your app source code.
+      placeholder: 'https://'
+  - type: textarea
+    attributes:
+      label: Console errors
+      description: Please copy any related errors printed to the console here.
+      render: js
+  - type: textarea
+    attributes:
+      label: Screenshots
+      description: Please remove or obscure any personally identifiable information from your screenshots or recordings.
+  - type: textarea
+    attributes:
+      label: Additional context
+      description: If any of the answers is "others or unrelated", please explain it here.

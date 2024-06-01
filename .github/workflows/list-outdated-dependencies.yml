@@ -1,0 +1,10 @@
+name: List outdated dependencies
+
+on:
+  schedule:
+    - cron: '0 4 * * 1'
+  workflow_dispatch: {}
+
+jobs:
+  call-workflow:
+    uses: compulim/workflows/.github/workflows/list-outdated-dependencies.yml@main

@@ -1,0 +1,6 @@
+// This configuration file is for VSCode only.
+{
+  "compilerOptions": {
+    "jsx": "react"
+  }
+}

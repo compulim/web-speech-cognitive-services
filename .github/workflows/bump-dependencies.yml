@@ -1,0 +1,14 @@
+name: Bump dependencies
+
+on:
+  workflow_dispatch: {}
+
+jobs:
+  call-workflow:
+    permissions:
+      contents: write
+      id-token: write
+    secrets: inherit
+    uses: compulim/workflows/.github/workflows/bump-dependencies.yml@main
+    with:
+      package-name: web-speech-cognitive-services
