@@ -1,4 +1,4 @@
-import onErrorResumeNext from 'on-error-resume-next';
+import { onErrorResumeNext } from 'on-error-resume-next';
 import { applyMiddleware, createStore } from 'redux';
 import createSagaMiddleware from 'redux-saga';
 
