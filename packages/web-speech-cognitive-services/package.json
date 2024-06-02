@@ -91,8 +91,7 @@
     "p-defer": "^4.0.1",
     "prettier": "^3.3.0",
     "tsup": "^8.0.2",
-    "typescript": "^5.4.5",
-    "whatwg-fetch": "^3.6.20"
+    "typescript": "^5.4.5"
   },
   "dependencies": {
     "base64-arraybuffer": "^1.0.2",

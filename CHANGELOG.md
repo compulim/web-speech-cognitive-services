@@ -35,7 +35,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
       - [`redux-saga@1.3.0`](https://npmjs.com/package/redux-saga)
       - [`redux@5.0.1`](https://npmjs.com/package/redux)
       - [`typescript@5.4.5`](https://npmjs.com/package/typescript)
-      - [`whatwg-fetch@3.6.20`](https://npmjs.com/package/whatwg-fetch)
 
 ## [7.1.3] - 2022-11-29
 
