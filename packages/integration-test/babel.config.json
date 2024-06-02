@@ -1,0 +1,17 @@
+{
+  "presets": [
+    [
+      "@babel/preset-react",
+      {
+        "runtime": "classic"
+      }
+    ],
+    [
+      "@babel/preset-env",
+      {
+        "modules": "commonjs",
+        "targets": "defaults"
+      }
+    ]
+  ]
+}

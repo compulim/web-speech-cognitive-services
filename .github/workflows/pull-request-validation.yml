@@ -1,0 +1,17 @@
+name: Pull request validation
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch: {}
+
+jobs:
+  call-workflow:
+    strategy:
+      matrix:
+        switch: [current]
+    uses: compulim/workflows/.github/workflows/pull-request-validation.yml@main
+    with:
+      package-name: web-speech-cognitive-services
+      skip-integration-test: false
+      switch: ${{ matrix.switch }}

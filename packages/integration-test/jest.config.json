@@ -1,0 +1,38 @@
+{
+  "testMatch": ["**/__tests__/**/*.?([cm])[jt]s?(x)", "**/?(*.)+(spec|test).?([cm])[jt]s?(x)"],
+  "transform": {
+    "\\.cjsx?$": [
+      "babel-jest",
+      {
+        "presets": [
+          [
+            "@babel/preset-react",
+            {
+              "runtime": "classic"
+            }
+          ]
+        ]
+      }
+    ],
+    "\\.mjsx?$": [
+      "babel-jest",
+      {
+        "presets": [
+          [
+            "@babel/preset-react",
+            {
+              "runtime": "classic"
+            }
+          ],
+          [
+            "@babel/preset-env",
+            {
+              "modules": "commonjs",
+              "targets": "defaults"
+            }
+          ]
+        ]
+      }
+    ]
+  }
+}

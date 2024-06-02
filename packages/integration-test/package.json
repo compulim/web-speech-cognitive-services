@@ -1,17 +1,31 @@
 {
-  "name": "integration-test",
+  "name": "web-speech-cognitive-services-integration-test",
   "version": "0.0.0-0",
+  "description": "",
   "private": true,
   "scripts": {
+    "bump": "npm run bump:prod && npm run bump:dev && npm run bump:auditfix",
+    "bump:auditfix": "npm audit fix || exit 0",
+    "bump:dev": "PACKAGES_TO_BUMP=$(cat package.json | jq -r '(.pinDependencies // {}) as $P | (.localPeerDependencies // {}) as $L | (.devDependencies // {}) | to_entries | map(select(.key as $K | $L | has($K) | not)) | map(.key + \"@\" + ($P[.key] // [\"latest\"])[0]) | join(\" \")') && [ ! -z \"$PACKAGES_TO_BUMP\" ] && npm install $PACKAGES_TO_BUMP || true",
+    "bump:prod": "PACKAGES_TO_BUMP=$(cat package.json | jq -r '(.pinDependencies // {}) as $P | (.localPeerDependencies // {}) as $L | (.dependencies // {}) | to_entries | map(select(.key as $K | $L | has($K) | not)) | map(.key + \"@\" + ($P[.key] // [\"latest\"])[0]) | join(\" \")') && [ ! -z \"$PACKAGES_TO_BUMP\" ] && npm install $PACKAGES_TO_BUMP || true",
+    "precommit": "eslint --ext .js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts ./",
+    "switch": "cat package.json | jq --arg SWITCH_NAME $SWITCH_NAME -r '(.[\"switch:\" + $SWITCH_NAME] // {}) as $TEMPLATE | .devDependencies += ($TEMPLATE.devDependencies // {}) | .dependencies += ($TEMPLATE.dependencies // {})' | tee ./package.json.tmp && mv ./package.json.tmp ./package.json",
     "test": "jest"
   },
   "author": "William Wong (https://github.com/compulim)",
   "license": "MIT",
+  "localPeerDependencies": {
+    "web-speech-cognitive-services": "^0.0.0-0"
+  },
   "devDependencies": {
-    "jest": "^29.3.1",
-    "jest-environment-jsdom": "^29.3.1"
+    "@babel/preset-env": "^7.24.6",
+    "@babel/preset-react": "^7.24.6",
+    "@types/jest": "^29.5.12",
+    "@types/node": "^20.12.13",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.0.3"
   },
   "dependencies": {
-    "microsoft-cognitiveservices-speech-sdk": "1.17.0"
+    "web-speech-cognitive-services": "^0.0.0-0"
   }
 }

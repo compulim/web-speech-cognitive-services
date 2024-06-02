@@ -1,0 +1,101 @@
+{
+  "name": "web-speech-cognitive-services",
+  "version": "0.0.0-0",
+  "description": "Polyfill Web Speech API with Cognitive Services Speech-to-Text service",
+  "files": [
+    "./dist/**/*"
+  ],
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/web-speech-cognitive-services.d.mts",
+        "default": "./dist/web-speech-cognitive-services.mjs"
+      },
+      "require": {
+        "types": "./dist/web-speech-cognitive-services.d.ts",
+        "default": "./dist/web-speech-cognitive-services.js"
+      }
+    }
+  },
+  "main": "./dist/web-speech-cognitive-services.js",
+  "typings": "./dist/web-speech-cognitive-services.d.ts",
+  "scripts": {
+    "build": "tsup",
+    "bump": "npm run bump:prod && npm run bump:dev && npm run bump:auditfix",
+    "bump:auditfix": "npm audit fix || exit 0",
+    "bump:dev": "PACKAGES_TO_BUMP=$(cat package.json | jq -r '(.pinDependencies // {}) as $P | (.localPeerDependencies // {}) as $L | (.devDependencies // {}) | to_entries | map(select(.key as $K | $L | has($K) | not)) | map(.key + \"@\" + ($P[.key] // [\"latest\"])[0]) | join(\" \")') && [ ! -z \"$PACKAGES_TO_BUMP\" ] && npm install $PACKAGES_TO_BUMP || true",
+    "bump:prod": "PACKAGES_TO_BUMP=$(cat package.json | jq -r '(.pinDependencies // {}) as $P | (.localPeerDependencies // {}) as $L | (.dependencies // {}) | to_entries | map(select(.key as $K | $L | has($K) | not)) | map(.key + \"@\" + ($P[.key] // [\"latest\"])[0]) | join(\" \")') && [ ! -z \"$PACKAGES_TO_BUMP\" ] && npm install $PACKAGES_TO_BUMP || true",
+    "precommit": "npm run precommit:eslint && npm run precommit:typescript:production && npm run precommit:typescript:test",
+    "precommit:eslint": "eslint ./src/",
+    "precommit:typescript:production": "tsc --noEmit --project ./src/tsconfig.precommit.production.json",
+    "precommit:typescript:test": "tsc --noEmit --project ./src/tsconfig.precommit.test.json",
+    "prepack": "cp ../../CHANGELOG.md . && cp ../../LICENSE . && cp ../../README.md .",
+    "switch": "cat package.json | jq --arg SWITCH_NAME $SWITCH_NAME -r '(.[\"switch:\" + $SWITCH_NAME] // {}) as $TEMPLATE | .devDependencies += ($TEMPLATE.devDependencies // {}) | .dependencies += ($TEMPLATE.dependencies // {})' | tee ./package.json.tmp && mv ./package.json.tmp ./package.json",
+    "start": "npm run build -- --watch",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/compulim/web-speech-cognitive-services.git"
+  },
+  "keywords": [
+    "cognitive services",
+    "dictation",
+    "microphone",
+    "polyfill",
+    "react",
+    "speak",
+    "speech recognition",
+    "speech synthesis",
+    "speech to text",
+    "speechsynthesis",
+    "stt",
+    "text to speech",
+    "tts",
+    "unified speech",
+    "utterance",
+    "voice recognition",
+    "web speech",
+    "webrtc",
+    "webspeech"
+  ],
+  "author": "William Wong <compulim@hotmail.com> (http://compulim.info/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/compulim/web-speech-cognitive-services/issues"
+  },
+  "homepage": "https://github.com/compulim/web-speech-cognitive-services#readme",
+  "devDependencies": {
+    "@babel/preset-env": "^7.24.6",
+    "@babel/preset-typescript": "^7.24.6",
+    "@jest/globals": "^29.7.0",
+    "@tsconfig/recommended": "^1.0.6",
+    "@tsconfig/strictest": "^2.0.5",
+    "@types/dom-speech-recognition": "^0.0.4",
+    "@types/jest": "^29.5.12",
+    "@types/node": "^20.12.13",
+    "dotenv": "^16.0.2",
+    "esbuild": "^0.21.4",
+    "global-agent": "^3.0.0",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.0.3",
+    "lolex": "^6.0.0",
+    "microsoft-cognitiveservices-speech-sdk": "^1.17.0",
+    "node-fetch": "^2.6.7",
+    "p-defer": "^4.0.1",
+    "prettier": "^3.2.5",
+    "tsup": "^8.0.2",
+    "typescript": "^5.4.5"
+  },
+  "dependencies": {
+    "base64-arraybuffer": "1.0.2",
+    "event-as-promise": "1.0.5",
+    "event-target-shim": "6.0.2",
+    "memoize-one": "6.0.0",
+    "on-error-resume-next": "^1.1.0",
+    "simple-update-in": "2.2.0"
+  },
+  "peerDependencies": {
+    "microsoft-cognitiveservices-speech-sdk": "^1.17.0"
+  }
+}

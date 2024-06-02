@@ -1,0 +1,12 @@
+name: Prepare release
+
+on:
+  workflow_dispatch: {}
+
+jobs:
+  call-workflow:
+    permissions:
+      contents: write
+      id-token: write
+    secrets: inherit
+    uses: compulim/workflows/.github/workflows/prepare-release.yml@main

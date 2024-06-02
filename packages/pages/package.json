@@ -1,0 +1,45 @@
+{
+  "name": "web-speech-cognitive-services-pages",
+  "version": "0.0.0-0",
+  "description": "",
+  "private": true,
+  "scripts": {
+    "build": "esbuild --bundle --entry-names=[name]/[ext]/main --jsx=automatic --minify --outdir=./public/static/ --sourcemap app=./src/app/index.jsx",
+    "bump": "npm run bump:prod && npm run bump:dev && npm run bump:auditfix",
+    "bump:auditfix": "npm audit fix || exit 0",
+    "bump:dev": "PACKAGES_TO_BUMP=$(cat package.json | jq -r '(.pinDependencies // {}) as $P | (.localPeerDependencies // {}) as $L | (.devDependencies // {}) | to_entries | map(select(.key as $K | $L | has($K) | not)) | map(.key + \"@\" + ($P[.key] // [\"latest\"])[0]) | join(\" \")') && [ ! -z \"$PACKAGES_TO_BUMP\" ] && npm install $PACKAGES_TO_BUMP || true",
+    "bump:prod": "PACKAGES_TO_BUMP=$(cat package.json | jq -r '(.pinDependencies // {}) as $P | (.localPeerDependencies // {}) as $L | (.dependencies // {}) | to_entries | map(select(.key as $K | $L | has($K) | not)) | map(.key + \"@\" + ($P[.key] // [\"latest\"])[0]) | join(\" \")') && [ ! -z \"$PACKAGES_TO_BUMP\" ] && npm install $PACKAGES_TO_BUMP || true",
+    "precommit": "npm run precommit:typescript",
+    "precommit:typescript": "tsc --project ./src/tsconfig.json",
+    "reinstall": "rm -r node_modules package-lock.json && npm install",
+    "start": "npm run build -- --servedir=./public",
+    "switch": "cat package.json | jq --arg SWITCH_NAME $SWITCH_NAME -r '(.[\"switch:\" + $SWITCH_NAME] // {}) as $TEMPLATE | .devDependencies += ($TEMPLATE.devDependencies // {}) | .dependencies += ($TEMPLATE.dependencies // {})' | tee ./package.json.tmp && mv ./package.json.tmp ./package.json"
+  },
+  "author": "William Wong (https://github.com/compulim)",
+  "license": "MIT",
+  "localPeerDependencies": {
+    "web-speech-cognitive-services": "^0.0.0-0"
+  },
+  "devDependencies": {
+    "@tsconfig/strictest": "^2.0.5",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "esbuild": "^0.21.4",
+    "typescript": "^5.4.5"
+  },
+  "dependencies": {
+    "@emotion/css": "^11.11.2",
+    "classnames": "^2.3.2",
+    "microsoft-cognitiveservices-speech-sdk": "^1.17.0",
+    "on-error-resume-next": "^1.1.0",
+    "react": "^18.2.0",
+    "react-dictate-button": "^2.0.1",
+    "react-dom": "^18.2.0",
+    "react-redux": "^8.0.4",
+    "react-say": "^2.1.0",
+    "redux": "^4.2.0",
+    "redux-saga": "^1.2.1",
+    "simple-update-in": "^2.2.0",
+    "web-speech-cognitive-services": "0.0.0-0"
+  }
+}

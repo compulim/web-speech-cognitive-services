@@ -1,6 +1,7 @@
 arrowParens: avoid
+bracketSameLine: false
 bracketSpacing: true
-jsxBracketSameLine: false
+endOfLine: auto
 printWidth: 120
 proseWrap: preserve
 quoteProps: as-needed

@@ -1,0 +1,21 @@
+name: Continuous deployment
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - '.devcontainer/**'
+      - '.github/**'
+  workflow_dispatch: {}
+
+jobs:
+  call-workflow:
+    permissions:
+      attestations: write
+      contents: write
+      id-token: write
+      pages: write
+    secrets: inherit
+    uses: compulim/workflows/.github/workflows/continuous-deployment.yml@main
+    with:
+      package-name: web-speech-cognitive-services

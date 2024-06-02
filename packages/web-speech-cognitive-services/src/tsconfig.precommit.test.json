@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "allowJs": true, // TODO: Should port to TypeScript.
+    "esModuleInterop": true,
+    "jsx": "react",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "noEmit": true,
+    "strict": true,
+    "target": "ESNext",
+    "types": ["jest"]
+  },
+  "include": [
+    "**/*.spec.js",
+    "**/*.spec.jsx",
+    "**/*.spec.ts",
+    "**/*.spec.tsx",
+    "**/*.test.js",
+    "**/*.test.jsx",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "__tests__/**/*"
+  ],
+  "extends": "@tsconfig/recommended/tsconfig.json"
+}
