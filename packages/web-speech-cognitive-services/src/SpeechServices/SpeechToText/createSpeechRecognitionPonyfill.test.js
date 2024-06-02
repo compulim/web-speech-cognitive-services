@@ -215,6 +215,7 @@ beforeEach(() => {
 
   constructRecognizerDeferred = createDeferred();
   originalConsole = console;
+  // eslint-disable-next-line no-global-assign
   console = { ...console, warn: (...args) => warnings.push(args) };
   warnings = [];
 
@@ -259,6 +260,7 @@ beforeEach(() => {
 });
 
 afterEach(() => {
+  // eslint-disable-next-line no-global-assign
   console = originalConsole;
 });
 

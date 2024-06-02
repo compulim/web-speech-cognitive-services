@@ -3,11 +3,11 @@
 import SpeechSynthesisVoice from './SpeechSynthesisVoice';
 
 async function fetchCustomVoices({ customVoiceHostname, deploymentId, region, subscriptionKey }) {
-  const hostname = customVoiceHostname || `${ region }.customvoice.api.speech.microsoft.com`;
+  const hostname = customVoiceHostname || `${region}.customvoice.api.speech.microsoft.com`;
 
   // Although encodeURI on a hostname doesn't work as expected for hostname, at least, it will fail peacefully.
   const res = await fetch(
-    `https://${ encodeURI(hostname) }/api/texttospeech/v2.0/endpoints/${ encodeURIComponent(deploymentId) }`,
+    `https://${encodeURI(hostname)}/api/texttospeech/v2.0/endpoints/${encodeURIComponent(deploymentId)}`,
     {
       headers: {
         accept: 'application/json',
@@ -23,7 +23,7 @@ async function fetchCustomVoices({ customVoiceHostname, deploymentId, region, su
   return res.json();
 }
 
-export default async function({ customVoiceHostname, deploymentId, region, subscriptionKey }) {
+export default async function ({ customVoiceHostname, deploymentId, region, subscriptionKey }) {
   const { models } = await fetchCustomVoices({ customVoiceHostname, deploymentId, region, subscriptionKey });
 
   return models

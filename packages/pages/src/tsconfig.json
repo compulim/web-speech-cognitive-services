@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "allowJs": true,  // TODO: Should port to TypeScript.
+    "esModuleInterop": true,
+    "jsx": "react",
+    "lib": ["DOM", "ESNext", "WebWorker"],
+    "moduleResolution": "Bundler",
+    "noEmit": true,
+    "skipLibCheck": true, // TODO: Should port to TypeScript.
+    "strict": true,
+    "target": "ESNext"
+  }
+  // TODO: Should port to TypeScript.
+  // "extends": "@tsconfig/strictest/tsconfig.json"
+}

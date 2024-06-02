@@ -5,6 +5,8 @@ let logging = {};
 
 beforeEach(() => {
   originalConsole = console;
+  // @ts-ignore
+  // eslint-disable-next-line no-global-assign
   console = {};
 
   ['error', 'info', 'warn', 'log'].forEach(type => {
@@ -13,6 +15,7 @@ beforeEach(() => {
 });
 
 afterEach(() => {
+  // eslint-disable-next-line no-global-assign
   console = originalConsole;
 });
 

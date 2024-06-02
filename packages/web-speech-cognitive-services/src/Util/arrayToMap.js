@@ -1,4 +1,4 @@
-export default function(array, extras) {
+export default function (array, extras) {
   const map = {
     ...[].reduce.call(
       array,
