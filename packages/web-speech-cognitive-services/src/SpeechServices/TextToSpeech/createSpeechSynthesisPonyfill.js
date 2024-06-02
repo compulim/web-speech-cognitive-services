@@ -1,15 +1,15 @@
 /* eslint class-methods-use-this: 0 */
 
 import { EventTarget, getEventAttributeValue, setEventAttributeValue } from 'event-target-shim';
+import { onErrorResumeNext } from 'on-error-resume-next/async';
 import createDeferred from 'p-defer';
-import onErrorResumeNext from 'on-error-resume-next';
 
-import AudioContextQueue from './AudioContextQueue';
-import fetchCustomVoices from './fetchCustomVoices';
-import fetchVoices from './fetchVoices';
 import patchOptions from '../patchOptions';
+import AudioContextQueue from './AudioContextQueue';
 import SpeechSynthesisEvent from './SpeechSynthesisEvent';
 import SpeechSynthesisUtterance from './SpeechSynthesisUtterance';
+import fetchCustomVoices from './fetchCustomVoices';
+import fetchVoices from './fetchVoices';
 
 // Supported output format can be found at https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/rest-text-to-speech#audio-outputs
 const DEFAULT_OUTPUT_FORMAT = 'audio-24khz-160kbitrate-mono-mp3';
