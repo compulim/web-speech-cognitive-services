@@ -9,6 +9,32 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 
 - Updated build tools and added named exports via CJS/ESM
+- Bumped dependencies, in PR [#216](https://github.com/compulim/web-speech-cognitive-services/pull/216)
+   -  Production dependencies
+      - [`base64-arraybuffer@1.0.2`](https://npmjs.com/package/base64-arraybuffer)
+      - [`event-as-promise@1.0.5`](https://npmjs.com/package/event-as-promise)
+      - [`event-target-shim@6.0.2`](https://npmjs.com/package/event-target-shim)
+      - [`memoize-one@6.0.0`](https://npmjs.com/package/memoize-one)
+      - [`on-error-resume-next@2.0.1`](https://npmjs.com/package/on-error-resume-next)
+      - [`simple-update-in@2.2.0`](https://npmjs.com/package/simple-update-in)
+   -  Development dependencies
+      - [`@types/node@20.13.0`](https://npmjs.com/package/@types/node)
+      - [`@typescript-eslint/eslint-plugin@7.11.0`](https://npmjs.com/package/@typescript-eslint/eslint-plugin)
+      - [`@typescript-eslint/parser@7.11.0`](https://npmjs.com/package/@typescript-eslint/parser)
+      - [`classnames@2.5.1`](https://npmjs.com/package/classnames)
+      - [`dotenv@16.4.5`](https://npmjs.com/package/dotenv)
+      - [`eslint-plugin-react@7.34.2`](https://npmjs.com/package/eslint-plugin-react)
+      - [`jest-environment-jsdom@29.7.0`](https://npmjs.com/package/jest-environment-jsdom)
+      - [`microsoft-cognitiveservices-speech-sdk@1.36.0`](https://npmjs.com/package/microsoft-cognitiveservices-speech-sdk)
+      - [`node-fetch@2.7.0`](https://npmjs.com/package/node-fetch)
+      - [`on-error-resume-next@2.0.1`](https://npmjs.com/package/on-error-resume-next)
+      - [`prettier@3.3.0`](https://npmjs.com/package/prettier)
+      - [`react-dom@18.3.1`](https://npmjs.com/package/react-dom)
+      - [`react-redux@9.1.2`](https://npmjs.com/package/react-redux)
+      - [`react@18.3.1`](https://npmjs.com/package/react)
+      - [`redux-saga@1.3.0`](https://npmjs.com/package/redux-saga)
+      - [`redux@5.0.1`](https://npmjs.com/package/redux)
+      - [`typescript@5.4.5`](https://npmjs.com/package/typescript)
 
 ## [7.1.3] - 2022-11-29
 
