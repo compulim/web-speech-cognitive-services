@@ -15,10 +15,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 
 - Updated build tools and added named exports via CJS/ESM
-- Bumped dependencies, in PR [#216](https://github.com/compulim/web-speech-cognitive-services/pull/216)
+- Bumped dependencies, in PR [#216](https://github.com/compulim/web-speech-cognitive-services/pull/216) and [#218](https://github.com/compulim/web-speech-cognitive-services/issues/218)
    -  Production dependencies
       - [`base64-arraybuffer@1.0.2`](https://npmjs.com/package/base64-arraybuffer)
-      - [`event-as-promise@1.0.5`](https://npmjs.com/package/event-as-promise)
+      - [`event-as-promise@2.0.0`](https://npmjs.com/package/event-as-promise)
       - [`event-target-shim@6.0.2`](https://npmjs.com/package/event-target-shim)
       - [`memoize-one@6.0.0`](https://npmjs.com/package/memoize-one)
       - [`on-error-resume-next@2.0.1`](https://npmjs.com/package/on-error-resume-next)
