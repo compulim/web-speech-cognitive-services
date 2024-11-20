@@ -4,13 +4,15 @@
 /* eslint no-empty-function: "off" */
 /* eslint no-magic-numbers: ["error", { "ignore": [0, 100, 150] }] */
 
-import { Event, EventTarget, getEventAttributeValue, setEventAttributeValue } from 'event-target-shim';
-
 import createPromiseQueue from '../../Util/createPromiseQueue';
 import patchOptions from '../patchOptions';
 import SpeechSDK from '../SpeechSDK';
-import cognitiveServiceEventResultToWebSpeechRecognitionResultList from './cognitiveServiceEventResultToWebSpeechRecognitionResultList';
+import cognitiveServiceEventResultToWebSpeechRecognitionResult from './cognitiveServiceEventResultToWebSpeechRecognitionResult';
+import EventListenerMap from './EventListenerMap';
 import SpeechGrammarList from './SpeechGrammarList';
+import SpeechRecognitionErrorEvent from './SpeechRecognitionErrorEvent';
+import SpeechRecognitionEvent from './SpeechRecognitionEvent';
+import SpeechRecognitionResultList from './SpeechRecognitionResultList';
 
 // https://docs.microsoft.com/en-us/javascript/api/microsoft-cognitiveservices-speech-sdk/speechconfig?view=azure-node-latest#outputformat
 // {
@@ -59,18 +61,6 @@ function averageAmplitude(arrayBuffer) {
 
 function cognitiveServicesAsyncToPromise(fn) {
   return (...args) => new Promise((resolve, reject) => fn(...args, resolve, reject));
-}
-
-class SpeechRecognitionEvent extends Event {
-  constructor(type, { data, emma, interpretation, resultIndex, results } = {}) {
-    super(type);
-
-    this.data = data;
-    this.emma = emma;
-    this.interpretation = interpretation;
-    this.resultIndex = resultIndex;
-    this.results = results;
-  }
 }
 
 function prepareAudioConfig(audioConfig) {
@@ -142,7 +132,12 @@ export function createSpeechRecognitionPonyfillFromRecognizer({
           : 'en-US';
       this._grammars = new SpeechGrammarList();
       this._maxAlternatives = 1;
+
+      this.#eventListenerMap = new EventListenerMap(this);
     }
+
+    /** @type { import('./SpeechRecognitionEventListenerMap').SpeechRecognitionEventListenerMap } */
+    #eventListenerMap;
 
     emitCognitiveServices(type, event) {
       this.dispatchEvent(
@@ -199,97 +194,143 @@ export function createSpeechRecognitionPonyfillFromRecognizer({
       this._lang = value;
     }
 
+    /** @type { ((event: SpeechRecognitionEvent<'audioend'>) => void) | undefined } */
     get onaudioend() {
-      return getEventAttributeValue(this, 'audioend');
+      return this.#eventListenerMap.getProperty('audioend');
     }
 
-    set onaudioend(value) {
-      setEventAttributeValue(this, 'audioend', value);
+    set onaudioend(
+      /** @type { ((event: SpeechRecognitionEvent<'audioend'>) => void) | undefined } */
+      value
+    ) {
+      this.#eventListenerMap.setProperty('audioend', value);
     }
 
+    /** @type { ((event: SpeechRecognitionEvent<'audiostart'>) => void) | undefined } */
     get onaudiostart() {
-      return getEventAttributeValue(this, 'audiostart');
+      return this.#eventListenerMap.getProperty('audiostart');
     }
 
-    set onaudiostart(value) {
-      setEventAttributeValue(this, 'audiostart', value);
+    set onaudiostart(
+      /** @type { ((event: SpeechRecognitionEvent<'audiostart'>) => void) | undefined } */
+      value
+    ) {
+      this.#eventListenerMap.setProperty('audiostart', value);
     }
 
+    /** @type { ((event: SpeechRecognitionEvent<'cognitiveservices'>) => void) | undefined } */
     get oncognitiveservices() {
-      return getEventAttributeValue(this, 'cognitiveservices');
+      return this.#eventListenerMap.getProperty('cognitiveservices');
     }
 
-    set oncognitiveservices(value) {
-      setEventAttributeValue(this, 'cognitiveservices', value);
+    set oncognitiveservices(
+      /** @type { ((event: SpeechRecognitionEvent<'cognitiveservices'>) => void) | undefined } */
+      value
+    ) {
+      this.#eventListenerMap.setProperty('cognitiveservices', value);
     }
 
+    /** @type { ((event: SpeechRecognitionEvent<'end'>) => void) | undefined } */
     get onend() {
-      return getEventAttributeValue(this, 'end');
+      return this.#eventListenerMap.getProperty('end');
     }
 
-    set onend(value) {
-      setEventAttributeValue(this, 'end', value);
+    set onend(
+      /** @type { ((event: SpeechRecognitionEvent<'end'>) => void) | undefined } */
+      value
+    ) {
+      this.#eventListenerMap.setProperty('end', value);
     }
 
+    /** @type { ((event: SpeechRecognitionEvent<'error'>) => void) | undefined } */
     get onerror() {
-      return getEventAttributeValue(this, 'error');
+      return this.#eventListenerMap.getProperty('error');
     }
 
-    set onerror(value) {
-      setEventAttributeValue(this, 'error', value);
+    set onerror(
+      /** @type { ((event: SpeechRecognitionEvent<'error'>) => void) | undefined } */
+      value
+    ) {
+      this.#eventListenerMap.setProperty('error', value);
     }
 
+    /** @type { ((event: SpeechRecognitionEvent<'result'>) => void) | undefined } */
     get onresult() {
-      return getEventAttributeValue(this, 'result');
+      return this.#eventListenerMap.getProperty('result');
     }
 
-    set onresult(value) {
-      setEventAttributeValue(this, 'result', value);
+    set onresult(
+      /** @type { ((event: SpeechRecognitionEvent<'result'>) => void) | undefined } */
+      value
+    ) {
+      this.#eventListenerMap.setProperty('result', value);
     }
 
+    /** @type { ((event: SpeechRecognitionEvent<'soundend'>) => void) | undefined } */
     get onsoundend() {
-      return getEventAttributeValue(this, 'soundend');
+      return this.#eventListenerMap.getProperty('soundend');
     }
 
-    set onsoundend(value) {
-      setEventAttributeValue(this, 'soundend', value);
+    set onsoundend(
+      /** @type { ((event: SpeechRecognitionEvent<'soundend'>) => void) | undefined } */
+      value
+    ) {
+      this.#eventListenerMap.setProperty('soundend', value);
     }
 
+    /** @type { ((event: SpeechRecognitionEvent<'soundstart'>) => void) | undefined } */
     get onsoundstart() {
-      return getEventAttributeValue(this, 'soundstart');
+      return this.#eventListenerMap.getProperty('soundstart');
     }
 
-    set onsoundstart(value) {
-      setEventAttributeValue(this, 'soundstart', value);
+    set onsoundstart(
+      /** @type { ((event: SpeechRecognitionEvent<'soundstart'>) => void) | undefined } */
+      value
+    ) {
+      this.#eventListenerMap.setProperty('soundstart', value);
     }
 
+    /** @type { ((event: SpeechRecognitionEvent<'speechend'>) => void) | undefined } */
     get onspeechend() {
-      return getEventAttributeValue(this, 'speechend');
+      return this.#eventListenerMap.getProperty('speechend');
     }
 
-    set onspeechend(value) {
-      setEventAttributeValue(this, 'speechend', value);
+    set onspeechend(
+      /** @type { ((event: SpeechRecognitionEvent<'speechend'>) => void) | undefined } */
+      value
+    ) {
+      this.#eventListenerMap.setProperty('speechend', value);
     }
 
+    /** @type { ((event: SpeechRecognitionEvent<'speechstart'>) => void) | undefined } */
     get onspeechstart() {
-      return getEventAttributeValue(this, 'speechstart');
+      return this.#eventListenerMap.getProperty('speechstart');
     }
 
-    set onspeechstart(value) {
-      setEventAttributeValue(this, 'speechstart', value);
+    set onspeechstart(
+      /** @type { ((event: SpeechRecognitionEvent<'speechstart'>) => void) | undefined } */
+      value
+    ) {
+      this.#eventListenerMap.setProperty('speechstart', value);
     }
 
+    /** @type { ((event: SpeechRecognitionEvent<'start'>) => void) | undefined } */
     get onstart() {
-      return getEventAttributeValue(this, 'start');
+      return this.#eventListenerMap.getProperty('start');
     }
 
-    set onstart(value) {
-      setEventAttributeValue(this, 'start', value);
+    set onstart(
+      /** @type { ((event: SpeechRecognitionEvent<'start'>) => void) | undefined } */
+      value
+    ) {
+      this.#eventListenerMap.setProperty('start', value);
     }
 
     start() {
       this._startOnce().catch(err => {
-        this.dispatchEvent(new ErrorEvent('error', { error: err, message: err && (err.stack || err.message) }));
+        this.dispatchEvent(
+          new SpeechRecognitionErrorEvent('error', { error: err, message: err && (err.stack || err.message) })
+        );
       });
     }
 
@@ -385,7 +426,9 @@ export function createSpeechRecognitionPonyfillFromRecognizer({
         }
 
         let audioStarted;
+        /** @type { SpeechRecognitionErrorEvent | SpeechRecognitionEvent<'result'> } */
         let finalEvent;
+        /** @type { SpeechRecognitionResult[] } */
         let finalizedResults = [];
 
         for (let loop = 0; !stopping || audioStarted; loop++) {
@@ -409,10 +452,7 @@ export function createSpeechRecognitionPonyfillFromRecognizer({
           if (/Permission\sdenied/u.test(errorMessage || '')) {
             // If microphone is not allowed, we should not emit "start" event.
 
-            finalEvent = {
-              error: 'not-allowed',
-              type: 'error'
-            };
+            finalEvent = new SpeechRecognitionErrorEvent('error', { error: 'not-allowed' });
 
             break;
           }
@@ -428,24 +468,15 @@ export function createSpeechRecognitionPonyfillFromRecognizer({
                 this.dispatchEvent(new SpeechRecognitionEvent('audioend'));
               }
 
-              finalEvent = {
-                error: 'network',
-                type: 'error'
-              };
+              finalEvent = new SpeechRecognitionErrorEvent('error', { error: 'network' });
             } else {
-              finalEvent = {
-                error: 'unknown',
-                type: 'error'
-              };
+              finalEvent = new SpeechRecognitionErrorEvent('error', { error: 'unknown' });
             }
 
             break;
           } else if (abort || stop) {
             if (abort) {
-              finalEvent = {
-                error: 'aborted',
-                type: 'error'
-              };
+              finalEvent = new SpeechRecognitionErrorEvent('error', { error: 'aborted' });
 
               // If we are aborting, we will ignore lingering recognizing/recognized events. But if we are stopping, we need them.
               stopping = 'abort';
@@ -488,10 +519,7 @@ export function createSpeechRecognitionPonyfillFromRecognizer({
               //   That means, we need to end this manually in interactive mode, and continuous-but-stopping mode.
               if (!this.continuous || stopping === 'stop') {
                 // Empty result will turn into "no-speech" later in the code.
-                finalEvent = {
-                  results: [],
-                  type: 'result'
-                };
+                finalEvent = new SpeechRecognitionEvent('result');
 
                 // Quirks: 2024-11-19 with Speech SDK 1.14.0
                 //   Speech SDK did not stop after NoMatch even in interactive mode.
@@ -524,7 +552,7 @@ export function createSpeechRecognitionPonyfillFromRecognizer({
               }
 
               if (recognized) {
-                const result = cognitiveServiceEventResultToWebSpeechRecognitionResultList(recognized.result, {
+                const result = cognitiveServiceEventResultToWebSpeechRecognitionResult(recognized.result, {
                   maxAlternatives: this.maxAlternatives,
                   textNormalization
                 });
@@ -537,19 +565,18 @@ export function createSpeechRecognitionPonyfillFromRecognizer({
                   this.continuous &&
                     this.dispatchEvent(
                       new SpeechRecognitionEvent('result', {
-                        results: finalizedResults
+                        results: new SpeechRecognitionResultList(finalizedResults)
                       })
                     );
                 }
 
                 // If it is continuous, we just sent the finalized results. So we don't need to send it again after "audioend" event.
                 if (this.continuous && recognizable) {
-                  finalEvent = null;
+                  finalEvent = undefined;
                 } else {
-                  finalEvent = {
-                    results: finalizedResults,
-                    type: 'result'
-                  };
+                  finalEvent = new SpeechRecognitionEvent('result', {
+                    results: new SpeechRecognitionResultList(finalizedResults)
+                  });
                 }
 
                 // If it is interactive, stop after first recognition.
@@ -561,20 +588,20 @@ export function createSpeechRecognitionPonyfillFromRecognizer({
                 // If event order can be loosened, we can send the recognized event as soon as we receive it.
                 // 1. If it is not recognizable (no-speech), we should send an "error" event just before "end" event. We will not loosen "error" events.
                 if (looseEvents && finalEvent && recognizable) {
-                  this.dispatchEvent(new SpeechRecognitionEvent(finalEvent.type, finalEvent));
-                  finalEvent = null;
+                  this.dispatchEvent(finalEvent);
+                  finalEvent = undefined;
                 }
               } else if (recognizing) {
                 this.interimResults &&
                   this.dispatchEvent(
                     new SpeechRecognitionEvent('result', {
-                      results: [
+                      results: new SpeechRecognitionResultList([
                         ...finalizedResults,
-                        cognitiveServiceEventResultToWebSpeechRecognitionResultList(recognizing.result, {
+                        cognitiveServiceEventResultToWebSpeechRecognitionResult(recognizing.result, {
                           maxAlternatives: this.maxAlternatives,
                           textNormalization
                         })
-                      ]
+                      ])
                     })
                   );
               }
@@ -596,17 +623,10 @@ export function createSpeechRecognitionPonyfillFromRecognizer({
 
         if (finalEvent) {
           if (finalEvent.type === 'result' && !finalEvent.results.length) {
-            finalEvent = {
-              error: 'no-speech',
-              type: 'error'
-            };
+            finalEvent = new SpeechRecognitionErrorEvent('error', { error: 'no-speech' });
           }
 
-          if (finalEvent.type === 'error') {
-            this.dispatchEvent(new ErrorEvent('error', finalEvent));
-          } else {
-            this.dispatchEvent(new SpeechRecognitionEvent(finalEvent.type, finalEvent));
-          }
+          this.dispatchEvent(finalEvent);
         }
 
         // Even though there is no "start" event emitted, we will still emit "end" event

@@ -14,6 +14,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 
+- 💥 Modernized some code with TypeScript, more type-aligned to W3C Speech API, and moved to official Event Target API, in PR [#220](https://github.com/compulim/web-speech-cognitive-services/pull/220)
+   -  `SpeechRecognitionResult` and `SpeechRecognitionResultList` is now a array-like object, use `Array.from()` to convert them into an array
 - Updated build tools and added named exports via CJS/ESM
 - Bumped dependencies, in PR [#216](https://github.com/compulim/web-speech-cognitive-services/pull/216) and [#218](https://github.com/compulim/web-speech-cognitive-services/issues/218)
    -  Production dependencies

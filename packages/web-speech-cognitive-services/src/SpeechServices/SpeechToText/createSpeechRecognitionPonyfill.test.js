@@ -193,7 +193,7 @@ function toSnapshot(events) {
           return `webspeech:error { error: '${event.error}' }`;
 
         case 'result':
-          return `webspeech:result [${event.results
+          return `webspeech:result [${Array.from(event.results)
             .map(results =>
               [].map.call(results, ({ transcript }) => `'${transcript}'${results.isFinal ? ' (isFinal)' : ''}`)
             )
