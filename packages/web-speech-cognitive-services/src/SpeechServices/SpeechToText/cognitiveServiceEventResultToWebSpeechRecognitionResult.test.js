@@ -2,10 +2,10 @@
  * @jest-environment jsdom
  */
 
-import cognitiveServiceEventResultToWebSpeechRecognitionResultList from './cognitiveServiceEventResultToWebSpeechRecognitionResultList';
+import cognitiveServiceEventResultToWebSpeechRecognitionResult from './cognitiveServiceEventResultToWebSpeechRecognitionResult';
 
 test('Multiple results with RecognitionStatus === "Success"', () => {
-  const resultList = cognitiveServiceEventResultToWebSpeechRecognitionResultList({
+  const resultList = cognitiveServiceEventResultToWebSpeechRecognitionResult({
     json: {
       NBest: [
         {
@@ -28,23 +28,23 @@ test('Multiple results with RecognitionStatus === "Success"', () => {
     reason: 3
   });
 
-  expect(resultList[0]).toEqual({ confidence: 0.25, transcript: 'No.' });
-  expect(resultList[1]).toEqual({ confidence: 0.1, transcript: 'Yes.' });
+  expect(resultList[0]).toEqual(expect.objectContaining({ confidence: 0.25, transcript: 'No.' }));
+  expect(resultList[1]).toEqual(expect.objectContaining({ confidence: 0.1, transcript: 'Yes.' }));
   expect(resultList).toHaveProperty('isFinal', true);
 });
 
 test('Single interim results', () => {
-  const resultList = cognitiveServiceEventResultToWebSpeechRecognitionResultList({
+  const resultList = cognitiveServiceEventResultToWebSpeechRecognitionResult({
     reason: 2,
     text: 'No.'
   });
 
-  expect(resultList[0]).toEqual({ confidence: 0.5, transcript: 'No.' });
-  expect(resultList).not.toHaveProperty('isFinal');
+  expect(resultList[0]).toEqual(expect.objectContaining({ confidence: 0.5, transcript: 'No.' }));
+  expect(resultList).toHaveProperty('isFinal', false);
 });
 
 test('Single final results', () => {
-  const resultList = cognitiveServiceEventResultToWebSpeechRecognitionResultList({
+  const resultList = cognitiveServiceEventResultToWebSpeechRecognitionResult({
     json: {
       NBest: [
         {
@@ -59,12 +59,12 @@ test('Single final results', () => {
     reason: 3
   });
 
-  expect(resultList[0]).toEqual({ confidence: 0.25, transcript: 'No.' });
+  expect(resultList[0]).toEqual(expect.objectContaining({ confidence: 0.25, transcript: 'No.' }));
   expect(resultList).toHaveProperty('isFinal', true);
 });
 
 test('Single final results with ITN', () => {
-  const resultList = cognitiveServiceEventResultToWebSpeechRecognitionResultList(
+  const resultList = cognitiveServiceEventResultToWebSpeechRecognitionResult(
     {
       json: {
         NBest: [
@@ -84,12 +84,12 @@ test('Single final results with ITN', () => {
     }
   );
 
-  expect(resultList[0]).toEqual({ confidence: 0.25, transcript: 'no (ITN)' });
+  expect(resultList[0]).toEqual(expect.objectContaining({ confidence: 0.25, transcript: 'no (ITN)' }));
   expect(resultList).toHaveProperty('isFinal', true);
 });
 
 test('Single final results with lexical', () => {
-  const resultList = cognitiveServiceEventResultToWebSpeechRecognitionResultList(
+  const resultList = cognitiveServiceEventResultToWebSpeechRecognitionResult(
     {
       json: {
         NBest: [
@@ -109,12 +109,12 @@ test('Single final results with lexical', () => {
     }
   );
 
-  expect(resultList[0]).toEqual({ confidence: 0.25, transcript: 'no (Lexical)' });
+  expect(resultList[0]).toEqual(expect.objectContaining({ confidence: 0.25, transcript: 'no (Lexical)' }));
   expect(resultList).toHaveProperty('isFinal', true);
 });
 
 test('Single final results with masked ITN', () => {
-  const resultList = cognitiveServiceEventResultToWebSpeechRecognitionResultList(
+  const resultList = cognitiveServiceEventResultToWebSpeechRecognitionResult(
     {
       json: {
         NBest: [
@@ -134,12 +134,12 @@ test('Single final results with masked ITN', () => {
     }
   );
 
-  expect(resultList[0]).toEqual({ confidence: 0.25, transcript: 'no (MaskedITN)' });
+  expect(resultList[0]).toEqual(expect.objectContaining({ confidence: 0.25, transcript: 'no (MaskedITN)' }));
   expect(resultList).toHaveProperty('isFinal', true);
 });
 
 test('Result is iterable', () => {
-  const resultList = cognitiveServiceEventResultToWebSpeechRecognitionResultList(
+  const resultList = cognitiveServiceEventResultToWebSpeechRecognitionResult(
     {
       json: {
         NBest: [
@@ -160,6 +160,6 @@ test('Result is iterable', () => {
   const [firstAlternative] = resultList;
   const { isFinal } = resultList;
 
-  expect(firstAlternative).toEqual({ confidence: 0.25, transcript: 'No.' });
+  expect(firstAlternative).toEqual(expect.objectContaining({ confidence: 0.25, transcript: 'No.' }));
   expect(isFinal).toBe(true);
 });
