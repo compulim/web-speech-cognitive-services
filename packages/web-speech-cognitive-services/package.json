@@ -95,7 +95,7 @@
   },
   "dependencies": {
     "base64-arraybuffer": "^1.0.2",
-    "event-as-promise": "^1.0.5",
+    "event-as-promise": "^2.0.0",
     "event-target-shim": "^6.0.2",
     "memoize-one": "^6.0.0",
     "on-error-resume-next": "^2.0.1",
