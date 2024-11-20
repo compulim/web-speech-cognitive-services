@@ -6,13 +6,19 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Fixed
+
+- Fixed [#218](https://github.com/compulim/web-speech-cognitive-services/issues/218). Speech recognition should stopping properly in some cases, in PR [#218](https://github.com/compulim/web-speech-cognitive-services/pull/219)
+   - Interactive mode, muted microphone
+   - Continuous and interactive mode, stop shortly after start
+
 ### Changed
 
 - Updated build tools and added named exports via CJS/ESM
-- Bumped dependencies, in PR [#216](https://github.com/compulim/web-speech-cognitive-services/pull/216)
+- Bumped dependencies, in PR [#216](https://github.com/compulim/web-speech-cognitive-services/pull/216) and [#218](https://github.com/compulim/web-speech-cognitive-services/issues/218)
    -  Production dependencies
       - [`base64-arraybuffer@1.0.2`](https://npmjs.com/package/base64-arraybuffer)
-      - [`event-as-promise@1.0.5`](https://npmjs.com/package/event-as-promise)
+      - [`event-as-promise@2.0.0`](https://npmjs.com/package/event-as-promise)
       - [`event-target-shim@6.0.2`](https://npmjs.com/package/event-target-shim)
       - [`memoize-one@6.0.0`](https://npmjs.com/package/memoize-one)
       - [`on-error-resume-next@2.0.1`](https://npmjs.com/package/on-error-resume-next)
@@ -159,12 +165,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [7.0.0] - 2020-05-27
 
-### Breaking changes
+### Changed
 
-- To enable developers to select their version of Cognitive Services Speech SDK and use newer features, we are moving [`microsoft-cognitiveservices-speech-sdk`](https://npmjs.com/package/microsoft-cognitiveservices-speech-sdk) to `peerDependencies`.
+- 💥 To enable developers to select their version of Cognitive Services Speech SDK and use newer features, we are moving [`microsoft-cognitiveservices-speech-sdk`](https://npmjs.com/package/microsoft-cognitiveservices-speech-sdk) to `peerDependencies`.
    - When you install `web-speech-cognitive-services`, you will also need to install a compatible version of `microsoft-cognitiveservices-speech-sdk`.
 
-### Changed
+### Fixed
 
 - Fixes [#96](https://github.com/compulim/web-speech-cognitive-services/issues/96), move [`microsoft-cognitiveservices-speech-sdk`](https://npmjs.com/package/microsoft-cognitive-services-speech-sdk) to `peerDependencies`, by [@compulim](https://github.com/compulim), in PR [#97](https://github.com/compulim/web-speech-cognitive-services/pull/97)
 
@@ -176,16 +182,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [6.2.0] - 2020-03-27
 
-### Breaking changes
+### Changed
 
-- Temporarily reverting breaking changes by reintroducing Bing Speech and `fetchAuthorizationToken`, by [@compulim](https://github.com/compulim) in PR [#92](https://github.com/compulim/web-speech-cognitive-services/pull/92).
+- 💥 Temporarily reverting breaking changes by reintroducing Bing Speech and `fetchAuthorizationToken`, by [@compulim](https://github.com/compulim) in PR [#92](https://github.com/compulim/web-speech-cognitive-services/pull/92).
 
 ## [6.1.0] - 2020-03-26
-
-### Breaking changes
-
-- ~As Bing Speech has deprecated and removed from Azure. Bing Speech support has been removed.~
-- ~`fetchAuthorizationToken` is removed, please refer to [this documentation on how to get an access token](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/rest-speech-to-text#how-to-get-an-access-token).~
 
 ### Added
 
@@ -193,8 +194,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Removed
 
-- ~Bing Speech support is removed, by [@compulim](https://github.com/compulim), in PR [#87](https://github.com/compulim/web-speech-cognitive-services/pull/87).~
-- ~`fetchAuthorizationToken` is removed, by [@compulim](https://github.com/compulim), in PR [#89](https://github.com/compulim/web-speech-cognitive-services/pull/89).~
+- 💥 ~Bing Speech support is removed, by [@compulim](https://github.com/compulim), in PR [#87](https://github.com/compulim/web-speech-cognitive-services/pull/87).~
+  - ~As Bing Speech has deprecated and removed from Azure. Bing Speech support has been removed.~
+- 💥 ~`fetchAuthorizationToken` is removed, by [@compulim](https://github.com/compulim), in PR [#89](https://github.com/compulim/web-speech-cognitive-services/pull/89).~
+  - ~`fetchAuthorizationToken` is removed, please refer to [this documentation on how to get an access token](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/rest-speech-to-text#how-to-get-an-access-token).~
 
 ### Changed
 
@@ -225,25 +228,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [6.0.0] - 2019-12-03
 
-### Breaking changes
-
-#### Unifying options to pass credentials
-
-`authorizationToken`, `region`, and `subscriptionKey` are being deprecated in favor of `credentials` options. `credentials` can be one of the following types:
-
-- `{ authorizationToken: string, region: string? }`
-- `{ region: string?, subscriptionKey: string }`
-- `Promise<{ authorizationToken: string, region: string? }>`
-- `Promise<{ region: string?, subscriptionKey: string }>`
-- `() => { authorizationToken: string, region: string? }`
-- `() => { region: string?, subscriptionKey: string }`
-- `() => Promise<{ authorizationToken: string, region: string? }>`
-- `() => Promise<{ region: string?, subscriptionKey: string }>`
-
-If `credentials` is a function, it will be called just before the credentials is needed and may be called very frequently. This behavior matches the deprecating `authorizationToken`. The result of the call is also expected to be cached.
-
-If `region` is not returned, the default value of `"westus"` will be used.
-
 ### Fixed
 
 - Speech recognition: Removed extraneous finalized `result` event in continuous mode, by [@compulim](https://github.com/compulim), in PR [#79](https://github.com/compulim/web-speech-cognitive-services/pull/79)
@@ -262,6 +246,18 @@ If `region` is not returned, the default value of `"westus"` will be used.
 
 ### Changed
 
+- 💥 Unifying options to pass credentials
+   - `authorizationToken`, `region`, and `subscriptionKey` are being deprecated in favor of `credentials` options. `credentials` can be one of the following types:
+      - `{ authorizationToken: string, region: string? }`
+      - `{ region: string?, subscriptionKey: string }`
+      - `Promise<{ authorizationToken: string, region: string? }>`
+      - `Promise<{ region: string?, subscriptionKey: string }>`
+      - `() => { authorizationToken: string, region: string? }`
+      - `() => { region: string?, subscriptionKey: string }`
+      - `() => Promise<{ authorizationToken: string, region: string? }>`
+      - `() => Promise<{ region: string?, subscriptionKey: string }>`
+   - If `credentials` is a function, it will be called just before the credentials is needed and may be called very frequently. This behavior matches the deprecating `authorizationToken`. The result of the call is also expected to be cached.
+   - If `region` is not returned, the default value of `"westus"` will be used.
 - Bumped dependencies, in PR [#73](https://github.com/compulim/web-speech-cognitive-services/pull/73)
    - [babel-jest@^24.9.0](https://www.npmjs.com/package/babel-jest)
    - [jest@^24.9.0](https://www.npmjs.com/package/jest)
@@ -283,12 +279,6 @@ If `region` is not returned, the default value of `"westus"` will be used.
    - Removed `import '@babel/runtime'` explicitly
 
 ## [5.0.0] - 2019-10-23
-
-### Breaking changes
-
-- Instead of stopping `AudioContext` after all pending utterances are finished, the `AudioContext` is now persisted. If this is not desirable in your application and would like to control the lifetime of `AudioContext` object, please create your own instance and pass it as an option named `audioContext` when creating the ponyfill
-- `createSpeechServicesPonyfill` function is no longer asynchronous
-   - Immediate after the ponyfill is created, we will fetch voice list from the services and emit `voiceschanged` event on completion
 
 ### Added
 
@@ -321,6 +311,9 @@ If `region` is not returned, the default value of `"westus"` will be used.
 
 ### Changed
 
+- 💥 Instead of stopping `AudioContext` after all pending utterances are finished, the `AudioContext` is now persisted. If this is not desirable in your application and would like to control the lifetime of `AudioContext` object, please create your own instance and pass it as an option named `audioContext` when creating the ponyfill
+- 💥 `createSpeechServicesPonyfill` function is no longer asynchronous
+   - Immediate after the ponyfill is created, we will fetch voice list from the services and emit `voiceschanged` event on completion
 - Bumped dependencies, in PR [#20](https://github.com/compulim/web-speech-cognitive-services/pull/20)
    - [@babel/cli@^7.5.5](https://www.npmjs.com/package/@babel/cli)
    - [@babel/core@^7.5.5](https://www.npmjs.com/package/@babel/core)

@@ -6,11 +6,11 @@
 
 import { Event, EventTarget, getEventAttributeValue, setEventAttributeValue } from 'event-target-shim';
 
-import cognitiveServiceEventResultToWebSpeechRecognitionResultList from './cognitiveServiceEventResultToWebSpeechRecognitionResultList';
 import createPromiseQueue from '../../Util/createPromiseQueue';
 import patchOptions from '../patchOptions';
-import SpeechGrammarList from './SpeechGrammarList';
 import SpeechSDK from '../SpeechSDK';
+import cognitiveServiceEventResultToWebSpeechRecognitionResultList from './cognitiveServiceEventResultToWebSpeechRecognitionResultList';
+import SpeechGrammarList from './SpeechGrammarList';
 
 // https://docs.microsoft.com/en-us/javascript/api/microsoft-cognitiveservices-speech-sdk/speechconfig?view=azure-node-latest#outputformat
 // {
@@ -482,10 +482,27 @@ export function createSpeechRecognitionPonyfillFromRecognizer({
             break;
           } else if (stopping !== 'abort') {
             if (recognized && recognized.result && recognized.result.reason === ResultReason.NoMatch) {
-              finalEvent = {
-                error: 'no-speech',
-                type: 'error'
-              };
+              // Quirks: 2024-11-19 with Speech SDK 1.41.0
+              //   When microphone is muted, `reason` is `NoMatch` (0) in both interactive mode and continuous mode.
+              //   After receiving this "recognized but no match" event, both modes will continue to recognize speech with "speechStartDetected" and "recognizing" events.
+              //   That means, we need to end this manually in interactive mode, and continuous-but-stopping mode.
+              if (!this.continuous || stopping === 'stop') {
+                // Empty result will turn into "no-speech" later in the code.
+                finalEvent = {
+                  results: [],
+                  type: 'result'
+                };
+
+                // Quirks: 2024-11-19 with Speech SDK 1.14.0
+                //   Speech SDK did not stop after NoMatch even in interactive mode.
+                recognizer.stopContinuousRecognitionAsync &&
+                  (await cognitiveServicesAsyncToPromise(recognizer.stopContinuousRecognitionAsync.bind(recognizer))());
+
+                // Quirks: 2024-11-19 with Speech SDK 1.14.0
+                //   After calling stopContinuousRecognitionAsync, no "audioSourceOff" is fired.
+
+                break;
+              }
             } else if (recognized || recognizing) {
               if (!audioStarted) {
                 // Unconfirmed prevention of quirks
@@ -535,7 +552,9 @@ export function createSpeechRecognitionPonyfillFromRecognizer({
                   };
                 }
 
-                if (!this.continuous && recognizer.stopContinuousRecognitionAsync) {
+                // If it is interactive, stop after first recognition.
+                // If it is continuous and it is stopping, stop it too.
+                if ((!this.continuous || stopping === 'stop') && recognizer.stopContinuousRecognitionAsync) {
                   await cognitiveServicesAsyncToPromise(recognizer.stopContinuousRecognitionAsync.bind(recognizer))();
                 }
 
@@ -662,6 +681,9 @@ export default options => {
 
     speechConfig.outputFormat = OutputFormat.Detailed;
     speechConfig.speechRecognitionLanguage = lang || 'en-US';
+    // speechConfig.setProperty(PropertyId.SpeechServiceConnection_InitialSilenceTimeoutMs, '2000');
+    // speechConfig.setProperty(PropertyId.Conversation_Initial_Silence_Timeout, '2000');
+    // speechConfig.setProperty(PropertyId.Speech_SegmentationSilenceTimeoutMs, '2000');
 
     return new SpeechRecognizer(speechConfig, audioConfig);
   };

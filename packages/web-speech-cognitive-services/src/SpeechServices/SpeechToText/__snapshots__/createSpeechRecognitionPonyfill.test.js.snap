@@ -240,7 +240,6 @@ exports[`SpeechRecognition in interactive mode with muted microphone 1`] = `
   "webspeech:start",
   "webspeech:audiostart",
   "cognitiveservices:recognized",
-  "cognitiveservices:audioSourceOff",
   "webspeech:audioend",
   "webspeech:error { error: 'no-speech' }",
   "webspeech:end",

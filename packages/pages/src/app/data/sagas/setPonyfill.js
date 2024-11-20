@@ -87,10 +87,15 @@ function* setPonyfillSaga() {
                     console.error('Failed to fetch Speech Services authorization token', err);
                   }
                 }
-              : {
-                  region,
-                  subscriptionKey: speechServicesSubscriptionKey
-                }
+              : /^aad#\//.test(speechServicesSubscriptionKey)
+                ? {
+                    authorizationToken: speechServicesSubscriptionKey,
+                    region
+                  }
+                : {
+                    region,
+                    subscriptionKey: speechServicesSubscriptionKey
+                  }
           }
     );
 

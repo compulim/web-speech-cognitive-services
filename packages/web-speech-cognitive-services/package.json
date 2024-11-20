@@ -31,7 +31,7 @@
     "precommit:typescript:test": "tsc --noEmit --project ./src/tsconfig.precommit.test.json",
     "prepack": "cp ../../CHANGELOG.md . && cp ../../LICENSE . && cp ../../README.md .",
     "switch": "cat package.json | jq --arg SWITCH_NAME $SWITCH_NAME -r '(.[\"switch:\" + $SWITCH_NAME] // {}) as $TEMPLATE | .devDependencies += ($TEMPLATE.devDependencies // {}) | .dependencies += ($TEMPLATE.dependencies // {})' | tee ./package.json.tmp && mv ./package.json.tmp ./package.json",
-    "start": "npm run build -- --watch",
+    "start": "npm run build -- --onSuccess \"touch ../pages/src/app/index.jsx\" --watch",
     "test": "jest"
   },
   "repository": {
@@ -95,7 +95,7 @@
   },
   "dependencies": {
     "base64-arraybuffer": "^1.0.2",
-    "event-as-promise": "^1.0.5",
+    "event-as-promise": "^2.0.0",
     "event-target-shim": "^6.0.2",
     "memoize-one": "^6.0.0",
     "on-error-resume-next": "^2.0.1",

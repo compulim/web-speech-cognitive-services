@@ -1,7 +1,7 @@
 /* eslint no-empty: ["error", { "allowEmptyCatch": true }] */
 
+import { EventAsPromise } from 'event-as-promise';
 import { EventTarget, getEventAttributeValue, setEventAttributeValue } from 'event-target-shim';
-import EventAsPromise from 'event-as-promise';
 
 import fetchSpeechData from './fetchSpeechData';
 import SpeechSynthesisEvent from './SpeechSynthesisEvent';

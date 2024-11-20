@@ -12,7 +12,7 @@
     "precommit": "npm run precommit:typescript",
     "precommit:typescript": "tsc --project ./src/tsconfig.json",
     "reinstall": "rm -r node_modules package-lock.json && npm install",
-    "start": "npm run build -- --servedir=./public",
+    "start": "npm run build -- --define:IS_DEVELOPMENT=true --servedir=./public --watch",
     "switch": "cat package.json | jq --arg SWITCH_NAME $SWITCH_NAME -r '(.[\"switch:\" + $SWITCH_NAME] // {}) as $TEMPLATE | .devDependencies += ($TEMPLATE.devDependencies // {}) | .dependencies += ($TEMPLATE.dependencies // {})' | tee ./package.json.tmp && mv ./package.json.tmp ./package.json"
   },
   "author": "William Wong (https://github.com/compulim)",

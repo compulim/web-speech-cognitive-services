@@ -1647,7 +1647,6 @@ describe('SpeechRecognition with loosened events', () => {
           "webspeech:start",
           "webspeech:audiostart",
           "cognitiveservices:recognized",
-          "cognitiveservices:audioSourceOff",
           "webspeech:audioend",
           "webspeech:error { error: 'no-speech' }",
           "webspeech:end",

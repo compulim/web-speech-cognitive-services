@@ -13,3 +13,5 @@ ReactDOM.render(
   </Provider>,
   document.getElementsByTagName('main')[0]
 );
+
+IS_DEVELOPMENT && new EventSource('/esbuild').addEventListener('change', () => location.reload());
