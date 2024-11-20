@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Fixed
+
+- Fixed [#218](https://github.com/compulim/web-speech-cognitive-services/issues/218). Speech recognition should stopping properly in some cases, in PR [#218](https://github.com/compulim/web-speech-cognitive-services/pull/219)
+   - Interactive mode, muted microphone
+   - Continuous and interactive mode, stop shortly after start
+
 ### Changed
 
 - Updated build tools and added named exports via CJS/ESM
