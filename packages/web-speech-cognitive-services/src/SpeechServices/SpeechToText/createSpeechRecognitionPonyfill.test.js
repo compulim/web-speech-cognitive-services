@@ -1861,6 +1861,96 @@ describe('SpeechRecognition with loosened events', () => {
       `);
     });
 
+    test('stop after recognized 1 speech', async () => {
+      speechRecognition.start();
+      speechRecognition.continuous = true;
+      speechRecognition.interimResults = true;
+
+      const recognizer = await constructRecognizerDeferred.promise;
+
+      await recognizer.waitForStartContinuousRecognitionAsync();
+
+      // This will fire "firstAudibleChunk" on "emitRead"
+      await recognizer.readAudioChunk();
+
+      recognizer.audioConfig.emitEvent('AudioSourceReadyEvent');
+
+      // cognitiveservices:audioSourceReady
+      // webspeech:start
+      // webspeech:audiostart
+
+      recognizer.audioConfig.emitRead();
+      await soundStartEmitted;
+
+      // cognitiveservices:firstAudibleChunk
+      // webspeech:soundstart
+
+      recognizer.recognizing(this, createRecognizingEvent('hello'));
+
+      // cognitiveservices:recognizing
+      // webspeech:speechstart
+      // webspeech:result ['hello']
+
+      recognizer.recognized(this, createRecognizedEvent('Hello.'));
+
+      // cognitiveservices:recognized
+      // webspeech:result ['Hello.' (isFinal)]
+
+      speechRecognition.stop();
+
+      // cognitiveservices:stop
+
+      recognizer.speechEndDetected(this, {});
+
+      // cognitiveservices:speechEndDetected
+
+      recognizer.recognized(this, {
+        offset: 50000000,
+        result: {
+          duration: 0,
+          json: JSON.stringify({
+            RecognitionStatus: 5,
+            Offset: 50000000,
+            Duration: 0
+          }),
+          offset: 50000000,
+          reason: 0 // NoMatch
+        }
+      });
+
+      // cognitiveservices:recognized
+      // webspeech:speechend
+      // webspeech:soundend
+      // webspeech:audioend
+      // webspeech:result ['Hello.' (isFinal)]
+      // webspeech:end
+
+      await endEventEmitted;
+
+      expect(toSnapshot(events)).toMatchInlineSnapshot(`
+        [
+          "cognitiveservices:audioSourceReady",
+          "webspeech:start",
+          "webspeech:audiostart",
+          "cognitiveservices:firstAudibleChunk",
+          "webspeech:soundstart",
+          "cognitiveservices:recognizing",
+          "webspeech:speechstart",
+          "webspeech:result ['hello']",
+          "cognitiveservices:recognized",
+          "webspeech:result ['Hello.' (isFinal)]",
+          "cognitiveservices:stop",
+          "cognitiveservices:speechEndDetected",
+          "cognitiveservices:recognized",
+          "webspeech:speechend",
+          "webspeech:soundend",
+          "webspeech:audioend",
+          "webspeech:result ['Hello.' (isFinal)]",
+          "webspeech:end",
+        ]
+      `);
+    });
+
     test('abort after recognized', async () => {
       speechRecognition.start();
       speechRecognition.continuous = true;
