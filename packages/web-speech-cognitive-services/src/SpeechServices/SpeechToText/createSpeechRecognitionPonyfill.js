@@ -519,7 +519,7 @@ export function createSpeechRecognitionPonyfillFromRecognizer({
               //   That means, we need to end this manually in interactive mode, and continuous-but-stopping mode.
               if (!this.continuous || stopping === 'stop') {
                 // Empty result will turn into "no-speech" later in the code.
-                finalEvent = new SpeechRecognitionEvent('result');
+                finalEvent = new SpeechRecognitionEvent('result', { results: finalizedResults });
 
                 // Quirks: 2024-11-19 with Speech SDK 1.14.0
                 //   Speech SDK did not stop after NoMatch even in interactive mode.
