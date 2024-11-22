@@ -4,13 +4,13 @@
 /* eslint no-empty-function: "off" */
 /* eslint no-magic-numbers: ["error", { "ignore": [0, 100, 150] }] */
 
-import patchOptions from '../patchOptions';
+import patchOptions, { type PatchOptionsInit } from '../patchOptions';
 import SpeechSDK from '../SpeechSDK';
 import createSpeechRecognitionPonyfillFromRecognizer from './createSpeechRecognitionPonyfillFromRecognizer';
 
 const { AudioConfig, OutputFormat, SpeechConfig, SpeechRecognizer } = SpeechSDK;
 
-export default function createSpeechRecognitionPonyfill(options) {
+export default function createSpeechRecognitionPonyfill(options: PatchOptionsInit) {
   const {
     audioConfig = AudioConfig.fromDefaultMicrophoneInput(),
 
@@ -33,23 +33,26 @@ export default function createSpeechRecognitionPonyfill(options) {
     return {};
   }
 
-  const createRecognizer = async lang => {
-    const { authorizationToken, region, speechRecognitionHostname, subscriptionKey } = await fetchCredentials();
+  const createRecognizer = async (lang: string) => {
+    const credentials = await fetchCredentials();
     let speechConfig;
 
-    if (speechRecognitionHostname) {
-      const host = { hostname: speechRecognitionHostname, port: 443, protocol: 'wss:' };
+    if (typeof credentials.speechRecognitionHostname !== 'undefined') {
+      const host = new URL('wss://hostname:443');
 
-      if (authorizationToken) {
+      host.hostname = credentials.speechRecognitionHostname;
+
+      if (credentials.authorizationToken) {
         speechConfig = SpeechConfig.fromHost(host);
-        speechConfig.authorizationToken = authorizationToken;
+        speechConfig.authorizationToken = credentials.authorizationToken;
       } else {
-        speechConfig = SpeechConfig.fromHost(host, subscriptionKey);
+        speechConfig = SpeechConfig.fromHost(host, credentials.subscriptionKey);
       }
     } else {
-      speechConfig = authorizationToken
-        ? SpeechConfig.fromAuthorizationToken(authorizationToken, region)
-        : SpeechConfig.fromSubscription(subscriptionKey, region);
+      speechConfig =
+        typeof credentials.authorizationToken !== 'undefined'
+          ? SpeechConfig.fromAuthorizationToken(credentials.authorizationToken, credentials.region)
+          : SpeechConfig.fromSubscription(credentials.subscriptionKey, credentials.region);
     }
 
     if (speechRecognitionEndpointId) {
@@ -66,7 +69,6 @@ export default function createSpeechRecognitionPonyfill(options) {
   };
 
   return createSpeechRecognitionPonyfillFromRecognizer({
-    audioConfig,
     createRecognizer,
     enableTelemetry,
     looseEvents,

@@ -6,7 +6,9 @@ import {
 import averageAmplitude from './averageAmplitude';
 
 export default function prepareAudioConfig(audioConfig: AudioConfig) {
-  const audioConfigImpl = audioConfig as AudioConfigImpl; // HACK: Need internals of AudioConfig.
+  // Speech SDK also force cast AudioConfig to AudioConfigImpl and pass it to ServiceRecognizerBase to use attach() and other methods.
+  // https://github.com/microsoft/cognitive-services-speech-sdk-js/blob/a6e9d2a202534565ccc97650861a6b296de48ecf/src/sdk/SpeechRecognizer.ts#L291C27-L291C43
+  const audioConfigImpl = audioConfig as AudioConfigImpl;
   const originalAttach = audioConfigImpl.attach;
   const boundOriginalAttach = audioConfigImpl.attach.bind(audioConfigImpl);
   let firstChunk = false;

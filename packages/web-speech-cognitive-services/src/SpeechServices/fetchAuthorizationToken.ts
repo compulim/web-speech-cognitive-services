@@ -1,6 +1,14 @@
 const TOKEN_URL_TEMPLATE = 'https://{region}.api.cognitive.microsoft.com/sts/v1.0/issueToken';
 
-export default async function ({ region, subscriptionKey }) {
+type FetchAuthorizationTokenInit = {
+  region: string;
+  subscriptionKey: string;
+};
+
+export default async function fetchAuthorizationToken({
+  region,
+  subscriptionKey
+}: FetchAuthorizationTokenInit): Promise<string> {
   const res = await fetch(TOKEN_URL_TEMPLATE.replace(/\{region\}/u, region), {
     headers: {
       'Ocp-Apim-Subscription-Key': subscriptionKey
