@@ -12,19 +12,19 @@ import {
   type SpeechRecognizer as SpeechRecognizerType
 } from 'microsoft-cognitiveservices-speech-sdk';
 import { type AudioConfigImpl } from 'microsoft-cognitiveservices-speech-sdk/distrib/lib/src/sdk/Audio/AudioConfig';
-import createPromiseQueue from '../../../Util/createPromiseQueue';
-import SpeechSDK from '../../SpeechSDK';
-import cognitiveServiceEventResultToWebSpeechRecognitionResult from '../cognitiveServiceEventResultToWebSpeechRecognitionResult';
-import cognitiveServicesAsyncToPromise from '../cognitiveServicesAsyncToPromise';
-import SpeechGrammarList from '../SpeechGrammarList';
-import SpeechRecognitionErrorEvent from '../SpeechRecognitionErrorEvent';
-import SpeechRecognitionEvent from '../SpeechRecognitionEvent';
-import { type SpeechRecognitionEventListenerMap } from '../SpeechRecognitionEventListenerMap';
-import type SpeechRecognitionResult from '../SpeechRecognitionResult';
-import SpeechRecognitionResultList from '../SpeechRecognitionResultList';
-import EventListenerMap from './EventListenerMap';
-import prepareAudioConfig from './prepareAudioConfig';
-import serializeRecognitionResult from './serializeRecognitionResult';
+import createPromiseQueue from '../../Util/createPromiseQueue';
+import SpeechSDK from '../SpeechSDK';
+import cognitiveServiceEventResultToWebSpeechRecognitionResult from './cognitiveServiceEventResultToWebSpeechRecognitionResult';
+import cognitiveServicesAsyncToPromise from './cognitiveServicesAsyncToPromise';
+import SpeechGrammarList from './SpeechGrammarList';
+import SpeechRecognitionErrorEvent from './SpeechRecognitionErrorEvent';
+import SpeechRecognitionEvent from './SpeechRecognitionEvent';
+import { type SpeechRecognitionEventListenerMap } from './SpeechRecognitionEventListenerMap';
+import type SpeechRecognitionResult from './SpeechRecognitionResult';
+import SpeechRecognitionResultList from './SpeechRecognitionResultList';
+import EventListenerMap from './private/EventListenerMap';
+import prepareAudioConfig from './private/prepareAudioConfig';
+import serializeRecognitionResult from './private/serializeRecognitionResult';
 
 // https://docs.microsoft.com/en-us/javascript/api/microsoft-cognitiveservices-speech-sdk/speechconfig?view=azure-node-latest#outputformat
 // {
@@ -58,7 +58,7 @@ type CreateSpeechRecognitionPonyfillFromRecognizerInit = {
   textNormalization: 'display' | 'itn' | 'lexical' | 'maskeditn';
 };
 
-export function createSpeechRecognitionPonyfillFromRecognizer({
+export default function createSpeechRecognitionPonyfillFromRecognizer({
   createRecognizer,
   enableTelemetry,
   looseEvents,
@@ -356,7 +356,7 @@ export function createSpeechRecognitionPonyfillFromRecognizer({
         const { dynamicGrammar } = recognizer['privReco'];
 
         referenceGrammars && referenceGrammars.length && dynamicGrammar.addReferenceGrammar(referenceGrammars);
-        phrases && phrases.length && dynamicGrammar.addPhrase(phrases);
+        phrases && phrases.length && dynamicGrammar.addPhrase([...phrases]);
 
         await cognitiveServicesAsyncToPromise<void>(recognizer.startContinuousRecognitionAsync, recognizer)();
 

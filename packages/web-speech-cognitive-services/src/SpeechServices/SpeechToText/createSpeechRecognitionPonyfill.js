@@ -6,7 +6,7 @@
 
 import patchOptions from '../patchOptions';
 import SpeechSDK from '../SpeechSDK';
-import { createSpeechRecognitionPonyfillFromRecognizer } from './private/createSpeechRecognitionPonyfillFromRecognizer';
+import createSpeechRecognitionPonyfillFromRecognizer from './createSpeechRecognitionPonyfillFromRecognizer';
 
 const { AudioConfig, OutputFormat, SpeechConfig, SpeechRecognizer } = SpeechSDK;
 

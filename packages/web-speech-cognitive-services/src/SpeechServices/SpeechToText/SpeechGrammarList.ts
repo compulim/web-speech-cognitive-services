@@ -1,23 +1,25 @@
 /* eslint class-methods-use-this: "off" */
 
-export default class {
+export default class SpeechGrammarList {
   constructor() {
-    this._phrases = [];
+    this.#phrases = [];
   }
 
   addFromString() {
     throw new Error('JSGF is not supported');
   }
 
-  get phrases() {
-    return this._phrases;
+  #phrases: readonly string[];
+
+  get phrases(): readonly string[] {
+    return this.#phrases;
   }
 
-  set phrases(value) {
+  set phrases(value: readonly string[]) {
     if (Array.isArray(value)) {
-      this._phrases = value;
+      this.#phrases = Object.freeze([...value]);
     } else if (typeof value === 'string') {
-      this._phrases = [value];
+      this.#phrases = Object.freeze([value]);
     } else {
       throw new Error(`The provided value is not an array or of type 'string'`);
     }
