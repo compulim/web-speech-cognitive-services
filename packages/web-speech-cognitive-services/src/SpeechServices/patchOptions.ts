@@ -1,16 +1,64 @@
+import { type AudioConfig } from 'microsoft-cognitiveservices-speech-sdk';
 import resolveFunctionOrReturnValue from './resolveFunctionOrReturnValue';
 
 let shouldWarnOnSubscriptionKey = true;
 
+export type Credentials = (
+  | { authorizationToken: string; subscriptionKey?: undefined }
+  | { authorizationToken?: undefined; subscriptionKey: string }
+) &
+  (
+    | {
+        customVoiceHostname?: undefined;
+        region: string;
+        speechRecognitionHostname?: undefined;
+        speechSynthesisHostname?: undefined;
+      }
+    | {
+        customVoiceHostname: string;
+        region?: undefined;
+        speechRecognitionHostname: string;
+        speechSynthesisHostname: string;
+      }
+  );
+
+export type PatchOptionsInit = {
+  audioConfig: AudioConfig;
+  authorizationToken?: string | undefined;
+  credentials?: (() => Credentials | Promise<Credentials>) | Credentials | Promise<Credentials>;
+  enableTelemetry: boolean;
+  looseEvent?: boolean | undefined;
+  looseEvents?: boolean | undefined;
+  referenceGrammars: string[];
+  region?: string | undefined;
+  speechRecognitionEndpointId: string;
+  subscriptionKey?: string | undefined;
+  textNormalization: 'display' | 'itn' | 'lexical' | 'maskeditn';
+};
+
+type PatchedOptions = {
+  audioConfig: AudioConfig;
+  enableTelemetry: boolean;
+  fetchCredentials: () => Promise<Credentials>;
+  looseEvents: boolean;
+  referenceGrammars: string[] | undefined;
+  speechRecognitionEndpointId: string | undefined;
+  textNormalization: 'display' | 'itn' | 'lexical' | 'maskeditn';
+};
+
 export default function patchOptions({
+  audioConfig,
   authorizationToken,
   credentials,
+  enableTelemetry,
   looseEvent,
   looseEvents,
+  referenceGrammars,
   region = 'westus',
+  speechRecognitionEndpointId,
   subscriptionKey,
-  ...otherOptions
-} = {}) {
+  textNormalization
+}: PatchOptionsInit): PatchedOptions {
   if (typeof looseEvent !== 'undefined') {
     console.warn('web-speech-cognitive-services: The option "looseEvent" should be named as "looseEvents".');
 
@@ -33,7 +81,8 @@ export default function patchOptions({
   }
 
   return {
-    ...otherOptions,
+    audioConfig,
+    enableTelemetry,
     fetchCredentials: async () => {
       const {
         authorizationToken,
@@ -72,18 +121,20 @@ export default function patchOptions({
         shouldWarnOnSubscriptionKey = false;
       }
 
-      const resolvedCredentials = authorizationToken ? { authorizationToken } : { subscriptionKey };
-
-      if (region) {
-        resolvedCredentials.region = region;
-      } else {
-        resolvedCredentials.customVoiceHostname = customVoiceHostname;
-        resolvedCredentials.speechRecognitionHostname = speechRecognitionHostname;
-        resolvedCredentials.speechSynthesisHostname = speechSynthesisHostname;
-      }
-
-      return resolvedCredentials;
+      return {
+        ...(typeof authorizationToken !== 'undefined' ? { authorizationToken } : { subscriptionKey }),
+        ...(typeof region !== 'undefined'
+          ? { region }
+          : {
+              customVoiceHostname,
+              speechRecognitionHostname,
+              speechSynthesisHostname
+            })
+      } satisfies Credentials;
     },
-    looseEvents
+    looseEvents: !!looseEvents,
+    referenceGrammars,
+    speechRecognitionEndpointId,
+    textNormalization
   };
 }

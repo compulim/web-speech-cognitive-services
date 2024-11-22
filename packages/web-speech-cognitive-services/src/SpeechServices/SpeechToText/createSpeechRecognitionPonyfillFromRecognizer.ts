@@ -16,15 +16,15 @@ import createPromiseQueue from '../../Util/createPromiseQueue';
 import SpeechSDK from '../SpeechSDK';
 import cognitiveServiceEventResultToWebSpeechRecognitionResult from './cognitiveServiceEventResultToWebSpeechRecognitionResult';
 import cognitiveServicesAsyncToPromise from './cognitiveServicesAsyncToPromise';
+import EventListenerMap from './private/EventListenerMap';
+import prepareAudioConfig from './private/prepareAudioConfig';
+import serializeRecognitionResult from './private/serializeRecognitionResult';
 import SpeechGrammarList from './SpeechGrammarList';
 import SpeechRecognitionErrorEvent from './SpeechRecognitionErrorEvent';
 import SpeechRecognitionEvent from './SpeechRecognitionEvent';
 import { type SpeechRecognitionEventListenerMap } from './SpeechRecognitionEventListenerMap';
 import type SpeechRecognitionResult from './SpeechRecognitionResult';
 import SpeechRecognitionResultList from './SpeechRecognitionResultList';
-import EventListenerMap from './private/EventListenerMap';
-import prepareAudioConfig from './private/prepareAudioConfig';
-import serializeRecognitionResult from './private/serializeRecognitionResult';
 
 // https://docs.microsoft.com/en-us/javascript/api/microsoft-cognitiveservices-speech-sdk/speechconfig?view=azure-node-latest#outputformat
 // {
@@ -54,7 +54,7 @@ type CreateSpeechRecognitionPonyfillFromRecognizerInit = {
   createRecognizer: (lang: string) => Promise<SpeechRecognizerType>;
   enableTelemetry: boolean;
   looseEvents: boolean;
-  referenceGrammars: [];
+  referenceGrammars?: readonly string[] | undefined;
   textNormalization: 'display' | 'itn' | 'lexical' | 'maskeditn';
 };
 
@@ -355,7 +355,7 @@ export default function createSpeechRecognitionPonyfillFromRecognizer({
         // HACK: We are using the internal of SpeechRecognizer because they did not expose it
         const { dynamicGrammar } = recognizer['privReco'];
 
-        referenceGrammars && referenceGrammars.length && dynamicGrammar.addReferenceGrammar(referenceGrammars);
+        referenceGrammars && referenceGrammars.length && dynamicGrammar.addReferenceGrammar([...referenceGrammars]);
         phrases && phrases.length && dynamicGrammar.addPhrase([...phrases]);
 
         await cognitiveServicesAsyncToPromise<void>(recognizer.startContinuousRecognitionAsync, recognizer)();
