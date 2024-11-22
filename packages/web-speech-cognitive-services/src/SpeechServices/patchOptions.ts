@@ -3,40 +3,49 @@ import resolveFunctionOrReturnValue from './resolveFunctionOrReturnValue';
 
 let shouldWarnOnSubscriptionKey = true;
 
-export type Credentials = (
-  | { authorizationToken: string; subscriptionKey?: undefined }
-  | { authorizationToken?: undefined; subscriptionKey: string }
-) &
+export type Credentials = Readonly<
   (
-    | {
-        customVoiceHostname?: undefined;
-        region: string;
-        speechRecognitionHostname?: undefined;
-        speechSynthesisHostname?: undefined;
-      }
-    | {
-        customVoiceHostname: string;
-        region?: undefined;
-        speechRecognitionHostname: string;
-        speechSynthesisHostname: string;
-      }
-  );
+    | { authorizationToken: string; subscriptionKey?: undefined }
+    | { authorizationToken?: undefined; subscriptionKey: string }
+  ) &
+    (
+      | {
+          customVoiceHostname?: undefined;
+          region: string;
+          speechRecognitionHostname?: undefined;
+          speechSynthesisHostname?: undefined;
+        }
+      | {
+          customVoiceHostname: string;
+          region?: undefined;
+          speechRecognitionHostname: string;
+          speechSynthesisHostname: string;
+        }
+    )
+>;
 
 export type PatchOptionsInit = {
   audioConfig: AudioConfig;
-  authorizationToken?: string | undefined;
   credentials?: (() => Credentials | Promise<Credentials>) | Credentials | Promise<Credentials>;
   enableTelemetry: boolean;
   looseEvent?: boolean | undefined;
   looseEvents?: boolean | undefined;
-  referenceGrammars: string[];
+  referenceGrammars: readonly string[];
   region?: string | undefined;
   speechRecognitionEndpointId: string;
-  subscriptionKey?: string | undefined;
   textNormalization: 'display' | 'itn' | 'lexical' | 'maskeditn';
-};
+} & (
+  | {
+      authorizationToken: string;
+      subscriptionKey?: undefined;
+    }
+  | {
+      authorizationToken?: undefined;
+      subscriptionKey: string;
+    }
+);
 
-type PatchedOptions = {
+type PatchedOptions = Readonly<{
   audioConfig: AudioConfig;
   enableTelemetry: boolean;
   fetchCredentials: () => Promise<Credentials>;
@@ -44,21 +53,23 @@ type PatchedOptions = {
   referenceGrammars: string[] | undefined;
   speechRecognitionEndpointId: string | undefined;
   textNormalization: 'display' | 'itn' | 'lexical' | 'maskeditn';
-};
+}>;
 
-export default function patchOptions({
-  audioConfig,
-  authorizationToken,
-  credentials,
-  enableTelemetry,
-  looseEvent,
-  looseEvents,
-  referenceGrammars,
-  region = 'westus',
-  speechRecognitionEndpointId,
-  subscriptionKey,
-  textNormalization
-}: PatchOptionsInit): PatchedOptions {
+export default function patchOptions(init: PatchOptionsInit): PatchedOptions {
+  const {
+    audioConfig,
+    authorizationToken,
+    enableTelemetry,
+    looseEvent,
+    referenceGrammars,
+    region = 'westus',
+    speechRecognitionEndpointId,
+    subscriptionKey,
+    textNormalization
+  } = init;
+
+  let { credentials, looseEvents } = init;
+
   if (typeof looseEvent !== 'undefined') {
     console.warn('web-speech-cognitive-services: The option "looseEvent" should be named as "looseEvents".');
 
@@ -74,13 +85,13 @@ export default function patchOptions({
       );
 
       credentials = async () =>
-        authorizationToken
-          ? { authorizationToken: await resolveFunctionOrReturnValue(authorizationToken), region }
-          : { region, subscriptionKey: await resolveFunctionOrReturnValue(subscriptionKey) };
+        typeof init.authorizationToken !== 'undefined'
+          ? { authorizationToken: await resolveFunctionOrReturnValue<string>(init.authorizationToken), region }
+          : { region, subscriptionKey: await resolveFunctionOrReturnValue<string>(init.subscriptionKey) };
     }
   }
 
-  return {
+  return Object.freeze({
     audioConfig,
     enableTelemetry,
     fetchCredentials: async () => {
@@ -91,7 +102,7 @@ export default function patchOptions({
         speechRecognitionHostname,
         speechSynthesisHostname,
         subscriptionKey
-      } = await resolveFunctionOrReturnValue(credentials);
+      } = await resolveFunctionOrReturnValue<Credentials>(credentials);
 
       if ((!authorizationToken && !subscriptionKey) || (authorizationToken && subscriptionKey)) {
         throw new Error(
@@ -133,8 +144,8 @@ export default function patchOptions({
       } satisfies Credentials;
     },
     looseEvents: !!looseEvents,
-    referenceGrammars,
+    referenceGrammars: Object.freeze([...referenceGrammars]),
     speechRecognitionEndpointId,
     textNormalization
-  };
+  });
 }
