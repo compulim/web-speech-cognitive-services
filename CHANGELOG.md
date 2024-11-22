@@ -11,11 +11,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fixed [#218](https://github.com/compulim/web-speech-cognitive-services/issues/218). Speech recognition should stopping properly in some cases, in PR [#218](https://github.com/compulim/web-speech-cognitive-services/pull/219)
    - Interactive mode, muted microphone
    - Continuous and interactive mode, stop shortly after start
-- Fixed [#221](https://github.com/compulim/web-speech-cognitive-services/issues/221). Continuous mode with successful interims should stop without errors, in PR [#222](https://github.com/compulim/web-speech-cognitive-services/pull/222) and [#224](https://github.com/compulim/web-speech-cognitive-services/pull/224)
+- Fixed [#221](https://github.com/compulim/web-speech-cognitive-services/issues/221). Continuous mode with successful interims should stop without errors, in PR [#222](https://github.com/compulim/web-speech-cognitive-services/pull/222)
 
 ### Changed
 
-- 💥 Modernized some code with TypeScript, more type-aligned to W3C Speech API, and moved to official Event Target API, in PR [#220](https://github.com/compulim/web-speech-cognitive-services/pull/220)
+- 💥 Modernized some code with TypeScript, more type-aligned to W3C Speech API, and moved to official Event Target API, in PR [#220](https://github.com/compulim/web-speech-cognitive-services/pull/220) and [#224](https://github.com/compulim/web-speech-cognitive-services/pull/224)
    -  `SpeechRecognitionResult` and `SpeechRecognitionResultList` is now a array-like object, use `Array.from()` to convert them into an array
 - Updated build tools and added named exports via CJS/ESM
 - Bumped dependencies, in PR [#216](https://github.com/compulim/web-speech-cognitive-services/pull/216) and [#218](https://github.com/compulim/web-speech-cognitive-services/issues/218)
