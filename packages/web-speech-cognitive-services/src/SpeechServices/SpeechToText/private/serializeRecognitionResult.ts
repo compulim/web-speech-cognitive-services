@@ -9,7 +9,7 @@ type SerializeRecognitionResultInit = {
   text: string;
 };
 
-type SerializedRecognitionResult = Readonly<{
+export type SerializedRecognitionResult = Readonly<{
   duration: number;
   errorDetails: string;
   json: unknown;

@@ -1,15 +1,15 @@
 import SpeechSDK from '../SpeechSDK';
 
-import { type RecognitionResult } from 'microsoft-cognitiveservices-speech-sdk';
 import SpeechRecognitionAlternative from './SpeechRecognitionAlternative';
 import SpeechRecognitionResult from './SpeechRecognitionResult';
+import type { SerializedRecognitionResult } from './private/serializeRecognitionResult';
 
 const {
   ResultReason: { RecognizingSpeech, RecognizedSpeech }
 } = SpeechSDK;
 
 export default function (
-  result: RecognitionResult,
+  result: SerializedRecognitionResult,
   init?:
     | {
         maxAlternatives: number;
