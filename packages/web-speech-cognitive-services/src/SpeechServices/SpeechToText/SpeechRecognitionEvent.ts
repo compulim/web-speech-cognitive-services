@@ -54,4 +54,8 @@ export default class SpeechRecognitionEvent<
   get results(): SpeechRecognitionResultList {
     return this.#results;
   }
+
+  override get type(): T {
+    return super.type as T;
+  }
 }

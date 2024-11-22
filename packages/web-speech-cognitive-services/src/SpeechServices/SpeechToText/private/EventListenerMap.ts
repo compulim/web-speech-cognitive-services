@@ -1,6 +1,6 @@
-type EventListener<T extends Event> = (event: T) => void;
+type EventListener<T> = (event: T) => void;
 
-export default class EventListenerMap<T extends string, EventMap extends Record<T, Event>> {
+export default class EventListenerMap<T extends string, EventMap extends { [Name in T]: unknown }> {
   constructor(eventTarget: EventTarget) {
     this.#eventTarget = eventTarget;
     this.#propertyMap = {};
@@ -9,11 +9,11 @@ export default class EventListenerMap<T extends string, EventMap extends Record<
   #eventTarget: EventTarget;
   #propertyMap: { [Name in keyof EventMap]?: EventListener<EventMap[Name]> | undefined };
 
-  getProperty(name: T): ((event: EventMap[typeof name]) => void) | undefined {
+  getProperty<U extends T>(name: U): ((event: EventMap[U]) => void) | undefined {
     return this.#propertyMap[name];
   }
 
-  setProperty(name: T, value: ((event: EventMap[typeof name]) => void) | undefined) {
+  setProperty<U extends T>(name: U, value: ((event: EventMap[U]) => void) | undefined) {
     const existing = this.#propertyMap[name];
 
     existing && this.#eventTarget.removeEventListener(name, existing as EventListener<Event>);

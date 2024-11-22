@@ -1,4 +1,4 @@
-import EventListenerMap from './EventListenerMap';
+import EventListenerMap from './private/EventListenerMap';
 import type SpeechRecognitionErrorEvent from './SpeechRecognitionErrorEvent';
 import type SpeechRecognitionEvent from './SpeechRecognitionEvent';
 

@@ -6,7 +6,8 @@ export type SpeechRecognitionErrorType =
   | 'network'
   | 'no-speech'
   | 'not-allowed'
-  | 'service-not-allowed';
+  | 'service-not-allowed'
+  | 'unknown';
 
 export type SpeechRecognitionErrorEventInit = {
   error: SpeechRecognitionErrorType;
@@ -30,5 +31,9 @@ export default class SpeechRecognitionErrorEvent extends Event {
 
   get message(): string | undefined {
     return this.#message;
+  }
+
+  override get type(): 'error' {
+    return 'error';
   }
 }

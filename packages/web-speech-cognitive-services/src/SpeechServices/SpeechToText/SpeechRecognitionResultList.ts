@@ -1,4 +1,4 @@
-import FakeArray from './FakeArray';
+import FakeArray from './private/FakeArray';
 import type SpeechRecognitionResult from './SpeechRecognitionResult';
 
 export default class SpeechRecognitionResultList extends FakeArray<SpeechRecognitionResult> {
