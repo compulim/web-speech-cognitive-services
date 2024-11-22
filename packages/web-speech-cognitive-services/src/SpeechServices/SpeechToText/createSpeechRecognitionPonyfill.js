@@ -8,7 +8,10 @@ import createPromiseQueue from '../../Util/createPromiseQueue';
 import patchOptions from '../patchOptions';
 import SpeechSDK from '../SpeechSDK';
 import cognitiveServiceEventResultToWebSpeechRecognitionResult from './cognitiveServiceEventResultToWebSpeechRecognitionResult';
+import cognitiveServicesAsyncToPromise from './cognitiveServicesAsyncToPromise';
 import EventListenerMap from './EventListenerMap';
+import prepareAudioConfig from './private/prepareAudioConfig';
+import serializeRecognitionResult from './private/serializeRecognitionResult';
 import SpeechGrammarList from './SpeechGrammarList';
 import SpeechRecognitionErrorEvent from './SpeechRecognitionErrorEvent';
 import SpeechRecognitionEvent from './SpeechRecognitionEvent';
@@ -38,85 +41,10 @@ import SpeechRecognitionResultList from './SpeechRecognitionResultList';
 
 const { AudioConfig, OutputFormat, ResultReason, SpeechConfig, SpeechRecognizer } = SpeechSDK;
 
-function serializeRecognitionResult({ duration, errorDetails, json, offset, properties, reason, resultId, text }) {
-  return {
-    duration,
-    errorDetails,
-    json: JSON.parse(json),
-    offset,
-    properties,
-    reason,
-    resultId,
-    text
-  };
-}
-
-function averageAmplitude(arrayBuffer) {
-  const array = new Int16Array(arrayBuffer);
-
-  return (
-    [].reduce.call(array, (averageAmplitude, amplitude) => averageAmplitude + Math.abs(amplitude), 0) / array.length
-  );
-}
-
-function cognitiveServicesAsyncToPromise(fn) {
-  return (...args) => new Promise((resolve, reject) => fn(...args, resolve, reject));
-}
-
-function prepareAudioConfig(audioConfig) {
-  const originalAttach = audioConfig.attach;
-  const boundOriginalAttach = audioConfig.attach.bind(audioConfig);
-  let firstChunk;
-  let muted;
-
-  // We modify "attach" function and detect when audible chunk is read.
-  // We will only modify "attach" function once.
-  audioConfig.attach = async () => {
-    const reader = await boundOriginalAttach();
-
-    return {
-      ...reader,
-      read: async () => {
-        const chunk = await reader.read();
-
-        // The magic number 150 is measured by:
-        // 1. Set microphone volume to 0
-        // 2. Observe the amplitude (100-110) for the first few chunks
-        //    (There is a short static caught when turning on the microphone)
-        // 3. Set the number a bit higher than the observation
-
-        if (!firstChunk && averageAmplitude(chunk.buffer) > 150) {
-          audioConfig.events.onEvent({ name: 'FirstAudibleChunk' });
-          firstChunk = true;
-        }
-
-        if (muted) {
-          return { buffer: new ArrayBuffer(0), isEnd: true, timeReceived: Date.now() };
-        }
-
-        return chunk;
-      }
-    };
-  };
-
-  return {
-    audioConfig,
-    pause: () => {
-      muted = true;
-    },
-    unprepare: () => {
-      audioConfig.attach = originalAttach;
-    }
-  };
-}
-
-export function createSpeechRecognitionPonyfillFromRecognizer({
-  createRecognizer,
-  enableTelemetry,
-  looseEvents,
-  referenceGrammars,
-  textNormalization
-}) {
+export function createSpeechRecognitionPonyfillFromRecognizer(
+  /** @type {{ createRecognizer: (lang: string) => import('microsoft-cognitiveservices-speech-sdk').SpeechRecognizer; enableTelemetry: boolean; looseEvents: boolean; referenceGrammars: []; textNormalization: 'display' | 'itn' | 'lexical' | 'maskeditn' }} */
+  { createRecognizer, enableTelemetry, looseEvents, referenceGrammars, textNormalization }
+) {
   // If enableTelemetry is set to null or non-boolean, we will default to true.
   SpeechRecognizer.enableTelemetry(enableTelemetry !== false);
 
@@ -139,7 +67,12 @@ export function createSpeechRecognitionPonyfillFromRecognizer({
     /** @type { import('./SpeechRecognitionEventListenerMap').SpeechRecognitionEventListenerMap } */
     #eventListenerMap;
 
-    emitCognitiveServices(type, event) {
+    emitCognitiveServices(
+      /** @type {string} */
+      type,
+      /** @type {any} */
+      event
+    ) {
       this.dispatchEvent(
         new SpeechRecognitionEvent('cognitiveservices', {
           data: {
@@ -242,13 +175,13 @@ export function createSpeechRecognitionPonyfillFromRecognizer({
       this.#eventListenerMap.setProperty('end', value);
     }
 
-    /** @type { ((event: SpeechRecognitionEvent<'error'>) => void) | undefined } */
+    /** @type { ((event: SpeechRecognitionErrorEvent) => void) | undefined } */
     get onerror() {
       return this.#eventListenerMap.getProperty('error');
     }
 
     set onerror(
-      /** @type { ((event: SpeechRecognitionEvent<'error'>) => void) | undefined } */
+      /** @type { ((event: SpeechRecognitionErrorEvent) => void) | undefined } */
       value
     ) {
       this.#eventListenerMap.setProperty('error', value);
@@ -358,7 +291,12 @@ export function createSpeechRecognitionPonyfillFromRecognizer({
           }
         });
 
-        recognizer.canceled = (_, { errorDetails, offset, reason, sessionId }) => {
+        recognizer.canceled = (
+          /** @type {import('microsoft-cognitiveservices-speech-sdk').SpeechRecognizer} */
+          _,
+          /** @type {import('microsoft-cognitiveservices-speech-sdk').CancellationEventArgs} */
+          { errorDetails, offset, reason, sessionId }
+        ) => {
           queue.push({
             canceled: {
               errorDetails,
@@ -369,7 +307,12 @@ export function createSpeechRecognitionPonyfillFromRecognizer({
           });
         };
 
-        recognizer.recognized = (_, { offset, result, sessionId }) => {
+        recognizer.recognized = (
+          /** @type {import('microsoft-cognitiveservices-speech-sdk').SpeechRecognizer} */
+          _,
+          /** @type {import('microsoft-cognitiveservices-speech-sdk').SpeechRecognitionEventArgs} */
+          { offset, result, sessionId }
+        ) => {
           queue.push({
             recognized: {
               offset,
@@ -379,7 +322,12 @@ export function createSpeechRecognitionPonyfillFromRecognizer({
           });
         };
 
-        recognizer.recognizing = (_, { offset, result, sessionId }) => {
+        recognizer.recognizing = (
+          /** @type {import('microsoft-cognitiveservices-speech-sdk').SpeechRecognizer} */
+          _,
+          /** @type {import('microsoft-cognitiveservices-speech-sdk').SpeechRecognitionEventArgs} */
+          { offset, result, sessionId }
+        ) => {
           queue.push({
             recognizing: {
               offset,
@@ -389,20 +337,40 @@ export function createSpeechRecognitionPonyfillFromRecognizer({
           });
         };
 
-        recognizer.sessionStarted = (_, { sessionId }) => {
+        recognizer.sessionStarted = (
+          /** @type {import('microsoft-cognitiveservices-speech-sdk').SpeechRecognizer} */
+          _,
+          /** @type {import('microsoft-cognitiveservices-speech-sdk').SessionEventArgs} */
+          { sessionId }
+        ) => {
           queue.push({ sessionStarted: { sessionId } });
         };
 
-        recognizer.sessionStopped = (_, { sessionId }) => {
+        recognizer.sessionStopped = (
+          /** @type {import('microsoft-cognitiveservices-speech-sdk').SpeechRecognizer} */
+          _,
+          /** @type {import('microsoft-cognitiveservices-speech-sdk').SessionEventArgs} */
+          { sessionId }
+        ) => {
           // "sessionStopped" is never fired, probably because we are using startContinuousRecognitionAsync instead of recognizeOnceAsync.
           queue.push({ sessionStopped: { sessionId } });
         };
 
-        recognizer.speechStartDetected = (_, { offset, sessionId }) => {
+        recognizer.speechStartDetected = (
+          /** @type {import('microsoft-cognitiveservices-speech-sdk').SpeechRecognizer} */
+          _,
+          /** @type {import('microsoft-cognitiveservices-speech-sdk').RecognitionEventArgs} */
+          { offset, sessionId }
+        ) => {
           queue.push({ speechStartDetected: { offset, sessionId } });
         };
 
-        recognizer.speechEndDetected = (_, { sessionId }) => {
+        recognizer.speechEndDetected = (
+          /** @type {import('microsoft-cognitiveservices-speech-sdk').SpeechRecognizer} */
+          _,
+          /** @type {import('microsoft-cognitiveservices-speech-sdk').RecognitionEventArgs} */
+          { sessionId }
+        ) => {
           // "speechEndDetected" is never fired, probably because we are using startContinuousRecognitionAsync instead of recognizeOnceAsync.
           // Update: "speechEndDetected" is fired for DLSpeech.listenOnceAsync()
           queue.push({ speechEndDetected: { sessionId } });
@@ -426,9 +394,9 @@ export function createSpeechRecognitionPonyfillFromRecognizer({
         }
 
         let audioStarted;
-        /** @type { SpeechRecognitionErrorEvent | SpeechRecognitionEvent<'result'> } */
+        /** @type { import('./SpeechRecognitionErrorEvent').default | import('./SpeechRecognitionEvent').default<'result'> | undefined } */
         let finalEvent;
-        /** @type { SpeechRecognitionResult[] } */
+        /** @type { readonly import('./SpeechRecognitionResult')[] } */
         let finalizedResults = [];
 
         for (let loop = 0; !stopping || audioStarted; loop++) {
@@ -519,7 +487,9 @@ export function createSpeechRecognitionPonyfillFromRecognizer({
               //   That means, we need to end this manually in interactive mode, and continuous-but-stopping mode.
               if (!this.continuous || stopping === 'stop') {
                 // Empty result will turn into "no-speech" later in the code.
-                finalEvent = new SpeechRecognitionEvent('result', { results: finalizedResults });
+                finalEvent = new SpeechRecognitionEvent('result', {
+                  results: new SpeechRecognitionResultList(finalizedResults)
+                });
 
                 // Quirks: 2024-11-19 with Speech SDK 1.14.0
                 //   Speech SDK did not stop after NoMatch even in interactive mode.
@@ -557,7 +527,7 @@ export function createSpeechRecognitionPonyfillFromRecognizer({
                   textNormalization
                 });
 
-                const recognizable = !!result[0].transcript;
+                const recognizable = !!result[0]?.transcript;
 
                 if (recognizable) {
                   finalizedResults = [...finalizedResults, result];

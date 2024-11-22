@@ -6,7 +6,8 @@ export type SpeechRecognitionErrorType =
   | 'network'
   | 'no-speech'
   | 'not-allowed'
-  | 'service-not-allowed';
+  | 'service-not-allowed'
+  | 'unknown';
 
 export type SpeechRecognitionErrorEventInit = {
   error: SpeechRecognitionErrorType;
