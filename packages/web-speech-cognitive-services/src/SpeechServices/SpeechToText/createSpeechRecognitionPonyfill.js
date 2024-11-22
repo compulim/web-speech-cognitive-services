@@ -66,7 +66,6 @@ export default function createSpeechRecognitionPonyfill(options) {
   };
 
   return createSpeechRecognitionPonyfillFromRecognizer({
-    audioConfig,
     createRecognizer,
     enableTelemetry,
     looseEvents,
