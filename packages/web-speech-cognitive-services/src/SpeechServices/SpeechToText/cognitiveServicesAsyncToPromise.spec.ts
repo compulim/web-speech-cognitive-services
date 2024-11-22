@@ -1,15 +1,11 @@
 import cognitiveServicesAsyncToPromise from './cognitiveServicesAsyncToPromise';
 
-type Fn = (
-  arg0: number,
-  arg1: number,
-  arg2: number,
-  resolve: (returnValue: string) => void,
-  reject: (error: unknown) => void
-) => void;
-
-let fn: jest.MockedFn<Fn>;
-let promiseFn: (arg0: number, arg1: number, arg2: number) => Promise<string>;
+let fn: jest.Mock<
+  void,
+  [number, number, number, (returnValue: string) => void, (error: unknown) => void],
+  string | undefined | void
+>;
+let promiseFn: (this: string | undefined | void, arg0: number, arg1: number, arg2: number) => Promise<string>;
 
 beforeEach(() => {
   fn = jest.fn();
@@ -38,4 +34,20 @@ describe('when called and rejected', () => {
   });
 
   test('should reject with error', () => expect(resultPromise).rejects.toThrow('artificial'));
+});
+
+describe('when called with context', () => {
+  let resultPromise: Promise<string>;
+
+  beforeEach(() => {
+    promiseFn = cognitiveServicesAsyncToPromise(
+      jest.fn(function (x, y, z, resolve) {
+        resolve(`${x + y + z} ${this}`);
+      }),
+      'Hello!'
+    );
+    resultPromise = promiseFn(1, 2, 3);
+  });
+
+  test('should return result', () => expect(resultPromise).resolves.toBe('6 Hello!'));
 });

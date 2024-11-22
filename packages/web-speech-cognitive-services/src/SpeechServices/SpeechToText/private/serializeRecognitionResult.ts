@@ -1,13 +1,4 @@
-type SerializeRecognitionResultInit = {
-  duration: number;
-  errorDetails: string;
-  json: string;
-  offset: number;
-  properties: unknown;
-  reason: number;
-  resultId: string;
-  text: string;
-};
+import { type SpeechRecognitionResult } from 'microsoft-cognitiveservices-speech-sdk';
 
 export type SerializedRecognitionResult = Readonly<{
   duration: number;
@@ -29,11 +20,11 @@ export default function serializeRecognitionResult({
   reason,
   resultId,
   text
-}: SerializeRecognitionResultInit): SerializedRecognitionResult {
+}: SpeechRecognitionResult): SerializedRecognitionResult {
   return Object.freeze({
     duration,
     errorDetails,
-    json: JSON.parse(json),
+    json: json && JSON.parse(json),
     offset,
     properties,
     reason,

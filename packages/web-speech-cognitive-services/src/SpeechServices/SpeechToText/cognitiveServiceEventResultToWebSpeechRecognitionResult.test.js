@@ -6,6 +6,8 @@ import cognitiveServiceEventResultToWebSpeechRecognitionResult from './cognitive
 
 test('Multiple results with RecognitionStatus === "Success"', () => {
   const resultList = cognitiveServiceEventResultToWebSpeechRecognitionResult({
+    duration: 0,
+    errorDetails: '',
     json: {
       NBest: [
         {
@@ -25,7 +27,11 @@ test('Multiple results with RecognitionStatus === "Success"', () => {
       ],
       RecognitionStatus: 'Success'
     },
-    reason: 3
+    offset: 0,
+    properties: '',
+    reason: 3,
+    resultId: '',
+    text: ''
   });
 
   expect(resultList[0]).toEqual(expect.objectContaining({ confidence: 0.25, transcript: 'No.' }));
@@ -35,7 +41,13 @@ test('Multiple results with RecognitionStatus === "Success"', () => {
 
 test('Single interim results', () => {
   const resultList = cognitiveServiceEventResultToWebSpeechRecognitionResult({
+    duration: 0,
+    errorDetails: '',
+    json: {},
+    offset: 0,
+    properties: '',
     reason: 2,
+    resultId: '',
     text: 'No.'
   });
 
@@ -45,6 +57,8 @@ test('Single interim results', () => {
 
 test('Single final results', () => {
   const resultList = cognitiveServiceEventResultToWebSpeechRecognitionResult({
+    duration: 0,
+    errorDetails: '',
     json: {
       NBest: [
         {
@@ -56,7 +70,11 @@ test('Single final results', () => {
         }
       ]
     },
-    reason: 3
+    offset: 0,
+    properties: '',
+    reason: 3,
+    resultId: '',
+    text: ''
   });
 
   expect(resultList[0]).toEqual(expect.objectContaining({ confidence: 0.25, transcript: 'No.' }));
@@ -66,6 +84,8 @@ test('Single final results', () => {
 test('Single final results with ITN', () => {
   const resultList = cognitiveServiceEventResultToWebSpeechRecognitionResult(
     {
+      duration: 0,
+      errorDetails: '',
       json: {
         NBest: [
           {
@@ -77,9 +97,14 @@ test('Single final results with ITN', () => {
           }
         ]
       },
-      reason: 3
+      offset: 0,
+      properties: '',
+      reason: 3,
+      resultId: '',
+      text: ''
     },
     {
+      maxAlternatives: 1,
       textNormalization: 'itn'
     }
   );
@@ -91,6 +116,8 @@ test('Single final results with ITN', () => {
 test('Single final results with lexical', () => {
   const resultList = cognitiveServiceEventResultToWebSpeechRecognitionResult(
     {
+      duration: 0,
+      errorDetails: '',
       json: {
         NBest: [
           {
@@ -102,9 +129,14 @@ test('Single final results with lexical', () => {
           }
         ]
       },
-      reason: 3
+      offset: 0,
+      properties: '',
+      reason: 3,
+      resultId: '',
+      text: ''
     },
     {
+      maxAlternatives: 1,
       textNormalization: 'lexical'
     }
   );
@@ -116,6 +148,8 @@ test('Single final results with lexical', () => {
 test('Single final results with masked ITN', () => {
   const resultList = cognitiveServiceEventResultToWebSpeechRecognitionResult(
     {
+      duration: 0,
+      errorDetails: '',
       json: {
         NBest: [
           {
@@ -127,9 +161,14 @@ test('Single final results with masked ITN', () => {
           }
         ]
       },
-      reason: 3
+      offset: 0,
+      properties: '',
+      reason: 3,
+      resultId: '',
+      text: ''
     },
     {
+      maxAlternatives: 1,
       textNormalization: 'maskeditn'
     }
   );
@@ -141,6 +180,8 @@ test('Single final results with masked ITN', () => {
 test('Result is iterable', () => {
   const resultList = cognitiveServiceEventResultToWebSpeechRecognitionResult(
     {
+      duration: 0,
+      errorDetails: '',
       json: {
         NBest: [
           {
@@ -152,9 +193,16 @@ test('Result is iterable', () => {
           }
         ]
       },
-      reason: 3
+      offset: 0,
+      properties: '',
+      reason: 3,
+      resultId: '',
+      text: ''
     },
-    {}
+    {
+      maxAlternatives: 1,
+      textNormalization: 'display'
+    }
   );
 
   const [firstAlternative] = resultList;

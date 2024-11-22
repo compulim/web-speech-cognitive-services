@@ -1,6 +1,6 @@
-type EventListener<T extends Event> = (event: T) => void;
+type EventListener<T> = (event: T) => void;
 
-export default class EventListenerMap<T extends string, EventMap extends Record<T, Event>> {
+export default class EventListenerMap<T extends string, EventMap extends { [Name in T]: unknown }> {
   constructor(eventTarget: EventTarget) {
     this.#eventTarget = eventTarget;
     this.#propertyMap = {};

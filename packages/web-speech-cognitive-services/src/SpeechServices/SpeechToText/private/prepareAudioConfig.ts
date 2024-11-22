@@ -1,16 +1,20 @@
 import { AudioSourceEvent } from 'microsoft-cognitiveservices-speech-sdk/distrib/lib/src/common/AudioSourceEvents';
-import type { AudioConfigImpl } from 'microsoft-cognitiveservices-speech-sdk/distrib/lib/src/sdk/Audio/AudioConfig';
+import {
+  type AudioConfig,
+  type AudioConfigImpl
+} from 'microsoft-cognitiveservices-speech-sdk/distrib/lib/src/sdk/Audio/AudioConfig';
 import averageAmplitude from './averageAmplitude';
 
-export default function prepareAudioConfig(audioConfig: AudioConfigImpl) {
-  const originalAttach = audioConfig.attach;
-  const boundOriginalAttach = audioConfig.attach.bind(audioConfig);
+export default function prepareAudioConfig(audioConfig: AudioConfig) {
+  const audioConfigImpl = audioConfig as AudioConfigImpl; // HACK: Need internals of AudioConfig.
+  const originalAttach = audioConfigImpl.attach;
+  const boundOriginalAttach = audioConfigImpl.attach.bind(audioConfigImpl);
   let firstChunk = false;
   let muted = false;
 
   // We modify "attach" function and detect when audible chunk is read.
   // We will only modify "attach" function once.
-  audioConfig.attach = async () => {
+  audioConfigImpl.attach = async () => {
     const reader = await boundOriginalAttach('');
 
     return {
@@ -24,7 +28,7 @@ export default function prepareAudioConfig(audioConfig: AudioConfigImpl) {
         //    (There is a short static caught when turning on the microphone)
         // 3. Set the number a bit higher than the observation
         if (!firstChunk && averageAmplitude(chunk.buffer) > 150) {
-          audioConfig.events.onEvent(new AudioSourceEvent('FirstAudibleChunk', ''));
+          audioConfigImpl.events.onEvent(new AudioSourceEvent('FirstAudibleChunk', ''));
           firstChunk = true;
         }
 
@@ -43,7 +47,7 @@ export default function prepareAudioConfig(audioConfig: AudioConfigImpl) {
       muted = true;
     },
     unprepare: () => {
-      audioConfig.attach = originalAttach;
+      audioConfigImpl.attach = originalAttach;
     }
   };
 }

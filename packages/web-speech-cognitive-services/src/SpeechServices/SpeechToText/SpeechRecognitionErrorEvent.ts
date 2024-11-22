@@ -32,4 +32,8 @@ export default class SpeechRecognitionErrorEvent extends Event {
   get message(): string | undefined {
     return this.#message;
   }
+
+  override get type(): 'error' {
+    return 'error';
+  }
 }
