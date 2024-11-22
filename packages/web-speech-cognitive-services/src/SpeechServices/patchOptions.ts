@@ -30,7 +30,7 @@ export type PatchOptionsInit = {
   enableTelemetry: boolean;
   looseEvent?: boolean | undefined;
   looseEvents?: boolean | undefined;
-  referenceGrammars: readonly string[];
+  referenceGrammars?: readonly string[] | undefined;
   region?: string | undefined;
   speechRecognitionEndpointId: string;
   textNormalization: 'display' | 'itn' | 'lexical' | 'maskeditn';
@@ -50,7 +50,7 @@ type PatchedOptions = Readonly<{
   enableTelemetry: boolean;
   fetchCredentials: () => Promise<Credentials>;
   looseEvents: boolean;
-  referenceGrammars: string[] | undefined;
+  referenceGrammars: readonly string[] | undefined;
   speechRecognitionEndpointId: string | undefined;
   textNormalization: 'display' | 'itn' | 'lexical' | 'maskeditn';
 }>;
@@ -144,7 +144,7 @@ export default function patchOptions(init: PatchOptionsInit): PatchedOptions {
       } satisfies Credentials;
     },
     looseEvents: !!looseEvents,
-    referenceGrammars: Object.freeze([...referenceGrammars]),
+    referenceGrammars: referenceGrammars && Object.freeze([...referenceGrammars]),
     speechRecognitionEndpointId,
     textNormalization
   });
