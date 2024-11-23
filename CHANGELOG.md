@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
    - Interactive mode, muted microphone
    - Continuous and interactive mode, stop shortly after start
 - Fixed [#221](https://github.com/compulim/web-speech-cognitive-services/issues/221). Continuous mode with successful interims should stop without errors, in PR [#222](https://github.com/compulim/web-speech-cognitive-services/pull/222)
+- Fixed [#226](https://github.com/compulim/web-speech-cognitive-services/issues/226). `createSpeechServicesPonyfill` should return both `SpeechRecognition` and `SpeechSynthesis` ponyfill, in PR [#227](https://github.com/compulim/web-speech-cognitive-services/pull/227)
+   - 💥 `createSpeechServicesPonyfill` will throw if the browser does not support Media Capture and Streams API, instead of warning and continue
 
 ### Changed
 

@@ -10,7 +10,9 @@ import createSpeechRecognitionPonyfillFromRecognizer from './createSpeechRecogni
 
 const { AudioConfig, OutputFormat, SpeechConfig, SpeechRecognizer } = SpeechSDK;
 
-export default function createSpeechRecognitionPonyfill(options: PatchOptionsInit) {
+export default function createSpeechRecognitionPonyfill(
+  options: PatchOptionsInit
+): ReturnType<typeof createSpeechRecognitionPonyfillFromRecognizer> {
   const {
     audioConfig = AudioConfig.fromDefaultMicrophoneInput(),
 
@@ -26,11 +28,9 @@ export default function createSpeechRecognitionPonyfill(options: PatchOptionsIni
   } = patchOptions(options);
 
   if (!audioConfig && (!window.navigator.mediaDevices || !window.navigator.mediaDevices.getUserMedia)) {
-    console.warn(
-      'web-speech-cognitive-services: This browser does not support WebRTC and it will not work with Cognitive Services Speech Services.'
+    throw new Error(
+      'web-speech-cognitive-services: This browser does not support Media Capture and Streams API and it will not work with Cognitive Services Speech Services.'
     );
-
-    return {};
   }
 
   const createRecognizer = async (lang: string) => {
