@@ -10,9 +10,7 @@ import createSpeechRecognitionPonyfillFromRecognizer from './createSpeechRecogni
 
 const { AudioConfig, OutputFormat, SpeechConfig, SpeechRecognizer } = SpeechSDK;
 
-export default function createSpeechRecognitionPonyfill(
-  options: PatchOptionsInit
-): ReturnType<typeof createSpeechRecognitionPonyfillFromRecognizer> {
+export default function createSpeechRecognitionPonyfill(options: PatchOptionsInit) {
   const {
     audioConfig = AudioConfig.fromDefaultMicrophoneInput(),
 
