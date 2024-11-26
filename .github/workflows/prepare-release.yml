@@ -1,7 +1,17 @@
 name: Prepare release
 
 on:
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      version-to-bump:
+        default: patch
+        description: Version to bump
+        options:
+          - major
+          - minor
+          - patch
+        required: true
+        type: choice
 
 jobs:
   call-workflow:
@@ -10,3 +20,5 @@ jobs:
       id-token: write
     secrets: inherit
     uses: compulim/workflows/.github/workflows/prepare-release.yml@main
+    with:
+      version-to-bump: ${{ inputs.version-to-bump }}
