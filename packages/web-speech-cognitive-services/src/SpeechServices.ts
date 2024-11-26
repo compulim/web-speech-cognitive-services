@@ -15,7 +15,7 @@ import createSpeechSynthesisPonyfill from './SpeechServices/TextToSpeech';
 import fetchAuthorizationToken from './SpeechServices/fetchAuthorizationToken';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export default function createSpeechServicesPonyfill(options: any = {}) {
+export default function createSpeechServicesPonyfill(options: any = {}): any {
   return {
     ...createSpeechRecognitionPonyfill(options),
     ...createSpeechSynthesisPonyfill(options)
