@@ -1,19 +1,11 @@
 # Changelog
+
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
-
-### Fixed
-
-- Fixed [#218](https://github.com/compulim/web-speech-cognitive-services/issues/218). Speech recognition should stopping properly in some cases, in PR [#218](https://github.com/compulim/web-speech-cognitive-services/pull/219)
-   - Interactive mode, muted microphone
-   - Continuous and interactive mode, stop shortly after start
-- Fixed [#221](https://github.com/compulim/web-speech-cognitive-services/issues/221). Continuous mode with successful interims should stop without errors, in PR [#222](https://github.com/compulim/web-speech-cognitive-services/pull/222)
-- Fixed [#226](https://github.com/compulim/web-speech-cognitive-services/issues/226). `createSpeechServicesPonyfill` should return both `SpeechRecognition` and `SpeechSynthesis` ponyfill, in PR [#227](https://github.com/compulim/web-speech-cognitive-services/pull/227)
-   - 💥 `createSpeechServicesPonyfill` will throw if the browser does not support Media Capture and Streams API, instead of warning and continue
+## [8.0.0] - 2024-11-26
 
 ### Changed
 
@@ -46,6 +38,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
       - [`redux-saga@1.3.0`](https://npmjs.com/package/redux-saga)
       - [`redux@5.0.1`](https://npmjs.com/package/redux)
       - [`typescript@5.4.5`](https://npmjs.com/package/typescript)
+
+### Fixed
+
+- Fixed [#218](https://github.com/compulim/web-speech-cognitive-services/issues/218). Speech recognition should stopping properly in some cases, in PR [#218](https://github.com/compulim/web-speech-cognitive-services/pull/219)
+   - Interactive mode, muted microphone
+   - Continuous and interactive mode, stop shortly after start
+- Fixed [#221](https://github.com/compulim/web-speech-cognitive-services/issues/221). Continuous mode with successful interims should stop without errors, in PR [#222](https://github.com/compulim/web-speech-cognitive-services/pull/222)
+- Fixed [#226](https://github.com/compulim/web-speech-cognitive-services/issues/226). `createSpeechServicesPonyfill` should return both `SpeechRecognition` and `SpeechSynthesis` ponyfill, in PR [#227](https://github.com/compulim/web-speech-cognitive-services/pull/227)
+   - 💥 `createSpeechServicesPonyfill` will throw if the browser does not support Media Capture and Streams API, instead of warning and continue
 
 ## [7.1.3] - 2022-11-29
 
@@ -197,13 +198,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Resolves [#88](https://github.com/compulim/web-speech-cognitive-services/issues/88). Support sovereign cloud, by [@compulim](https://github.com/compulim) in PR [#89](https://github.com/compulim/web-speech-cognitive-services/pull/89)
 
-### Removed
-
-- 💥 ~Bing Speech support is removed, by [@compulim](https://github.com/compulim), in PR [#87](https://github.com/compulim/web-speech-cognitive-services/pull/87).~
-  - ~As Bing Speech has deprecated and removed from Azure. Bing Speech support has been removed.~
-- 💥 ~`fetchAuthorizationToken` is removed, by [@compulim](https://github.com/compulim), in PR [#89](https://github.com/compulim/web-speech-cognitive-services/pull/89).~
-  - ~`fetchAuthorizationToken` is removed, please refer to [this documentation on how to get an access token](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/rest-speech-to-text#how-to-get-an-access-token).~
-
 ### Changed
 
 - Bumped dependencies, in PR [#87](https://github.com/compulim/web-speech-cognitive-services/pull/87), by [@compulim](https://github.com/compulim)
@@ -231,15 +225,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
       - [`webpack@4.42.0`](https://npmjs.com/package/webpack)
 - Use [`p-defer-es5`](https://npmjs.com/package/p-defer-es5) instead of adopted `createDeferred.js`, in PR [#89](https://github.com/compulim/web-speech-cognitive-services/pull/89).
 
-## [6.0.0] - 2019-12-03
-
-### Fixed
-
-- Speech recognition: Removed extraneous finalized `result` event in continuous mode, by [@compulim](https://github.com/compulim), in PR [#79](https://github.com/compulim/web-speech-cognitive-services/pull/79)
-
 ### Removed
 
-- 🔥 `authorizationToken`, `region`, and `subscriptionKey` are being deprecated in favor of `credentials` options, by [@compulim](https://github.com/compulim) in PR [#80](https://github.com/compulim/web-speech-cognitive-services/pull/80)
+- 💥 ~Bing Speech support is removed, by [@compulim](https://github.com/compulim), in PR [#87](https://github.com/compulim/web-speech-cognitive-services/pull/87).~
+  - ~As Bing Speech has deprecated and removed from Azure. Bing Speech support has been removed.~
+- 💥 ~`fetchAuthorizationToken` is removed, by [@compulim](https://github.com/compulim), in PR [#89](https://github.com/compulim/web-speech-cognitive-services/pull/89).~
+  - ~`fetchAuthorizationToken` is removed, please refer to [this documentation on how to get an access token](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/rest-speech-to-text#how-to-get-an-access-token).~
+
+## [6.0.0] - 2019-12-03
 
 ### Added
 
@@ -267,6 +260,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
    - [babel-jest@^24.9.0](https://www.npmjs.com/package/babel-jest)
    - [jest@^24.9.0](https://www.npmjs.com/package/jest)
    - [rimraf@^3.0.0](https://www.npmjs.com/package/rimraf)
+
+### Removed
+
+- 🔥 `authorizationToken`, `region`, and `subscriptionKey` are being deprecated in favor of `credentials` options, by [@compulim](https://github.com/compulim) in PR [#80](https://github.com/compulim/web-speech-cognitive-services/pull/80)
+
+### Fixed
+
+- Speech recognition: Removed extraneous finalized `result` event in continuous mode, by [@compulim](https://github.com/compulim), in PR [#79](https://github.com/compulim/web-speech-cognitive-services/pull/79)
 
 ## [5.0.1] - 2019-10-25
 
@@ -344,7 +345,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fix [#45](https://github.com/compulim/web-speech-cognitive-services/issues/45). Speech synthesize should emit "start" and "error" if the synthesized audio clip cannot be fetch over the network, in PR [#46](https://github.com/compulim/web-speech-cognitive-services/issues/46)
 
 ## [4.0.0] - 2018-12-10
+
 ### Added
+
 - New playground for better debuggability
 - Support of Speech Services SDK, with automated unit tests for speech recognition
    - See [`SPEC-RECOGNITION.md`](SPEC-RECOGNITION.md) and [`SPEC-SYNTHESIS.md`](SPEC-SYNTHESIS.md) for quirks
@@ -353,17 +356,22 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Speech synthesis: Support `speaking` property
 
 ### Changed
+
 - Ponyfill are now constructed based on options (authorization token, region, and subscription key)
    - A new set of ponyfill will be created every time an option has changed
 
 ### Fixed
+
 - Fix [#13](https://github.com/compulim/web-speech-cognitive-services/issues/13) Speech recognition: `SpeechRecognitionResult` should be iterable
 
 ## [3.0.0] - 2018-10-31
+
 ### Added
+
 - Speech Synthesis: Will async fetch speech token instead of throwing exception
 
 ### Changed
+
 - Use `@babel/runtime` and `@babel/plugin-tranform-runtime`, in favor of `babel-polyfill`
 - Better error handling on `null` token
 - Updated voice list from [https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/supported-languages](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/supported-languages)
@@ -379,14 +387,19 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Bump to [`event-as-promise@1.0.5`](https://npmjs.com/package/event-as-promise/v/1.0.5)
 
 ## [2.1.0] - 2018-07-09
+
 ### Added
+
 - Speech priming via custom `SpeechGrammarList`
 
 ## [2.0.0] - 2018-07-09
+
 ### Added
+
 - SpeechSynthesis polyfill with Cognitive Services
 
 ### Changed
+
 - Removed `CognitiveServices` prefix
    - Renamed `CognitiveServicesSpeechGrammarList` to `SpeechGrammarList`
    - Renamed `CognitiveServicesSpeechRecognition` to `SpeechRecognition`
@@ -395,6 +408,27 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
    - `recognition.speechToken = new SubscriptionKey('your subscription key');`
 
 ## [1.0.0] - 2018-06-29
+
 ### Added
+
 - Initial release
 - SpeechRecognition polyfill with Cognitive Services
+
+[8.0.0]: https://github.com/compulim/web-speech-cognitive-services/compare/v7.1.3...v8.0.0
+[7.1.3]: https://github.com/compulim/web-speech-cognitive-services/compare/v7.1.2...v7.1.3
+[7.1.2]: https://github.com/compulim/web-speech-cognitive-services/compare/v7.1.1...v7.1.2
+[7.1.1]: https://github.com/compulim/web-speech-cognitive-services/compare/v7.1.0...v7.1.1
+[7.1.0]: https://github.com/compulim/web-speech-cognitive-services/compare/v7.0.1...v7.1.0
+[7.0.1]: https://github.com/compulim/web-speech-cognitive-services/compare/v7.0.0...v7.0.1
+[7.0.0]: https://github.com/compulim/web-speech-cognitive-services/compare/v6.3.0...v7.0.0
+[6.3.0]: https://github.com/compulim/web-speech-cognitive-services/compare/v6.2.0...v6.3.0
+[6.2.0]: https://github.com/compulim/web-speech-cognitive-services/compare/v6.1.0...v6.2.0
+[6.1.0]: https://github.com/compulim/web-speech-cognitive-services/compare/v6.0.0...v6.1.0
+[6.0.0]: https://github.com/compulim/web-speech-cognitive-services/compare/v5.0.1...v6.0.0
+[5.0.1]: https://github.com/compulim/web-speech-cognitive-services/compare/v5.0.0...v5.0.1
+[5.0.0]: https://github.com/compulim/web-speech-cognitive-services/compare/v4.0.0...v5.0.0
+[4.0.0]: https://github.com/compulim/web-speech-cognitive-services/compare/v3.0.0...v4.0.0
+[3.0.0]: https://github.com/compulim/web-speech-cognitive-services/compare/v2.1.0...v3.0.0
+[2.1.0]: https://github.com/compulim/web-speech-cognitive-services/compare/v2.0.0...v2.1.0
+[2.0.0]: https://github.com/compulim/web-speech-cognitive-services/compare/v1.0.0...v2.0.0
+[1.0.0]: https://github.com/compulim/web-speech-cognitive-services/releases/tag/v1.0.0
