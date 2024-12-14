@@ -4,25 +4,23 @@
 /* eslint no-empty-function: "off" */
 /* eslint no-magic-numbers: ["error", { "ignore": [0, 100, 150] }] */
 
+import { PropertyId } from 'microsoft-cognitiveservices-speech-sdk';
 import patchOptions, { type PatchOptionsInit } from '../patchOptions';
 import SpeechSDK from '../SpeechSDK';
 import createSpeechRecognitionPonyfillFromRecognizer from './createSpeechRecognitionPonyfillFromRecognizer';
 
-const { AudioConfig, OutputFormat, SpeechConfig, SpeechRecognizer } = SpeechSDK;
+const { OutputFormat, SpeechConfig, SpeechRecognizer } = SpeechSDK;
 
 export default function createSpeechRecognitionPonyfill(options: PatchOptionsInit) {
   const {
-    audioConfig = AudioConfig.fromDefaultMicrophoneInput(),
-
-    // We set telemetry to true to honor the default telemetry settings of Speech SDK
-    // https://github.com/Microsoft/cognitive-services-speech-sdk-js#data--telemetry
-    enableTelemetry = true,
-
+    audioConfig,
+    enableTelemetry,
     fetchCredentials,
+    initialSilenceTimeout,
     looseEvents,
     referenceGrammars,
     speechRecognitionEndpointId,
-    textNormalization = 'display'
+    textNormalization
   } = patchOptions(options);
 
   if (!audioConfig && (!window.navigator.mediaDevices || !window.navigator.mediaDevices.getUserMedia)) {
@@ -36,7 +34,7 @@ export default function createSpeechRecognitionPonyfill(options: PatchOptionsIni
     let speechConfig;
 
     if (typeof credentials.speechRecognitionHostname !== 'undefined') {
-      const host = new URL('wss://hostname:443');
+      const host = new URL('wss://localhost:443');
 
       host.hostname = credentials.speechRecognitionHostname;
 
@@ -59,9 +57,8 @@ export default function createSpeechRecognitionPonyfill(options: PatchOptionsIni
 
     speechConfig.outputFormat = OutputFormat.Detailed;
     speechConfig.speechRecognitionLanguage = lang || 'en-US';
-    // speechConfig.setProperty(PropertyId.SpeechServiceConnection_InitialSilenceTimeoutMs, '2000');
-    // speechConfig.setProperty(PropertyId.Conversation_Initial_Silence_Timeout, '2000');
-    // speechConfig.setProperty(PropertyId.Speech_SegmentationSilenceTimeoutMs, '2000');
+    typeof initialSilenceTimeout === 'number' &&
+      speechConfig.setProperty(PropertyId.SpeechServiceConnection_InitialSilenceTimeoutMs, '' + initialSilenceTimeout);
 
     return new SpeechRecognizer(speechConfig, audioConfig);
   };
