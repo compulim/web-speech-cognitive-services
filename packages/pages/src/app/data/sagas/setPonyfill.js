@@ -8,6 +8,7 @@ import setPonyfill from '../actions/setPonyfill';
 import { SET_PONYFILL_TYPE } from '../actions/setPonyfillType';
 import { SET_REGION } from '../actions/setRegion';
 import { SET_SPEECH_RECOGNITION_ENDPOINT_ID } from '../actions/setSpeechRecognitionEndpointId';
+import { SET_SPEECH_RECOGNITION_INITIAL_SILENCE_TIMEOUT } from '../actions/setSpeechRecognitionInitialSilenceTimeout';
 import { SET_SPEECH_RECOGNITION_REFERENCE_GRAMMARS } from '../actions/setSpeechRecognitionReferenceGrammars';
 import { SET_SPEECH_RECOGNITION_TEXT_NORMALIZATION } from '../actions/setSpeechRecognitionTextNormalization';
 import { SET_SPEECH_SERVICES_AUTHORIZATION_TOKEN } from '../actions/setSpeechServicesAuthorizationToken';
@@ -22,6 +23,7 @@ function* setPonyfillSaga() {
     ponyfillType,
     region,
     speechRecognitionEndpointId,
+    speechRecognitionInitialSilenceTimeout: initialSilenceTimeout,
     speechRecognitionReferenceGrammars: referenceGrammars,
     speechRecognitionTextNormalization: textNormalization,
     speechServicesAuthorizationToken,
@@ -46,6 +48,7 @@ function* setPonyfillSaga() {
 
     const options = {
       enableTelemetry,
+      initialSilenceTimeout: initialSilenceTimeout === 'default' ? undefined : initialSilenceTimeout,
       referenceGrammars,
       region,
       speechRecognitionEndpointId,
@@ -111,6 +114,7 @@ export default function* setPonyfillRootSaga() {
       type === SET_ENABLE_TELEMETRY ||
       type === SET_PONYFILL_TYPE ||
       type === SET_REGION ||
+      type === SET_SPEECH_RECOGNITION_INITIAL_SILENCE_TIMEOUT ||
       type === SET_SPEECH_RECOGNITION_REFERENCE_GRAMMARS ||
       type === SET_SPEECH_RECOGNITION_ENDPOINT_ID ||
       type === SET_SPEECH_RECOGNITION_TEXT_NORMALIZATION ||

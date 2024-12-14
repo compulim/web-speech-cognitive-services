@@ -11,6 +11,7 @@ import speechRecognitionContinuous from './reducers/speechRecognitionContinuous'
 import speechRecognitionDelayedStart from './reducers/speechRecognitionDelayedStart';
 import speechRecognitionEndpointId from './reducers/speechRecognitionEndpointId';
 import speechRecognitionEvents from './reducers/speechRecognitionEvents';
+import speechRecognitionInitialSilenceTimeout from './reducers/speechRecognitionInitialSilenceTimeout';
 import speechRecognitionInterimResults from './reducers/speechRecognitionInterimResults';
 import speechRecognitionLanguage from './reducers/speechRecognitionLanguage';
 import speechRecognitionMaxAlternatives from './reducers/speechRecognitionMaxAlternatives';
@@ -39,6 +40,7 @@ export default combineReducers({
   speechRecognitionDelayedStart,
   speechRecognitionEndpointId,
   speechRecognitionEvents,
+  speechRecognitionInitialSilenceTimeout,
   speechRecognitionInterimResults,
   speechRecognitionLanguage,
   speechRecognitionMaxAlternatives,
