@@ -4,12 +4,16 @@ import { parse } from 'valibot';
 import resolveFunctionOrReturnValue from './resolveFunctionOrReturnValue';
 import SpeechSDK from './SpeechSDK';
 import credentialsSchema, { type Credentials } from './SpeechToText/validation/credentialsSchema';
-import enableTelemetrySchema from './SpeechToText/validation/enableTelemetrySchema';
-import initialSilenceTimeoutSchema from './SpeechToText/validation/initialSilenceTimeoutSchema';
-import looseEventsSchema from './SpeechToText/validation/looseEventsSchema';
-import referenceGrammarsSchema from './SpeechToText/validation/referenceGrammarsSchema';
-import speechRecognitionEndpointIdSchema from './SpeechToText/validation/speechRecognitionEndpointIdSchema';
-import textNormalizationSchema from './SpeechToText/validation/textNormalizationSchema';
+import enableTelemetrySchema, { EnableTelemetry } from './SpeechToText/validation/enableTelemetrySchema';
+import initialSilenceTimeoutSchema, {
+  InitialSilenceTimeout
+} from './SpeechToText/validation/initialSilenceTimeoutSchema';
+import looseEventsSchema, { LooseEvents } from './SpeechToText/validation/looseEventsSchema';
+import referenceGrammarsSchema, { ReferenceGrammars } from './SpeechToText/validation/referenceGrammarsSchema';
+import speechRecognitionEndpointIdSchema, {
+  SpeechRecognitionEndpointId
+} from './SpeechToText/validation/speechRecognitionEndpointIdSchema';
+import textNormalizationSchema, { TextNormalization } from './SpeechToText/validation/textNormalizationSchema';
 
 const { AudioConfig } = SpeechSDK;
 
@@ -29,13 +33,13 @@ type PatchOptionsInit = {
 
 type PatchedOptions = Readonly<{
   audioConfig: AudioConfigType;
-  enableTelemetry: boolean | undefined;
+  enableTelemetry: EnableTelemetry;
   fetchCredentials: () => Promise<Credentials>;
-  initialSilenceTimeout: number | undefined;
-  looseEvents: boolean;
-  referenceGrammars: readonly string[];
-  speechRecognitionEndpointId: string | undefined;
-  textNormalization: 'display' | 'itn' | 'lexical' | 'maskeditn';
+  initialSilenceTimeout: InitialSilenceTimeout;
+  looseEvents: LooseEvents;
+  referenceGrammars: ReferenceGrammars;
+  speechRecognitionEndpointId: SpeechRecognitionEndpointId;
+  textNormalization: TextNormalization;
 }>;
 
 export default function patchOptions(init: PatchOptionsInit): PatchedOptions {

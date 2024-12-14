@@ -1,4 +1,4 @@
-import { array, optional, pipe, string, transform } from 'valibot';
+import { array, type InferOutput, optional, pipe, string, transform } from 'valibot';
 
 const referenceGrammarsSchema = pipe(
   optional(array(string()), []),
@@ -7,5 +7,7 @@ const referenceGrammarsSchema = pipe(
   // transform<string[], readonly string[]>(value => (Object.isFrozen(value) ? value : Object.freeze([...value])))
   transform<string[], readonly string[]>(value => (Object.isFrozen(value) ? value : Object.freeze([...value])))
 );
+
+export type ReferenceGrammars = InferOutput<typeof referenceGrammarsSchema>;
 
 export default referenceGrammarsSchema;

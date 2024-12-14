@@ -1,4 +1,4 @@
-import { enum_, optional } from 'valibot';
+import { type InferOutput, enum_, optional } from 'valibot';
 
 const textNormalizationSchema = optional(
   enum_({
@@ -9,5 +9,7 @@ const textNormalizationSchema = optional(
   }),
   'display'
 );
+
+export type TextNormalization = InferOutput<typeof textNormalizationSchema>;
 
 export default textNormalizationSchema;
