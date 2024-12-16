@@ -1,5 +1,12 @@
 import { css } from '@emotion/css';
-import React, { useCallback, useEffect, useRef } from 'react';
+import React, { type ReactNode, useCallback, useEffect, useRef } from 'react';
+
+declare global {
+  interface Window {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    jQuery(...args: unknown[]): any;
+  }
+}
 
 const ROOT_CSS = css({
   backgroundColor: 'Transparent',
@@ -7,8 +14,15 @@ const ROOT_CSS = css({
   padding: 0
 });
 
-const Popover = ({ children, content, placement, trigger }) => {
-  const createContentElement = useCallback(() => {
+type Props = {
+  children?: ReactNode | undefined;
+  content: string;
+  placement: string;
+  trigger: string;
+};
+
+const Popover = ({ children, content, placement, trigger }: Props) => {
+  const createContentElement = useCallback<() => HTMLPreElement>(() => {
     const element = document.createElement('pre');
 
     element.innerText = content;
@@ -16,12 +30,12 @@ const Popover = ({ children, content, placement, trigger }) => {
     return element;
   }, [content]);
 
-  const ref = useRef();
+  const ref = useRef<HTMLButtonElement>(null);
   const { current } = ref;
 
   useEffect(() => {
     window.jQuery(current).popover({
-      content: createContentElement(content),
+      content: createContentElement(),
       html: true
     });
 
@@ -43,3 +57,5 @@ const Popover = ({ children, content, placement, trigger }) => {
 };
 
 export default Popover;
+
+export { type Props };

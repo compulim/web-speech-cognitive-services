@@ -1,23 +1,23 @@
-import { useDispatch, useSelector } from 'react-redux';
 import React, { useCallback, useMemo, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import Select, { Option } from '../Bootstrap/Select';
 import SpeechRecognitionEndpointIdInput from './SpeechRecognitionEndpointIdInput';
+import SpeechRecognitionInitialSilenceTimeoutSelector from './SpeechRecognitionInitialSilenceTimeoutSelector';
 import SpeechRecognitionLanguageSelector from './SpeechRecognitionLanguageSelector';
 import SpeechRecognitionTextNormalizationSelector from './SpeechRecognitionTextNormalizationSelector';
 
 import abortSpeechRecognition from '../data/actions/abortSpeechRecognition';
-import startSpeechRecognition from '../data/actions/startSpeechRecognition';
-import stopSpeechRecognition from '../data/actions/stopSpeechRecognition';
-
 import clearSpeechRecognitionEvent from '../data/actions/clearSpeechRecognitionEvent';
-import getPonyfillCapabilities from '../getPonyfillCapabilities';
 import setSpeechRecognitionContinuous from '../data/actions/setSpeechRecognitionContinuous';
 import setSpeechRecognitionDelayedStart from '../data/actions/setSpeechRecognitionDelayedStart';
 import setSpeechRecognitionInterimResults from '../data/actions/setSpeechRecognitionInterimResults';
 import setSpeechRecognitionMaxAlternatives from '../data/actions/setSpeechRecognitionMaxAlternatives';
 import setSpeechRecognitionPhrases from '../data/actions/setSpeechRecognitionPhrases';
 import setSpeechRecognitionReferenceGrammars from '../data/actions/setSpeechRecognitionReferenceGrammars';
+import startSpeechRecognition from '../data/actions/startSpeechRecognition';
+import stopSpeechRecognition from '../data/actions/stopSpeechRecognition';
+import getPonyfillCapabilities from '../getPonyfillCapabilities';
 
 const SpeechRecognitionCommands = () => {
   const {
@@ -178,6 +178,10 @@ const SpeechRecognitionCommands = () => {
         &nbsp;
         <div className="form-group-inline">
           <SpeechRecognitionTextNormalizationSelector />
+        </div>
+        &nbsp;
+        <div className="form-group-inline">
+          <SpeechRecognitionInitialSilenceTimeoutSelector />
         </div>
         &nbsp;
         <div className="btn-group">
