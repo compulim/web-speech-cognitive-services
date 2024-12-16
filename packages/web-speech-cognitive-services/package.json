@@ -100,7 +100,7 @@
     "memoize-one": "^6.0.0",
     "on-error-resume-next": "^2.0.1",
     "simple-update-in": "^2.2.0",
-    "valibot": "^1.0.0-beta.9"
+    "valibot": "^0.42.1"
   },
   "peerDependencies": {
     "microsoft-cognitiveservices-speech-sdk": "^1.17.0"
