@@ -21,7 +21,9 @@ on:
 
 jobs:
   call-workflow:
-    secrets: inherit
+    secrets:
+      APP_ID: ${{ secrets.APP_ID }}
+      PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
     uses: compulim/workflows/.github/workflows/bump-scaffold.yml@main
     with:
       package-name: ${{ inputs.package-name }}
