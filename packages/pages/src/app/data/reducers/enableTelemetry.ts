@@ -1,6 +1,6 @@
-import { SET_ENABLE_TELEMETRY } from '../actions/setEnableTelemetry';
+import { SET_ENABLE_TELEMETRY, type SetEnableTelemetryAction } from '../actions/setEnableTelemetry';
 
-export default function enableTelemetry(state = true, { payload, type }): boolean {
+export default function enableTelemetry(state = true, { payload, type }: SetEnableTelemetryAction): boolean {
   if (type === SET_ENABLE_TELEMETRY) {
     return payload.enableTelemetry;
   }
