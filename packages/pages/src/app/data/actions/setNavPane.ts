@@ -10,10 +10,10 @@ export default function setNavPane(navPane: SetNavPaneAction['payload']['navPane
     navPane = 'speech recognition';
   }
 
-  return Object.freeze({
+  return {
     payload: Object.freeze({ navPane }),
     type: SET_NAV_PANE
-  });
+  };
 }
 
 export { SET_NAV_PANE };

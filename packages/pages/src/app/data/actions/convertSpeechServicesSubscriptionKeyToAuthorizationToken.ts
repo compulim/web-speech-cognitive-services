@@ -6,7 +6,7 @@ export type ConvertSpeechServicesSubscriptionKeyToAuthorizationTokenAction = Rea
 }>;
 
 export default function convertSpeechServicesSubscriptionKeyToAuthorizationToken(): ConvertSpeechServicesSubscriptionKeyToAuthorizationTokenAction {
-  return Object.freeze({ type: CONVERT_SPEECH_SERVICES_SUBSCRIPTION_KEY_TO_AUTHORIZATION_TOKEN });
+  return { type: CONVERT_SPEECH_SERVICES_SUBSCRIPTION_KEY_TO_AUTHORIZATION_TOKEN };
 }
 
 export { CONVERT_SPEECH_SERVICES_SUBSCRIPTION_KEY_TO_AUTHORIZATION_TOKEN };

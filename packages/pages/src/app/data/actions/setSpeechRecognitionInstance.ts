@@ -8,10 +8,10 @@ export type SetSpeechRecognitionInstanceAction = Readonly<{
 export default function setSpeechRecognitionInstance(
   speechRecognition: SetSpeechRecognitionInstanceAction['payload']['speechRecognition']
 ): SetSpeechRecognitionInstanceAction {
-  return Object.freeze({
+  return {
     payload: Object.freeze({ speechRecognition }),
     type: SET_SPEECH_RECOGNITION_INSTANCE
-  });
+  };
 }
 
 export { SET_SPEECH_RECOGNITION_INSTANCE };

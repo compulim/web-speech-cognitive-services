@@ -8,10 +8,10 @@ export type SetSpeechServicesSubscriptionKeyAction = Readonly<{
 export default function setSpeechServicesSubscriptionKey(
   subscriptionKey: SetSpeechServicesSubscriptionKeyAction['payload']['subscriptionKey']
 ): SetSpeechServicesSubscriptionKeyAction {
-  return Object.freeze({
+  return {
     payload: Object.freeze({ subscriptionKey }),
     type: SET_SPEECH_SERVICES_SUBSCRIPTION_KEY
-  });
+  };
 }
 
 export { SET_SPEECH_SERVICES_SUBSCRIPTION_KEY };

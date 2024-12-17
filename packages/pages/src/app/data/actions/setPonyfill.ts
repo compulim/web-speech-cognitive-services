@@ -9,10 +9,10 @@ export type SetPonyfillAction = Readonly<{
 }>;
 
 export default function setPonyfill(ponyfill: SetPonyfillAction['payload']['ponyfill']): SetPonyfillAction {
-  return Object.freeze({
+  return {
     payload: Object.freeze({ ponyfill }),
     type: SET_PONYFILL
-  });
+  };
 }
 
 export { SET_PONYFILL };

@@ -8,10 +8,10 @@ export type SetSpeechRecognitionMaxAlternativesAction = Readonly<{
 export default function setSpeechRecognitionMaxAlternatives(
   maxAlternatives: number
 ): SetSpeechRecognitionMaxAlternativesAction {
-  return Object.freeze({
+  return {
     payload: Object.freeze({ maxAlternatives }),
     type: SET_SPEECH_RECOGNITION_MAX_ALTERNATIVES
-  });
+  };
 }
 
 export { SET_SPEECH_RECOGNITION_MAX_ALTERNATIVES };

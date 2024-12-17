@@ -8,10 +8,10 @@ export type SetSpeechRecognitionLanguageAction = Readonly<{
 export default function setSpeechRecognitionLanguage(
   language: SetSpeechRecognitionLanguageAction['payload']['language']
 ): SetSpeechRecognitionLanguageAction {
-  return Object.freeze({
+  return {
     payload: Object.freeze({ language }),
     type: SET_SPEECH_RECOGNITION_LANGUAGE
-  });
+  };
 }
 
 export { SET_SPEECH_RECOGNITION_LANGUAGE };

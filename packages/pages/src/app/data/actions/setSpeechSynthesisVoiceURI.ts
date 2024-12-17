@@ -8,10 +8,10 @@ export type SetSpeechSynthesisVoiceURIAction = Readonly<{
 export default function setSpeechSynthesisVoiceURI(
   voiceURI: SetSpeechSynthesisVoiceURIAction['payload']['voiceURI']
 ): SetSpeechSynthesisVoiceURIAction {
-  return Object.freeze({
+  return {
     payload: Object.freeze({ voiceURI }),
     type: SET_SPEECH_SYNTHESIS_VOICE_URI
-  });
+  };
 }
 
 export { SET_SPEECH_SYNTHESIS_VOICE_URI };

@@ -8,10 +8,10 @@ export type SetSpeechRecognitionEndpointIdAction = Readonly<{
 export default function setSpeechRecognitionEndpointId(
   endpointId: SetSpeechRecognitionEndpointIdAction['payload']['endpointId']
 ): SetSpeechRecognitionEndpointIdAction {
-  return Object.freeze({
+  return {
     payload: Object.freeze({ endpointId }),
     type: SET_SPEECH_RECOGNITION_ENDPOINT_ID
-  });
+  };
 }
 
 export { SET_SPEECH_RECOGNITION_ENDPOINT_ID };

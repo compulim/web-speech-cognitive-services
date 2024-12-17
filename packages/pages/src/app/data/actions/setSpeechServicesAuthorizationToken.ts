@@ -8,10 +8,10 @@ export type SetSpeechServicesAuthorizationToken = Readonly<{
 export default function setSpeechServicesAuthorizationToken(
   authorizationToken: SetSpeechServicesAuthorizationToken['payload']['authorizationToken']
 ): SetSpeechServicesAuthorizationToken {
-  return Object.freeze({
+  return {
     payload: Object.freeze({ authorizationToken }),
     type: SET_SPEECH_SERVICES_AUTHORIZATION_TOKEN
-  });
+  };
 }
 
 export { SET_SPEECH_SERVICES_AUTHORIZATION_TOKEN };

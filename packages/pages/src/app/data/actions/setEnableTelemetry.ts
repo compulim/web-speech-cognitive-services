@@ -8,10 +8,10 @@ export type SetEnableTelemetryAction = Readonly<{
 export default function setEnableTelemetry(
   enableTelemetry: SetEnableTelemetryAction['payload']['enableTelemetry']
 ): SetEnableTelemetryAction {
-  return Object.freeze({
+  return {
     payload: Object.freeze({ enableTelemetry }),
     type: SET_ENABLE_TELEMETRY
-  });
+  };
 }
 
 export { SET_ENABLE_TELEMETRY };

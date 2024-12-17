@@ -10,10 +10,10 @@ export type AddSpeechSynthesisNativeUtteranceAction = Readonly<{
 export default function addSpeechSynthesisNativeUtterance(
   nativeUtterance: AddSpeechSynthesisNativeUtteranceAction['payload']['nativeUtterance']
 ): AddSpeechSynthesisNativeUtteranceAction {
-  return Object.freeze({
+  return {
     payload: { nativeUtterance },
     type: ADD_SPEECH_SYNTHESIS_NATIVE_UTTERANCE
-  });
+  };
 }
 
 export { ADD_SPEECH_SYNTHESIS_NATIVE_UTTERANCE };

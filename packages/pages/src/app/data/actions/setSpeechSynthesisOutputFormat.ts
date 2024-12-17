@@ -8,10 +8,10 @@ export type SetSpeechSynthesisOutputFormat = Readonly<{
 export default function setSpeechSynthesisOutputFormat(
   outputFormat: SetSpeechSynthesisOutputFormat['payload']['outputFormat']
 ): SetSpeechSynthesisOutputFormat {
-  return Object.freeze({
+  return {
     payload: Object.freeze({ outputFormat }),
     type: SET_SPEECH_SYNTHESIS_OUTPUT_FORMAT
-  });
+  };
 }
 
 export { SET_SPEECH_SYNTHESIS_OUTPUT_FORMAT };

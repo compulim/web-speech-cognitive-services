@@ -8,10 +8,10 @@ export type SetSpeechRecongitionDelayedStartAction = Readonly<{
 export default function setSpeechRecognitionDelayedStart(
   delay: SetSpeechRecongitionDelayedStartAction['payload']['delay']
 ): SetSpeechRecongitionDelayedStartAction {
-  return Object.freeze({
+  return {
     payload: Object.freeze({ delay }),
     type: SET_SPEECH_RECOGNITION_DELAYED_START
-  });
+  };
 }
 
 export { SET_SPEECH_RECOGNITION_DELAYED_START };

@@ -9,10 +9,10 @@ export type SetSpeechRecognitionInterimResultsAction = Readonly<{
 export default function setSpeechRecognitionInterimResults(
   interimResults: SetSpeechRecognitionInterimResultsAction['payload']['interimResults']
 ): SetSpeechRecognitionInterimResultsAction {
-  return Object.freeze({
+  return {
     payload: Object.freeze({ interimResults }),
     type: SET_SPEECH_RECOGNITION_INTERIM_RESULTS
-  });
+  };
 }
 
 export { SET_SPEECH_RECOGNITION_INTERIM_RESULTS };

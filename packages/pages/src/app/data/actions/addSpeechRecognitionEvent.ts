@@ -9,14 +9,14 @@ export type AddSpeechRecognitionEventAction = Readonly<{
 function serializeEvent<K extends string>(
   from: Record<string, unknown> & { type: string },
   ...keys: K[]
-): Readonly<Pick<typeof from, K> & { type: string }> {
+): Pick<typeof from, K> & { type: string } {
   const to: Partial<Pick<typeof from, K>> = { type: from.type } as Partial<Pick<typeof from, K>>;
 
   keys.forEach(key => {
     to[key] = from[key];
   });
 
-  return Object.freeze(to as Pick<typeof from, K> & { type: string });
+  return to as Pick<typeof from, K> & { type: string };
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -108,10 +108,10 @@ export default function addSpeechRecognitionEvent(event: any): AddSpeechRecognit
       break;
   }
 
-  return Object.freeze({
+  return {
     payload: Object.freeze({ event: serializedEvent }),
     type: ADD_SPEECH_RECOGNITION_EVENT
-  });
+  };
 }
 
 export { ADD_SPEECH_RECOGNITION_EVENT };

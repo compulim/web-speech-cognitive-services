@@ -6,10 +6,10 @@ export type SetRegionAction = Readonly<{
 }>;
 
 export default function setRegion(region: SetRegionAction['payload']['region']): SetRegionAction {
-  return Object.freeze({
+  return {
     payload: Object.freeze({ region }),
     type: SET_REGION
-  });
+  };
 }
 
 export { SET_REGION };

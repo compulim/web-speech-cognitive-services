@@ -8,10 +8,10 @@ export type SetSpeechRecognitionTextNormalizationAction = Readonly<{
 export default function setSpeechRecognitionTextNormalization(
   textNormalization: SetSpeechRecognitionTextNormalizationAction['payload']['textNormalization']
 ): SetSpeechRecognitionTextNormalizationAction {
-  return Object.freeze({
+  return {
     payload: Object.freeze({ textNormalization }),
     type: SET_SPEECH_RECOGNITION_TEXT_NORMALIZATION
-  });
+  };
 }
 
 export { SET_SPEECH_RECOGNITION_TEXT_NORMALIZATION };

@@ -8,10 +8,10 @@ export type SetSpeechRecognitionContinuousAction = Readonly<{
 export default function setSpeechRecognitionContinuous(
   continuous: SetSpeechRecognitionContinuousAction['payload']['continuous']
 ): SetSpeechRecognitionContinuousAction {
-  return Object.freeze({
+  return {
     payload: Object.freeze({ continuous }),
     type: SET_SPEECH_RECOGNITION_CONTINUOUS
-  });
+  };
 }
 
 export { SET_SPEECH_RECOGNITION_CONTINUOUS };

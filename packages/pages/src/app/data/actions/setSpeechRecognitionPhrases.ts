@@ -8,10 +8,10 @@ export type SetSpeechRecognitionPhrasesAction = Readonly<{
 export default function setSpeechRecognitionPhrases(
   phrases: SetSpeechRecognitionPhrasesAction['payload']['phrases']
 ): SetSpeechRecognitionPhrasesAction {
-  return Object.freeze({
+  return {
     payload: Object.freeze({ phrases }),
     type: SET_SPEECH_RECOGNITION_PHRASES
-  });
+  };
 }
 
 export { SET_SPEECH_RECOGNITION_PHRASES };

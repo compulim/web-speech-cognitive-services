@@ -8,10 +8,10 @@ export type SetSpeechRecognitionReferenceGrammarsAction = Readonly<{
 export default function setSpeechRecognitionReferenceGrammars(
   referenceGrammars: SetSpeechRecognitionReferenceGrammarsAction['payload']['referenceGrammars']
 ): SetSpeechRecognitionReferenceGrammarsAction {
-  return Object.freeze({
+  return {
     payload: Object.freeze({ referenceGrammars }),
     type: SET_SPEECH_RECOGNITION_REFERENCE_GRAMMARS
-  });
+  };
 }
 
 export { SET_SPEECH_RECOGNITION_REFERENCE_GRAMMARS };

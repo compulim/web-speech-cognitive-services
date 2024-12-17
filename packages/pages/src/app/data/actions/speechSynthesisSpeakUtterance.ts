@@ -8,10 +8,10 @@ export type SpeechSynthesisSpeakUtteranceAction = Readonly<{
 export default function speechSynthesisSpeakUtterance(
   utterance: SpeechSynthesisSpeakUtteranceAction['payload']['utterance']
 ): SpeechSynthesisSpeakUtteranceAction {
-  return Object.freeze({
+  return {
     payload: Object.freeze({ utterance }),
     type: SPEECH_SYNTHESIS_SPEAK_UTTERANCE
-  });
+  };
 }
 
 export { SPEECH_SYNTHESIS_SPEAK_UTTERANCE };

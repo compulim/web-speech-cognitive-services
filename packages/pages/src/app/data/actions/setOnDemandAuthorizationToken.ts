@@ -8,10 +8,10 @@ export type SetOnDemandAuthorizationTokenAction = Readonly<{
 export default function setOnDemandAuthorizationToken(
   onDemand: SetOnDemandAuthorizationTokenAction['payload']['onDemand']
 ): SetOnDemandAuthorizationTokenAction {
-  return Object.freeze({
+  return {
     payload: Object.freeze({ onDemand }),
     type: SET_ON_DEMAND_AUTHORIZATION_TOKEN
-  });
+  };
 }
 
 export { SET_ON_DEMAND_AUTHORIZATION_TOKEN };

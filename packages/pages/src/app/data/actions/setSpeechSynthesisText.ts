@@ -8,10 +8,10 @@ export type SetSpeechSynthesisText = Readonly<{
 export default function setSpeechSynthesisText(
   text: SetSpeechSynthesisText['payload']['text']
 ): SetSpeechSynthesisText {
-  return Object.freeze({
+  return {
     payload: Object.freeze({ text }),
     type: SET_SPEECH_SYNTHESIS_TEXT
-  });
+  };
 }
 
 export { SET_SPEECH_SYNTHESIS_TEXT };

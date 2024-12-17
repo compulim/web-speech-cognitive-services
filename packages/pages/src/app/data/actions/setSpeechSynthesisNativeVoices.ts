@@ -9,10 +9,10 @@ export type SetSpeechSynthesisNativeVoicesAction = Readonly<{
 export default function setSpeechSynthesisNativeVoices(
   voices: SetSpeechSynthesisNativeVoicesAction['payload']['voices']
 ): SetSpeechSynthesisNativeVoicesAction {
-  return Object.freeze({
+  return {
     payload: Object.freeze({ voices }),
     type: SET_SPEECH_SYNTHESIS_NATIVE_VOICES
-  });
+  };
 }
 
 export { SET_SPEECH_SYNTHESIS_NATIVE_VOICES };
