@@ -51,6 +51,8 @@ import textNormalizationSchema from './validation/textNormalizationSchema';
 //   "Duration": 0
 // }
 
+const FINAL_RESULT_OFFSET = 1;
+
 const { ResultReason, SpeechRecognizer } = SpeechSDK;
 
 type CreateSpeechRecognitionPonyfillFromRecognizerInit = {
@@ -471,7 +473,8 @@ export default function createSpeechRecognitionPonyfillFromRecognizer({
               if (!this.continuous || stopping === 'stop') {
                 // Empty result will turn into "no-speech" later in the code.
                 finalEvent = new SpeechRecognitionEvent('result', {
-                  results: new SpeechRecognitionResultList(finalizedResults)
+                  results: new SpeechRecognitionResultList(finalizedResults),
+                  resultIndex: finalizedResults.length - FINAL_RESULT_OFFSET
                 });
 
                 // Quirks: 2024-11-19 with Speech SDK 1.14.0
@@ -521,7 +524,8 @@ export default function createSpeechRecognitionPonyfillFromRecognizer({
                   this.continuous &&
                     this.dispatchEvent(
                       new SpeechRecognitionEvent('result', {
-                        results: new SpeechRecognitionResultList(finalizedResults)
+                        results: new SpeechRecognitionResultList(finalizedResults),
+                        resultIndex: finalizedResults.length - FINAL_RESULT_OFFSET
                       })
                     );
                 }
@@ -531,7 +535,8 @@ export default function createSpeechRecognitionPonyfillFromRecognizer({
                   finalEvent = undefined;
                 } else {
                   finalEvent = new SpeechRecognitionEvent('result', {
-                    results: new SpeechRecognitionResultList(finalizedResults)
+                    results: new SpeechRecognitionResultList(finalizedResults),
+                    resultIndex: finalizedResults.length - FINAL_RESULT_OFFSET
                   });
                 }
 
@@ -548,16 +553,18 @@ export default function createSpeechRecognitionPonyfillFromRecognizer({
                   finalEvent = undefined;
                 }
               } else if (recognizing) {
+                const results = new SpeechRecognitionResultList([
+                  ...finalizedResults,
+                  cognitiveServiceEventResultToWebSpeechRecognitionResult(recognizing.result, {
+                    maxAlternatives: this.maxAlternatives,
+                    textNormalization
+                  })
+                ]);
                 this.interimResults &&
                   this.dispatchEvent(
                     new SpeechRecognitionEvent('result', {
-                      results: new SpeechRecognitionResultList([
-                        ...finalizedResults,
-                        cognitiveServiceEventResultToWebSpeechRecognitionResult(recognizing.result, {
-                          maxAlternatives: this.maxAlternatives,
-                          textNormalization
-                        })
-                      ])
+                      results,
+                      resultIndex: results.length - FINAL_RESULT_OFFSET
                     })
                   );
               }
