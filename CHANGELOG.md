@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+
+- Fixed resultIndex undefined issue while using cognitive service ponyfill, in PR [241](https://github.com/compulim/web-speech-cognitive-services/pull/241) by [@RushikeshGavali](https://github.com/RushikeshGavali)
+
 ## [8.1.1] - 2025-01-21
 
 ### Changed
