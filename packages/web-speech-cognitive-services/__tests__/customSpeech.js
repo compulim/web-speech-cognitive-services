@@ -82,7 +82,7 @@ describe.each(testTableForAuthentication)(
         [
           'result',
           {
-            resultIndex: undefined,
+            resultIndex: 0,
             results: [
               {
                 0: {
