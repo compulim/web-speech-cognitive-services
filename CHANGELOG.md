@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 
-- Fixed import of Speech SDK with file extension to resolve build breaks with `create-react-app`, by [@compulim](https://github.com/compulim), in PR [#XXX](https://github.com/compulim/web-speech-cognitive-services/pull/XXX)
+- Fixed import of Speech SDK with file extension to resolve build breaks with `create-react-app`, by [@compulim](https://github.com/compulim), in PR [#243](https://github.com/compulim/web-speech-cognitive-services/pull/243)
 
 ## [8.1.1] - 2025-01-21
 
