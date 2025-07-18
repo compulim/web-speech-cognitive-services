@@ -1,8 +1,8 @@
-import { AudioSourceEvent } from 'microsoft-cognitiveservices-speech-sdk/distrib/lib/src/common/AudioSourceEvents';
+import { AudioSourceEvent } from 'microsoft-cognitiveservices-speech-sdk/distrib/lib/src/common/AudioSourceEvents.js';
 import {
   type AudioConfig,
   type AudioConfigImpl
-} from 'microsoft-cognitiveservices-speech-sdk/distrib/lib/src/sdk/Audio/AudioConfig';
+} from 'microsoft-cognitiveservices-speech-sdk/distrib/lib/src/sdk/Audio/AudioConfig.js';
 import averageAmplitude from './averageAmplitude';
 
 export default function prepareAudioConfig(audioConfig: AudioConfig) {

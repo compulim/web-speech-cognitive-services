@@ -11,7 +11,7 @@ import {
   type SpeechRecognitionEventArgs,
   type SpeechRecognizer as SpeechRecognizerType
 } from 'microsoft-cognitiveservices-speech-sdk';
-import { type AudioConfigImpl } from 'microsoft-cognitiveservices-speech-sdk/distrib/lib/src/sdk/Audio/AudioConfig';
+import { type AudioConfigImpl } from 'microsoft-cognitiveservices-speech-sdk/distrib/lib/src/sdk/Audio/AudioConfig.js';
 import { boolean, function_, parse, undefined_, union } from 'valibot';
 import createPromiseQueue from '../../Util/createPromiseQueue';
 import SpeechSDK from '../SpeechSDK';

@@ -9,12 +9,12 @@ import {
   AudioStreamNodeAttachingEvent,
   AudioStreamNodeDetachedEvent
   // AudioStreamNodeErrorEvent,
-} from 'microsoft-cognitiveservices-speech-sdk/distrib/lib/src/common/AudioSourceEvents';
+} from 'microsoft-cognitiveservices-speech-sdk/distrib/lib/src/common/AudioSourceEvents.js';
 
-import { ChunkedArrayBufferStream } from 'microsoft-cognitiveservices-speech-sdk/distrib/lib/src/common/ChunkedArrayBufferStream';
-import { createNoDashGuid } from 'microsoft-cognitiveservices-speech-sdk/distrib/lib/src/common/Guid';
-import { Events } from 'microsoft-cognitiveservices-speech-sdk/distrib/lib/src/common/Events';
-import { EventSource } from 'microsoft-cognitiveservices-speech-sdk/distrib/lib/src/common/EventSource';
+import { ChunkedArrayBufferStream } from 'microsoft-cognitiveservices-speech-sdk/distrib/lib/src/common/ChunkedArrayBufferStream.js';
+import { createNoDashGuid } from 'microsoft-cognitiveservices-speech-sdk/distrib/lib/src/common/Guid.js';
+import { Events } from 'microsoft-cognitiveservices-speech-sdk/distrib/lib/src/common/Events.js';
+import { EventSource } from 'microsoft-cognitiveservices-speech-sdk/distrib/lib/src/common/EventSource.js';
 
 // This is copied from MicAudioSource, but instead of retrieving from MediaStream, we dump the ArrayBuffer directly.
 class QueuedArrayBufferAudioSource {
