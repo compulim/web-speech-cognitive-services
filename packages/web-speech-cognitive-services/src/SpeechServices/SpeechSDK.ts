@@ -6,7 +6,7 @@ import {
   ResultReason,
   SpeechConfig,
   SpeechRecognizer
-} from 'microsoft-cognitiveservices-speech-sdk/distrib/lib/microsoft.cognitiveservices.speech.sdk';
+} from 'microsoft-cognitiveservices-speech-sdk/distrib/lib/microsoft.cognitiveservices.speech.sdk.js';
 
 export default {
   AudioConfig,
