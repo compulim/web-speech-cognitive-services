@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [8.1.3] - 2025-07-19
 
 ### Changed
 
@@ -472,7 +472,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Initial release
 - SpeechRecognition polyfill with Cognitive Services
 
-[Unreleased]: https://github.com/compulim/web-speech-cognitive-services/compare/v8.1.2...HEAD
+[8.1.3]: https://github.com/compulim/web-speech-cognitive-services/compare/v8.1.2...v8.1.3
 [8.1.2]: https://github.com/compulim/web-speech-cognitive-services/compare/v8.1.1...v8.1.2
 [8.1.1]: https://github.com/compulim/web-speech-cognitive-services/compare/v8.1.0...v8.1.1
 [8.1.0]: https://github.com/compulim/web-speech-cognitive-services/compare/v8.0.0...v8.1.0
