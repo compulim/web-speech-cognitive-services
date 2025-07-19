@@ -5,6 +5,44 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Changed
+
+- Bumped dependencies, in PR [#247](https://github.com/compulim/web-speech-cognitive-services/pull/247)
+  - Production dependencies
+    - [`valibot@1.1.0`](https://npmjs.com/package/valibot/v/1.1.0)
+  - Development dependencies
+    - [`@babel/preset-env@7.28.0`](https://npmjs.com/package/@babel/preset-env/v/7.28.0)
+    - [`@babel/preset-react@7.27.1`](https://npmjs.com/package/@babel/preset-react/v/7.27.1)
+    - [`@babel/preset-typescript@7.27.1`](https://npmjs.com/package/@babel/preset-typescript/v/7.27.1)
+    - [`@emotion/css@11.13.5`](https://npmjs.com/package/@emotion/css/v/11.13.5)
+    - [`@jest/globals@30.0.4`](https://npmjs.com/package/@jest/globals/v/30.0.4)
+    - [`@tsconfig/recommended@1.0.10`](https://npmjs.com/package/@tsconfig/recommended/v/1.0.10)
+    - [`@types/dom-speech-recognition@0.0.6`](https://npmjs.com/package/@types/dom-speech-recognition/v/0.0.6)
+    - [`@types/jest@30.0.0`](https://npmjs.com/package/@types/jest/v/30.0.0)
+    - [`@types/node@24.0.15`](https://npmjs.com/package/@types/node/v/24.0.15)
+    - [`@types/react@19.1.8`](https://npmjs.com/package/@types/react/v/19.1.8)
+    - [`@types/react-dom@19.1.6`](https://npmjs.com/package/@types/react-dom/v/19.1.6)
+    - [`@typescript-eslint/eslint-plugin@8.37.0`](https://npmjs.com/package/@typescript-eslint/eslint-plugin/v/8.37.0)
+    - [`@typescript-eslint/parser@8.37.0`](https://npmjs.com/package/@typescript-eslint/parser/v/8.37.0)
+    - [`dotenv@17.2.0`](https://npmjs.com/package/dotenv/v/17.2.0)
+    - [`esbuild@0.25.7`](https://npmjs.com/package/esbuild/v/0.25.7)
+    - [`eslint@8.57.1`](https://npmjs.com/package/eslint/v/8.57.1)
+    - [`eslint-plugin-prettier@5.5.3`](https://npmjs.com/package/eslint-plugin-prettier/v/5.5.3)
+    - [`eslint-plugin-react@7.37.5`](https://npmjs.com/package/eslint-plugin-react/v/7.37.5)
+    - [`jest@30.0.4`](https://npmjs.com/package/jest/v/30.0.4)
+    - [`jest-environment-jsdom@30.0.4`](https://npmjs.com/package/jest-environment-jsdom/v/30.0.4)
+    - [`microsoft-cognitiveservices-speech-sdk@1.45.0`](https://npmjs.com/package/microsoft-cognitiveservices-speech-sdk/v/1.45.0)
+    - [`on-error-resume-next@2.0.2`](https://npmjs.com/package/on-error-resume-next/v/2.0.2)
+    - [`prettier@3.6.2`](https://npmjs.com/package/prettier/v/3.6.2)
+    - [`react@19.1.0`](https://npmjs.com/package/react/v/19.1.0)
+    - [`react-dictate-button@4.0.0`](https://npmjs.com/package/react-dictate-button/v/4.0.0)
+    - [`react-dom@19.1.0`](https://npmjs.com/package/react-dom/v/19.1.0)
+    - [`react-redux@9.2.0`](https://npmjs.com/package/react-redux/v/9.2.0)
+    - [`tsup@8.5.0`](https://npmjs.com/package/tsup/v/8.5.0)
+    - [`typescript@5.8.3`](https://npmjs.com/package/typescript/v/5.8.3)
+
 ## [8.1.2] - 2025-07-19
 
 ### Fixed
@@ -434,6 +472,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Initial release
 - SpeechRecognition polyfill with Cognitive Services
 
+[Unreleased]: https://github.com/compulim/web-speech-cognitive-services/compare/v8.1.2...HEAD
 [8.1.2]: https://github.com/compulim/web-speech-cognitive-services/compare/v8.1.1...v8.1.2
 [8.1.1]: https://github.com/compulim/web-speech-cognitive-services/compare/v8.1.0...v8.1.1
 [8.1.0]: https://github.com/compulim/web-speech-cognitive-services/compare/v8.0.0...v8.1.0
