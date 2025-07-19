@@ -12,5 +12,3 @@ jobs:
       APP_ID: ${{ secrets.APP_ID }}
       PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
     uses: compulim/workflows/.github/workflows/bump-dependencies.yml@main
-    with:
-      package-name: web-speech-cognitive-services

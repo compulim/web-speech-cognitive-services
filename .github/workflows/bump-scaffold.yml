@@ -21,6 +21,9 @@ on:
 
 jobs:
   call-workflow:
+    permissions:
+      contents: write
+      id-token: write
     secrets:
       APP_ID: ${{ secrets.APP_ID }}
       PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
