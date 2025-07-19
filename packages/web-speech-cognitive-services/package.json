@@ -72,26 +72,26 @@
     ]
   },
   "devDependencies": {
-    "@babel/preset-env": "^7.24.6",
-    "@babel/preset-typescript": "^7.24.6",
-    "@jest/globals": "^29.7.0",
-    "@tsconfig/recommended": "^1.0.6",
+    "@babel/preset-env": "^7.28.0",
+    "@babel/preset-typescript": "^7.27.1",
+    "@jest/globals": "^30.0.4",
+    "@tsconfig/recommended": "^1.0.10",
     "@tsconfig/strictest": "^2.0.5",
-    "@types/dom-speech-recognition": "^0.0.4",
-    "@types/jest": "^29.5.12",
-    "@types/node": "^20.13.0",
-    "dotenv": "^16.4.5",
-    "esbuild": "^0.21.4",
+    "@types/dom-speech-recognition": "^0.0.6",
+    "@types/jest": "^30.0.0",
+    "@types/node": "^24.0.15",
+    "dotenv": "^17.2.0",
+    "esbuild": "^0.25.7",
     "global-agent": "^3.0.0",
-    "jest": "^29.7.0",
-    "jest-environment-jsdom": "^29.7.0",
+    "jest": "^30.0.4",
+    "jest-environment-jsdom": "^30.0.4",
     "lolex": "^6.0.0",
-    "microsoft-cognitiveservices-speech-sdk": "^1.36.0",
+    "microsoft-cognitiveservices-speech-sdk": "^1.45.0",
     "node-fetch": "^2.7.0",
     "p-defer": "^4.0.1",
-    "prettier": "^3.3.0",
-    "tsup": "^8.0.2",
-    "typescript": "^5.4.5"
+    "prettier": "^3.6.2",
+    "tsup": "^8.5.0",
+    "typescript": "^5.8.3"
   },
   "dependencies": {
     "base64-arraybuffer": "^1.0.2",
@@ -100,7 +100,7 @@
     "memoize-one": "^6.0.0",
     "on-error-resume-next": "^2.0.2",
     "simple-update-in": "^2.2.0",
-    "valibot": "^0.42.1"
+    "valibot": "^1.1.0"
   },
   "peerDependencies": {
     "microsoft-cognitiveservices-speech-sdk": "^1.17.0"
