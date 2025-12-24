@@ -1,11 +1,13 @@
 {
   "compilerOptions": {
     "allowImportingTsExtensions": true,
+    "allowJs": true, // TODO: Should port to TypeScript.
     "esModuleInterop": true,
     "jsx": "react",
     "module": "ESNext",
     "moduleResolution": "Bundler",
     "noEmit": true,
+    "skipLibCheck": true,
     "strict": true,
     "target": "ESNext",
     "types": []
