@@ -1,3 +1,18 @@
 extends:
-  - ../../.eslintrc.react.yml
-  - ../../.eslintrc.jest.yml
+  - ./.eslintrc.custom.yml
+ignorePatterns:
+  - test/webDriver/**/dist/**
+  - test/webDriver/static/**
+overrides:
+  - env:
+      commonjs: true
+    files:
+      - '**/*.cjs'
+      - '**/*.js'
+    rules:
+      import/no-commonjs: off
+  - files:
+      - '**/*.mjs'
+    parserOptions:
+      ecmaVersion: latest
+      sourceType: module

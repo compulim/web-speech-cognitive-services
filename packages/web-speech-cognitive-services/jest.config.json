@@ -1,9 +1,17 @@
 {
-  "setupFilesAfterEnv": ["./utils/setupDotEnv.js", "./utils/setupGlobalAgent.js", "./utils/setupFetchPolyfill.js"],
-  "testPathIgnorePatterns": ["/__setup__/", "/lib/", "/node_modules/", "/__types__/", "\\.pnp\\.[^\\/]+$"],
+  "testEnvironment": "@happy-dom/jest-environment",
+  "testPathIgnorePatterns": [
+    "/__setup__/",
+    "/lib/",
+    "/node_modules/",
+    "/__types__/",
+    "\\.pnp\\.[^\\/]+$"
+  ],
   "transform": {
-    "/__tests__/types/": ["<rootDir>/__tests__/__setup__/typingTestTransformer.js"],
-    "\\.[jt]sx?$": [
+    "/__tests__/types/": [
+      "<rootDir>/__tests__/__setup__/typingTestTransformer.js"
+    ],
+    "\\.m?[jt]sx?$": [
       "babel-jest",
       {
         "presets": [
@@ -18,7 +26,7 @@
             {
               "modules": "commonjs",
               "targets": {
-                "node": "18"
+                "node": "20"
               }
             }
           ]
@@ -27,6 +35,7 @@
       }
     ]
   },
-  "transformIgnorePatterns": ["/node_modules/(?!(p-defer))/"],
-  "watchPathIgnorePatterns": ["\\.tmp\\."]
+  "watchPathIgnorePatterns": [
+    "\\.tmp\\."
+  ]
 }

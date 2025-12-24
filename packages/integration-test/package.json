@@ -4,13 +4,17 @@
   "description": "",
   "private": true,
   "scripts": {
-    "bump": "npm run bump:prod && npm run bump:dev && npm run bump:auditfix",
-    "bump:auditfix": "npm audit fix || exit 0",
+    "build": "npm run build:copy && npm run build:custom --if-present",
+    "build:copy": "mkdir -p ./test/webDriver/static/; SRC=$(node --eval=\"console.log(require('path').resolve(require('resolve-cwd')('web-speech-cognitive-services'), '../../dist'))\"); DEST=$(realpath ./test/webDriver/static); rm -rf $DEST; mkdir -p $DEST/js/; cp $SRC/** $DEST/js/",
+    "bump": "npm run bump:prod && npm run bump:dev",
     "bump:dev": "PACKAGES_TO_BUMP=$(cat package.json | jq -r '(.pinDependencies // {}) as $P | (.localPeerDependencies // {}) as $L | (.devDependencies // {}) | to_entries | map(select(.key as $K | $L | has($K) | not)) | map(.key + \"@\" + ($P[.key] // [\"latest\"])[0]) | join(\" \")') && [ ! -z \"$PACKAGES_TO_BUMP\" ] && npm install $PACKAGES_TO_BUMP || true",
     "bump:prod": "PACKAGES_TO_BUMP=$(cat package.json | jq -r '(.pinDependencies // {}) as $P | (.localPeerDependencies // {}) as $L | (.dependencies // {}) | to_entries | map(select(.key as $K | $L | has($K) | not)) | map(.key + \"@\" + ($P[.key] // [\"latest\"])[0]) | join(\" \")') && [ ! -z \"$PACKAGES_TO_BUMP\" ] && npm install $PACKAGES_TO_BUMP || true",
-    "precommit": "eslint --ext .js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts ./",
+    "docker": "docker compose up --quiet-pull --scale chromium=4",
+    "posttest": "if test \"$CI\" = \"true\"; then docker compose logs; docker compose down; fi",
+    "precommit": "ESLINT_USE_FLAT_CONFIG=false eslint --ext .js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts ./",
+    "pretest": "if test \"$CI\" = \"true\"; then npm run build; npm run docker -- --detach --wait; fi",
     "switch": "cat package.json | jq --arg SWITCH_NAME $SWITCH_NAME -r '(.[\"switch:\" + $SWITCH_NAME] // {}) as $TEMPLATE | .devDependencies += ($TEMPLATE.devDependencies // {}) | .dependencies += ($TEMPLATE.dependencies // {})' | tee ./package.json.tmp && mv ./package.json.tmp ./package.json",
-    "test": "jest"
+    "test": "node --import ./happy-dom-env.ts --test ${CI:---watch} **/*.{spec,test}.{[jt]s,[jt]sx,c[jt]s,m[jt]s}"
   },
   "author": "William Wong (https://github.com/compulim)",
   "license": "MIT",

@@ -1,6 +1,11 @@
 // This configuration file is for VSCode only.
 {
   "compilerOptions": {
-    "jsx": "react"
-  }
+    "allowJs": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "noEmit": true,
+    "target": "esnext"
+  },
+  "extends": "./tsconfig.custom.json"
 }

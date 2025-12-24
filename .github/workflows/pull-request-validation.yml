@@ -11,9 +11,9 @@ jobs:
       contents: read
     strategy:
       matrix:
-        switch: [current]
+        switch: [current, react-16, react-17, react-18]
     uses: compulim/workflows/.github/workflows/pull-request-validation.yml@main
     with:
-      package-name: web-speech-cognitive-services
+      package-name: 'web-speech-cognitive-services'
       skip-integration-test: false
       switch: ${{ matrix.switch }}

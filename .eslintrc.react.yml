@@ -1,7 +1,12 @@
 extends:
   - plugin:react/recommended
+  - plugin:react-hooks/recommended
 plugins:
   - react
+  - react-hooks
+rules:
+  react-hooks/refs: off # We use refs intensively
+  react-hooks/preserve-manual-memoization: off # Does not know `valibot.parseProps`
 settings:
   react:
     version: 18.3.1
