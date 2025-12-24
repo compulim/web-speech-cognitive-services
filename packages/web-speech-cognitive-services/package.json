@@ -91,6 +91,7 @@
     "node-fetch": "^2.7.0",
     "p-defer": "^4.0.1",
     "prettier": "^3.6.2",
+    "publint": "^0.3.16",
     "tsup": "^8.5.0",
     "typescript": "^5.8.3"
   },
