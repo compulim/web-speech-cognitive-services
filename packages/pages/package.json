@@ -1,5 +1,5 @@
 {
-  "name": "web-speech-cognitive-services-pages",
+  "name": "@compulim/web-speech-cognitive-services-pages",
   "version": "0.0.0-0",
   "description": "",
   "private": true,
@@ -18,7 +18,7 @@
   "author": "William Wong (https://github.com/compulim)",
   "license": "MIT",
   "localPeerDependencies": {
-    "web-speech-cognitive-services": "^0.0.0-0"
+    "web-speech-cognitive-services": "0.0.0-0"
   },
   "devDependencies": {
     "@tsconfig/strictest": "^2.0.8",

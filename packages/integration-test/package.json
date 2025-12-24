@@ -1,5 +1,5 @@
 {
-  "name": "web-speech-cognitive-services-integration-test",
+  "name": "@compulim/web-speech-cognitive-services-integration-test",
   "version": "0.0.0-0",
   "description": "",
   "private": true,
@@ -19,7 +19,7 @@
   "author": "William Wong (https://github.com/compulim)",
   "license": "MIT",
   "localPeerDependencies": {
-    "web-speech-cognitive-services": "^0.0.0-0"
+    "web-speech-cognitive-services": "0.0.0-0"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.28.5",
@@ -30,6 +30,6 @@
     "jest-environment-jsdom": "^30.2.0"
   },
   "dependencies": {
-    "web-speech-cognitive-services": "^0.0.0-0"
+    "web-speech-cognitive-services": "0.0.0-0"
   }
 }
