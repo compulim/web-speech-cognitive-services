@@ -1,3 +1,4 @@
 {
-  "extends": "@tsconfig/strictest/tsconfig.json"
+  // TODO: Should port to TypeScript.
+  // "extends": "@tsconfig/strictest/tsconfig.json"
 }

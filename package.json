@@ -21,9 +21,6 @@
     "postscaffold:eslint:react": "npm run bump:eslintrc",
     "precommit": "npm run precommit --if-present --workspaces",
     "switch:_": "npm run --if-present --workspaces switch && npm install --legacy-peer-deps --prefer-dedupe",
-    "switch:react-16": "SWITCH_NAME=react-16 npm run switch:_",
-    "switch:react-17": "SWITCH_NAME=react-17 npm run switch:_",
-    "switch:react-18": "SWITCH_NAME=react-18 npm run switch:_",
     "test": "npm run test --if-present --workspaces"
   },
   "pinDependencies": {
@@ -38,6 +35,7 @@
     "eslint": "^8.57.1",
     "eslint-plugin-prettier": "^5.5.3",
     "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.0.1",
     "prettier": "^3.6.2"
   }
 }
