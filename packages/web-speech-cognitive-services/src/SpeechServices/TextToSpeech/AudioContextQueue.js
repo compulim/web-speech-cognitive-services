@@ -2,9 +2,9 @@
 
 import memoize from 'memoize-one';
 
-import AudioContextConsumer from './AudioContextConsumer';
+import AudioContextConsumer from './AudioContextConsumer.js';
 
-export default class {
+export default class AudioContextQueue {
   constructor({ audioContext, ponyfill }) {
     this.consumer = null;
     this.paused = false;

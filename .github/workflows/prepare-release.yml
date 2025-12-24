@@ -1,4 +1,4 @@
-name: Prepare release
+name: 🚢 Prepare release
 
 on:
   workflow_dispatch:
@@ -19,8 +19,8 @@ jobs:
       contents: write
       id-token: write
     secrets:
-      APP_ID: ${{ secrets.APP_ID }}
-      PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+      WORKFLOW_BOT_APP_ID: ${{ secrets.WORKFLOW_BOT_APP_ID }}
+      WORKFLOW_BOT_PRIVATE_KEY: ${{ secrets.WORKFLOW_BOT_PRIVATE_KEY }}
     uses: compulim/workflows/.github/workflows/prepare-release.yml@main
     with:
       version-to-bump: ${{ inputs.version-to-bump }}

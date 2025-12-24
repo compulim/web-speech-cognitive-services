@@ -1,7 +1,7 @@
 {
   "testMatch": ["**/__tests__/**/*.?([cm])[jt]s?(x)", "**/?(*.)+(spec|test).?([cm])[jt]s?(x)"],
   "transform": {
-    "\\.cjsx?$": [
+    "\\.c?jsx?$": [
       "babel-jest",
       {
         "presets": [

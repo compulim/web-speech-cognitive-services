@@ -1,6 +1,3 @@
-env:
-  browser: true
-  es2020: true
 extends:
   - eslint:recommended
 overrides:
@@ -10,10 +7,11 @@ overrides:
       - '**/*.tsx'
   - extends: .eslintrc.typescript.yml
     files:
+      - '**/*.cts'
       - '**/*.mts'
       - '**/*.ts'
       - '**/*.tsx'
-  - extends: .eslintrc.jest.yml
+  - extends: .eslintrc.test.yml
     files:
       - '**/__tests__/**'
       - '**/*.spec.cjs'
@@ -32,6 +30,36 @@ overrides:
       - '**/*.test.mts'
       - '**/*.test.ts'
       - '**/*.test.tsx'
+      - '**/test/**'
+  - extends: .eslintrc.production.yml
+    excludedFiles:
+      - '**/__tests__/**'
+      - '**/*.spec.cjs'
+      - '**/*.spec.mjs'
+      - '**/*.spec.js'
+      - '**/*.spec.jsx'
+      - '**/*.spec.cts'
+      - '**/*.spec.mts'
+      - '**/*.spec.ts'
+      - '**/*.spec.tsx'
+      - '**/*.test.cjs'
+      - '**/*.test.mjs'
+      - '**/*.test.js'
+      - '**/*.test.jsx'
+      - '**/*.test.cts'
+      - '**/*.test.mts'
+      - '**/*.test.ts'
+      - '**/*.test.tsx'
+      - '**/test/**'
+    files:
+      - '**/*.cjs'
+      - '**/*.mjs'
+      - '**/*.js'
+      - '**/*.jsx'
+      - '**/*.cts'
+      - '**/*.mts'
+      - '**/*.ts'
+      - '**/*.tsx'
 parserOptions:
   ecmaVersion: latest
   sourceType: module

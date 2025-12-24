@@ -3,7 +3,7 @@ import createSpeechServicesPonyfill, {
   createSpeechRecognitionPonyfillFromRecognizer,
   createSpeechSynthesisPonyfill,
   fetchAuthorizationToken
-} from './SpeechServices';
+} from './SpeechServices.ts';
 
 export {
   createSpeechRecognitionPonyfill,

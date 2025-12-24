@@ -2,10 +2,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames';
 import React, { useCallback } from 'react';
 
-import getPonyfillCapabilities from '../getPonyfillCapabilities';
-import Select, { Option } from '../Bootstrap/Select';
-import setEnableTelemetry from '../data/actions/setEnableTelemetry';
-import setPonyfillType from '../data/actions/setPonyfillType';
+import getPonyfillCapabilities from '../getPonyfillCapabilities.js';
+import Select, { Option } from '../Bootstrap/Select.tsx';
+import setEnableTelemetry from '../data/actions/setEnableTelemetry.ts';
+import setPonyfillType from '../data/actions/setPonyfillType.ts';
 
 const PonyfillSelector = () => {
   const { browserSupportedSpeechRecognition, ponyfillType, enableTelemetry } = useSelector(
@@ -17,10 +17,10 @@ const PonyfillSelector = () => {
   );
 
   const dispatch = useDispatch();
-  const dispatchSetEnableTelemetry = useCallback(() => dispatch(setEnableTelemetry(!enableTelemetry)), [
-    dispatch,
-    enableTelemetry
-  ]);
+  const dispatchSetEnableTelemetry = useCallback(
+    () => dispatch(setEnableTelemetry(!enableTelemetry)),
+    [dispatch, enableTelemetry]
+  );
   const dispatchSetPonyfillType = useCallback(value => dispatch(setPonyfillType(value)), [dispatch]);
   const ponyfillCapabilities = getPonyfillCapabilities(ponyfillType);
 

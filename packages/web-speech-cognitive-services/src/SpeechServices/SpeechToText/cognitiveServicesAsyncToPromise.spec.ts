@@ -1,3 +1,5 @@
+/// <reference types="jest" />
+
 import cognitiveServicesAsyncToPromise from './cognitiveServicesAsyncToPromise';
 
 let fn: jest.Mock<

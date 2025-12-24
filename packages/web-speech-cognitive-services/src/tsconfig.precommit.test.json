@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "allowJs": true, // TODO: Should port to TypeScript.
+    "allowImportingTsExtensions": true,
     "esModuleInterop": true,
     "jsx": "react",
     "module": "ESNext",
@@ -8,18 +8,8 @@
     "noEmit": true,
     "strict": true,
     "target": "ESNext",
-    "types": ["jest"]
+    "types": ["node"]
   },
-  "include": [
-    "**/*.spec.js",
-    "**/*.spec.jsx",
-    "**/*.spec.ts",
-    "**/*.spec.tsx",
-    "**/*.test.js",
-    "**/*.test.jsx",
-    "**/*.test.ts",
-    "**/*.test.tsx",
-    "__tests__/**/*"
-  ],
-  "extends": "@tsconfig/recommended/tsconfig.json"
+  "extends": "@tsconfig/recommended/tsconfig.json",
+  "include": ["**/*.spec.ts", "**/*.spec.tsx", "**/*.test.ts", "**/*.test.tsx", "__tests__/**/*"]
 }

@@ -15,7 +15,7 @@ const SpeechRecognitionEvents = () => {
       </thead>
       <tbody>
         {speechRecognitionEvents.map((event, index) => (
-          <tr>
+          <tr key={index}>
             <th scope="row">{index + 1}</th>
             <th scope="row">{event.type}</th>
             <td>

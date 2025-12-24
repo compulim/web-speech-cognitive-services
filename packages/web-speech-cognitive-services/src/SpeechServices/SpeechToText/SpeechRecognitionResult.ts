@@ -1,4 +1,4 @@
-import FakeArray from './private/FakeArray';
+import FakeArray from './private/FakeArray.ts';
 
 export type SpeechRecognitionResultInit = {
   isFinal: boolean;

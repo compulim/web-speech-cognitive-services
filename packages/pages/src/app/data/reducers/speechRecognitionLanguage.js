@@ -1,4 +1,4 @@
-import { SET_SPEECH_RECOGNITION_LANGUAGE } from '../actions/setSpeechRecognitionLanguage';
+import { SET_SPEECH_RECOGNITION_LANGUAGE } from '../actions/setSpeechRecognitionLanguage.ts';
 
 export default function speechRecognitionLanguage(state = 'en-US', { payload, type }) {
   switch (type) {

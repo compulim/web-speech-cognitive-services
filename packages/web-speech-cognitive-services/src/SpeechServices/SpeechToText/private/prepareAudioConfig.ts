@@ -3,7 +3,7 @@ import {
   type AudioConfig,
   type AudioConfigImpl
 } from 'microsoft-cognitiveservices-speech-sdk/distrib/lib/src/sdk/Audio/AudioConfig.js';
-import averageAmplitude from './averageAmplitude';
+import averageAmplitude from './averageAmplitude.ts';
 
 export default function prepareAudioConfig(audioConfig: AudioConfig) {
   // Speech SDK also force cast AudioConfig to AudioConfigImpl and pass it to ServiceRecognizerBase to use attach() and other methods.

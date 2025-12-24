@@ -1,3 +1,5 @@
+/// <reference types="jest" />
+
 import fetchVoices from './fetchVoices';
 
 let originalFetch;

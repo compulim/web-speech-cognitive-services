@@ -15,7 +15,7 @@ export default defineConfig([
     },
     format: ['cjs', 'esm'],
     sourcemap: true,
-    target: ['chrome100', 'edge100', 'firefox100', 'safari16']
+    target: ['esnext']
   },
   {
     ...baseConfig,

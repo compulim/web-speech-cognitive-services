@@ -3,9 +3,9 @@
 import { EventAsPromise } from 'event-as-promise';
 import { EventTarget, getEventAttributeValue, setEventAttributeValue } from 'event-target-shim';
 
-import fetchSpeechData from './fetchSpeechData';
-import SpeechSynthesisEvent from './SpeechSynthesisEvent';
-import subscribeEvent from './subscribeEvent';
+import fetchSpeechData from './fetchSpeechData.js';
+import SpeechSynthesisEvent from './SpeechSynthesisEvent.js';
+import subscribeEvent from './subscribeEvent.js';
 
 function asyncDecodeAudioData(audioContext, arrayBuffer) {
   return new Promise((resolve, reject) => {

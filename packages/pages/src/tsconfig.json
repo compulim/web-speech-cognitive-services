@@ -1,15 +1,15 @@
 {
   "compilerOptions": {
-    "allowJs": true,  // TODO: Should port to TypeScript.
+    "allowImportingTsExtensions": true,
     "esModuleInterop": true,
     "jsx": "react",
     "lib": ["DOM", "ESNext", "WebWorker"],
-    "moduleResolution": "Bundler",
+    "module": "esnext",
+    "moduleResolution": "bundler",
     "noEmit": true,
-    "skipLibCheck": true, // TODO: Should port to TypeScript.
     "strict": true,
-    "target": "ESNext"
-  }
-  // TODO: Should port to TypeScript.
-  // "extends": "@tsconfig/strictest/tsconfig.json"
+    "target": "esnext",
+    "types": []
+  },
+  "extends": "./tsconfig.custom.json"
 }

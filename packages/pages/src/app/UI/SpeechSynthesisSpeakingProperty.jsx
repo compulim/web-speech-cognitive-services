@@ -2,7 +2,7 @@ import { useSelector } from 'react-redux';
 import classNames from 'classnames';
 import React, { useCallback } from 'react';
 
-import MonitoringComponent from './MonitoringComponent';
+import MonitoringComponent from './MonitoringComponent.jsx';
 
 const MonitoredSpeakingProperty = () => {
   const speechSynthesis = useSelector(({ ponyfill: { speechSynthesis } }) => speechSynthesis);

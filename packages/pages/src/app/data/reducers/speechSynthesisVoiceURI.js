@@ -1,4 +1,4 @@
-import { SET_SPEECH_SYNTHESIS_VOICE_URI } from '../actions/setSpeechSynthesisVoiceURI';
+import { SET_SPEECH_SYNTHESIS_VOICE_URI } from '../actions/setSpeechSynthesisVoiceURI.ts';
 
 export default function speechSynthesisVoiceURI(state = '', { payload, type }) {
   if (type === SET_SPEECH_SYNTHESIS_VOICE_URI) {

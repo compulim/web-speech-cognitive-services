@@ -1,6 +1,6 @@
 /* eslint no-await-in-loop: "off" */
 
-export default class {
+export default class AudioContextConsumer {
   constructor(audioContext) {
     this.audioContext = audioContext;
   }

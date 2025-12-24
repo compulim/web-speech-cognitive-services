@@ -1,3 +1,3 @@
-import createSpeechSynthesisPonyfill from './TextToSpeech/createSpeechSynthesisPonyfill';
+import createSpeechSynthesisPonyfill from './TextToSpeech/createSpeechSynthesisPonyfill.js';
 
 export default createSpeechSynthesisPonyfill;

@@ -1,4 +1,4 @@
-import { SET_ON_DEMAND_AUTHORIZATION_TOKEN } from '../actions/setOnDemandAuthorizationToken';
+import { SET_ON_DEMAND_AUTHORIZATION_TOKEN } from '../actions/setOnDemandAuthorizationToken.ts';
 
 export default function onDemandAuthorizationToken(state = false, { payload, type }) {
   if (type === SET_ON_DEMAND_AUTHORIZATION_TOKEN) {

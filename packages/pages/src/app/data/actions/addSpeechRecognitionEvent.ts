@@ -1,6 +1,6 @@
 const ADD_SPEECH_RECOGNITION_EVENT = 'ADD_SPEECH_RECOGNITION_EVENT';
 
-export type AddSpeechRecognitionEventAction = Readonly<{
+type AddSpeechRecognitionEventAction = Readonly<{
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   payload: Readonly<{ event: any }>;
   type: typeof ADD_SPEECH_RECOGNITION_EVENT;
@@ -114,4 +114,4 @@ export default function addSpeechRecognitionEvent(event: any): AddSpeechRecognit
   };
 }
 
-export { ADD_SPEECH_RECOGNITION_EVENT };
+export { ADD_SPEECH_RECOGNITION_EVENT, type AddSpeechRecognitionEventAction };

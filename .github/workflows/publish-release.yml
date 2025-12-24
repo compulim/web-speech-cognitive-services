@@ -11,10 +11,9 @@ jobs:
       pages: write
       id-token: write
     secrets:
-      APP_ID: ${{ secrets.APP_ID }}
-      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-      PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
-    uses: compulim/workflows/.github/workflows/publish-release.yml@main
+      WORKFLOW_BOT_APP_ID: ${{ secrets.WORKFLOW_BOT_APP_ID }}
+      WORKFLOW_BOT_PRIVATE_KEY: ${{ secrets.WORKFLOW_BOT_PRIVATE_KEY }}
+    uses: compulim/workflows/.github/workflows/publish-release-oidc.yml@main
     with:
-      package-name: web-speech-cognitive-services
+      package-name: 'web-speech-cognitive-services'
       tag: ${{ github.ref_name }}

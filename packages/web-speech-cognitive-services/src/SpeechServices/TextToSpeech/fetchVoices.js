@@ -1,6 +1,6 @@
 /* eslint no-magic-numbers: ["error", { "ignore": [0, 1, -1] }] */
 
-import SpeechSynthesisVoice from './SpeechSynthesisVoice';
+import SpeechSynthesisVoice from './SpeechSynthesisVoice.js';
 
 export default async function fetchVoices({ authorizationToken, region, speechSynthesisHostname, subscriptionKey }) {
   // Although encodeURI on a hostname doesn't work as expected for hostname, at least, it will fail peacefully.

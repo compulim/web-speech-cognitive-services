@@ -31,13 +31,13 @@
 // Criteria to remove this package:
 // - When create-react-app@2 become mainstream
 
-module.exports = function() {
+export default function createDeferred() {
   const ret = {};
 
-  ret.promise = new Promise(function(resolve, reject) {
+  ret.promise = new Promise(function (resolve, reject) {
     ret.resolve = resolve;
     ret.reject = reject;
   });
 
   return ret;
-};
+}

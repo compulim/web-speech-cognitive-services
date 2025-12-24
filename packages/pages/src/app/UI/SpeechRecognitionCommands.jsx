@@ -1,23 +1,23 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import Select, { Option } from '../Bootstrap/Select';
-import SpeechRecognitionEndpointIdInput from './SpeechRecognitionEndpointIdInput';
-import SpeechRecognitionInitialSilenceTimeoutSelector from './SpeechRecognitionInitialSilenceTimeoutSelector';
-import SpeechRecognitionLanguageSelector from './SpeechRecognitionLanguageSelector';
-import SpeechRecognitionTextNormalizationSelector from './SpeechRecognitionTextNormalizationSelector';
+import Select, { Option } from '../Bootstrap/Select.tsx';
+import SpeechRecognitionEndpointIdInput from './SpeechRecognitionEndpointIdInput.jsx';
+import SpeechRecognitionInitialSilenceTimeoutSelector from './SpeechRecognitionInitialSilenceTimeoutSelector.tsx';
+import SpeechRecognitionLanguageSelector from './SpeechRecognitionLanguageSelector.jsx';
+import SpeechRecognitionTextNormalizationSelector from './SpeechRecognitionTextNormalizationSelector.jsx';
 
-import abortSpeechRecognition from '../data/actions/abortSpeechRecognition';
-import clearSpeechRecognitionEvent from '../data/actions/clearSpeechRecognitionEvent';
-import setSpeechRecognitionContinuous from '../data/actions/setSpeechRecognitionContinuous';
-import setSpeechRecognitionDelayedStart from '../data/actions/setSpeechRecognitionDelayedStart';
-import setSpeechRecognitionInterimResults from '../data/actions/setSpeechRecognitionInterimResults';
-import setSpeechRecognitionMaxAlternatives from '../data/actions/setSpeechRecognitionMaxAlternatives';
-import setSpeechRecognitionPhrases from '../data/actions/setSpeechRecognitionPhrases';
-import setSpeechRecognitionReferenceGrammars from '../data/actions/setSpeechRecognitionReferenceGrammars';
-import startSpeechRecognition from '../data/actions/startSpeechRecognition';
-import stopSpeechRecognition from '../data/actions/stopSpeechRecognition';
-import getPonyfillCapabilities from '../getPonyfillCapabilities';
+import abortSpeechRecognition from '../data/actions/abortSpeechRecognition.ts';
+import clearSpeechRecognitionEvent from '../data/actions/clearSpeechRecognitionEvent.ts';
+import setSpeechRecognitionContinuous from '../data/actions/setSpeechRecognitionContinuous.ts';
+import setSpeechRecognitionDelayedStart from '../data/actions/setSpeechRecognitionDelayedStart.ts';
+import setSpeechRecognitionInterimResults from '../data/actions/setSpeechRecognitionInterimResults.ts';
+import setSpeechRecognitionMaxAlternatives from '../data/actions/setSpeechRecognitionMaxAlternatives.ts';
+import setSpeechRecognitionPhrases from '../data/actions/setSpeechRecognitionPhrases.ts';
+import setSpeechRecognitionReferenceGrammars from '../data/actions/setSpeechRecognitionReferenceGrammars.ts';
+import startSpeechRecognition from '../data/actions/startSpeechRecognition.ts';
+import stopSpeechRecognition from '../data/actions/stopSpeechRecognition.ts';
+import getPonyfillCapabilities from '../getPonyfillCapabilities.js';
 
 const SpeechRecognitionCommands = () => {
   const {
@@ -57,19 +57,22 @@ const SpeechRecognitionCommands = () => {
   const dispatch = useDispatch();
   const dispatchAbortSpeechRecognition = useCallback(() => dispatch(abortSpeechRecognition()), [dispatch]);
   const dispatchClearSpeechRecognitionEvent = useCallback(() => dispatch(clearSpeechRecognitionEvent()), [dispatch]);
-  const dispatchSetSpeechRecognitionContinuous = useCallback(() => dispatch(setSpeechRecognitionContinuous(true)), [
-    dispatch
-  ]);
-  const dispatchSetSpeechRecognitionDelayedStart = useCallback(() => dispatch(setSpeechRecognitionDelayedStart(true)), [
-    dispatch
-  ]);
+  const dispatchSetSpeechRecognitionContinuous = useCallback(
+    () => dispatch(setSpeechRecognitionContinuous(true)),
+    [dispatch]
+  );
+  const dispatchSetSpeechRecognitionDelayedStart = useCallback(
+    () => dispatch(setSpeechRecognitionDelayedStart(true)),
+    [dispatch]
+  );
   const dispatchSetSpeechRecognitionHideInterimResults = useCallback(
     () => dispatch(setSpeechRecognitionInterimResults(false)),
     [dispatch]
   );
-  const dispatchSetSpeechRecognitionInteractive = useCallback(() => dispatch(setSpeechRecognitionContinuous(false)), [
-    dispatch
-  ]);
+  const dispatchSetSpeechRecognitionInteractive = useCallback(
+    () => dispatch(setSpeechRecognitionContinuous(false)),
+    [dispatch]
+  );
   const dispatchSetSpeechRecognitionMaxAlternatives = useCallback(
     value => dispatch(setSpeechRecognitionMaxAlternatives(+value)),
     [dispatch]
@@ -78,9 +81,10 @@ const SpeechRecognitionCommands = () => {
     () => dispatch(setSpeechRecognitionDelayedStart(false)),
     [dispatch]
   );
-  const dispatchSetSpeechRecognitionPhrases = useCallback(value => dispatch(setSpeechRecognitionPhrases(value)), [
-    dispatch
-  ]);
+  const dispatchSetSpeechRecognitionPhrases = useCallback(
+    value => dispatch(setSpeechRecognitionPhrases(value)),
+    [dispatch]
+  );
   const dispatchSetSpeechRecognitionReferenceGrammars = useCallback(
     value => dispatch(setSpeechRecognitionReferenceGrammars(value)),
     [dispatch]
@@ -95,7 +99,9 @@ const SpeechRecognitionCommands = () => {
   const [phrasesString, setPhrasesString] = useState();
   const [referenceGrammarsString, setReferenceGrammarsString] = useState();
 
+  // eslint-disable-next-line react-hooks/set-state-in-render
   useMemo(() => setPhrasesString(phrases.join(', ')), [phrases]);
+  // eslint-disable-next-line react-hooks/set-state-in-render
   useMemo(() => setReferenceGrammarsString(referenceGrammars.join(', ')), [referenceGrammars]);
 
   const ponyfillCapabilities = getPonyfillCapabilities(ponyfillType);
@@ -116,15 +122,15 @@ const SpeechRecognitionCommands = () => {
                   ? 'Delayed start in continuous mode with interims'
                   : 'Start in continuous mode with interims'
                 : delayedStart
-                ? 'Delayed start in continuous mode'
-                : 'Start in continuous mode'
+                  ? 'Delayed start in continuous mode'
+                  : 'Start in continuous mode'
               : interimResults
-              ? delayedStart
-                ? 'Delayed start with interims'
-                : 'Start with interims'
-              : delayedStart
-              ? 'Delayed start'
-              : 'Start'}
+                ? delayedStart
+                  ? 'Delayed start with interims'
+                  : 'Start with interims'
+                : delayedStart
+                  ? 'Delayed start'
+                  : 'Start'}
           </button>
           <button
             className="btn btn-primary dropdown-toggle dropdown-toggle-split"

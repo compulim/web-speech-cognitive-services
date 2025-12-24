@@ -1,4 +1,4 @@
-import SpeechRecognitionResultList from './SpeechRecognitionResultList';
+import SpeechRecognitionResultList from './SpeechRecognitionResultList.ts';
 
 export type SpeechRecognitionEventInit = {
   data?: undefined | unknown;

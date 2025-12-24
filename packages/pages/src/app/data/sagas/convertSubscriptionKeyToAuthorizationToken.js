@@ -2,8 +2,8 @@ import { call, put, select, takeLatest } from 'redux-saga/effects';
 
 import { fetchAuthorizationToken as fetchSpeechServicesAuthorizationToken } from 'web-speech-cognitive-services';
 
-import { CONVERT_SPEECH_SERVICES_SUBSCRIPTION_KEY_TO_AUTHORIZATION_TOKEN } from '../actions/convertSpeechServicesSubscriptionKeyToAuthorizationToken';
-import setSpeechServicesAuthorizationToken from '../actions/setSpeechServicesAuthorizationToken';
+import { CONVERT_SPEECH_SERVICES_SUBSCRIPTION_KEY_TO_AUTHORIZATION_TOKEN } from '../actions/convertSpeechServicesSubscriptionKeyToAuthorizationToken.ts';
+import setSpeechServicesAuthorizationToken from '../actions/setSpeechServicesAuthorizationToken.ts';
 
 export default function* convertSubscriptionKeyToAuthorizationTokenSaga() {
   yield takeLatest(CONVERT_SPEECH_SERVICES_SUBSCRIPTION_KEY_TO_AUTHORIZATION_TOKEN, function* () {

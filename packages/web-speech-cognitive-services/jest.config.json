@@ -3,7 +3,7 @@
   "testPathIgnorePatterns": ["/__setup__/", "/lib/", "/node_modules/", "/__types__/", "\\.pnp\\.[^\\/]+$"],
   "transform": {
     "/__tests__/types/": ["<rootDir>/__tests__/__setup__/typingTestTransformer.js"],
-    "\\.[jt]sx?$": [
+    "\\.m?[jt]sx?$": [
       "babel-jest",
       {
         "presets": [
@@ -18,7 +18,7 @@
             {
               "modules": "commonjs",
               "targets": {
-                "node": "18"
+                "node": "20"
               }
             }
           ]

@@ -1,0 +1,50 @@
+extends:
+  - plugin:import/recommended
+plugins:
+  - import
+rules:
+  import/no-deprecated: error
+  import/no-empty-named-blocks: error
+  import/no-extraneous-dependencies: error
+  import/no-mutable-exports: error
+  import/no-named-as-default: error
+  import/no-named-as-default-member: error
+  import/no-unused-modules: error
+  import/no-amd: error
+  import/no-commonjs: error
+  import/no-absolute-path: error
+  import/no-cycle: error
+  import/no-dynamic-require: error
+  import/no-self-import: error
+  import/no-useless-path-segments: error
+  import/no-webpack-loader-syntax: error
+  import/consistent-type-specifier-style:
+    - error
+    - prefer-inline
+  import/exports-last: error
+  import/extensions:
+    - error
+    - ignorePackages # eslint-plugin-import does not understand named import
+  import/first: error
+  import/newline-after-import: error
+  import/no-anonymous-default-export: error
+  import/no-duplicates: error
+  import/no-namespace: error
+  import/no-unassigned-import:
+    - error
+    - allow:
+      - '**/*.css'
+      - dotenv/config
+settings:
+  import/resolver:
+    node:
+      extensions:
+        - .cjs
+        - .mjs
+        - .js
+        - .jsx
+        - .cts
+        - .mts
+        - .ts
+        - .tsx
+    typescript: true

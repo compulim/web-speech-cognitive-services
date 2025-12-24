@@ -1,20 +1,20 @@
 import { put, select, takeLatest } from 'redux-saga/effects';
 import { createSpeechServicesPonyfill } from 'web-speech-cognitive-services';
 
-import fetchSpeechServicesAuthorizationToken from '../../fetchSpeechServicesAuthorizationToken';
-import { SET_ENABLE_TELEMETRY } from '../actions/setEnableTelemetry';
-import { SET_ON_DEMAND_AUTHORIZATION_TOKEN } from '../actions/setOnDemandAuthorizationToken';
-import setPonyfill from '../actions/setPonyfill';
-import { SET_PONYFILL_TYPE } from '../actions/setPonyfillType';
-import { SET_REGION } from '../actions/setRegion';
-import { SET_SPEECH_RECOGNITION_ENDPOINT_ID } from '../actions/setSpeechRecognitionEndpointId';
-import { SET_SPEECH_RECOGNITION_INITIAL_SILENCE_TIMEOUT } from '../actions/setSpeechRecognitionInitialSilenceTimeout';
-import { SET_SPEECH_RECOGNITION_REFERENCE_GRAMMARS } from '../actions/setSpeechRecognitionReferenceGrammars';
-import { SET_SPEECH_RECOGNITION_TEXT_NORMALIZATION } from '../actions/setSpeechRecognitionTextNormalization';
-import { SET_SPEECH_SERVICES_AUTHORIZATION_TOKEN } from '../actions/setSpeechServicesAuthorizationToken';
-import { SET_SPEECH_SERVICES_SUBSCRIPTION_KEY } from '../actions/setSpeechServicesSubscriptionKey';
-import { SET_SPEECH_SYNTHESIS_DEPLOYMENT_ID } from '../actions/setSpeechSynthesisDeploymentId';
-import { SET_SPEECH_SYNTHESIS_OUTPUT_FORMAT } from '../actions/setSpeechSynthesisOutputFormat';
+import fetchSpeechServicesAuthorizationToken from '../../fetchSpeechServicesAuthorizationToken.js';
+import { SET_ENABLE_TELEMETRY } from '../actions/setEnableTelemetry.ts';
+import { SET_ON_DEMAND_AUTHORIZATION_TOKEN } from '../actions/setOnDemandAuthorizationToken.ts';
+import setPonyfill from '../actions/setPonyfill.ts';
+import { SET_PONYFILL_TYPE } from '../actions/setPonyfillType.ts';
+import { SET_REGION } from '../actions/setRegion.ts';
+import { SET_SPEECH_RECOGNITION_ENDPOINT_ID } from '../actions/setSpeechRecognitionEndpointId.ts';
+import { SET_SPEECH_RECOGNITION_INITIAL_SILENCE_TIMEOUT } from '../actions/setSpeechRecognitionInitialSilenceTimeout.ts';
+import { SET_SPEECH_RECOGNITION_REFERENCE_GRAMMARS } from '../actions/setSpeechRecognitionReferenceGrammars.ts';
+import { SET_SPEECH_RECOGNITION_TEXT_NORMALIZATION } from '../actions/setSpeechRecognitionTextNormalization.ts';
+import { SET_SPEECH_SERVICES_AUTHORIZATION_TOKEN } from '../actions/setSpeechServicesAuthorizationToken.ts';
+import { SET_SPEECH_SERVICES_SUBSCRIPTION_KEY } from '../actions/setSpeechServicesSubscriptionKey.ts';
+import { SET_SPEECH_SYNTHESIS_DEPLOYMENT_ID } from '../actions/setSpeechSynthesisDeploymentId.ts';
+import { SET_SPEECH_SYNTHESIS_OUTPUT_FORMAT } from '../actions/setSpeechSynthesisOutputFormat.ts';
 
 function* setPonyfillSaga() {
   const {

@@ -1,1 +1,1 @@
-export * from './SpeechToText/index';
+export * from './SpeechToText/index.ts';

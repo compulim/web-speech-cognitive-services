@@ -2,14 +2,14 @@
 
 import { call, cancel, fork, join, put, race, select, take } from 'redux-saga/effects';
 
-import addSpeechRecognitionEvent from '../actions/addSpeechRecognitionEvent';
-import clearSpeechRecognitionEvent from '../actions/clearSpeechRecognitionEvent';
-import getPonyfillCapabilities from '../../getPonyfillCapabilities';
+import addSpeechRecognitionEvent from '../actions/addSpeechRecognitionEvent.ts';
+import clearSpeechRecognitionEvent from '../actions/clearSpeechRecognitionEvent.ts';
+import getPonyfillCapabilities from '../../getPonyfillCapabilities.js';
 
-import { ABORT_SPEECH_RECOGNITION } from '../actions/abortSpeechRecognition';
-import { START_SPEECH_RECOGNITION } from '../actions/startSpeechRecognition';
-import setSpeechRecognitionInstance from '../actions/setSpeechRecognitionInstance';
-import stopSpeechRecognition, { STOP_SPEECH_RECOGNITION } from '../actions/stopSpeechRecognition';
+import { ABORT_SPEECH_RECOGNITION } from '../actions/abortSpeechRecognition.ts';
+import { START_SPEECH_RECOGNITION } from '../actions/startSpeechRecognition.ts';
+import setSpeechRecognitionInstance from '../actions/setSpeechRecognitionInstance.ts';
+import stopSpeechRecognition, { STOP_SPEECH_RECOGNITION } from '../actions/stopSpeechRecognition.ts';
 
 function sleep(duration) {
   return new Promise(resolve => setTimeout(resolve, duration));

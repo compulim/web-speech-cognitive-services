@@ -1,13 +1,13 @@
 import { useDispatch, useSelector } from 'react-redux';
 import React, { useCallback } from 'react';
 
-import cancelSpeechSynthesis from '../data/actions/cancelSpeechSynthesis';
-import clearSpeechSynthesisUtterance from '../data/actions/clearSpeechSynthesisUtterance';
-import pauseSpeechSynthesisUtterance from '../data/actions/pauseSpeechSynthesis';
-import resumeSpeechSynthesisUtterance from '../data/actions/resumeSpeechSynthesis';
-import speechSynthesisSpeakUtterance from '../data/actions/speechSynthesisSpeakUtterance';
+import cancelSpeechSynthesis from '../data/actions/cancelSpeechSynthesis.ts';
+import clearSpeechSynthesisUtterance from '../data/actions/clearSpeechSynthesisUtterance.ts';
+import pauseSpeechSynthesisUtterance from '../data/actions/pauseSpeechSynthesis.ts';
+import resumeSpeechSynthesisUtterance from '../data/actions/resumeSpeechSynthesis.ts';
+import speechSynthesisSpeakUtterance from '../data/actions/speechSynthesisSpeakUtterance.ts';
 
-import SpeechSynthesisSpeakingProperty from './SpeechSynthesisSpeakingProperty';
+import SpeechSynthesisSpeakingProperty from './SpeechSynthesisSpeakingProperty.jsx';
 
 const SpeechSynthesisCommands = () => {
   const { hasUtterances, text, voiceURI } = useSelector(
@@ -20,17 +20,20 @@ const SpeechSynthesisCommands = () => {
 
   const dispatch = useDispatch();
   const dispatchCancelSpeechSynthesis = useCallback(() => dispatch(cancelSpeechSynthesis()), [dispatch]);
-  const dispatchClearSpeechSynthesisUtterance = useCallback(() => dispatch(clearSpeechSynthesisUtterance()), [
-    dispatch
-  ]);
+  const dispatchClearSpeechSynthesisUtterance = useCallback(
+    () => dispatch(clearSpeechSynthesisUtterance()),
+    [dispatch]
+  );
 
-  const dispatchPauseSpeechSynthesisUtterance = useCallback(() => dispatch(pauseSpeechSynthesisUtterance()), [
-    dispatch
-  ]);
+  const dispatchPauseSpeechSynthesisUtterance = useCallback(
+    () => dispatch(pauseSpeechSynthesisUtterance()),
+    [dispatch]
+  );
 
-  const dispatchResumeSpeechSynthesisUtterance = useCallback(() => dispatch(resumeSpeechSynthesisUtterance()), [
-    dispatch
-  ]);
+  const dispatchResumeSpeechSynthesisUtterance = useCallback(
+    () => dispatch(resumeSpeechSynthesisUtterance()),
+    [dispatch]
+  );
 
   const dispatchSpeechSynthesisSpeakUtterance = useCallback(
     () => dispatch(speechSynthesisSpeakUtterance({ text, voiceURI })),

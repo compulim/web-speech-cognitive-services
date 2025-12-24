@@ -13,21 +13,21 @@ import {
 } from 'microsoft-cognitiveservices-speech-sdk';
 import { type AudioConfigImpl } from 'microsoft-cognitiveservices-speech-sdk/distrib/lib/src/sdk/Audio/AudioConfig.js';
 import { boolean, function_, parse, undefined_, union } from 'valibot';
-import createPromiseQueue from '../../Util/createPromiseQueue';
-import SpeechSDK from '../SpeechSDK';
-import cognitiveServiceEventResultToWebSpeechRecognitionResult from './cognitiveServiceEventResultToWebSpeechRecognitionResult';
-import cognitiveServicesAsyncToPromise from './cognitiveServicesAsyncToPromise';
-import EventListenerMap from './private/EventListenerMap';
-import prepareAudioConfig from './private/prepareAudioConfig';
-import serializeRecognitionResult from './private/serializeRecognitionResult';
-import SpeechGrammarList from './SpeechGrammarList';
-import SpeechRecognitionErrorEvent from './SpeechRecognitionErrorEvent';
-import SpeechRecognitionEvent from './SpeechRecognitionEvent';
-import { type SpeechRecognitionEventListenerMap } from './SpeechRecognitionEventListenerMap';
-import type SpeechRecognitionResult from './SpeechRecognitionResult';
-import SpeechRecognitionResultList from './SpeechRecognitionResultList';
-import referenceGrammarsSchema from './validation/referenceGrammarsSchema';
-import textNormalizationSchema from './validation/textNormalizationSchema';
+import createPromiseQueue from '../../Util/createPromiseQueue.js';
+import SpeechSDK from '../SpeechSDK.ts';
+import cognitiveServiceEventResultToWebSpeechRecognitionResult from './cognitiveServiceEventResultToWebSpeechRecognitionResult.ts';
+import cognitiveServicesAsyncToPromise from './cognitiveServicesAsyncToPromise.ts';
+import EventListenerMap from './private/EventListenerMap.ts';
+import prepareAudioConfig from './private/prepareAudioConfig.ts';
+import serializeRecognitionResult from './private/serializeRecognitionResult.ts';
+import SpeechGrammarList from './SpeechGrammarList.ts';
+import SpeechRecognitionErrorEvent from './SpeechRecognitionErrorEvent.ts';
+import SpeechRecognitionEvent from './SpeechRecognitionEvent.ts';
+import { type SpeechRecognitionEventListenerMap } from './SpeechRecognitionEventListenerMap.ts';
+import type SpeechRecognitionResult from './SpeechRecognitionResult.ts';
+import SpeechRecognitionResultList from './SpeechRecognitionResultList.ts';
+import referenceGrammarsSchema from './validation/referenceGrammarsSchema.ts';
+import textNormalizationSchema from './validation/textNormalizationSchema.ts';
 
 // https://docs.microsoft.com/en-us/javascript/api/microsoft-cognitiveservices-speech-sdk/speechconfig?view=azure-node-latest#outputformat
 // {

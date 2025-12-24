@@ -1,8 +1,8 @@
 import { useDispatch, useSelector } from 'react-redux';
 import React, { useCallback } from 'react';
 
-import getPonyfillCapabilities from '../getPonyfillCapabilities';
-import setSpeechSynthesisVoiceURI from '../data/actions/setSpeechSynthesisVoiceURI';
+import getPonyfillCapabilities from '../getPonyfillCapabilities.js';
+import setSpeechSynthesisVoiceURI from '../data/actions/setSpeechSynthesisVoiceURI.ts';
 
 const SpeechSynthesisVoiceURIInput = () => {
   const { ponyfillType, speechSynthesisDeploymentId, speechSynthesisVoiceURI } = useSelector(

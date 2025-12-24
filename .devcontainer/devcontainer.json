@@ -1,5 +1,13 @@
 {
-  "image": "mcr.microsoft.com/devcontainers/typescript-node",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {}
+  },
+  "forwardPorts": [
+    8000
+  ],
   "remoteUser": "node",
   "updateContentCommand": "npm clean-install && npm run build"
 }
