@@ -1,3 +1,5 @@
+/// <reference types="jest" />
+
 import fetchSpeechServicesAuthorizationToken from './fetchSpeechServicesAuthorizationToken';
 
 test('fetch using region and subscriptionKey', async () => {

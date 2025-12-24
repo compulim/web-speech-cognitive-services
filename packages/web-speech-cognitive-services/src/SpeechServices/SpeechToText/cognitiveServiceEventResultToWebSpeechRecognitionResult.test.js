@@ -1,3 +1,5 @@
+/// <reference types="jest" />
+
 /**
  * @jest-environment jsdom
  */

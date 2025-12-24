@@ -1,3 +1,5 @@
+/// <reference types="jest" />
+
 import isSSML from './isSSML';
 
 test('check SSML string by <speak> tag', () => {

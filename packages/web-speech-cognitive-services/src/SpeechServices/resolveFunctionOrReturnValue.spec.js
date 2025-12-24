@@ -1,3 +1,5 @@
+/// <reference types="jest" />
+
 import resolveFunctionOrReturnValue from './resolveFunctionOrReturnValue';
 
 test('resolve sync function', () => {

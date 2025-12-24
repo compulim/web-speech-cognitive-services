@@ -1,3 +1,6 @@
 {
-  "extends": "@tsconfig/strictest/tsconfig.json"
+  "compilerOptions": {
+    "allowJs": true
+  },
+  "extends": "@tsconfig/recommended/tsconfig.json"
 }

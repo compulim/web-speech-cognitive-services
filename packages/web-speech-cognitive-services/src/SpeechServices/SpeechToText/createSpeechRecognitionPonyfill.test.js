@@ -1,3 +1,5 @@
+/// <reference types="jest" />
+
 jest.useFakeTimers();
 
 import createDeferred from 'p-defer';

@@ -1,3 +1,5 @@
+/// <reference types="jest" />
+
 import FakeArray from './FakeArray';
 
 test('should return indexed item', () => {
