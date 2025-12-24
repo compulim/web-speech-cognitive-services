@@ -1,6 +1,6 @@
 import createDeferred from 'p-defer';
 
-export default function () {
+export default function createPromiseQueue() {
   let shiftDeferred;
   const queue = [];
 

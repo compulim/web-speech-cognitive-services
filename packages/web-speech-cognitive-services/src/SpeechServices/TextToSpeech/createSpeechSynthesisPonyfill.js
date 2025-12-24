@@ -4,18 +4,18 @@ import { EventTarget, getEventAttributeValue, setEventAttributeValue } from 'eve
 import { onErrorResumeNext } from 'on-error-resume-next/async';
 import createDeferred from 'p-defer';
 
-import patchOptions from '../patchOptions';
-import AudioContextQueue from './AudioContextQueue';
-import SpeechSynthesisEvent from './SpeechSynthesisEvent';
-import SpeechSynthesisUtterance from './SpeechSynthesisUtterance';
-import fetchCustomVoices from './fetchCustomVoices';
-import fetchVoices from './fetchVoices';
+import patchOptions from '../patchOptions.ts';
+import AudioContextQueue from './AudioContextQueue.js';
+import SpeechSynthesisEvent from './SpeechSynthesisEvent.js';
+import SpeechSynthesisUtterance from './SpeechSynthesisUtterance.js';
+import fetchCustomVoices from './fetchCustomVoices.js';
+import fetchVoices from './fetchVoices.js';
 
 // Supported output format can be found at https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/rest-text-to-speech#audio-outputs
 const DEFAULT_OUTPUT_FORMAT = 'audio-24khz-160kbitrate-mono-mp3';
 const EMPTY_ARRAY = [];
 
-export default options => {
+function createSpeechRecognitionPonyfill(options) {
   const {
     audioContext,
     fetchCredentials,
@@ -143,4 +143,6 @@ export default options => {
     SpeechSynthesisEvent,
     SpeechSynthesisUtterance
   };
-};
+}
+
+export default createSpeechRecognitionPonyfill;

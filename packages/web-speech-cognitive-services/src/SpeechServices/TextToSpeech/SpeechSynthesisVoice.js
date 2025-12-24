@@ -1,4 +1,4 @@
-export default class {
+export default class SpeechSynthesisVoice {
   constructor({ gender, lang, voiceURI }) {
     this._default = false;
     this._gender = gender;

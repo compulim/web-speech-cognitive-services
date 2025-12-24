@@ -1,4 +1,4 @@
-import EventListenerMap from './private/EventListenerMap';
+import EventListenerMap from './private/EventListenerMap.ts';
 import type SpeechRecognitionErrorEvent from './SpeechRecognitionErrorEvent';
 import type SpeechRecognitionEvent from './SpeechRecognitionEvent';
 

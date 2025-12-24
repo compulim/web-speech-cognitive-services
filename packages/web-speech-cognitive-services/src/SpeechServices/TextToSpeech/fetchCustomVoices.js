@@ -1,8 +1,8 @@
 /* eslint no-magic-numbers: ["error", { "ignore": [0, 1, -1] }] */
 
-import SpeechSynthesisVoice from './SpeechSynthesisVoice';
+import SpeechSynthesisVoice from './SpeechSynthesisVoice.js';
 
-async function fetchCustomVoices({ customVoiceHostname, deploymentId, region, subscriptionKey }) {
+async function fetchCustomVoices_({ customVoiceHostname, deploymentId, region, subscriptionKey }) {
   const hostname = customVoiceHostname || `${region}.customvoice.api.speech.microsoft.com`;
 
   // Although encodeURI on a hostname doesn't work as expected for hostname, at least, it will fail peacefully.
@@ -23,8 +23,8 @@ async function fetchCustomVoices({ customVoiceHostname, deploymentId, region, su
   return res.json();
 }
 
-export default async function ({ customVoiceHostname, deploymentId, region, subscriptionKey }) {
-  const { models } = await fetchCustomVoices({ customVoiceHostname, deploymentId, region, subscriptionKey });
+export default async function fetchCustomVoices({ customVoiceHostname, deploymentId, region, subscriptionKey }) {
+  const { models } = await fetchCustomVoices_({ customVoiceHostname, deploymentId, region, subscriptionKey });
 
   return models
     .map(

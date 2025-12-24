@@ -8,10 +8,12 @@ import {
   SpeechRecognizer
 } from 'microsoft-cognitiveservices-speech-sdk/distrib/lib/microsoft.cognitiveservices.speech.sdk.js';
 
-export default {
+const SpeechSDK = {
   AudioConfig,
   OutputFormat,
   ResultReason,
   SpeechConfig,
   SpeechRecognizer
 };
+
+export default SpeechSDK;

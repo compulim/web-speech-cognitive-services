@@ -10,18 +10,28 @@ import {
   type SpeechRecognitionEventListenerMap,
   type SpeechRecognitionResult,
   type SpeechRecognitionResultList
-} from './SpeechServices/SpeechToText';
-import createSpeechSynthesisPonyfill from './SpeechServices/TextToSpeech';
-import fetchAuthorizationToken from './SpeechServices/fetchAuthorizationToken';
+} from './SpeechServices/SpeechToText.ts';
+import createSpeechSynthesisPonyfill from './SpeechServices/TextToSpeech.js';
+import fetchAuthorizationToken from './SpeechServices/fetchAuthorizationToken.ts';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export default function createSpeechServicesPonyfill(options: any = {}): any {
+function createSpeechServicesPonyfill(options: any = {}): any {
   return {
     ...createSpeechRecognitionPonyfill(options),
     ...createSpeechSynthesisPonyfill(options)
   };
 }
 
+const meta = document.createElement('meta');
+
+meta.setAttribute('name', 'web-speech-cognitive-services');
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+meta.setAttribute('content', `version=${process.env.npm_package_version}`);
+
+document.head.appendChild(meta);
+
+export default createSpeechServicesPonyfill;
 export {
   createSpeechRecognitionPonyfill,
   createSpeechRecognitionPonyfillFromRecognizer,
@@ -35,12 +45,3 @@ export {
   type SpeechRecognitionResult,
   type SpeechRecognitionResultList
 };
-
-const meta = document.createElement('meta');
-
-meta.setAttribute('name', 'web-speech-cognitive-services');
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-meta.setAttribute('content', `version=${process.env.npm_package_version}`);
-
-document.head.appendChild(meta);

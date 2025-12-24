@@ -1,14 +1,14 @@
-import SpeechSDK from '../SpeechSDK';
+import SpeechSDK from '../SpeechSDK.ts';
 
-import SpeechRecognitionAlternative from './SpeechRecognitionAlternative';
-import SpeechRecognitionResult from './SpeechRecognitionResult';
-import type { SerializedRecognitionResult } from './private/serializeRecognitionResult';
+import SpeechRecognitionAlternative from './SpeechRecognitionAlternative.ts';
+import SpeechRecognitionResult from './SpeechRecognitionResult.ts';
+import { type SerializedRecognitionResult } from './private/serializeRecognitionResult.ts';
 
 const {
   ResultReason: { RecognizingSpeech, RecognizedSpeech }
 } = SpeechSDK;
 
-export default function (
+export default function cognitiveServiceEventResultToWebSpeechRecognitionResult(
   result: SerializedRecognitionResult,
   init?:
     | {

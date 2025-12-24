@@ -1,19 +1,19 @@
 import { type AudioConfig as AudioConfigType } from 'microsoft-cognitiveservices-speech-sdk';
 import { parse } from 'valibot';
 
-import resolveFunctionOrReturnValue from './resolveFunctionOrReturnValue';
-import SpeechSDK from './SpeechSDK';
-import credentialsSchema, { type Credentials } from './SpeechToText/validation/credentialsSchema';
-import enableTelemetrySchema, { EnableTelemetry } from './SpeechToText/validation/enableTelemetrySchema';
+import resolveFunctionOrReturnValue from './resolveFunctionOrReturnValue.ts';
+import SpeechSDK from './SpeechSDK.ts';
+import credentialsSchema, { type Credentials } from './SpeechToText/validation/credentialsSchema.ts';
+import enableTelemetrySchema, { EnableTelemetry } from './SpeechToText/validation/enableTelemetrySchema.ts';
 import initialSilenceTimeoutSchema, {
   InitialSilenceTimeout
-} from './SpeechToText/validation/initialSilenceTimeoutSchema';
-import looseEventsSchema, { LooseEvents } from './SpeechToText/validation/looseEventsSchema';
-import referenceGrammarsSchema, { ReferenceGrammars } from './SpeechToText/validation/referenceGrammarsSchema';
+} from './SpeechToText/validation/initialSilenceTimeoutSchema.ts';
+import looseEventsSchema, { LooseEvents } from './SpeechToText/validation/looseEventsSchema.ts';
+import referenceGrammarsSchema, { ReferenceGrammars } from './SpeechToText/validation/referenceGrammarsSchema.ts';
 import speechRecognitionEndpointIdSchema, {
   SpeechRecognitionEndpointId
-} from './SpeechToText/validation/speechRecognitionEndpointIdSchema';
-import textNormalizationSchema, { TextNormalization } from './SpeechToText/validation/textNormalizationSchema';
+} from './SpeechToText/validation/speechRecognitionEndpointIdSchema.ts';
+import textNormalizationSchema, { TextNormalization } from './SpeechToText/validation/textNormalizationSchema.ts';
 
 const { AudioConfig } = SpeechSDK;
 
