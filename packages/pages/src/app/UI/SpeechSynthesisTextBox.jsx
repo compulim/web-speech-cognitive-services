@@ -1,8 +1,8 @@
 import { useDispatch, useSelector } from 'react-redux';
 import React, { useCallback } from 'react';
 
-import setSpeechSynthesisText from '../data/actions/setSpeechSynthesisText';
-import setSpeechSynthesisVoiceURI from '../data/actions/setSpeechSynthesisVoiceURI';
+import setSpeechSynthesisText from '../data/actions/setSpeechSynthesisText.ts';
+import setSpeechSynthesisVoiceURI from '../data/actions/setSpeechSynthesisVoiceURI.ts';
 
 const SpeechSynthesisTextBox = () => {
   const { speechSynthesisNativeVoices, speechSynthesisText } = useSelector(
@@ -48,9 +48,10 @@ const SpeechSynthesisTextBox = () => {
     );
   }, [dispatchSetSpeechSynthesisText]);
 
-  const handleTextChange = useCallback(({ target: { value } }) => dispatchSetSpeechSynthesisText(value), [
-    dispatchSetSpeechSynthesisText
-  ]);
+  const handleTextChange = useCallback(
+    ({ target: { value } }) => dispatchSetSpeechSynthesisText(value),
+    [dispatchSetSpeechSynthesisText]
+  );
 
   return (
     <div className="input-group">

@@ -2,8 +2,8 @@ import { onErrorResumeNext } from 'on-error-resume-next';
 import { applyMiddleware, createStore } from 'redux';
 import createSagaMiddleware from 'redux-saga';
 
-import reducer from './reducer';
-import saga from './saga';
+import reducer from './reducer.js';
+import saga from './saga.js';
 
 function loadState() {
   const state = onErrorResumeNext(() => JSON.parse(window.sessionStorage.getItem('REDUX_STORE'))) || {};
@@ -45,10 +45,15 @@ export default function createPlaygroundStore() {
 
     // Remove keys that should not be serialized
     const {
+      // eslint-disable-next-line no-unused-vars
       authorizationToken: _authorizationToken,
+      // eslint-disable-next-line no-unused-vars
       ponyfill: _ponyfill,
+      // eslint-disable-next-line no-unused-vars
       speechRecognitionStarted: _speechRecognitionStarted,
+      // eslint-disable-next-line no-unused-vars
       speechServicesAuthorizationToken: _speechServicesAuthorizationToken,
+      // eslint-disable-next-line no-unused-vars
       speechSynthesisNativeVoices: _speechSynthesisNativeVoices,
       ...serializableState
     } = state;

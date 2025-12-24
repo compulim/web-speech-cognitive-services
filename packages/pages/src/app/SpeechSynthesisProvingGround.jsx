@@ -1,13 +1,13 @@
 import { useSelector } from 'react-redux';
 import React from 'react';
 
-import SpeechSynthesisCommands from './UI/SpeechSynthesisCommands';
-import SpeechSynthesisDeploymentIdInput from './UI/SpeechSynthesisDeploymentIdInput';
-import SpeechSynthesisOutputFormatSelector from './UI/SpeechSynthesisOutputFormatSelector';
-import SpeechSynthesisTextBox from './UI/SpeechSynthesisTextBox';
-import SpeechSynthesisUtterances from './UI/SpeechSynthesisUtterances';
-import SpeechSynthesisVoiceSelector from './UI/SpeechSynthesisVoiceSelector';
-import SpeechSynthesisVoiceURIInput from './UI/SpeechSynthesisVoiceURIInput';
+import SpeechSynthesisCommands from './UI/SpeechSynthesisCommands.jsx';
+import SpeechSynthesisDeploymentIdInput from './UI/SpeechSynthesisDeploymentIdInput.jsx';
+import SpeechSynthesisOutputFormatSelector from './UI/SpeechSynthesisOutputFormatSelector.jsx';
+import SpeechSynthesisTextBox from './UI/SpeechSynthesisTextBox.jsx';
+import SpeechSynthesisUtterances from './UI/SpeechSynthesisUtterances.jsx';
+import SpeechSynthesisVoiceSelector from './UI/SpeechSynthesisVoiceSelector.jsx';
+import SpeechSynthesisVoiceURIInput from './UI/SpeechSynthesisVoiceURIInput.jsx';
 
 const SpeechSynthesisProvingGround = () => {
   const hasVoices = useSelector(({ speechSynthesisNativeVoices }) => !!speechSynthesisNativeVoices.length);

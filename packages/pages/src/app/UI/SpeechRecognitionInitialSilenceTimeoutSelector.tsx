@@ -1,9 +1,9 @@
 import React, { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import Select, { Option } from '../Bootstrap/Select';
-import setSpeechRecognitionInitialSilenceTimeout from '../data/actions/setSpeechRecognitionInitialSilenceTimeout';
-import getPonyfillCapabilities from '../getPonyfillCapabilities';
+import Select, { Option } from '../Bootstrap/Select.tsx';
+import setSpeechRecognitionInitialSilenceTimeout from '../data/actions/setSpeechRecognitionInitialSilenceTimeout.ts';
+import getPonyfillCapabilities from '../getPonyfillCapabilities.js';
 
 const SpeechRecognitionInitialSilenceTimeoutSelector = () => {
   const { ponyfillType, speechRecognitionInitialSilenceTimeout } = useSelector(

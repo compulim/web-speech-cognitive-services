@@ -1,4 +1,4 @@
-export default async function({ region, subscriptionKey, tokenURL }) {
+export default async function fetchSpeechServicesAuthorizationToken({ region, subscriptionKey, tokenURL }) {
   if (!subscriptionKey) {
     throw new Error('web-speech-cognitive-services: "subscriptionKey" must be specified.');
   } else if (!region && !tokenURL) {

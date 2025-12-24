@@ -3,15 +3,15 @@ import classNames from 'classnames';
 import React, { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import GitHubForkMe from './GitHubForkMe';
+import GitHubForkMe from './GitHubForkMe.jsx';
 
-import SpeechRecognitionProvingGround from './SpeechRecognitionProvingGround2';
-import SpeechSynthesisProvingGround from './SpeechSynthesisProvingGround';
-import PonyfillSelector from './UI/PonyfillSelector';
-import RegionSelector from './UI/RegionSelector';
-import SubscriptionKeyInput from './UI/SubscriptionKeyInput';
+import SpeechRecognitionProvingGround from './SpeechRecognitionProvingGround2.jsx';
+import SpeechSynthesisProvingGround from './SpeechSynthesisProvingGround.jsx';
+import PonyfillSelector from './UI/PonyfillSelector.jsx';
+import RegionSelector from './UI/RegionSelector.jsx';
+import SubscriptionKeyInput from './UI/SubscriptionKeyInput.jsx';
 
-import setNavPane from './data/actions/setNavPane';
+import setNavPane from './data/actions/setNavPane.ts';
 
 // Patching Bootstrap
 injectGlobal('button.nav-link', { backgroundColor: 'Transparent' });

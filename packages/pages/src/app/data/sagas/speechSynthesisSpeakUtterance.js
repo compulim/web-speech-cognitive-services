@@ -2,11 +2,11 @@
 
 import { put, select, takeEvery } from 'redux-saga/effects';
 
-import { SPEECH_SYNTHESIS_SPEAK_UTTERANCE } from '../actions/speechSynthesisSpeakUtterance';
-import addSpeechSynthesisNativeUtterance from '../actions/addSpeechSynthesisNativeUtterance';
+import { SPEECH_SYNTHESIS_SPEAK_UTTERANCE } from '../actions/speechSynthesisSpeakUtterance.ts';
+import addSpeechSynthesisNativeUtterance from '../actions/addSpeechSynthesisNativeUtterance.ts';
 
 export default function* speechSynthesisSpeakUtteranceSaga() {
-  yield takeEvery(SPEECH_SYNTHESIS_SPEAK_UTTERANCE, function*({ payload: { utterance } }) {
+  yield takeEvery(SPEECH_SYNTHESIS_SPEAK_UTTERANCE, function* ({ payload: { utterance } }) {
     const { text, voiceURI } = utterance;
 
     const {
@@ -16,9 +16,7 @@ export default function* speechSynthesisSpeakUtteranceSaga() {
 
     const nativeUtterance = new SpeechSynthesisUtterance(text);
 
-    nativeUtterance.id = Math.random()
-      .toString(36)
-      .substr(2);
+    nativeUtterance.id = Math.random().toString(36).substr(2);
 
     const nativeVoice = speechSynthesisNativeVoices.find(voice => voice.voiceURI === voiceURI);
 

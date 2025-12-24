@@ -1,5 +1,5 @@
-import { ADD_SPEECH_RECOGNITION_EVENT } from '../actions/addSpeechRecognitionEvent';
-import { CLEAR_SPEECH_RECOGNITION_EVENT } from '../actions/clearSpeechRecognitionEvent';
+import { ADD_SPEECH_RECOGNITION_EVENT } from '../actions/addSpeechRecognitionEvent.ts';
+import { CLEAR_SPEECH_RECOGNITION_EVENT } from '../actions/clearSpeechRecognitionEvent.ts';
 
 export default function speechRecognitionEvents(state = [], { payload, type }) {
   switch (type) {

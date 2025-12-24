@@ -1,8 +1,8 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
-import App from './App';
-import createStore from './data/createStore';
+import App from './App.jsx';
+import createStore from './data/createStore.js';
 
 const store = createStore();
 
@@ -16,7 +16,7 @@ mainElement &&
   );
 
 declare global {
-  var IS_DEVELOPMENT: boolean | undefined;
+  const IS_DEVELOPMENT: boolean | undefined;
 }
 
 typeof IS_DEVELOPMENT !== 'undefined' &&

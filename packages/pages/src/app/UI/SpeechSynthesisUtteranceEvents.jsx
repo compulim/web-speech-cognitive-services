@@ -1,12 +1,13 @@
 import { useSelector } from 'react-redux';
 import React, { useMemo } from 'react';
 
+// eslint-disable-next-line react/prop-types
 const SpeechSynthesisUtteranceEvent = ({ utteranceID }) => {
   const speechSynthesisUtterances = useSelector(({ speechSynthesisUtterances }) => speechSynthesisUtterances);
-  const events = useMemo(() => (speechSynthesisUtterances.find(({ id }) => id === utteranceID) || {}).events || [], [
-    speechSynthesisUtterances,
-    utteranceID
-  ]);
+  const events = useMemo(
+    () => (speechSynthesisUtterances.find(({ id }) => id === utteranceID) || {}).events || [],
+    [speechSynthesisUtterances, utteranceID]
+  );
 
   return (
     <div>

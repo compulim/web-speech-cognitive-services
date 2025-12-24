@@ -2,11 +2,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames';
 import React, { useCallback } from 'react';
 
-import convertSpeechServicesSubscriptionKeyToAuthorizationToken from '../data/actions/convertSpeechServicesSubscriptionKeyToAuthorizationToken';
-import getPonyfillCapabilities from '../getPonyfillCapabilities';
-import setOnDemandAuthorizationToken from '../data/actions/setOnDemandAuthorizationToken';
-import setSpeechServicesAuthorizationToken from '../data/actions/setSpeechServicesAuthorizationToken';
-import setSpeechServicesSubscriptionKey from '../data/actions/setSpeechServicesSubscriptionKey';
+import convertSpeechServicesSubscriptionKeyToAuthorizationToken from '../data/actions/convertSpeechServicesSubscriptionKeyToAuthorizationToken.ts';
+import getPonyfillCapabilities from '../getPonyfillCapabilities.js';
+import setOnDemandAuthorizationToken from '../data/actions/setOnDemandAuthorizationToken.ts';
+import setSpeechServicesAuthorizationToken from '../data/actions/setSpeechServicesAuthorizationToken.ts';
+import setSpeechServicesSubscriptionKey from '../data/actions/setSpeechServicesSubscriptionKey.ts';
 
 const SubscriptionKeyInput = () => {
   const { authorizationToken, disabled, onDemandAuthorizationToken, subscriptionKey } = useSelector(
@@ -24,13 +24,15 @@ const SubscriptionKeyInput = () => {
   );
 
   const dispatch = useDispatch();
-  const dispatchSetOnDemandAuthorizationToken = useCallback(value => dispatch(setOnDemandAuthorizationToken(value)), [
-    dispatch
-  ]);
+  const dispatchSetOnDemandAuthorizationToken = useCallback(
+    value => dispatch(setOnDemandAuthorizationToken(value)),
+    [dispatch]
+  );
 
-  const dispatchClearAuthorizationToken = useCallback(() => dispatch(setSpeechServicesAuthorizationToken('')), [
-    dispatch
-  ]);
+  const dispatchClearAuthorizationToken = useCallback(
+    () => dispatch(setSpeechServicesAuthorizationToken('')),
+    [dispatch]
+  );
 
   const dispatchConvertSubscriptionKeyToAuthorizationToken = useCallback(
     () => dispatch(convertSpeechServicesSubscriptionKeyToAuthorizationToken()),

@@ -1,13 +1,13 @@
 import { fork } from 'redux-saga/effects';
 
-import convertSubscriptionKeyToAuthorizationToken from './sagas/convertSubscriptionKeyToAuthorizationToken';
-import setPonyfill from './sagas/setPonyfill';
-import speechRecognitionSetInstance from './sagas/speechRecognitionSetInstance';
-import speechRecognitionStart from './sagas/speechRecognitionStart';
-import speechSynthesisCancelPauseResume from './sagas/speechSynthesisCancelPauseResume';
-import speechSynthesisSetNativeVoices from './sagas/speechSynthesisSetNativeVoices';
-import speechSynthesisSpeakUtterance from './sagas/speechSynthesisSpeakUtterance';
-import speechSynthesisUtteranceEvent from './sagas/speechSynthesisUtteranceEvent';
+import convertSubscriptionKeyToAuthorizationToken from './sagas/convertSubscriptionKeyToAuthorizationToken.js';
+import setPonyfill from './sagas/setPonyfill.js';
+import speechRecognitionSetInstance from './sagas/speechRecognitionSetInstance.js';
+import speechRecognitionStart from './sagas/speechRecognitionStart.js';
+import speechSynthesisCancelPauseResume from './sagas/speechSynthesisCancelPauseResume.js';
+import speechSynthesisSetNativeVoices from './sagas/speechSynthesisSetNativeVoices.js';
+import speechSynthesisSpeakUtterance from './sagas/speechSynthesisSpeakUtterance.js';
+import speechSynthesisUtteranceEvent from './sagas/speechSynthesisUtteranceEvent.js';
 
 export default function* saga() {
   yield fork(convertSubscriptionKeyToAuthorizationToken);

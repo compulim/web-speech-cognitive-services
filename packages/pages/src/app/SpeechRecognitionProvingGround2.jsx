@@ -1,19 +1,21 @@
 import React from 'react';
 
-import SpeechRecognitionCommands from './UI/SpeechRecognitionCommands';
-import SpeechRecognitionEvents from './UI/SpeechRecognitionSimpleEvents';
+import SpeechRecognitionCommands from './UI/SpeechRecognitionCommands.jsx';
+import SpeechRecognitionEvents from './UI/SpeechRecognitionSimpleEvents.jsx';
 
-export default () => (
-  <div>
-    <div className="row">
-      <div className="col">
-        <SpeechRecognitionCommands />
+export default function SpeechRecognitionProvingGround2() {
+  return (
+    <div>
+      <div className="row">
+        <div className="col">
+          <SpeechRecognitionCommands />
+        </div>
+      </div>
+      <div className="row">
+        <div className="col">
+          <SpeechRecognitionEvents />
+        </div>
       </div>
     </div>
-    <div className="row">
-      <div className="col">
-        <SpeechRecognitionEvents />
-      </div>
-    </div>
-  </div>
-);
+  );
+}

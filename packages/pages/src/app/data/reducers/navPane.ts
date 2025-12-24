@@ -1,4 +1,4 @@
-import { SET_NAV_PANE, type SetNavPaneAction } from '../actions/setNavPane';
+import { SET_NAV_PANE, type SetNavPaneAction } from '../actions/setNavPane.ts';
 
 export default function navPane(state = 'speech recognition', { payload, type }: SetNavPaneAction): string {
   if (type === SET_NAV_PANE) {

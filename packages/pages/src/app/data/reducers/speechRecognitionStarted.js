@@ -1,6 +1,6 @@
-import { ABORT_SPEECH_RECOGNITION } from '../actions/abortSpeechRecognition';
-import { START_SPEECH_RECOGNITION } from '../actions/startSpeechRecognition';
-import { STOP_SPEECH_RECOGNITION } from '../actions/stopSpeechRecognition';
+import { ABORT_SPEECH_RECOGNITION } from '../actions/abortSpeechRecognition.ts';
+import { START_SPEECH_RECOGNITION } from '../actions/startSpeechRecognition.ts';
+import { STOP_SPEECH_RECOGNITION } from '../actions/stopSpeechRecognition.ts';
 
 export default function speechRecognitionStarted(state = false, { type }) {
   switch (type) {

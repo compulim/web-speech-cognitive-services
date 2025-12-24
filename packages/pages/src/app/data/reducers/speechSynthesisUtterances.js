@@ -1,8 +1,8 @@
 import updateIn from 'simple-update-in';
 
-import { ADD_SPEECH_SYNTHESIS_NATIVE_UTTERANCE } from '../actions/addSpeechSynthesisNativeUtterance';
-import { ADD_SPEECH_SYNTHESIS_NATIVE_UTTERANCE_EVENT } from '../actions/addSpeechSynthesisNativeUtteranceEvent';
-import { CLEAR_SPEECH_SYNTHESIS_UTTERANCE } from '../actions/clearSpeechSynthesisUtterance';
+import { ADD_SPEECH_SYNTHESIS_NATIVE_UTTERANCE } from '../actions/addSpeechSynthesisNativeUtterance.ts';
+import { ADD_SPEECH_SYNTHESIS_NATIVE_UTTERANCE_EVENT } from '../actions/addSpeechSynthesisNativeUtteranceEvent.ts';
+import { CLEAR_SPEECH_SYNTHESIS_UTTERANCE } from '../actions/clearSpeechSynthesisUtterance.ts';
 
 function serializeEvent({ charIndex, elapsedTime, name, type }) {
   return {

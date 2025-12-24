@@ -3,7 +3,7 @@
 import { useSelector } from 'react-redux';
 import React from 'react';
 
-import Popover from '../Bootstrap/Popover';
+import Popover from '../Bootstrap/Popover.tsx';
 
 const SpeechRecognitionSimpleEvents = () => {
   const speechRecognitionEvents = useSelector(({ speechRecognitionEvents }) => speechRecognitionEvents);
@@ -60,7 +60,7 @@ const SpeechRecognitionSimpleEvents = () => {
               </React.Fragment>
             ) : event.type === 'cognitiveservices' ? (
               <span className="badge badge-light">
-                {event.type}:{event.data?.type}
+                {event.type}:{event.data && event.data.type}
               </span>
             ) : (
               <span className="badge badge-secondary">{event.type}</span>

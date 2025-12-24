@@ -1,8 +1,8 @@
 import { useDispatch, useSelector } from 'react-redux';
 import React, { useCallback } from 'react';
 
-import setSpeechSynthesisVoiceURI from '../data/actions/setSpeechSynthesisVoiceURI';
-import Select, { Option } from '../Bootstrap/Select';
+import setSpeechSynthesisVoiceURI from '../data/actions/setSpeechSynthesisVoiceURI.ts';
+import Select, { Option } from '../Bootstrap/Select.tsx';
 
 const SPEAK_TAG_PATTERN = /^\s*<speak[\s>]/u;
 const XML_PROLOG_PATTERN = /^\s*<?xml\s/u;
@@ -21,9 +21,10 @@ const SpeechSynthesisVoiceSelector = () => {
   );
 
   const dispatch = useDispatch();
-  const dispatchSetSpeechSynthesisVoiceURI = useCallback(value => dispatch(setSpeechSynthesisVoiceURI(value)), [
-    dispatch
-  ]);
+  const dispatchSetSpeechSynthesisVoiceURI = useCallback(
+    value => dispatch(setSpeechSynthesisVoiceURI(value)),
+    [dispatch]
+  );
 
   return (
     <Select

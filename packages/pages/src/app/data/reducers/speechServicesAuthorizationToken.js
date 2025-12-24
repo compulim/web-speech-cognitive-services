@@ -1,4 +1,4 @@
-import { SET_SPEECH_SERVICES_AUTHORIZATION_TOKEN } from '../actions/setSpeechServicesAuthorizationToken';
+import { SET_SPEECH_SERVICES_AUTHORIZATION_TOKEN } from '../actions/setSpeechServicesAuthorizationToken.ts';
 
 export default function speechServicesAuthorizationToken(state = '', { payload, type }) {
   if (type === SET_SPEECH_SERVICES_AUTHORIZATION_TOKEN) {

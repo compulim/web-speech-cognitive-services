@@ -2,8 +2,9 @@
 
 import React, { useState } from 'react';
 
-import useInterval from '../useInterval';
+import useInterval from '../useInterval.js';
 
+// eslint-disable-next-line react/prop-types
 const MonitoringComponent = ({ children, getValue, interval }) => {
   const [result, setResult] = useState();
 

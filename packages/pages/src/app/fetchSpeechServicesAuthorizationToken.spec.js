@@ -10,7 +10,10 @@ test('fetch using region and subscriptionKey', async () => {
     return res;
   });
 
-  const tokenPromise = fetchSpeechServicesAuthorizationToken({ region: 'westus2', subscriptionKey: 'SUBSCRIPTION_KEY' });
+  const tokenPromise = fetchSpeechServicesAuthorizationToken({
+    region: 'westus2',
+    subscriptionKey: 'SUBSCRIPTION_KEY'
+  });
 
   expect(global.fetch).toHaveBeenCalledTimes(1);
   expect(global.fetch).toHaveBeenCalledWith('https://westus2.api.cognitive.microsoft.com/sts/v1.0/issueToken', {
@@ -33,7 +36,10 @@ test('fetch using subscriptionKey and tokenURL', async () => {
     return res;
   });
 
-  const tokenPromise = fetchSpeechServicesAuthorizationToken({ subscriptionKey: 'SUBSCRIPTION_KEY', tokenURL: 'https://virginia.api.cognitive.microsoft.us/sts/v1.0/issueToken' });
+  const tokenPromise = fetchSpeechServicesAuthorizationToken({
+    subscriptionKey: 'SUBSCRIPTION_KEY',
+    tokenURL: 'https://virginia.api.cognitive.microsoft.us/sts/v1.0/issueToken'
+  });
 
   expect(global.fetch).toHaveBeenCalledTimes(1);
   expect(global.fetch).toHaveBeenCalledWith('https://virginia.api.cognitive.microsoft.us/sts/v1.0/issueToken', {
@@ -47,7 +53,11 @@ test('fetch using subscriptionKey and tokenURL', async () => {
 });
 
 test('throw exception when fetching with both "region" and "tokenURL"', async () => {
-  const tokenPromise = fetchSpeechServicesAuthorizationToken({ region: 'westus2', subscriptionKey: 'SUBSCRIPTION_KEY', tokenURL: 'https://virginia.api.cognitive.microsoft.us/sts/v1.0/issueToken' });
+  const tokenPromise = fetchSpeechServicesAuthorizationToken({
+    region: 'westus2',
+    subscriptionKey: 'SUBSCRIPTION_KEY',
+    tokenURL: 'https://virginia.api.cognitive.microsoft.us/sts/v1.0/issueToken'
+  });
 
   expect(tokenPromise).rejects.toThrow('either');
 });

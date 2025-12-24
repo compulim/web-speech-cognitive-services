@@ -1,7 +1,7 @@
 import { useSelector } from 'react-redux';
 import React from 'react';
 
-import SpeechSynthesisUtteranceEvents from './SpeechSynthesisUtteranceEvents';
+import SpeechSynthesisUtteranceEvents from './SpeechSynthesisUtteranceEvents.jsx';
 
 const SpeechSynthesisUtterances = () => {
   const speechSynthesisUtterances = useSelector(({ speechSynthesisUtterances }) => speechSynthesisUtterances);

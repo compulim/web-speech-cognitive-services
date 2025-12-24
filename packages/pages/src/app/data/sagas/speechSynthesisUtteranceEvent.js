@@ -1,15 +1,15 @@
 import { call, put, race, take, takeEvery } from 'redux-saga/effects';
 
-import addSpeechSynthesisNativeUtteranceEvent from '../actions/addSpeechSynthesisNativeUtteranceEvent';
-import { ADD_SPEECH_SYNTHESIS_NATIVE_UTTERANCE } from '../actions/addSpeechSynthesisNativeUtterance';
-import { CLEAR_SPEECH_SYNTHESIS_UTTERANCE } from '../actions/clearSpeechSynthesisUtterance';
+import addSpeechSynthesisNativeUtteranceEvent from '../actions/addSpeechSynthesisNativeUtteranceEvent.ts';
+import { ADD_SPEECH_SYNTHESIS_NATIVE_UTTERANCE } from '../actions/addSpeechSynthesisNativeUtterance.ts';
+import { CLEAR_SPEECH_SYNTHESIS_UTTERANCE } from '../actions/clearSpeechSynthesisUtterance.ts';
 
-import createPromiseQueue from '../utils/createPromiseQueue';
+import createPromiseQueue from '../utils/createPromiseQueue.js';
 
 const MONITORING_EVENTS = ['boundary', 'end', 'error', 'mark', 'pause', 'resume', 'start'];
 
 export default function* speechSynthesisUtteranceEventSaga() {
-  yield takeEvery(ADD_SPEECH_SYNTHESIS_NATIVE_UTTERANCE, function*({ payload: { nativeUtterance } }) {
+  yield takeEvery(ADD_SPEECH_SYNTHESIS_NATIVE_UTTERANCE, function* ({ payload: { nativeUtterance } }) {
     const events = createPromiseQueue();
 
     try {

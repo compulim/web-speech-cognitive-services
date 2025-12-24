@@ -1,4 +1,4 @@
-import { SET_PONYFILL_TYPE } from '../actions/setPonyfillType';
+import { SET_PONYFILL_TYPE } from '../actions/setPonyfillType.ts';
 
 export default function ponyfillType(state = 'speechservices:npm', { payload, type }) {
   if (type === SET_PONYFILL_TYPE) {
