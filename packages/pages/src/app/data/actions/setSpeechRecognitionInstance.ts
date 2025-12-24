@@ -1,3 +1,5 @@
+/// <reference types="dom-speech-recognition" />
+
 const SET_SPEECH_RECOGNITION_INSTANCE = 'SET_SPEECH_RECOGNITION_INSTANCE' as const;
 
 export type SetSpeechRecognitionInstanceAction = Readonly<{

@@ -6,7 +6,7 @@ import createStore from './data/createStore.js';
 
 const store = createStore();
 
-const [mainElement] = document.getElementsByTagName('main');
+const mainElement = document.getElementsByTagName('main')[0];
 
 mainElement &&
   createRoot(mainElement)?.render(

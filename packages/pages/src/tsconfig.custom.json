@@ -1,4 +1,8 @@
 {
+  "compilerOptions": {
+    "allowJs": true, // TODO: Should port to TypeScript.
+    "skipLibCheck": true // TODO: Should port to TypeScript.
+  }
   // TODO: Should port to TypeScript.
   // "extends": "@tsconfig/strictest/tsconfig.json"
 }
