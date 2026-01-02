@@ -7,6 +7,3 @@ plugins:
 rules:
   react-hooks/refs: off # We use refs intensively
   react-hooks/preserve-manual-memoization: off # Does not know `valibot.parseProps`
-settings:
-  react:
-    version: 19.2.3

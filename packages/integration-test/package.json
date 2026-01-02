@@ -5,20 +5,26 @@
   "private": true,
   "scripts": {
     "build": "npm run build:copy && npm run build:custom --if-present",
-    "build:copy": "mkdir -p ./test/webDriver/static/; SRC=$(node --eval=\"console.log(require('path').resolve(require('resolve-cwd')('web-speech-cognitive-services'), '../../dist'))\"); DEST=$(realpath ./test/webDriver/static); rm -rf $DEST; mkdir -p $DEST/js/; cp $SRC/** $DEST/js/",
+    "build:copy": "mkdir -p ./webDriver/static/; SRC=$(node --eval=\"console.log(require('path').resolve(require('resolve-cwd')('web-speech-cognitive-services'), '../../dist'))\"); DEST=$(realpath ./webDriver/static); rm -rf $DEST; mkdir -p $DEST/js/; cp $SRC/** $DEST/js/",
     "bump": "npm run bump:prod && npm run bump:dev",
     "bump:dev": "PACKAGES_TO_BUMP=$(cat package.json | jq -r '(.pinDependencies // {}) as $P | (.localPeerDependencies // {}) as $L | (.devDependencies // {}) | to_entries | map(select(.key as $K | $L | has($K) | not)) | map(.key + \"@\" + ($P[.key] // [\"latest\"])[0]) | join(\" \")') && [ ! -z \"$PACKAGES_TO_BUMP\" ] && npm install $PACKAGES_TO_BUMP || true",
     "bump:prod": "PACKAGES_TO_BUMP=$(cat package.json | jq -r '(.pinDependencies // {}) as $P | (.localPeerDependencies // {}) as $L | (.dependencies // {}) | to_entries | map(select(.key as $K | $L | has($K) | not)) | map(.key + \"@\" + ($P[.key] // [\"latest\"])[0]) | join(\" \")') && [ ! -z \"$PACKAGES_TO_BUMP\" ] && npm install $PACKAGES_TO_BUMP || true",
     "docker": "docker compose up --quiet-pull --scale chromium=4",
+    "init": "npm run init:dev --if-present && npm run init:prod --if-present",
+    "init:dev": "npm install --save-dev @tsconfig/strictest expect resolve-cwd typescript",
+    "init:prod": "npm install --save @compulim/test-harness@0.0.0-0 web-speech-cognitive-services@0.0.0-0",
     "posttest": "if test \"$CI\" = \"true\"; then docker compose logs; docker compose down; fi",
     "precommit": "ESLINT_USE_FLAT_CONFIG=false eslint --ext .js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts ./",
     "pretest": "if test \"$CI\" = \"true\"; then npm run build; npm run docker -- --detach --wait; fi",
     "switch": "cat package.json | jq --arg SWITCH_NAME $SWITCH_NAME -r '(.[\"switch:\" + $SWITCH_NAME] // {}) as $TEMPLATE | .devDependencies += ($TEMPLATE.devDependencies // {}) | .dependencies += ($TEMPLATE.dependencies // {})' | tee ./package.json.tmp && mv ./package.json.tmp ./package.json",
-    "test": "jest"
+    "test": "npm run test:unit && npm run test:types",
+    "test:types": "node --experimental-strip-types --import @compulim/test-harness/test-types.import --test **/*.test-types.ts",
+    "test:unit": "node --experimental-strip-types --experimental-test-coverage --experimental-test-isolation=none --test"
   },
   "author": "William Wong (https://github.com/compulim)",
   "license": "MIT",
   "localPeerDependencies": {
+    "@compulim/test-harness": "0.0.0-0",
     "web-speech-cognitive-services": "0.0.0-0"
   },
   "devDependencies": {
@@ -31,5 +37,14 @@
   },
   "dependencies": {
     "web-speech-cognitive-services": "0.0.0-0"
-  }
+  },
+  "files": [
+    "**/*.cjs",
+    "**/*.js",
+    "**/*.mjs",
+    "webDriver/**/*"
+  ],
+  "exports": {},
+  "pinDependencies": {},
+  "peerDependencies": {}
 }

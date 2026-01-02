@@ -1,0 +1,38 @@
+{
+  "name": "@compulim/test-harness",
+  "version": "0.0.0-0",
+  "description": "",
+  "private": true,
+  "files": [
+    "./src/**/*"
+  ],
+  "exports": {
+    "./describeEach": {
+      "import": {
+        "types": "./src/describeEach.d.mts",
+        "default": "./src/describeEach.mjs"
+      },
+      "require": {
+        "types": "./src/describeEach.d.ts",
+        "default": "./src/describeEach.js"
+      }
+    },
+    "./happy-dom.import": "./src/happy-dom.import.mjs",
+    "./test-types.import": "./src/test-types.import.mjs"
+  },
+  "scripts": {
+    "bump": "npm run bump:prod && npm run bump:dev",
+    "bump:dev": "PACKAGES_TO_BUMP=$(cat package.json | jq -r '(.pinDependencies // {}) as $P | (.localPeerDependencies // {}) as $L | (.devDependencies // {}) | to_entries | map(select(.key as $K | $L | has($K) | not)) | map(.key + \"@\" + ($P[.key] // [\"latest\"])[0]) | join(\" \")') && [ ! -z \"$PACKAGES_TO_BUMP\" ] && npm install $PACKAGES_TO_BUMP || true",
+    "bump:prod": "PACKAGES_TO_BUMP=$(cat package.json | jq -r '(.pinDependencies // {}) as $P | (.localPeerDependencies // {}) as $L | (.dependencies // {}) | to_entries | map(select(.key as $K | $L | has($K) | not)) | map(.key + \"@\" + ($P[.key] // [\"latest\"])[0]) | join(\" \")') && [ ! -z \"$PACKAGES_TO_BUMP\" ] && npm install $PACKAGES_TO_BUMP || true",
+    "init": "npm run init:dev --if-present && npm run init:prod --if-present",
+    "init:dev": "npm install --save-dev @tsconfig/strictest resolve-cwd",
+    "init:prod": "npm install --save @happy-dom/global-registrator escape-string-regexp expect typescript",
+    "precommit": "npm run precommit:eslint && npm run precommit:typescript",
+    "precommit:eslint": "ESLINT_USE_FLAT_CONFIG=false eslint --ext .js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts ./",
+    "precommit:typescript": "tsc --noEmit --project ./src/tsconfig.precommit.json",
+    "switch": "cat package.json | jq --arg SWITCH_NAME $SWITCH_NAME -r '(.[\"switch:\" + $SWITCH_NAME] // {}) as $TEMPLATE | .devDependencies += ($TEMPLATE.devDependencies // {}) | .dependencies += ($TEMPLATE.dependencies // {})' | tee ./package.json.tmp && mv ./package.json.tmp ./package.json"
+  },
+  "peerDependencies": {
+    "typescript": ">=5"
+  }
+}

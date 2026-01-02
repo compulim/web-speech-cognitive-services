@@ -35,5 +35,5 @@ services:
       - "8080:80"
     stop_grace_period: 0s
     volumes:
-      - ./test/webDriver:/usr/share/nginx/html:ro
+      - ./webDriver:/usr/share/nginx/html:ro
       - ./nginx.conf:/etc/nginx/nginx.conf:ro

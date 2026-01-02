@@ -13,11 +13,6 @@ on:
         description: Use React
         required: true
         type: boolean
-      skip-integration-test:
-        default: false
-        description: Skip integration test
-        required: true
-        type: boolean
 
 jobs:
   call-workflow:
@@ -30,5 +25,4 @@ jobs:
     uses: compulim/workflows/.github/workflows/bump-scaffold.yml@main
     with:
       package-name: ${{ inputs.package-name }}
-      skip-integration-test: ${{ inputs.skip-integration-test }}
       use-react: ${{ inputs.use-react }}

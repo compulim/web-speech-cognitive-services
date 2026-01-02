@@ -1,3 +1,5 @@
+env:
+  es2024: true # Target ESNext
 extends:
   - eslint:recommended
 overrides:
