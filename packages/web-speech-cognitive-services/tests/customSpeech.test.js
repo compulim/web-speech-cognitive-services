@@ -6,7 +6,8 @@ import fs from 'fs';
 import { AudioStreamFormat } from 'microsoft-cognitiveservices-speech-sdk';
 import { before, beforeEach, test } from 'node:test';
 import createDeferred from 'p-defer';
-import { join } from 'path';
+import { resolve } from 'path';
+import { fileURLToPath } from 'url';
 import { promisify } from 'util';
 import { createSpeechRecognitionPonyfill } from '../src/SpeechServices.ts';
 import captureAllSpeechRecognitionEvents from '../utils/speechRecognition/captureAllSpeechRecognitionEvents.js';
@@ -27,7 +28,8 @@ describeEach(testTableForAuthentication)(
     let waveArrayBuffer;
 
     before(async () => {
-      waveArrayBuffer = (await readFile(join(__dirname, 'tuen-mun-district-office.wav'))).buffer;
+      waveArrayBuffer = (await readFile(resolve(fileURLToPath(import.meta.url), '../tuen-mun-district-office.wav')))
+        .buffer;
     });
 
     beforeEach(async () => {

@@ -12,10 +12,7 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-  console.error.mock.restore();
-  console.info.mock.restore();
-  console.log.mock.restore();
-  console.warn.mock.restore();
+  mock.restoreAll();
 });
 
 test('should throw exception when region and speechSynthesisHostname are not specified', async () => {

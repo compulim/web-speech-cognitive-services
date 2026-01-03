@@ -3,8 +3,7 @@ import { expect } from 'expect';
 import cognitiveServicesAsyncToPromise from './cognitiveServicesAsyncToPromise.ts';
 
 let fn: Mock<
-  // (x: number, y: number, z: number, resolve: (returnValue: string) => void, reject: (error: unknown) => void) => void
-  typeof promiseFn
+  (x: number, y: number, z: number, resolve: (returnValue: string) => void, reject: (error: unknown) => void) => void
 >;
 let promiseFn: (this: string | undefined | void, arg0: number, arg1: number, arg2: number) => Promise<string>;
 
