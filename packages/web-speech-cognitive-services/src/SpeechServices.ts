@@ -11,6 +11,7 @@ import {
   type SpeechRecognitionResult,
   type SpeechRecognitionResultList
 } from './SpeechServices/SpeechToText.ts';
+// @ts-expect-error Not typed.
 import createSpeechSynthesisPonyfill from './SpeechServices/TextToSpeech.js';
 import fetchAuthorizationToken from './SpeechServices/fetchAuthorizationToken.ts';
 
