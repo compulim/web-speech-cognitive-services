@@ -16,8 +16,8 @@ const DEFAULT_OUTPUT_FORMAT = 'audio-24khz-160kbitrate-mono-mp3';
 const EMPTY_ARRAY = [];
 
 function createSpeechRecognitionPonyfill(options) {
+  const { audioContext } = options;
   const {
-    audioContext,
     fetchCredentials,
     ponyfill = {
       AudioContext: window.AudioContext || window.webkitAudioContext

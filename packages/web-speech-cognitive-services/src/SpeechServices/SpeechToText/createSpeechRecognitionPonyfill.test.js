@@ -1,7 +1,5 @@
-/// <reference types="jest" />
-
-jest.useFakeTimers();
-
+import { expect } from 'expect';
+import { afterEach, beforeEach, describe, mock, test } from 'node:test';
 import createDeferred from 'p-defer';
 
 function createLoudArrayBuffer() {
@@ -78,8 +76,8 @@ const MOCK_SPEECH_SDK = {
 
       this.privReco = {
         dynamicGrammar: {
-          addPhrase: jest.fn(),
-          addReferenceGrammar: jest.fn()
+          addPhrase: mock.fn(),
+          addReferenceGrammar: mock.fn()
         }
       };
     }
@@ -213,7 +211,7 @@ let originalConsole;
 let warnings;
 
 beforeEach(() => {
-  MOCK_SPEECH_SDK.SpeechRecognizer.enableTelemetry = jest.fn();
+  MOCK_SPEECH_SDK.SpeechRecognizer.enableTelemetry = mock.fn();
 
   constructRecognizerDeferred = createDeferred();
   originalConsole = console;
@@ -221,14 +219,16 @@ beforeEach(() => {
   console = { ...console, warn: (...args) => warnings.push(args) };
   warnings = [];
 
-  jest.resetModules();
-  jest.setMock('../SpeechSDK', {
-    ...MOCK_SPEECH_SDK,
-    SpeechRecognizer: class extends MOCK_SPEECH_SDK.SpeechRecognizer {
-      constructor(...args) {
-        super(...args);
+  mock.reset();
+  mock.module('../SpeechSDK.ts', {
+    defaultExport: {
+      ...MOCK_SPEECH_SDK,
+      SpeechRecognizer: class extends MOCK_SPEECH_SDK.SpeechRecognizer {
+        constructor(...args) {
+          super(...args);
 
-        constructRecognizerDeferred.resolve(this);
+          constructRecognizerDeferred.resolve(this);
+        }
       }
     }
   });

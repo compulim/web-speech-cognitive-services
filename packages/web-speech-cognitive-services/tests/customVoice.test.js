@@ -1,22 +1,21 @@
-/*
- * @jest-environment jsdom
- */
+/// <reference types="node" />
 
-import { createSpeechSynthesisPonyfill } from '../src/SpeechServices';
-import captureAllSpeechSynthesisUtteranceEvents from '../utils/speechSynthesis/captureAllSpeechSynthesisUtteranceEvents';
-// import fetchAuthorizationToken from '../utils/fetchAuthorizationToken';
-import MockAudioContext from '../utils/speechSynthesis/MockAudioContext';
-import recognizeRiffWaveArrayBuffer from '../utils/speechSynthesis/recognizeRiffWaveArrayBuffer';
-import waitForEvent from '../utils/waitForEvent';
-import testTableForAuthentication from '../utils/testTableForAuthentication';
+import { describeEach } from '@compulim/test-harness/describeEach';
+import { expect } from 'expect';
+import { mock, test } from 'node:test';
+import { createSpeechSynthesisPonyfill } from '../src/SpeechServices.ts';
+import captureAllSpeechSynthesisUtteranceEvents from '../utils/speechSynthesis/captureAllSpeechSynthesisUtteranceEvents.js';
+// import fetchAuthorizationToken from '../utils/fetchAuthorizationToken.js';
+import MockAudioContext from '../utils/speechSynthesis/MockAudioContext.js';
+import recognizeRiffWaveArrayBuffer from '../utils/speechSynthesis/recognizeRiffWaveArrayBuffer.js';
+import testTableForAuthentication from '../utils/testTableForAuthentication.js';
+import waitForEvent from '../utils/waitForEvent.js';
 
 const { CI, REGION } = process.env;
 
-describe.each(testTableForAuthentication)(
+describeEach(testTableForAuthentication)(
   'Custom Voice: using %s',
   (_name, useAuthorizationToken, mergeCredentials, fetchCredentials) => {
-    jest.setTimeout(15000);
-
     test('to synthesize', async () => {
       if (CI && !REGION) {
         return console.warn('Skipping tests against production system when running in CI without subscription key.');
@@ -34,7 +33,7 @@ describe.each(testTableForAuthentication)(
 
       const recognized = [];
 
-      const bufferSourceStartHandler = jest.fn(async ({ target: { buffer } }) => {
+      const bufferSourceStartHandler = mock.fn(async ({ target: { buffer } }) => {
         recognized.push(await recognizeRiffWaveArrayBuffer({ credentials, riffWaveArrayBuffer: buffer }));
       });
 

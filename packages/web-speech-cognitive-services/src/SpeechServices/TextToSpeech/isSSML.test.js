@@ -1,6 +1,6 @@
-/// <reference types="jest" />
-
-import isSSML from './isSSML';
+import { expect } from 'expect';
+import { test } from 'node:test';
+import isSSML from './isSSML.js';
 
 test('check SSML string by <speak> tag', () => {
   const actual = isSSML('<speak version="1.0">');

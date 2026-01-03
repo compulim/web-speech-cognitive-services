@@ -37,7 +37,8 @@
     "switch": "cat package.json | jq --arg SWITCH_NAME $SWITCH_NAME -r '(.[\"switch:\" + $SWITCH_NAME] // {}) as $TEMPLATE | .devDependencies += ($TEMPLATE.devDependencies // {}) | .dependencies += ($TEMPLATE.dependencies // {})' | tee ./package.json.tmp && mv ./package.json.tmp ./package.json",
     "test": "npm run test:unit && npm run test:types",
     "test:types": "node --experimental-strip-types --import @compulim/test-harness/test-types.import --test **/*.test-types.ts",
-    "test:unit": "node --experimental-strip-types --experimental-test-coverage --experimental-test-isolation=none --test"
+    "test:unit": "node --experimental-strip-types --experimental-test-coverage --experimental-test-isolation=none --experimental-test-module-mocks --import @compulim/test-harness/happy-dom.import --test",
+    "x": "node --experimental-strip-types --experimental-test-isolation=none --experimental-test-module-mocks --import @compulim/test-harness/happy-dom.import --test tests/speechRecognition.test.js"
   },
   "repository": {
     "type": "git",
@@ -76,20 +77,21 @@
       "jsdom does not support node-fetch@3 because missing TextDecoder"
     ]
   },
+  "localPeerDependencies": {
+    "@compulim/test-harness": "0.0.0-0"
+  },
+  "peerDependencies": {
+    "microsoft-cognitiveservices-speech-sdk": "^1.17.0"
+  },
   "devDependencies": {
-    "@babel/preset-env": "^7.28.5",
-    "@babel/preset-typescript": "^7.28.5",
-    "@jest/globals": "^30.2.0",
+    "@compulim/test-harness": "^0.0.0-0",
     "@tsconfig/recommended": "^1.0.13",
     "@tsconfig/strictest": "^2.0.8",
     "@types/dom-speech-recognition": "^0.0.7",
-    "@types/jest": "^30.0.0",
     "@types/node": "^25.0.3",
     "dotenv": "^17.2.3",
-    "esbuild": "^0.27.2",
+    "expect": "^30.2.0",
     "global-agent": "^3.0.0",
-    "jest": "^30.2.0",
-    "jest-environment-jsdom": "^30.2.0",
     "lolex": "^6.0.0",
     "microsoft-cognitiveservices-speech-sdk": "^1.47.0",
     "node-fetch": "^2.7.0",
@@ -107,11 +109,5 @@
     "on-error-resume-next": "^2.0.3",
     "simple-update-in": "^2.2.0",
     "valibot": "^1.2.0"
-  },
-  "peerDependencies": {
-    "microsoft-cognitiveservices-speech-sdk": "^1.17.0"
-  },
-  "localPeerDependencies": {
-    "@compulim/test-harness": "0.0.0-0"
   }
 }

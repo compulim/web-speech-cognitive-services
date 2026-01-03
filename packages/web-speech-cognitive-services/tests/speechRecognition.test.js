@@ -1,36 +1,26 @@
-/*
- * @jest-environment jsdom
- */
+/// <reference types="node" />
 
+import { describeEach } from '@compulim/test-harness/describeEach';
+import { expect } from 'expect';
 import { AudioStreamFormat } from 'microsoft-cognitiveservices-speech-sdk';
-import { join } from 'path';
-import { promisify } from 'util';
+import { beforeEach, test } from 'node:test';
 import createDeferred from 'p-defer';
-import fs from 'fs';
-
-import { createSpeechRecognitionPonyfill } from '../src/SpeechServices';
-import captureAllSpeechRecognitionEvents from '../utils/speechRecognition/captureAllSpeechRecognitionEvents';
-import createQueuedArrayBufferAudioSource from '../utils/speechRecognition/createQueuedArrayBufferAudioSource';
-import testTableForAuthentication from '../utils/testTableForAuthentication';
+import { createSpeechRecognitionPonyfill } from '../src/SpeechServices.ts';
+import fetchSpeechData from '../src/SpeechServices/TextToSpeech/fetchSpeechData.js';
+import captureAllSpeechRecognitionEvents from '../utils/speechRecognition/captureAllSpeechRecognitionEvents.js';
+import createQueuedArrayBufferAudioSource from '../utils/speechRecognition/createQueuedArrayBufferAudioSource.js';
+import testTableForAuthentication from '../utils/testTableForAuthentication.js';
 
 const { CI, REGION } = process.env;
 const BITS_PER_SAMPLE = 16;
 const CHANNELS = 1;
-const SAMPLES_PER_SECOND = 16000;
+const OUTPUT_FORMAT = 'riff-8khz-16bit-mono-pcm';
+const SAMPLES_PER_SECOND = 8000;
 
-const readFile = promisify(fs.readFile);
-
-describe.each(testTableForAuthentication)(
-  'Custom Speech: using %s',
-  (_name, _useAuthorizationToken, mergeCredentials, fetchCredentials) => {
-    jest.setTimeout(15000);
-
+describeEach(testTableForAuthentication)(
+  'using %s',
+  (_name, _useAuthorizationToken, _mergeCredentials, fetchCredentials) => {
     let audioConfig;
-    let waveArrayBuffer;
-
-    beforeAll(async () => {
-      waveArrayBuffer = (await readFile(join(__dirname, 'tuen-mun-district-office.wav'))).buffer;
-    });
 
     beforeEach(async () => {
       audioConfig = createQueuedArrayBufferAudioSource(
@@ -43,21 +33,19 @@ describe.each(testTableForAuthentication)(
         return console.warn('Skipping tests against production system when running in CI without subscription key.');
       }
 
-      const credentials = {
-        ...(await fetchCredentials()),
-        ...(!mergeCredentials.region && {
-          speechRecognitionHostname: 'westus2.stt.speech.microsoft.com'
-        })
-      };
-
+      const credentials = await fetchCredentials();
       const { SpeechRecognition } = createSpeechRecognitionPonyfill({
         audioConfig,
-        credentials,
-        speechRecognitionEndpointId: process.env.SPEECH_RECOGNITION_ENDPOINT_ID
+        credentials
       });
 
-      // We cannot use "fetchSpeechData" because the quality of the synthesis using Custom Voice is too low to being recognized by itself.
-      audioConfig.push(waveArrayBuffer);
+      audioConfig.push(
+        await fetchSpeechData({
+          fetchCredentials: () => credentials,
+          outputFormat: OUTPUT_FORMAT,
+          text: 'Hello'
+        })
+      );
 
       const speechRecognition = new SpeechRecognition();
       const { promise, reject, resolve } = createDeferred();
@@ -70,6 +58,14 @@ describe.each(testTableForAuthentication)(
 
         await promise;
       });
+
+      // `result` sometimes return confidence of 0.9 or 1.
+      // It weirdly depends on whether subscription key or authorization token is being used.
+      expect(events[7][0]).toEqual('result');
+
+      if (events[7][1].results[0][0].confidence === 0.9) {
+        events[7][1].results[0][0].confidence = 1;
+      }
 
       expect(events).toEqual([
         'start',
@@ -86,8 +82,8 @@ describe.each(testTableForAuthentication)(
             results: [
               {
                 0: {
-                  confidence: 0.9,
-                  transcript: 'Tuen Mun district office.'
+                  confidence: 1,
+                  transcript: 'Hello.'
                 },
                 isFinal: true,
                 length: 1

@@ -1,10 +1,6 @@
-/// <reference types="jest" />
-
-/**
- * @jest-environment jsdom
- */
-
-import cognitiveServiceEventResultToWebSpeechRecognitionResult from './cognitiveServiceEventResultToWebSpeechRecognitionResult';
+import { expect } from 'expect';
+import { test } from 'node:test';
+import cognitiveServiceEventResultToWebSpeechRecognitionResult from './cognitiveServiceEventResultToWebSpeechRecognitionResult.ts';
 
 test('Multiple results with RecognitionStatus === "Success"', () => {
   const resultList = cognitiveServiceEventResultToWebSpeechRecognitionResult({

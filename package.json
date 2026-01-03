@@ -6,10 +6,10 @@
   "author": "William Wong (https://github.com/compulim)",
   "license": "MIT",
   "workspaces": [
-    "packages/test-harness",
     "packages/web-speech-cognitive-services",
     "packages/integration-test",
-    "packages/pages"
+    "packages/pages",
+    "packages/test-harness"
   ],
   "scripts": {
     "build": "npm run build --if-present --workspaces",
@@ -32,6 +32,8 @@
       "2024-05-29: @typescript-eslint/parser@7.11.0 peer depends on eslint@^8"
     ]
   },
+  "localPeerDependencies": {},
+  "peerDependencies": {},
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^8.50.1",
     "@typescript-eslint/parser": "^8.50.1",
@@ -42,8 +44,5 @@
     "eslint-plugin-react-hooks": "^7.0.1",
     "prettier": "^3.7.4"
   },
-  "dependencies": {},
-  "exports": {},
-  "localPeerDependencies": {},
-  "peerDependencies": {}
+  "dependencies": {}
 }

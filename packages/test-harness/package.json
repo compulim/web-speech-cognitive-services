@@ -1,11 +1,11 @@
 {
   "name": "@compulim/test-harness",
   "version": "0.0.0-0",
-  "description": "",
   "private": true,
-  "files": [
-    "./src/**/*"
-  ],
+  "description": "",
+  "license": "MIT",
+  "author": "William Wong (https://github.com/compulim)",
+  "type": "commonjs",
   "exports": {
     "./describeEach": {
       "import": {
@@ -20,6 +20,10 @@
     "./happy-dom.import": "./src/happy-dom.import.mjs",
     "./test-types.import": "./src/test-types.import.mjs"
   },
+  "main": "index.js",
+  "files": [
+    "./src/**/*"
+  ],
   "scripts": {
     "bump": "npm run bump:prod && npm run bump:dev",
     "bump:dev": "PACKAGES_TO_BUMP=$(cat package.json | jq -r '(.pinDependencies // {}) as $P | (.localPeerDependencies // {}) as $L | (.devDependencies // {}) | to_entries | map(select(.key as $K | $L | has($K) | not)) | map(.key + \"@\" + ($P[.key] // [\"latest\"])[0]) | join(\" \")') && [ ! -z \"$PACKAGES_TO_BUMP\" ] && npm install $PACKAGES_TO_BUMP || true",
@@ -32,7 +36,16 @@
     "precommit:typescript": "tsc --noEmit --project ./src/tsconfig.precommit.json",
     "switch": "cat package.json | jq --arg SWITCH_NAME $SWITCH_NAME -r '(.[\"switch:\" + $SWITCH_NAME] // {}) as $TEMPLATE | .devDependencies += ($TEMPLATE.devDependencies // {}) | .dependencies += ($TEMPLATE.dependencies // {})' | tee ./package.json.tmp && mv ./package.json.tmp ./package.json"
   },
+  "devDependencies": {
+    "@tsconfig/strictest": "^2.0.8",
+    "resolve-cwd": "^3.0.0"
+  },
   "peerDependencies": {
-    "typescript": ">=5"
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "@happy-dom/global-registrator": "^20.0.11",
+    "escape-string-regexp": "^4.0.0",
+    "expect": "^30.2.0"
   }
 }

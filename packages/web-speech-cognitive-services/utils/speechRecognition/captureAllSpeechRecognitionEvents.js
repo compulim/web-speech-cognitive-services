@@ -1,4 +1,4 @@
-import formatSpeechRecognitionEvent from './formatSpeechRecognitionEvent';
+import formatSpeechRecognitionEvent from './formatSpeechRecognitionEvent.js';
 
 const SPEECH_RECOGNITION_EVENTS = [
   'audioend',

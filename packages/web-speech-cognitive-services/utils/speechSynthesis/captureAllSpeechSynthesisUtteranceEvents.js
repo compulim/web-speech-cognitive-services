@@ -1,6 +1,5 @@
 import createDeferred from 'p-defer';
-
-import formatSpeechSynthesisUtteranceEvent from './formatSpeechSynthesisUtteranceEvent';
+import formatSpeechSynthesisUtteranceEvent from './formatSpeechSynthesisUtteranceEvent.js';
 
 const SPEECH_SYNTHESIS_UTTERANCE_EVENTS = ['boundary', 'end', 'error', 'mark', 'pause', 'resume', 'start'];
 

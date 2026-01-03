@@ -1,7 +1,9 @@
-/// <reference types="jest" />
+/// <reference types="node" />
 
+import { expect } from 'expect';
 import { AudioConfig } from 'microsoft-cognitiveservices-speech-sdk';
-import patchOptions, { type Credentials } from './patchOptions';
+import { describe, test } from 'node:test';
+import patchOptions, { type Credentials } from './patchOptions.ts';
 
 const credentials: Credentials = { authorizationToken: 'dummy', region: 'westus' };
 

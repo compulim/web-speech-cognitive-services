@@ -1,5 +1,4 @@
 import SpeechSDK from '../SpeechSDK.ts';
-
 import SpeechRecognitionAlternative from './SpeechRecognitionAlternative.ts';
 import SpeechRecognitionResult from './SpeechRecognitionResult.ts';
 import { type SerializedRecognitionResult } from './private/serializeRecognitionResult.ts';

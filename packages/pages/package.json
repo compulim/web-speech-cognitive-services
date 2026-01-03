@@ -1,5 +1,5 @@
 {
-  "name": "@compulim/web-speech-cognitive-services-pages",
+  "name": "@compulim/pages",
   "version": "0.0.0-0",
   "description": "",
   "private": true,
@@ -20,9 +20,24 @@
   },
   "author": "William Wong (https://github.com/compulim)",
   "license": "MIT",
+  "pinDependencies": {
+    "@types/react": [
+      "18"
+    ],
+    "@types/react-dom": [
+      "18"
+    ],
+    "react": [
+      "18"
+    ],
+    "react-dom": [
+      "18"
+    ]
+  },
   "localPeerDependencies": {
     "web-speech-cognitive-services": "0.0.0-0"
   },
+  "peerDependencies": {},
   "devDependencies": {
     "@tsconfig/strictest": "^2.0.8",
     "@types/dom-speech-recognition": "^0.0.7",
@@ -45,21 +60,5 @@
     "redux-saga": "^1.4.2",
     "simple-update-in": "^2.2.0",
     "web-speech-cognitive-services": "0.0.0-0"
-  },
-  "pinDependencies": {
-    "@types/react": [
-      "18"
-    ],
-    "@types/react-dom": [
-      "18"
-    ],
-    "react": [
-      "18"
-    ],
-    "react-dom": [
-      "18"
-    ]
-  },
-  "exports": {},
-  "peerDependencies": {}
+  }
 }
