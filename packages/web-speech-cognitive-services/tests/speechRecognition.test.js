@@ -1,15 +1,15 @@
-/*
- * @jest-environment jsdom
- */
+/// <reference types="node" />
 
+import { describeEach } from '@compulim/test-harness/describeEach';
+import { expect } from 'expect';
 import { AudioStreamFormat } from 'microsoft-cognitiveservices-speech-sdk';
+import { beforeEach, test } from 'node:test';
 import createDeferred from 'p-defer';
-
-import { createSpeechRecognitionPonyfill } from '../src/SpeechServices';
-import captureAllSpeechRecognitionEvents from '../utils/speechRecognition/captureAllSpeechRecognitionEvents';
-import createQueuedArrayBufferAudioSource from '../utils/speechRecognition/createQueuedArrayBufferAudioSource';
-import fetchSpeechData from '../src/SpeechServices/TextToSpeech/fetchSpeechData';
-import testTableForAuthentication from '../utils/testTableForAuthentication';
+import { createSpeechRecognitionPonyfill } from '../src/SpeechServices.ts';
+import fetchSpeechData from '../src/SpeechServices/TextToSpeech/fetchSpeechData.js';
+import captureAllSpeechRecognitionEvents from '../utils/speechRecognition/captureAllSpeechRecognitionEvents.js';
+import createQueuedArrayBufferAudioSource from '../utils/speechRecognition/createQueuedArrayBufferAudioSource.js';
+import testTableForAuthentication from '../utils/testTableForAuthentication.js';
 
 const { CI, REGION } = process.env;
 const BITS_PER_SAMPLE = 16;
@@ -17,11 +17,9 @@ const CHANNELS = 1;
 const OUTPUT_FORMAT = 'riff-8khz-16bit-mono-pcm';
 const SAMPLES_PER_SECOND = 8000;
 
-describe.each(testTableForAuthentication)(
+describeEach(testTableForAuthentication)(
   'using %s',
   (_name, _useAuthorizationToken, _mergeCredentials, fetchCredentials) => {
-    jest.setTimeout(15000);
-
     let audioConfig;
 
     beforeEach(async () => {

@@ -1,4 +1,4 @@
-/// <reference types="jest" />
+import { it } from 'node:test';
 
 // import React from 'react';
 // import ReactDOM from 'react-dom';

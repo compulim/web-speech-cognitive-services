@@ -1,16 +1,18 @@
-/// <reference types="jest" />
+/// <reference types="node" />
 
-import patchOptions from './patchOptions';
+import { expect } from 'expect';
+import { afterEach, beforeEach, mock, test } from 'node:test';
+import patchOptions from './patchOptions.ts';
 
 beforeEach(() => {
-  jest.spyOn(console, 'error').mockImplementation();
-  jest.spyOn(console, 'info').mockImplementation();
-  jest.spyOn(console, 'log').mockImplementation();
-  jest.spyOn(console, 'warn').mockImplementation();
+  mock.method(console, 'error').mock.mockImplementation(() => {});
+  mock.method(console, 'info').mock.mockImplementation(() => {});
+  mock.method(console, 'log').mock.mockImplementation(() => {});
+  mock.method(console, 'warn').mock.mockImplementation(() => {});
 });
 
 afterEach(() => {
-  jest.restoreAllMocks();
+  mock.restoreAll();
 });
 
 test('should throw exception when region and speechSynthesisHostname are not specified', async () => {

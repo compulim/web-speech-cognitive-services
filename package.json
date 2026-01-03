@@ -1,5 +1,5 @@
 {
-  "name": "@compulim/web-speech-cognitive-services-root",
+  "name": "@compulim/root",
   "version": "8.1.5-0",
   "description": "",
   "private": true,
@@ -7,8 +7,9 @@
   "license": "MIT",
   "workspaces": [
     "packages/web-speech-cognitive-services",
+    "packages/integration-test",
     "packages/pages",
-    "packages/integration-test"
+    "packages/test-harness"
   ],
   "scripts": {
     "build": "npm run build --if-present --workspaces",
@@ -17,7 +18,9 @@
     "bump:eslintrc": "if [ -f node_modules/react/package.json ]; then docker run -e VERSION=$(cat node_modules/react/package.json | jq -r '.version') -i --rm mikefarah/yq '.settings.react.version = strenv(VERSION)' < ./.eslintrc.react.yml | tee /tmp/output.tmp && mv /tmp/output.tmp ./.eslintrc.react.yml; fi",
     "bump:packages": "npm run bump --if-present --workspaces",
     "bump:prod": "PACKAGES_TO_BUMP=$(cat package.json | jq -r '(.pinDependencies // {}) as $P | (.localPeerDependencies // {}) as $L | (.dependencies // {}) | to_entries | map(select(.key as $K | $L | has($K) | not)) | map(.key + \"@\" + ($P[.key] // [\"latest\"])[0]) | join(\" \")') && [ ! -z \"$PACKAGES_TO_BUMP\" ] && npm install $PACKAGES_TO_BUMP || true",
-    "postscaffold": "npm run postscaffold:eslint:react && npm run postscaffold --if-present --workspaces",
+    "init": "npm run init:dev --if-present && npm run init:prod --if-present",
+    "init:dev": "npm install --save-dev @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint eslint-import-resolver-node eslint-import-resolver-typescript eslint-plugin-import eslint-plugin-prettier eslint-plugin-react eslint-plugin-react-hooks prettier",
+    "postscaffold": "npm run postscaffold:eslint:react --if-present && npm run postscaffold --if-present --workspaces",
     "postscaffold:eslint:react": "npm run bump:eslintrc",
     "precommit": "npm run precommit --if-present --workspaces",
     "switch:_": "npm run --if-present --workspaces switch && npm install --legacy-peer-deps --prefer-dedupe",
@@ -29,6 +32,8 @@
       "2024-05-29: @typescript-eslint/parser@7.11.0 peer depends on eslint@^8"
     ]
   },
+  "localPeerDependencies": {},
+  "peerDependencies": {},
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^8.50.1",
     "@typescript-eslint/parser": "^8.50.1",
@@ -38,5 +43,6 @@
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^7.0.1",
     "prettier": "^3.7.4"
-  }
+  },
+  "dependencies": {}
 }

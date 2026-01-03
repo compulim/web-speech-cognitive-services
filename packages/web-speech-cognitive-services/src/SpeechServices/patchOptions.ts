@@ -4,16 +4,16 @@ import { parse } from 'valibot';
 import resolveFunctionOrReturnValue from './resolveFunctionOrReturnValue.ts';
 import SpeechSDK from './SpeechSDK.ts';
 import credentialsSchema, { type Credentials } from './SpeechToText/validation/credentialsSchema.ts';
-import enableTelemetrySchema, { EnableTelemetry } from './SpeechToText/validation/enableTelemetrySchema.ts';
+import enableTelemetrySchema, { type EnableTelemetry } from './SpeechToText/validation/enableTelemetrySchema.ts';
 import initialSilenceTimeoutSchema, {
-  InitialSilenceTimeout
+  type InitialSilenceTimeout
 } from './SpeechToText/validation/initialSilenceTimeoutSchema.ts';
-import looseEventsSchema, { LooseEvents } from './SpeechToText/validation/looseEventsSchema.ts';
-import referenceGrammarsSchema, { ReferenceGrammars } from './SpeechToText/validation/referenceGrammarsSchema.ts';
+import looseEventsSchema, { type LooseEvents } from './SpeechToText/validation/looseEventsSchema.ts';
+import referenceGrammarsSchema, { type ReferenceGrammars } from './SpeechToText/validation/referenceGrammarsSchema.ts';
 import speechRecognitionEndpointIdSchema, {
-  SpeechRecognitionEndpointId
+  type SpeechRecognitionEndpointId
 } from './SpeechToText/validation/speechRecognitionEndpointIdSchema.ts';
-import textNormalizationSchema, { TextNormalization } from './SpeechToText/validation/textNormalizationSchema.ts';
+import textNormalizationSchema, { type TextNormalization } from './SpeechToText/validation/textNormalizationSchema.ts';
 
 const { AudioConfig } = SpeechSDK;
 

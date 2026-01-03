@@ -15,5 +15,4 @@ jobs:
     uses: compulim/workflows/.github/workflows/pull-request-validation.yml@main
     with:
       package-name: 'web-speech-cognitive-services'
-      skip-integration-test: false
       switch: ${{ matrix.switch }}

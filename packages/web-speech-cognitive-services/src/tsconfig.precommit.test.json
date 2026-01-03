@@ -11,5 +11,30 @@
     "types": ["node"]
   },
   "extends": "@tsconfig/recommended/tsconfig.json",
-  "include": ["**/*.spec.ts", "**/*.spec.tsx", "**/*.test.ts", "**/*.test.tsx", "__tests__/**/*"]
+  "include": [
+    "__tests__/**/*.cjs",
+    "__tests__/**/*.cts",
+    "__tests__/**/*.js",
+    "__tests__/**/*.jsx",
+    "__tests__/**/*.mjs",
+    "__tests__/**/*.mts",
+    "__tests__/**/*.ts",
+    "__tests__/**/*.tsx",
+    "**/*.spec.cjs",
+    "**/*.spec.cts",
+    "**/*.spec.js",
+    "**/*.spec.jsx",
+    "**/*.spec.mjs",
+    "**/*.spec.mts",
+    "**/*.spec.ts",
+    "**/*.spec.tsx",
+    "**/*.test.cjs",
+    "**/*.test.cts",
+    "**/*.test.js",
+    "**/*.test.jsx",
+    "**/*.test.mjs",
+    "**/*.test.mts",
+    "**/*.test.ts",
+    "**/*.test.tsx"
+  ]
 }

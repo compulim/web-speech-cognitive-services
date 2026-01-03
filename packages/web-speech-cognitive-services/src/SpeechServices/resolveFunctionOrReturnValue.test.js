@@ -1,6 +1,8 @@
-/// <reference types="jest" />
+/// <reference types="node" />
 
-import resolveFunctionOrReturnValue from './resolveFunctionOrReturnValue';
+import { expect } from 'expect';
+import { test } from 'node:test';
+import resolveFunctionOrReturnValue from './resolveFunctionOrReturnValue.ts';
 
 test('resolve sync function', () => {
   expect(resolveFunctionOrReturnValue(() => 1)).toBe(1);

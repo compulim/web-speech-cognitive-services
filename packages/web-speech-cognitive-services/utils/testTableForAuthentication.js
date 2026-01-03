@@ -1,5 +1,5 @@
-import createTestTable from './createTestTable';
-import fetchAuthorizationToken from '../utils/fetchAuthorizationToken';
+import createTestTable from './createTestTable.js';
+import fetchAuthorizationToken from './fetchAuthorizationToken.js';
 
 function createTestTableForAuthentication() {
   const combos = [

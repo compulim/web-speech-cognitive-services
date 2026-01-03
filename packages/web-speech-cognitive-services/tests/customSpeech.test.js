@@ -1,17 +1,18 @@
-/*
- * @jest-environment jsdom
- */
+/// <reference types="node" />
 
-import { AudioStreamFormat } from 'microsoft-cognitiveservices-speech-sdk';
-import { join } from 'path';
-import { promisify } from 'util';
-import createDeferred from 'p-defer';
+import { describeEach } from '@compulim/test-harness/describeEach';
+import { expect } from 'expect';
 import fs from 'fs';
-
-import { createSpeechRecognitionPonyfill } from '../src/SpeechServices';
-import captureAllSpeechRecognitionEvents from '../utils/speechRecognition/captureAllSpeechRecognitionEvents';
-import createQueuedArrayBufferAudioSource from '../utils/speechRecognition/createQueuedArrayBufferAudioSource';
-import testTableForAuthentication from '../utils/testTableForAuthentication';
+import { AudioStreamFormat } from 'microsoft-cognitiveservices-speech-sdk';
+import { before, beforeEach, test } from 'node:test';
+import createDeferred from 'p-defer';
+import { resolve } from 'path';
+import { fileURLToPath } from 'url';
+import { promisify } from 'util';
+import { createSpeechRecognitionPonyfill } from '../src/SpeechServices.ts';
+import captureAllSpeechRecognitionEvents from '../utils/speechRecognition/captureAllSpeechRecognitionEvents.js';
+import createQueuedArrayBufferAudioSource from '../utils/speechRecognition/createQueuedArrayBufferAudioSource.js';
+import testTableForAuthentication from '../utils/testTableForAuthentication.js';
 
 const { CI, REGION } = process.env;
 const BITS_PER_SAMPLE = 16;
@@ -20,16 +21,15 @@ const SAMPLES_PER_SECOND = 16000;
 
 const readFile = promisify(fs.readFile);
 
-describe.each(testTableForAuthentication)(
+describeEach(testTableForAuthentication)(
   'Custom Speech: using %s',
   (_name, _useAuthorizationToken, mergeCredentials, fetchCredentials) => {
-    jest.setTimeout(15000);
-
     let audioConfig;
     let waveArrayBuffer;
 
-    beforeAll(async () => {
-      waveArrayBuffer = (await readFile(join(__dirname, 'tuen-mun-district-office.wav'))).buffer;
+    before(async () => {
+      waveArrayBuffer = (await readFile(resolve(fileURLToPath(import.meta.url), '../tuen-mun-district-office.wav')))
+        .buffer;
     });
 
     beforeEach(async () => {

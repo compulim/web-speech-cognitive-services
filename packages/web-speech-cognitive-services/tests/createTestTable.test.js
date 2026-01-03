@@ -1,4 +1,8 @@
-import createTestTable from '../utils/createTestTable';
+/// <reference types="node" />
+
+import { describe, test } from 'node:test';
+import { expect } from 'expect';
+import createTestTable from '../utils/createTestTable.js';
 
 const { CI, REGION } = process.env;
 
@@ -93,6 +97,11 @@ describe('createTestTable', () => {
   });
 
   test('with 0x2x0x2x0 combos', () => {
-    expect(createTestTable([[], [1, 2], [], ['a', 'b'], []])).toEqual([[1, 'a'], [2, 'a'], [1, 'b'], [2, 'b']]);
+    expect(createTestTable([[], [1, 2], [], ['a', 'b'], []])).toEqual([
+      [1, 'a'],
+      [2, 'a'],
+      [1, 'b'],
+      [2, 'b']
+    ]);
   });
 });

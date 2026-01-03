@@ -1,7 +1,5 @@
-/// <reference types="jest" />
-
-jest.useFakeTimers();
-
+import { expect } from 'expect';
+import { afterEach, beforeEach, describe, mock, test } from 'node:test';
 import createDeferred from 'p-defer';
 
 function createLoudArrayBuffer() {
@@ -78,8 +76,8 @@ const MOCK_SPEECH_SDK = {
 
       this.privReco = {
         dynamicGrammar: {
-          addPhrase: jest.fn(),
-          addReferenceGrammar: jest.fn()
+          addPhrase: mock.fn(),
+          addReferenceGrammar: mock.fn()
         }
       };
     }
@@ -213,7 +211,7 @@ let originalConsole;
 let warnings;
 
 beforeEach(() => {
-  MOCK_SPEECH_SDK.SpeechRecognizer.enableTelemetry = jest.fn();
+  MOCK_SPEECH_SDK.SpeechRecognizer.enableTelemetry = mock.fn();
 
   constructRecognizerDeferred = createDeferred();
   originalConsole = console;
@@ -221,14 +219,16 @@ beforeEach(() => {
   console = { ...console, warn: (...args) => warnings.push(args) };
   warnings = [];
 
-  jest.resetModules();
-  jest.setMock('../SpeechSDK', {
-    ...MOCK_SPEECH_SDK,
-    SpeechRecognizer: class extends MOCK_SPEECH_SDK.SpeechRecognizer {
-      constructor(...args) {
-        super(...args);
+  mock.reset();
+  mock.module('../SpeechSDK.ts', {
+    defaultExport: {
+      ...MOCK_SPEECH_SDK,
+      SpeechRecognizer: class extends MOCK_SPEECH_SDK.SpeechRecognizer {
+        constructor(...args) {
+          super(...args);
 
-        constructRecognizerDeferred.resolve(this);
+          constructRecognizerDeferred.resolve(this);
+        }
       }
     }
   });
@@ -274,7 +274,7 @@ describe('SpeechRecognition', () => {
   let speechRecognition;
 
   beforeEach(async () => {
-    const { default: createSpeechRecognitionPonyfill } = require('./createSpeechRecognitionPonyfill');
+    const { default: createSpeechRecognitionPonyfill } = await import('./createSpeechRecognitionPonyfill.ts');
     const { SpeechRecognition } = createSpeechRecognitionPonyfill({
       credentials: {
         region: 'westus',
@@ -332,7 +332,22 @@ describe('SpeechRecognition', () => {
 
       await endEventEmitted;
 
-      expect(toSnapshot(events)).toMatchSnapshot();
+      expect(toSnapshot(events)).toEqual([
+        'cognitiveservices:audioSourceReady',
+        'webspeech:start',
+        'webspeech:audiostart',
+        'cognitiveservices:firstAudibleChunk',
+        'webspeech:soundstart',
+        'cognitiveservices:recognizing',
+        'webspeech:speechstart',
+        'cognitiveservices:recognized',
+        'cognitiveservices:audioSourceOff',
+        'webspeech:speechend',
+        'webspeech:soundend',
+        'webspeech:audioend',
+        "webspeech:result ['Hello, World!' (isFinal)]",
+        'webspeech:end'
+      ]);
     });
 
     test('with interims', async () => {
@@ -384,7 +399,25 @@ describe('SpeechRecognition', () => {
 
       await endEventEmitted;
 
-      expect(toSnapshot(events)).toMatchSnapshot();
+      expect(toSnapshot(events)).toEqual([
+        'cognitiveservices:audioSourceReady',
+        'webspeech:start',
+        'webspeech:audiostart',
+        'cognitiveservices:firstAudibleChunk',
+        'webspeech:soundstart',
+        'cognitiveservices:recognizing',
+        'webspeech:speechstart',
+        "webspeech:result ['hello']",
+        'cognitiveservices:recognizing',
+        "webspeech:result ['hello world']",
+        'cognitiveservices:recognized',
+        'cognitiveservices:audioSourceOff',
+        'webspeech:speechend',
+        'webspeech:soundend',
+        'webspeech:audioend',
+        "webspeech:result ['Hello, World!' (isFinal)]",
+        'webspeech:end'
+      ]);
     });
 
     test('with muted microphone', async () => {
@@ -430,7 +463,15 @@ describe('SpeechRecognition', () => {
 
       await errorEventEmitted;
 
-      expect(toSnapshot(events)).toMatchSnapshot();
+      expect(toSnapshot(events)).toEqual([
+        'cognitiveservices:audioSourceReady',
+        'webspeech:start',
+        'webspeech:audiostart',
+        'cognitiveservices:recognized',
+        'webspeech:audioend',
+        "webspeech:error { error: 'no-speech' }",
+        'webspeech:end'
+      ]);
     });
 
     test('with unrecognizable sound should throw error', async () => {
@@ -475,7 +516,22 @@ describe('SpeechRecognition', () => {
 
       await endEventEmitted;
 
-      expect(toSnapshot(events)).toMatchSnapshot();
+      expect(toSnapshot(events)).toEqual([
+        'cognitiveservices:audioSourceReady',
+        'webspeech:start',
+        'webspeech:audiostart',
+        'cognitiveservices:firstAudibleChunk',
+        'webspeech:soundstart',
+        'cognitiveservices:recognized',
+        'webspeech:speechstart',
+        'cognitiveservices:stop',
+        'cognitiveservices:audioSourceOff',
+        'webspeech:speechend',
+        'webspeech:soundend',
+        'webspeech:audioend',
+        "webspeech:error { error: 'no-speech' }",
+        'webspeech:end'
+      ]);
     });
 
     test('stop after start', async () => {
@@ -495,7 +551,7 @@ describe('SpeechRecognition', () => {
 
       await endEventEmitted;
 
-      expect(toSnapshot(events)).toMatchSnapshot();
+      expect(toSnapshot(events)).toEqual(['cognitiveservices:stop', 'webspeech:start', 'webspeech:end']);
     });
 
     test('stop after audiostart', async () => {
@@ -527,7 +583,15 @@ describe('SpeechRecognition', () => {
 
       await endEventEmitted;
 
-      expect(toSnapshot(events)).toMatchSnapshot();
+      expect(toSnapshot(events)).toEqual([
+        'cognitiveservices:audioSourceReady',
+        'webspeech:start',
+        'webspeech:audiostart',
+        'cognitiveservices:stop',
+        'cognitiveservices:audioSourceOff',
+        'webspeech:audioend',
+        'webspeech:end'
+      ]);
     });
 
     test('stop after soundstart', async () => {
@@ -566,7 +630,18 @@ describe('SpeechRecognition', () => {
 
       await endEventEmitted;
 
-      expect(toSnapshot(events)).toMatchSnapshot();
+      expect(toSnapshot(events)).toEqual([
+        'cognitiveservices:audioSourceReady',
+        'webspeech:start',
+        'webspeech:audiostart',
+        'cognitiveservices:firstAudibleChunk',
+        'webspeech:soundstart',
+        'cognitiveservices:stop',
+        'cognitiveservices:audioSourceOff',
+        'webspeech:soundend',
+        'webspeech:audioend',
+        'webspeech:end'
+      ]);
     });
 
     test('stop after recognizing', async () => {
@@ -612,7 +687,22 @@ describe('SpeechRecognition', () => {
 
       await endEventEmitted;
 
-      expect(toSnapshot(events)).toMatchSnapshot();
+      expect(toSnapshot(events)).toEqual([
+        'cognitiveservices:audioSourceReady',
+        'webspeech:start',
+        'webspeech:audiostart',
+        'cognitiveservices:firstAudibleChunk',
+        'webspeech:soundstart',
+        'cognitiveservices:recognizing',
+        'webspeech:speechstart',
+        "webspeech:result ['hello']",
+        'cognitiveservices:stop',
+        'cognitiveservices:audioSourceOff',
+        'webspeech:speechend',
+        'webspeech:soundend',
+        'webspeech:audioend',
+        'webspeech:end'
+      ]);
     });
 
     test('abort after start', async () => {
@@ -633,7 +723,12 @@ describe('SpeechRecognition', () => {
 
       await endEventEmitted;
 
-      expect(toSnapshot(events)).toMatchSnapshot();
+      expect(toSnapshot(events)).toEqual([
+        'cognitiveservices:abort',
+        'webspeech:start',
+        "webspeech:error { error: 'aborted' }",
+        'webspeech:end'
+      ]);
     });
 
     test('abort after audiostart', async () => {
@@ -665,7 +760,16 @@ describe('SpeechRecognition', () => {
 
       await errorEventEmitted;
 
-      expect(toSnapshot(events)).toMatchSnapshot();
+      expect(toSnapshot(events)).toEqual([
+        'cognitiveservices:audioSourceReady',
+        'webspeech:start',
+        'webspeech:audiostart',
+        'cognitiveservices:abort',
+        'cognitiveservices:audioSourceOff',
+        'webspeech:audioend',
+        "webspeech:error { error: 'aborted' }",
+        'webspeech:end'
+      ]);
     });
 
     test('abort after soundstart', async () => {
@@ -704,7 +808,19 @@ describe('SpeechRecognition', () => {
 
       await errorEventEmitted;
 
-      expect(toSnapshot(events)).toMatchSnapshot();
+      expect(toSnapshot(events)).toEqual([
+        'cognitiveservices:audioSourceReady',
+        'webspeech:start',
+        'webspeech:audiostart',
+        'cognitiveservices:firstAudibleChunk',
+        'webspeech:soundstart',
+        'cognitiveservices:abort',
+        'cognitiveservices:audioSourceOff',
+        'webspeech:soundend',
+        'webspeech:audioend',
+        "webspeech:error { error: 'aborted' }",
+        'webspeech:end'
+      ]);
     });
 
     test('abort after recognizing', async () => {
@@ -749,7 +865,22 @@ describe('SpeechRecognition', () => {
 
       await errorEventEmitted;
 
-      expect(toSnapshot(events)).toMatchSnapshot();
+      expect(toSnapshot(events)).toEqual([
+        'cognitiveservices:audioSourceReady',
+        'webspeech:start',
+        'webspeech:audiostart',
+        'cognitiveservices:firstAudibleChunk',
+        'webspeech:soundstart',
+        'cognitiveservices:recognizing',
+        'webspeech:speechstart',
+        'cognitiveservices:abort',
+        'cognitiveservices:audioSourceOff',
+        'webspeech:speechend',
+        'webspeech:soundend',
+        'webspeech:audioend',
+        "webspeech:error { error: 'aborted' }",
+        'webspeech:end'
+      ]);
     });
 
     test('abort with lingering recognizing/recognized', async () => {
@@ -799,24 +930,22 @@ describe('SpeechRecognition', () => {
 
       await endEventEmitted;
 
-      expect(toSnapshot(events)).toMatchInlineSnapshot(`
-        [
-          "cognitiveservices:audioSourceReady",
-          "webspeech:start",
-          "webspeech:audiostart",
-          "cognitiveservices:firstAudibleChunk",
-          "webspeech:soundstart",
-          "cognitiveservices:abort",
-          "cognitiveservices:recognizing",
-          "cognitiveservices:recognizing",
-          "cognitiveservices:recognized",
-          "cognitiveservices:audioSourceOff",
-          "webspeech:soundend",
-          "webspeech:audioend",
-          "webspeech:error { error: 'aborted' }",
-          "webspeech:end",
-        ]
-      `);
+      expect(toSnapshot(events)).toEqual([
+        'cognitiveservices:audioSourceReady',
+        'webspeech:start',
+        'webspeech:audiostart',
+        'cognitiveservices:firstAudibleChunk',
+        'webspeech:soundstart',
+        'cognitiveservices:abort',
+        'cognitiveservices:recognizing',
+        'cognitiveservices:recognizing',
+        'cognitiveservices:recognized',
+        'cognitiveservices:audioSourceOff',
+        'webspeech:soundend',
+        'webspeech:audioend',
+        "webspeech:error { error: 'aborted' }",
+        'webspeech:end'
+      ]);
     });
   });
 
@@ -865,7 +994,22 @@ describe('SpeechRecognition', () => {
 
       await endEventEmitted;
 
-      expect(toSnapshot(events)).toMatchSnapshot();
+      expect(toSnapshot(events)).toEqual([
+        'cognitiveservices:audioSourceReady',
+        'webspeech:start',
+        'webspeech:audiostart',
+        'cognitiveservices:firstAudibleChunk',
+        'webspeech:soundstart',
+        'cognitiveservices:recognized',
+        'webspeech:speechstart',
+        'cognitiveservices:stop',
+        'cognitiveservices:audioSourceOff',
+        'webspeech:speechend',
+        'webspeech:soundend',
+        'webspeech:audioend',
+        "webspeech:error { error: 'no-speech' }",
+        'webspeech:end'
+      ]);
     });
 
     test('stop after recognizing', async () => {
@@ -912,7 +1056,22 @@ describe('SpeechRecognition', () => {
 
       await endEventEmitted;
 
-      expect(toSnapshot(events)).toMatchSnapshot();
+      expect(toSnapshot(events)).toEqual([
+        'cognitiveservices:audioSourceReady',
+        'webspeech:start',
+        'webspeech:audiostart',
+        'cognitiveservices:firstAudibleChunk',
+        'webspeech:soundstart',
+        'cognitiveservices:recognizing',
+        'webspeech:speechstart',
+        "webspeech:result ['hello']",
+        'cognitiveservices:stop',
+        'cognitiveservices:audioSourceOff',
+        'webspeech:speechend',
+        'webspeech:soundend',
+        'webspeech:audioend',
+        'webspeech:end'
+      ]);
     });
 
     test('stop after recognized 1 speech and 1 ongoing', async () => {
@@ -970,7 +1129,26 @@ describe('SpeechRecognition', () => {
 
       await endEventEmitted;
 
-      expect(toSnapshot(events)).toMatchSnapshot();
+      expect(toSnapshot(events)).toEqual([
+        'cognitiveservices:audioSourceReady',
+        'webspeech:start',
+        'webspeech:audiostart',
+        'cognitiveservices:firstAudibleChunk',
+        'webspeech:soundstart',
+        'cognitiveservices:recognizing',
+        'webspeech:speechstart',
+        "webspeech:result ['hello']",
+        'cognitiveservices:recognized',
+        "webspeech:result ['Hello.' (isFinal)]",
+        'cognitiveservices:stop',
+        'cognitiveservices:recognized',
+        "webspeech:result ['Hello.' (isFinal), 'World.' (isFinal)]",
+        'cognitiveservices:audioSourceOff',
+        'webspeech:speechend',
+        'webspeech:soundend',
+        'webspeech:audioend',
+        'webspeech:end'
+      ]);
     });
 
     test('abort after recognizing', async () => {
@@ -1018,7 +1196,23 @@ describe('SpeechRecognition', () => {
 
       await endEventEmitted;
 
-      expect(toSnapshot(events)).toMatchSnapshot();
+      expect(toSnapshot(events)).toEqual([
+        'cognitiveservices:audioSourceReady',
+        'webspeech:start',
+        'webspeech:audiostart',
+        'cognitiveservices:firstAudibleChunk',
+        'webspeech:soundstart',
+        'cognitiveservices:recognizing',
+        'webspeech:speechstart',
+        "webspeech:result ['hello world']",
+        'cognitiveservices:abort',
+        'cognitiveservices:audioSourceOff',
+        'webspeech:speechend',
+        'webspeech:soundend',
+        'webspeech:audioend',
+        "webspeech:error { error: 'aborted' }",
+        'webspeech:end'
+      ]);
     });
 
     test('abort after recognized', async () => {
@@ -1066,7 +1260,23 @@ describe('SpeechRecognition', () => {
 
       await endEventEmitted;
 
-      expect(toSnapshot(events)).toMatchSnapshot();
+      expect(toSnapshot(events)).toEqual([
+        'cognitiveservices:audioSourceReady',
+        'webspeech:start',
+        'webspeech:audiostart',
+        'cognitiveservices:firstAudibleChunk',
+        'webspeech:soundstart',
+        'cognitiveservices:recognized',
+        'webspeech:speechstart',
+        "webspeech:result ['Hello, World!' (isFinal)]",
+        'cognitiveservices:abort',
+        'cognitiveservices:audioSourceOff',
+        'webspeech:speechend',
+        'webspeech:soundend',
+        'webspeech:audioend',
+        "webspeech:error { error: 'aborted' }",
+        'webspeech:end'
+      ]);
     });
   });
 
@@ -1095,7 +1305,15 @@ describe('SpeechRecognition', () => {
 
     await errorEventEmitted;
 
-    expect(toSnapshot(events)).toMatchSnapshot();
+    expect(toSnapshot(events)).toEqual([
+      'cognitiveservices:audioSourceReady',
+      'webspeech:start',
+      'webspeech:audiostart',
+      'cognitiveservices:canceled',
+      'webspeech:audioend',
+      "webspeech:error { error: 'network' }",
+      'webspeech:end'
+    ]);
   });
 
   test('with microphone blocked', async () => {
@@ -1116,11 +1334,15 @@ describe('SpeechRecognition', () => {
 
     await errorEventEmitted;
 
-    expect(toSnapshot(events)).toMatchSnapshot();
+    expect(toSnapshot(events)).toEqual([
+      'cognitiveservices:canceled',
+      "webspeech:error { error: 'not-allowed' }",
+      'webspeech:end'
+    ]);
   });
 
   test('with dynamic grammars', async () => {
-    const { default: createSpeechRecognitionPonyfill } = require('./createSpeechRecognitionPonyfill');
+    const { default: createSpeechRecognitionPonyfill } = await import('./createSpeechRecognitionPonyfill.ts');
     const { SpeechRecognition } = createSpeechRecognitionPonyfill({
       credentials: {
         region: 'westus',
@@ -1139,12 +1361,12 @@ describe('SpeechRecognition', () => {
 
     await recognizer.waitForStartContinuousRecognitionAsync();
 
-    expect(recognizer.privReco.dynamicGrammar.addPhrase).toHaveBeenCalledTimes(1);
-    expect(recognizer.privReco.dynamicGrammar.addPhrase).toHaveBeenCalledWith(['Bellevue']);
+    expect(recognizer.privReco.dynamicGrammar.addPhrase.mock.callCount()).toBe(1);
+    expect(recognizer.privReco.dynamicGrammar.addPhrase.mock.calls[0]?.arguments).toEqual([['Bellevue']]);
   });
 
   test('with reference grammars', async () => {
-    const { default: createSpeechRecognitionPonyfill } = require('./createSpeechRecognitionPonyfill');
+    const { default: createSpeechRecognitionPonyfill } = await import('./createSpeechRecognitionPonyfill.ts');
     const { SpeechRecognition } = createSpeechRecognitionPonyfill({
       credentials: {
         region: 'westus',
@@ -1162,14 +1384,14 @@ describe('SpeechRecognition', () => {
 
     await recognizer.waitForStartContinuousRecognitionAsync();
 
-    expect(recognizer.privReco.dynamicGrammar.addReferenceGrammar).toHaveBeenCalledTimes(1);
-    expect(recognizer.privReco.dynamicGrammar.addReferenceGrammar).toHaveBeenCalledWith([
-      '12345678-1234-5678-abcd-12345678abcd'
+    expect(recognizer.privReco.dynamicGrammar.addReferenceGrammar.mock.callCount()).toBe(1);
+    expect(recognizer.privReco.dynamicGrammar.addReferenceGrammar.mock.calls[0]?.arguments).toEqual([
+      ['12345678-1234-5678-abcd-12345678abcd']
     ]);
   });
 
   test('with new SpeechGrammarList', async () => {
-    const { default: createSpeechRecognitionPonyfill } = require('./createSpeechRecognitionPonyfill');
+    const { default: createSpeechRecognitionPonyfill } = await import('./createSpeechRecognitionPonyfill.ts');
     const { SpeechGrammarList, SpeechRecognition } = createSpeechRecognitionPonyfill({
       credentials: {
         region: 'westus',
@@ -1211,7 +1433,7 @@ describe('SpeechRecognition with text normalization', () => {
   };
 
   test('of ITN should result in ITN', async () => {
-    const { default: createSpeechRecognitionPonyfill } = require('./createSpeechRecognitionPonyfill');
+    const { default: createSpeechRecognitionPonyfill } = await import('./createSpeechRecognitionPonyfill.ts');
     const { SpeechRecognition } = createSpeechRecognitionPonyfill({
       credentials: {
         region: 'westus',
@@ -1263,12 +1485,26 @@ describe('SpeechRecognition with text normalization', () => {
 
     await endEventEmitted;
 
-    expect(toSnapshot(events)).toMatchSnapshot();
+    expect(toSnapshot(events)).toEqual([
+      'cognitiveservices:audioSourceReady',
+      'webspeech:start',
+      'webspeech:audiostart',
+      'cognitiveservices:firstAudibleChunk',
+      'webspeech:soundstart',
+      'cognitiveservices:recognized',
+      'webspeech:speechstart',
+      'cognitiveservices:audioSourceOff',
+      'webspeech:speechend',
+      'webspeech:soundend',
+      'webspeech:audioend',
+      "webspeech:result ['no (ITN)' (isFinal)]",
+      'webspeech:end'
+    ]);
     expect(events[events.length - 2].results[0][0]).toHaveProperty('transcript', 'no (ITN)');
   });
 
   test('of lexical should result in lexical', async () => {
-    const { default: createSpeechRecognitionPonyfill } = require('./createSpeechRecognitionPonyfill');
+    const { default: createSpeechRecognitionPonyfill } = await import('./createSpeechRecognitionPonyfill.ts');
     const { SpeechRecognition } = createSpeechRecognitionPonyfill({
       credentials: {
         region: 'westus',
@@ -1320,12 +1556,26 @@ describe('SpeechRecognition with text normalization', () => {
 
     await endEventEmitted;
 
-    expect(toSnapshot(events)).toMatchSnapshot();
+    expect(toSnapshot(events)).toEqual([
+      'cognitiveservices:audioSourceReady',
+      'webspeech:start',
+      'webspeech:audiostart',
+      'cognitiveservices:firstAudibleChunk',
+      'webspeech:soundstart',
+      'cognitiveservices:recognized',
+      'webspeech:speechstart',
+      'cognitiveservices:audioSourceOff',
+      'webspeech:speechend',
+      'webspeech:soundend',
+      'webspeech:audioend',
+      "webspeech:result ['no (Lexical)' (isFinal)]",
+      'webspeech:end'
+    ]);
     expect(events[events.length - 2].results[0][0]).toHaveProperty('transcript', 'no (Lexical)');
   });
 
   test('of masked ITN should result in masked ITN', async () => {
-    const { default: createSpeechRecognitionPonyfill } = require('./createSpeechRecognitionPonyfill');
+    const { default: createSpeechRecognitionPonyfill } = await import('./createSpeechRecognitionPonyfill.ts');
     const { SpeechRecognition } = createSpeechRecognitionPonyfill({
       credentials: {
         region: 'westus',
@@ -1377,14 +1627,28 @@ describe('SpeechRecognition with text normalization', () => {
 
     await endEventEmitted;
 
-    expect(toSnapshot(events)).toMatchSnapshot();
+    expect(toSnapshot(events)).toEqual([
+      'cognitiveservices:audioSourceReady',
+      'webspeech:start',
+      'webspeech:audiostart',
+      'cognitiveservices:firstAudibleChunk',
+      'webspeech:soundstart',
+      'cognitiveservices:recognized',
+      'webspeech:speechstart',
+      'cognitiveservices:audioSourceOff',
+      'webspeech:speechend',
+      'webspeech:soundend',
+      'webspeech:audioend',
+      "webspeech:result ['no (MaskedITN)' (isFinal)]",
+      'webspeech:end'
+    ]);
     expect(events[events.length - 2].results[0][0]).toHaveProperty('transcript', 'no (MaskedITN)');
   });
 });
 
 describe('SpeechRecognition with Custom Speech', () => {
   test('should set up SpeechConfig with endpoint ID', async () => {
-    const { default: createSpeechRecognitionPonyfill } = require('./createSpeechRecognitionPonyfill');
+    const { default: createSpeechRecognitionPonyfill } = await import('./createSpeechRecognitionPonyfill.ts');
     const { SpeechRecognition } = createSpeechRecognitionPonyfill({
       credentials: {
         region: 'westus',
@@ -1405,7 +1669,7 @@ describe('SpeechRecognition with Custom Speech', () => {
 
 describe('SpeechRecognition with telemetry', () => {
   test('disabled', async () => {
-    const { default: createSpeechRecognitionPonyfill } = require('./createSpeechRecognitionPonyfill');
+    const { default: createSpeechRecognitionPonyfill } = await import('./createSpeechRecognitionPonyfill.ts');
     const { SpeechRecognition } = createSpeechRecognitionPonyfill({
       enableTelemetry: false,
       credentials: {
@@ -1418,12 +1682,12 @@ describe('SpeechRecognition with telemetry', () => {
 
     speechRecognition.start();
 
-    expect(MOCK_SPEECH_SDK.SpeechRecognizer.enableTelemetry).toHaveBeenCalledTimes(1);
-    expect(MOCK_SPEECH_SDK.SpeechRecognizer.enableTelemetry).toHaveBeenCalledWith(false);
+    expect(MOCK_SPEECH_SDK.SpeechRecognizer.enableTelemetry.mock.callCount()).toBe(1);
+    expect(MOCK_SPEECH_SDK.SpeechRecognizer.enableTelemetry.mock.calls[0]?.arguments).toEqual([false]);
   });
 
   test('enabled', async () => {
-    const { default: createSpeechRecognitionPonyfill } = require('./createSpeechRecognitionPonyfill');
+    const { default: createSpeechRecognitionPonyfill } = await import('./createSpeechRecognitionPonyfill.ts');
     const { SpeechRecognition } = createSpeechRecognitionPonyfill({
       enableTelemetry: true,
       credentials: {
@@ -1436,8 +1700,8 @@ describe('SpeechRecognition with telemetry', () => {
 
     speechRecognition.start();
 
-    expect(MOCK_SPEECH_SDK.SpeechRecognizer.enableTelemetry).toHaveBeenCalledTimes(1);
-    expect(MOCK_SPEECH_SDK.SpeechRecognizer.enableTelemetry).toHaveBeenCalledWith(true);
+    expect(MOCK_SPEECH_SDK.SpeechRecognizer.enableTelemetry.mock.callCount()).toBe(1);
+    expect(MOCK_SPEECH_SDK.SpeechRecognizer.enableTelemetry.mock.calls[0]?.arguments).toEqual([true]);
   });
 });
 
@@ -1449,7 +1713,7 @@ describe('SpeechRecognition with loosened events', () => {
   let soundStartEmitted;
 
   beforeEach(async () => {
-    const { default: createSpeechRecognitionPonyfill } = require('./createSpeechRecognitionPonyfill');
+    const { default: createSpeechRecognitionPonyfill } = await import('./createSpeechRecognitionPonyfill.ts');
     const { SpeechRecognition } = createSpeechRecognitionPonyfill({
       credentials: {
         region: 'westus',
@@ -1508,24 +1772,22 @@ describe('SpeechRecognition with loosened events', () => {
 
       await endEventEmitted;
 
-      expect(toSnapshot(events)).toMatchInlineSnapshot(`
-        [
-          "cognitiveservices:audioSourceReady",
-          "webspeech:start",
-          "webspeech:audiostart",
-          "cognitiveservices:firstAudibleChunk",
-          "webspeech:soundstart",
-          "cognitiveservices:recognizing",
-          "webspeech:speechstart",
-          "cognitiveservices:recognized",
-          "webspeech:result ['Hello, World!' (isFinal)]",
-          "cognitiveservices:audioSourceOff",
-          "webspeech:speechend",
-          "webspeech:soundend",
-          "webspeech:audioend",
-          "webspeech:end",
-        ]
-      `);
+      expect(toSnapshot(events)).toEqual([
+        'cognitiveservices:audioSourceReady',
+        'webspeech:start',
+        'webspeech:audiostart',
+        'cognitiveservices:firstAudibleChunk',
+        'webspeech:soundstart',
+        'cognitiveservices:recognizing',
+        'webspeech:speechstart',
+        'cognitiveservices:recognized',
+        "webspeech:result ['Hello, World!' (isFinal)]",
+        'cognitiveservices:audioSourceOff',
+        'webspeech:speechend',
+        'webspeech:soundend',
+        'webspeech:audioend',
+        'webspeech:end'
+      ]);
     });
 
     test('with interims', async () => {
@@ -1577,27 +1839,25 @@ describe('SpeechRecognition with loosened events', () => {
 
       await endEventEmitted;
 
-      expect(toSnapshot(events)).toMatchInlineSnapshot(`
-        [
-          "cognitiveservices:audioSourceReady",
-          "webspeech:start",
-          "webspeech:audiostart",
-          "cognitiveservices:firstAudibleChunk",
-          "webspeech:soundstart",
-          "cognitiveservices:recognizing",
-          "webspeech:speechstart",
-          "webspeech:result ['hello']",
-          "cognitiveservices:recognizing",
-          "webspeech:result ['hello world']",
-          "cognitiveservices:recognized",
-          "webspeech:result ['Hello, World!' (isFinal)]",
-          "cognitiveservices:audioSourceOff",
-          "webspeech:speechend",
-          "webspeech:soundend",
-          "webspeech:audioend",
-          "webspeech:end",
-        ]
-      `);
+      expect(toSnapshot(events)).toEqual([
+        'cognitiveservices:audioSourceReady',
+        'webspeech:start',
+        'webspeech:audiostart',
+        'cognitiveservices:firstAudibleChunk',
+        'webspeech:soundstart',
+        'cognitiveservices:recognizing',
+        'webspeech:speechstart',
+        "webspeech:result ['hello']",
+        'cognitiveservices:recognizing',
+        "webspeech:result ['hello world']",
+        'cognitiveservices:recognized',
+        "webspeech:result ['Hello, World!' (isFinal)]",
+        'cognitiveservices:audioSourceOff',
+        'webspeech:speechend',
+        'webspeech:soundend',
+        'webspeech:audioend',
+        'webspeech:end'
+      ]);
     });
 
     test('with muted microphone', async () => {
@@ -1643,17 +1903,15 @@ describe('SpeechRecognition with loosened events', () => {
 
       await errorEventEmitted;
 
-      expect(toSnapshot(events)).toMatchInlineSnapshot(`
-        [
-          "cognitiveservices:audioSourceReady",
-          "webspeech:start",
-          "webspeech:audiostart",
-          "cognitiveservices:recognized",
-          "webspeech:audioend",
-          "webspeech:error { error: 'no-speech' }",
-          "webspeech:end",
-        ]
-      `);
+      expect(toSnapshot(events)).toEqual([
+        'cognitiveservices:audioSourceReady',
+        'webspeech:start',
+        'webspeech:audiostart',
+        'cognitiveservices:recognized',
+        'webspeech:audioend',
+        "webspeech:error { error: 'no-speech' }",
+        'webspeech:end'
+      ]);
     });
 
     test('with unrecognizable sound should throw error', async () => {
@@ -1698,24 +1956,22 @@ describe('SpeechRecognition with loosened events', () => {
 
       await endEventEmitted;
 
-      expect(toSnapshot(events)).toMatchInlineSnapshot(`
-        [
-          "cognitiveservices:audioSourceReady",
-          "webspeech:start",
-          "webspeech:audiostart",
-          "cognitiveservices:firstAudibleChunk",
-          "webspeech:soundstart",
-          "cognitiveservices:recognized",
-          "webspeech:speechstart",
-          "cognitiveservices:stop",
-          "cognitiveservices:audioSourceOff",
-          "webspeech:speechend",
-          "webspeech:soundend",
-          "webspeech:audioend",
-          "webspeech:error { error: 'no-speech' }",
-          "webspeech:end",
-        ]
-      `);
+      expect(toSnapshot(events)).toEqual([
+        'cognitiveservices:audioSourceReady',
+        'webspeech:start',
+        'webspeech:audiostart',
+        'cognitiveservices:firstAudibleChunk',
+        'webspeech:soundstart',
+        'cognitiveservices:recognized',
+        'webspeech:speechstart',
+        'cognitiveservices:stop',
+        'cognitiveservices:audioSourceOff',
+        'webspeech:speechend',
+        'webspeech:soundend',
+        'webspeech:audioend',
+        "webspeech:error { error: 'no-speech' }",
+        'webspeech:end'
+      ]);
     });
   });
 
@@ -1764,24 +2020,22 @@ describe('SpeechRecognition with loosened events', () => {
 
       await endEventEmitted;
 
-      expect(toSnapshot(events)).toMatchInlineSnapshot(`
-        [
-          "cognitiveservices:audioSourceReady",
-          "webspeech:start",
-          "webspeech:audiostart",
-          "cognitiveservices:firstAudibleChunk",
-          "webspeech:soundstart",
-          "cognitiveservices:recognized",
-          "webspeech:speechstart",
-          "cognitiveservices:stop",
-          "cognitiveservices:audioSourceOff",
-          "webspeech:speechend",
-          "webspeech:soundend",
-          "webspeech:audioend",
-          "webspeech:error { error: 'no-speech' }",
-          "webspeech:end",
-        ]
-      `);
+      expect(toSnapshot(events)).toEqual([
+        'cognitiveservices:audioSourceReady',
+        'webspeech:start',
+        'webspeech:audiostart',
+        'cognitiveservices:firstAudibleChunk',
+        'webspeech:soundstart',
+        'cognitiveservices:recognized',
+        'webspeech:speechstart',
+        'cognitiveservices:stop',
+        'cognitiveservices:audioSourceOff',
+        'webspeech:speechend',
+        'webspeech:soundend',
+        'webspeech:audioend',
+        "webspeech:error { error: 'no-speech' }",
+        'webspeech:end'
+      ]);
     });
 
     test('stop after recognized 1 speech and 1 ongoing', async () => {
@@ -1839,28 +2093,26 @@ describe('SpeechRecognition with loosened events', () => {
 
       await endEventEmitted;
 
-      expect(toSnapshot(events)).toMatchInlineSnapshot(`
-        [
-          "cognitiveservices:audioSourceReady",
-          "webspeech:start",
-          "webspeech:audiostart",
-          "cognitiveservices:firstAudibleChunk",
-          "webspeech:soundstart",
-          "cognitiveservices:recognizing",
-          "webspeech:speechstart",
-          "webspeech:result ['hello']",
-          "cognitiveservices:recognized",
-          "webspeech:result ['Hello.' (isFinal)]",
-          "cognitiveservices:stop",
-          "cognitiveservices:recognized",
-          "webspeech:result ['Hello.' (isFinal), 'World.' (isFinal)]",
-          "cognitiveservices:audioSourceOff",
-          "webspeech:speechend",
-          "webspeech:soundend",
-          "webspeech:audioend",
-          "webspeech:end",
-        ]
-      `);
+      expect(toSnapshot(events)).toEqual([
+        'cognitiveservices:audioSourceReady',
+        'webspeech:start',
+        'webspeech:audiostart',
+        'cognitiveservices:firstAudibleChunk',
+        'webspeech:soundstart',
+        'cognitiveservices:recognizing',
+        'webspeech:speechstart',
+        "webspeech:result ['hello']",
+        'cognitiveservices:recognized',
+        "webspeech:result ['Hello.' (isFinal)]",
+        'cognitiveservices:stop',
+        'cognitiveservices:recognized',
+        "webspeech:result ['Hello.' (isFinal), 'World.' (isFinal)]",
+        'cognitiveservices:audioSourceOff',
+        'webspeech:speechend',
+        'webspeech:soundend',
+        'webspeech:audioend',
+        'webspeech:end'
+      ]);
     });
 
     test('stop after recognized 1 speech', async () => {
@@ -1929,28 +2181,26 @@ describe('SpeechRecognition with loosened events', () => {
 
       await endEventEmitted;
 
-      expect(toSnapshot(events)).toMatchInlineSnapshot(`
-        [
-          "cognitiveservices:audioSourceReady",
-          "webspeech:start",
-          "webspeech:audiostart",
-          "cognitiveservices:firstAudibleChunk",
-          "webspeech:soundstart",
-          "cognitiveservices:recognizing",
-          "webspeech:speechstart",
-          "webspeech:result ['hello']",
-          "cognitiveservices:recognized",
-          "webspeech:result ['Hello.' (isFinal)]",
-          "cognitiveservices:stop",
-          "cognitiveservices:speechEndDetected",
-          "cognitiveservices:recognized",
-          "webspeech:speechend",
-          "webspeech:soundend",
-          "webspeech:audioend",
-          "webspeech:result ['Hello.' (isFinal)]",
-          "webspeech:end",
-        ]
-      `);
+      expect(toSnapshot(events)).toEqual([
+        'cognitiveservices:audioSourceReady',
+        'webspeech:start',
+        'webspeech:audiostart',
+        'cognitiveservices:firstAudibleChunk',
+        'webspeech:soundstart',
+        'cognitiveservices:recognizing',
+        'webspeech:speechstart',
+        "webspeech:result ['hello']",
+        'cognitiveservices:recognized',
+        "webspeech:result ['Hello.' (isFinal)]",
+        'cognitiveservices:stop',
+        'cognitiveservices:speechEndDetected',
+        'cognitiveservices:recognized',
+        'webspeech:speechend',
+        'webspeech:soundend',
+        'webspeech:audioend',
+        "webspeech:result ['Hello.' (isFinal)]",
+        'webspeech:end'
+      ]);
     });
 
     test('abort after recognized', async () => {
@@ -1998,25 +2248,23 @@ describe('SpeechRecognition with loosened events', () => {
 
       await endEventEmitted;
 
-      expect(toSnapshot(events)).toMatchInlineSnapshot(`
-        [
-          "cognitiveservices:audioSourceReady",
-          "webspeech:start",
-          "webspeech:audiostart",
-          "cognitiveservices:firstAudibleChunk",
-          "webspeech:soundstart",
-          "cognitiveservices:recognized",
-          "webspeech:speechstart",
-          "webspeech:result ['Hello, World!' (isFinal)]",
-          "cognitiveservices:abort",
-          "cognitiveservices:audioSourceOff",
-          "webspeech:speechend",
-          "webspeech:soundend",
-          "webspeech:audioend",
-          "webspeech:error { error: 'aborted' }",
-          "webspeech:end",
-        ]
-      `);
+      expect(toSnapshot(events)).toEqual([
+        'cognitiveservices:audioSourceReady',
+        'webspeech:start',
+        'webspeech:audiostart',
+        'cognitiveservices:firstAudibleChunk',
+        'webspeech:soundstart',
+        'cognitiveservices:recognized',
+        'webspeech:speechstart',
+        "webspeech:result ['Hello, World!' (isFinal)]",
+        'cognitiveservices:abort',
+        'cognitiveservices:audioSourceOff',
+        'webspeech:speechend',
+        'webspeech:soundend',
+        'webspeech:audioend',
+        "webspeech:error { error: 'aborted' }",
+        'webspeech:end'
+      ]);
     });
   });
 });

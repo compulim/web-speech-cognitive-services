@@ -5,7 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+| Icon | Description                                       |
+| ---- | ------------------------------------------------- |
+| 💢   | Breaking changes                                  |
+| 👷🏻   | Development experience (non-production impacting) |
+
 ## [Unreleased]
+
+### Changed
+
+- 👷🏻 Test framework moved to Node.js test runner, by [@compulim](https://github.com/compulim) in PR [#256](https://github.com/compulim/web-speech-cognitive-services/pull/256)
 
 ## [8.1.4] - 2025-12-24
 

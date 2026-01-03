@@ -1,21 +1,23 @@
 extends:
   - ./.eslintrc.custom.yml
 ignorePatterns:
-  - webDriver/**
+  - '**/*.d.mts'
+  - '**/*.d.ts'
 overrides:
   - env:
       commonjs: true
     files:
-      - '**/*.cjs'
       - '**/*.js'
+      - '**/*.ts'
+    parserOptions:
+      ecmaVersion: latest
     rules:
       import/no-commonjs: off
   - files:
       - '**/*.mjs'
+      - '**/*.mts'
     parserOptions:
       ecmaVersion: latest
       sourceType: module
-  - files:
-      - '**/*.test-types.*'
-    rules:
-      react-hooks/rules-of-hooks: off
+rules:
+  import/no-mutable-exports: off

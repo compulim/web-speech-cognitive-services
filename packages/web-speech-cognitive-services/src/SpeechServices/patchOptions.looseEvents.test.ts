@@ -1,6 +1,8 @@
-/// <reference types="jest" />
+/// <reference types="node" />
 
-import patchOptions, { type Credentials } from './patchOptions';
+import { expect } from 'expect';
+import { describe, test } from 'node:test';
+import patchOptions, { type Credentials } from './patchOptions.ts';
 
 const credentials: Credentials = { authorizationToken: 'dummy', region: 'westus' };
 

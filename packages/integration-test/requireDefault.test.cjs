@@ -1,7 +1,5 @@
-/*
- * @jest-environment jsdom
- */
-
+const { expect } = require('expect');
+const { test } = require('node:test');
 const { createSpeechServicesPonyfill } = require('web-speech-cognitive-services');
 
 test('should load', () => {

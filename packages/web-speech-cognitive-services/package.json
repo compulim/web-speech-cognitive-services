@@ -25,6 +25,8 @@
     "bump": "npm run bump:prod && npm run bump:dev",
     "bump:dev": "PACKAGES_TO_BUMP=$(cat package.json | jq -r '(.pinDependencies // {}) as $P | (.localPeerDependencies // {}) as $L | (.devDependencies // {}) | to_entries | map(select(.key as $K | $L | has($K) | not)) | map(.key + \"@\" + ($P[.key] // [\"latest\"])[0]) | join(\" \")') && [ ! -z \"$PACKAGES_TO_BUMP\" ] && npm install $PACKAGES_TO_BUMP || true",
     "bump:prod": "PACKAGES_TO_BUMP=$(cat package.json | jq -r '(.pinDependencies // {}) as $P | (.localPeerDependencies // {}) as $L | (.dependencies // {}) | to_entries | map(select(.key as $K | $L | has($K) | not)) | map(.key + \"@\" + ($P[.key] // [\"latest\"])[0]) | join(\" \")') && [ ! -z \"$PACKAGES_TO_BUMP\" ] && npm install $PACKAGES_TO_BUMP || true",
+    "init": "npm run init:dev --if-present && npm run init:prod --if-present",
+    "init:dev": "npm install --save--dev @compulim/test-harness@0.0.0-0 @tsconfig/recommended @tsconfig/strictest @types/node escape-string-regexp expect publint tsup typescript",
     "precommit": "npm run precommit:eslint && npm run precommit:publint && npm run precommit:typescript:production && npm run precommit:typescript:test",
     "precommit:eslint": "ESLINT_USE_FLAT_CONFIG=false eslint ./src/",
     "precommit:publint": "publint",
@@ -33,7 +35,10 @@
     "prepack": "cp ../../CHANGELOG.md . && cp ../../LICENSE . && cp ../../README.md .",
     "start": "npm run build -- --onSuccess \"touch ../pages/package.json\" --watch",
     "switch": "cat package.json | jq --arg SWITCH_NAME $SWITCH_NAME -r '(.[\"switch:\" + $SWITCH_NAME] // {}) as $TEMPLATE | .devDependencies += ($TEMPLATE.devDependencies // {}) | .dependencies += ($TEMPLATE.dependencies // {})' | tee ./package.json.tmp && mv ./package.json.tmp ./package.json",
-    "test": "jest"
+    "test": "npm run test:unit && npm run test:types",
+    "test:types": "node --experimental-strip-types --import @compulim/test-harness/test-types.import --test **/*.test-types.ts",
+    "test:unit": "node --experimental-strip-types --experimental-test-coverage --experimental-test-module-mocks --import @compulim/test-harness/happy-dom.import --test",
+    "x": "node --experimental-strip-types --experimental-test-module-mocks --import @compulim/test-harness/happy-dom.import --test src/SpeechServices/SpeechToText/createSpeechRecognitionPonyfill.test.js"
   },
   "repository": {
     "type": "git",
@@ -72,20 +77,21 @@
       "jsdom does not support node-fetch@3 because missing TextDecoder"
     ]
   },
+  "localPeerDependencies": {
+    "@compulim/test-harness": "0.0.0-0"
+  },
+  "peerDependencies": {
+    "microsoft-cognitiveservices-speech-sdk": "^1.17.0"
+  },
   "devDependencies": {
-    "@babel/preset-env": "^7.28.5",
-    "@babel/preset-typescript": "^7.28.5",
-    "@jest/globals": "^30.2.0",
+    "@compulim/test-harness": "^0.0.0-0",
     "@tsconfig/recommended": "^1.0.13",
     "@tsconfig/strictest": "^2.0.8",
     "@types/dom-speech-recognition": "^0.0.7",
-    "@types/jest": "^30.0.0",
     "@types/node": "^25.0.3",
     "dotenv": "^17.2.3",
-    "esbuild": "^0.27.2",
+    "expect": "^30.2.0",
     "global-agent": "^3.0.0",
-    "jest": "^30.2.0",
-    "jest-environment-jsdom": "^30.2.0",
     "lolex": "^6.0.0",
     "microsoft-cognitiveservices-speech-sdk": "^1.47.0",
     "node-fetch": "^2.7.0",
@@ -103,8 +109,5 @@
     "on-error-resume-next": "^2.0.3",
     "simple-update-in": "^2.2.0",
     "valibot": "^1.2.0"
-  },
-  "peerDependencies": {
-    "microsoft-cognitiveservices-speech-sdk": "^1.17.0"
   }
 }

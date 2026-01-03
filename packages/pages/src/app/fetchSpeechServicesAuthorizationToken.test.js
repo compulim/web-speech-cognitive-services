@@ -1,9 +1,9 @@
-/// <reference types="jest" />
-
-import fetchSpeechServicesAuthorizationToken from './fetchSpeechServicesAuthorizationToken';
+import { expect } from 'expect';
+import { mock, test } from 'node:test';
+import fetchSpeechServicesAuthorizationToken from './fetchSpeechServicesAuthorizationToken.js';
 
 test('fetch using region and subscriptionKey', async () => {
-  global.fetch = jest.fn(async () => {
+  global.fetch = mock.fn(async () => {
     const res = {
       ok: true,
       text: async () => 'TOKEN'
@@ -29,7 +29,7 @@ test('fetch using region and subscriptionKey', async () => {
 });
 
 test('fetch using subscriptionKey and tokenURL', async () => {
-  global.fetch = jest.fn(async () => {
+  global.fetch = mock.fn(async () => {
     const res = {
       ok: true,
       text: async () => 'TOKEN'

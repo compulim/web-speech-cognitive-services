@@ -1,4 +1,4 @@
-import permutate from './permutate';
+import permutate from './permutate.js';
 
 export default function createTestTable(combos, formatter) {
   const permutations = permutate(combos);

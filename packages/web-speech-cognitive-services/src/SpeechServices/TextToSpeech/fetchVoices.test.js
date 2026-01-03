@@ -1,20 +1,20 @@
-/// <reference types="jest" />
+import { expect } from 'expect';
+import { afterEach, beforeEach, describe, mock, test } from 'node:test';
+import fetchVoices from './fetchVoices.js';
 
-import fetchVoices from './fetchVoices';
-
-let originalFetch;
+let fetchMock;
 
 beforeEach(() => {
-  originalFetch = global.fetch;
+  fetchMock = mock.method(globalThis, 'fetch');
 });
 
 afterEach(() => {
-  global.fetch = originalFetch;
+  fetchMock.mock.restore();
 });
 
 describe('Fetch voices', () => {
   test('happy path', async () => {
-    global.fetch = jest.fn(async () => ({
+    fetchMock.mock.mockImplementation(async () => ({
       json: async () => [
         {
           Name: 'Microsoft Server Speech Text to Speech Voice (en-US, AriaNeural)',
@@ -33,17 +33,20 @@ describe('Fetch voices', () => {
     expect(firstVoice).toHaveProperty('lang', 'en-US');
     expect(firstVoice).toHaveProperty('name', 'Microsoft Server Speech Text to Speech Voice (en-US, AriaNeural)');
 
-    expect(global.fetch).toHaveBeenCalledTimes(1);
-    expect(global.fetch).toHaveBeenCalledWith('https://westus.tts.speech.microsoft.com/cognitiveservices/voices/list', {
-      headers: {
-        authorization: 'Bearer AUTHORIZATION_TOKEN',
-        'content-type': 'application/json'
+    expect(globalThis.fetch.mock.callCount()).toBe(1);
+    expect(globalThis.fetch.mock.calls[0]?.arguments).toEqual([
+      'https://westus.tts.speech.microsoft.com/cognitiveservices/voices/list',
+      {
+        headers: {
+          authorization: 'Bearer AUTHORIZATION_TOKEN',
+          'content-type': 'application/json'
+        }
       }
-    });
+    ]);
   });
 
   test('with network error', async () => {
-    global.fetch = jest.fn(async () => ({ ok: false }));
+    fetchMock.mock.mockImplementation(async () => ({ ok: false }));
 
     expect(fetchVoices({ authorizationToken: 'AUTHORIZATION_TOKEN', region: 'westus' })).rejects.toThrow(
       'Failed to fetch voices'

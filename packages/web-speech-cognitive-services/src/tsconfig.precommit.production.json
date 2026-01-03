@@ -1,17 +1,40 @@
 {
   "compilerOptions": {
     "allowImportingTsExtensions": true,
-    "allowJs": true, // TODO: Should port to TypeScript.
     "esModuleInterop": true,
     "jsx": "react",
     "module": "ESNext",
     "moduleResolution": "Bundler",
     "noEmit": true,
-    "skipLibCheck": true,
     "strict": true,
     "target": "ESNext",
     "types": []
   },
-  "exclude": ["**/*.spec.ts", "**/*.spec.tsx", "**/*.test.ts", "**/*.test.tsx", "__tests__/**/*"],
+  "exclude": [
+    "__tests__/**/*.cjs",
+    "__tests__/**/*.cts",
+    "__tests__/**/*.js",
+    "__tests__/**/*.jsx",
+    "__tests__/**/*.mjs",
+    "__tests__/**/*.mts",
+    "__tests__/**/*.ts",
+    "__tests__/**/*.tsx",
+    "**/*.spec.cjs",
+    "**/*.spec.cts",
+    "**/*.spec.js",
+    "**/*.spec.jsx",
+    "**/*.spec.mjs",
+    "**/*.spec.mts",
+    "**/*.spec.ts",
+    "**/*.spec.tsx",
+    "**/*.test.cjs",
+    "**/*.test.cts",
+    "**/*.test.js",
+    "**/*.test.jsx",
+    "**/*.test.mjs",
+    "**/*.test.mts",
+    "**/*.test.ts",
+    "**/*.test.tsx"
+  ],
   "extends": "./tsconfig.custom.json"
 }
