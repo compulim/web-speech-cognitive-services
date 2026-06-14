@@ -90,7 +90,7 @@
     "@types/dom-speech-recognition": "^0.0.7",
     "@types/node": "^25.0.3",
     "dotenv": "^17.2.3",
-    "expect": "^30.2.0",
+    "expect": "^30.4.1",
     "global-agent": "^3.0.0",
     "lolex": "^6.0.0",
     "microsoft-cognitiveservices-speech-sdk": "^1.47.0",
