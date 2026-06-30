@@ -437,9 +437,9 @@ export default function createSpeechRecognitionPonyfillFromRecognizer({
               stopping = 'stop';
             }
 
-            // Abort should not be dispatched without support of "stopContinuousRecognitionAsync".
-            // But for defensive purpose, we make sure "stopContinuousRecognitionAsync" is available before we can call.
-            if (abort && recognizer.stopContinuousRecognitionAsync) {
+            // Both abort and stop must call stopContinuousRecognitionAsync immediately to release the microphone.
+            // Without this, stop() leaves the mic active and subsequent start() calls fail until page refresh.
+            if (recognizer.stopContinuousRecognitionAsync) {
               await cognitiveServicesAsyncToPromise<void>(recognizer.stopContinuousRecognitionAsync, recognizer)();
             }
           } else if (audioSourceReady) {
@@ -536,8 +536,8 @@ export default function createSpeechRecognitionPonyfillFromRecognizer({
                 }
 
                 // If it is interactive, stop after first recognition.
-                // If it is continuous and it is stopping, stop it too.
-                if ((!this.continuous || stopping === 'stop') && recognizer.stopContinuousRecognitionAsync) {
+                // Continuous+stopping case is already handled above when stop was first received.
+                if (!this.continuous && recognizer.stopContinuousRecognitionAsync) {
                   await cognitiveServicesAsyncToPromise<void>(recognizer.stopContinuousRecognitionAsync, recognizer)();
                 }
 

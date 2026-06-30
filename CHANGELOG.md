@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Fixed
+
+- Resolved microphone not released when `stop()` is called in continuous mode during silence, by [@Akram-Wa](https://github.com/Akram-Wa) in PR [#260](https://github.com/compulim/web-speech-cognitive-services/pull/260)
+
 ### Changed
 
 - 👷🏻 Test framework moved to Node.js test runner, by [@compulim](https://github.com/compulim) in PR [#256](https://github.com/compulim/web-speech-cognitive-services/pull/256)

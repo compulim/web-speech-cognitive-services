@@ -1278,6 +1278,63 @@ describe('SpeechRecognition', () => {
         'webspeech:end'
       ]);
     });
+
+    test('stop with no pending speech should release microphone immediately', async () => {
+      // Regression test for https://github.com/compulim/web-speech-cognitive-services/issues/166
+      // stop() in continuous mode must call stopContinuousRecognitionAsync immediately,
+      // not defer it to a recognized event that may never arrive (e.g. during silence).
+      speechRecognition.continuous = true;
+      speechRecognition.start();
+
+      const recognizer = await constructRecognizerDeferred.promise;
+
+      await recognizer.waitForStartContinuousRecognitionAsync();
+
+      // This will fire "firstAudibleChunk" on "emitRead"
+      await recognizer.readAudioChunk();
+
+      recognizer.audioConfig.emitEvent('AudioSourceReadyEvent');
+
+      // cognitiveservices:audioSourceReady
+      // webspeech:start
+      // webspeech:audiostart
+
+      recognizer.audioConfig.emitRead();
+      await soundStartEmitted;
+
+      // cognitiveservices:firstAudibleChunk
+      // webspeech:soundstart
+
+      speechRecognition.stop();
+
+      // cognitiveservices:stop
+      // stopContinuousRecognitionAsync must be called immediately here (the fix)
+
+      await recognizer.waitForStopContinuousRecognitionAsync();
+
+      recognizer.audioConfig.emitEvent('AudioSourceOffEvent');
+
+      // cognitiveservices:audioSourceOff
+      // webspeech:soundend
+      // webspeech:audioend
+      // webspeech:error { error: 'no-speech' }
+      // webspeech:end
+
+      await endEventEmitted;
+
+      expect(toSnapshot(events)).toEqual([
+        'cognitiveservices:audioSourceReady',
+        'webspeech:start',
+        'webspeech:audiostart',
+        'cognitiveservices:firstAudibleChunk',
+        'webspeech:soundstart',
+        'cognitiveservices:stop',
+        'cognitiveservices:audioSourceOff',
+        'webspeech:soundend',
+        'webspeech:audioend',
+        'webspeech:end'
+      ]);
+    });
   });
 
   test('with network error', async () => {
